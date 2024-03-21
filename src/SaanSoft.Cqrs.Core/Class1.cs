@@ -1,4 +1,5 @@
 ﻿namespace SaanSoft.Cqrs.Core;
+
 public class Class1
 {
     public void Method1()
