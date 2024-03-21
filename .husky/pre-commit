@@ -5,9 +5,10 @@
 ## Note : for local installation use 'dotnet' prefix. e.g. 'dotnet husky'
 
 ## run all tasks
-#husky run
+#dotnethusky run
 
 ### run all tasks with group: 'group-name'
+#husky run --group group-name
 dotnet husky run --group pre-commit
 
 ## run task with name: 'task-name'

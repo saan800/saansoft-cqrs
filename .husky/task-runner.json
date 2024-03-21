@@ -5,20 +5,20 @@
          "group": "pre-commit",
          "command": "dotnet",
          "args": ["format", "--include", "${staged}"],
-         "include": ["**/*.cs"]
+         "include": ["**/*.cs", "**/*.csx"]
       },
       {
          "name": "commit-message-linter",
          "group": "pre-commit",
          "command": "dotnet",
-         "args": ["husky", "exec", ".husky/csx/commit-lint.csx", "--args", "${args}"]
+         "args": ["husky", "exec", ".husky/csx/commit-message-linter.csx", "--args", "${args}"]
       },
       {
          "name": "warning-check",
          "group": "pre-push",
          "command": "dotnet",
          "args": ["build", "/warnaserror"],
-         "include": ["**/*.cs"]
+         "include": ["**/*.cs", "**/*.csx"]
       }
    ]
 }
