@@ -9,7 +9,6 @@
       },
       {
          "name": "commit-message-linter",
-         "group": "pre-commit",
          "command": "dotnet",
          "args": ["husky", "exec", ".husky/csx/commit-message-linter.csx", "--args", "${args}"]
       },
