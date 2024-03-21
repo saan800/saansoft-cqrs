@@ -40,8 +40,8 @@ tmp
 node_modules
 
 # .NET
-/bin
-/obj
+bin
+obj
 
 
 # LOGS, TESTS AND COVERAGE
