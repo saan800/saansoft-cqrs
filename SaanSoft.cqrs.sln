@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Core", "src\SaanSoft.Cqrs.Core\SaanSoft.Cqrs.Core.csproj", "{BEC44C1D-322F-4AE2-B5B9-9A2B32E80616}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BEC44C1D-322F-4AE2-B5B9-9A2B32E80616}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEC44C1D-322F-4AE2-B5B9-9A2B32E80616}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEC44C1D-322F-4AE2-B5B9-9A2B32E80616}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEC44C1D-322F-4AE2-B5B9-9A2B32E80616}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
