@@ -53,3 +53,22 @@ jobs:
           name: test-results-${{ matrix.os }}-${{ matrix.dotnet-version }}
           path: test-results-${{ matrix.os }}-${{ matrix.dotnet-version }}.xml
         if: ${{ always() }}
+
+
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      checks: write
+
+    steps:
+      - name: Upload test report
+        uses: dorny/test-reporter@v1
+        with:
+          name: dotnet-tests                # Name of the check run which will be created
+          artifact: /test-results-(.*)/     # artifact name
+          path: '*.xml'                     # Path to test results (inside artifact .zip)
+          reporter: dotnet-trx              # Format of test results
