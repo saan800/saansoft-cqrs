@@ -6,25 +6,30 @@
 
 using System.Text.RegularExpressions;
 
-foreach (var arg in Args)
-{
-    Console.WriteLine($"arg: {arg}");
-}
-private var pattern = @"^(?=.{1,90}$)(?:build|feat|ci|chore|docs|fix|perf|refactor|revert|style|test)(?:\(.+\))*(?::).{4,}(?:#\d+)*(?<![\.\s])$";
+private var pattern = @"^(?=.{1,90}$)(?:build|feature|ci|chore|dependabot|docs|fix|perf|refactor|revert|style|test)(?:\(.+\))*(?::).{4,}(?:#\d+)*(?<![\.\s])$";
 
 private var msg = File.ReadAllLines(Args[0])[0];
-Console.WriteLine($"commit message: {msg}");
 
 if (Regex.IsMatch(msg, pattern))
    return 0;
 
-Console.WriteLine("commit message: 99");
 
 Console.ForegroundColor = ConsoleColor.Red;
-Console.WriteLine("Invalid commit message");
+Console.WriteLine("");
+Console.WriteLine($"Invalid commit message: {msg}");
+Console.WriteLine("");
 Console.ResetColor();
-Console.WriteLine("e.g: 'feat(scope): subject' or 'fix: subject'");
-Console.ForegroundColor = ConsoleColor.Gray;
-Console.WriteLine("more info: https://www.conventionalcommits.org/en/v1.0.0/");
+Console.WriteLine("Commit messages must be in the Conventional Commits format:");
+Console.WriteLine("  <type>: <subject>");
+Console.WriteLine("  <type>(<scope>): <subject>");
+Console.WriteLine("");
+Console.WriteLine("Where:");
+Console.WriteLine("  - <type>: build, feature, ci, chore, dependabot, docs, fix, perf, refactor, revert, style, test");
+Console.WriteLine("  - <scope>: (optional) usually used for story or issue number");
+Console.WriteLine("  - <subject>: at least 4 characters long");
+Console.WriteLine("");
+Console.WriteLine("e.g: 'feature(ABC-123): subject' or 'fix: subject'");
+Console.WriteLine("");
+Console.WriteLine("More info: https://www.conventionalcommits.org/en/v1.0.0/");
 
 return 1;
