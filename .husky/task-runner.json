@@ -11,10 +11,8 @@
          "name": "echo staged files",
          "group": "pre-commit",
          "pathMode": "absolute",
-         // "command": "sh",
-         // "args": [ "/c", "echo", "${staged}"]
          "command": "echo",
-         "args": [ "${staged}"]
+         "args": [ "", "${staged}"]
       },
       {
          "name": "commit-message-linter",
