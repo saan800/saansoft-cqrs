@@ -14,7 +14,7 @@
          // "command": "sh",
          // "args": [ "/c", "echo", "${staged}"]
          "command": "echo",
-         "args": [ "hi"]
+         "args": [ "${staged}"]
       },
       {
          "name": "commit-message-linter",
