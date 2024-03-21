@@ -1,18 +1,18 @@
 {
    "tasks": [
       {
+         "name": "echo staged files",
+         "group": "pre-commit",
+         "pathMode": "absolute",
+         "command": "echo",
+         "args": ["${staged}"]
+      },
+      {
          "name": "dotnet format",
          "group": "pre-commit",
          "command": "dotnet",
          "args": ["format", "--include", "${staged}"],
          "include": ["**/*.cs", "**/*.csx"]
-      },
-      {
-         "name": "echo staged files",
-         "group": "pre-commit",
-         "pathMode": "absolute",
-         "command": "echo",
-         "args": [ "", "${staged}"]
       },
       {
          "name": "commit-message-linter",
