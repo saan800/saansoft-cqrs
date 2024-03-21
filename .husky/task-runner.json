@@ -1,7 +1,7 @@
 {
    "tasks": [
       {
-         "name": "dotnet-format",
+         "name": "dotnet format",
          "group": "pre-commit",
          "command": "dotnet",
          "args": ["format", "--include", "${staged}"],
@@ -9,13 +9,14 @@
       },
       {
          "name": "commit-message-linter",
+         "group": "pre-commit",
          "command": "dotnet",
          "args": ["husky", "exec", ".husky/csx/commit-lint.csx", "--args", "${args}"]
       },
       {
          "name": "warning-check",
+         "group": "pre-commit",
          "command": "dotnet",
-         "group": "pre-push",
          "args": ["build", "/warnaserror"],
          "include": ["**/*.cs"]
       }
