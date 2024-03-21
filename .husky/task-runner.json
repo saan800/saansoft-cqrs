@@ -13,6 +13,13 @@
          "args": ["husky", "exec", ".husky/csx/commit-message-linter.csx", "--args", "${args}"]
       },
       {
+         "name": "echo staged files",
+         "group": "pre-commit",
+         "pathMode": "absolute",
+         "command": "echo",
+         "args": [ "${staged}"]
+      },
+      {
          "name": "warning-check",
          "group": "pre-push",
          "command": "dotnet",
