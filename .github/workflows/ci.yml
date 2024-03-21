@@ -45,12 +45,11 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Run unit tests
-      #  run: dotnet test --no-build --filter FullyQualifiedName~SaanSoft.Tests --logger trx --results-directory "test-results-${{ matrix.os }}-${{ matrix.dotnet-version }}"
         run: dotnet test --no-build --filter FullyQualifiedName~SaanSoft.Tests --logger trx --results-directory "test-results-${{ matrix.os }}-${{ matrix.dotnet-version }}"
 
-      # - name: Upload dotnet test results
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: test-results-${{ matrix.os }}-${{ matrix.dotnet-version }}
-      #     path: test-results-${{ matrix.os }}-${{ matrix.dotnet-version }}.xml
-      #   if: ${{ always() }}
+      - name: Upload dotnet test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.os }}-${{ matrix.dotnet-version }}
+          path: test-results-${{ matrix.os }}-${{ matrix.dotnet-version }}.xml
+        if: ${{ always() }}
