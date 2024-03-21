@@ -8,7 +8,7 @@
 #husky run
 
 ### run all tasks with group: 'group-name'
-#husky run --group group-name
+dotnet husky run --group pre-commit
 
 ## run task with name: 'task-name'
 #husky run --name task-name
@@ -19,4 +19,3 @@
 ## or put your custom commands -------------------
 # echo 'Husky.Net is awesome!'
 
-echo 'Husky.Net is awesome!'
