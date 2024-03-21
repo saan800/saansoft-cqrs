@@ -15,7 +15,7 @@
       },
       {
          "name": "warning-check",
-         "group": "pre-commit",
+         "group": "pre-push",
          "command": "dotnet",
          "args": ["build", "/warnaserror"],
          "include": ["**/*.cs"]
