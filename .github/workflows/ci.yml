@@ -2,10 +2,10 @@ name: CI
 
 on:
   pull_request:
-    paths:
-    - '**.cs'
-    - '**.csproj'
-    - '**.json'
+    # paths:
+    # - '**.cs'
+    # - '**.csproj'
+    # - '**.json'
   push:
     branches:
       - main
