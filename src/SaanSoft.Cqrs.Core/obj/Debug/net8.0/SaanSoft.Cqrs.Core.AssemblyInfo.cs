@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SaanSoft.Cqrs.Core")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b6d2db64261020c3eb4b614343ff199e36efab13")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+597a7b70cae4b5dd3a7ddff5eab62fc19d0df600")]
 [assembly: System.Reflection.AssemblyProductAttribute("SaanSoft.Cqrs.Core")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SaanSoft.Cqrs.Core")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

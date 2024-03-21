@@ -1,0 +1,20 @@
+{
+  "name": "saansoft-cqrs",
+  "version": "1.0.0",
+  "description": "CQRS and Event Sourcing implementation for c#",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saan800/saansoft-cqrs.git"
+  },
+  "keywords": ["dotnet","cqrs","event sourcing"],
+  "author": "saan800",
+  "license": "MIT",
+  "homepage": "https://github.com/saan800/saansoft-cqrs#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "cspell": "^7.3.8"
+  }
+}
