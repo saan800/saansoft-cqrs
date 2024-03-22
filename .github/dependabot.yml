@@ -36,17 +36,6 @@ updates:
         update-types:
         - "minor"
         - "patch"
-    commit-message:
-      prefix: "dependabot: [nuget] "
-    labels:
-      - "nuget"
-      - "dependabot"
-
-  - package-ecosystem: nuget
-    directory: "/"
-    schedule:
-      interval: "daily"
-    groups:
       testing:
         applies-to: version-updates
         patterns:
@@ -55,19 +44,11 @@ updates:
         update-types:
         - "minor"
         - "patch"
-    commit-message:
-      prefix: "dependabot: [nuget] "
-    labels:
-      - "nuget"
-      - "dependabot"
-
-  - package-ecosystem: nuget
-    directory: '/'
-    schedule:
-      interval: 'weekly'
     ignore:
       - dependency-name: "*"
         update-types: "version-update:semver-major"
+    commit-message:
+      prefix: "dependabot: [nuget] "
     labels:
       - "nuget"
       - "dependabot"
