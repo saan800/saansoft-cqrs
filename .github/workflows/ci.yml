@@ -13,10 +13,10 @@ on:
     paths-ignore:
       - '**.md'
 
-permissions:
-  contents: read
-  actions: read
-  checks: write
+# permissions:
+#   contents: read
+#   actions: read
+#   checks: write
   
 jobs:
   build-and-test:
