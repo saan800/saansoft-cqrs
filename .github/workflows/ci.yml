@@ -53,7 +53,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results-${{ matrix.os }}-${{ matrix.dotnet-version }}
-          path: test-results-${{ matrix.os }}-${{ matrix.dotnet-version }}
+          path: reports
         if: ${{ always() }}
 
       - name: Upload test report
