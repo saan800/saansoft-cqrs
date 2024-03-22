@@ -1,12 +1,9 @@
 **Description:**
 
-Describe your changes.
 
-**Related issue:**
-
-Add link to the related issue.
 
 **Check list:**
 
-- [ ] Mark if documentation changes are required
+- [ ] Linked to any related issues in the PR description
+- [ ] Mark if documentation changes are required or made
 - [ ] Mark if tests were added or updated to cover the changes

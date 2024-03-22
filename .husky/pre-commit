@@ -1,15 +1,20 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
+
+local_branch_name="$(git rev-parse --abbrev-ref HEAD)"
+dotnet husky run --name branch-name-linter --args "$local_branch_name"
+
+dotnet husky run --group pre-commit
+
 ## husky task runner examples -------------------
 ## Note : for local installation use 'dotnet' prefix. e.g. 'dotnet husky'
 
 ## run all tasks
-#dotnethusky run
+#husky run
 
-### run all tasks with group: 'group-name'
+## run all tasks with group: 'group-name'
 #husky run --group group-name
-dotnet husky run --group pre-commit
 
 ## run task with name: 'task-name'
 #husky run --name task-name
