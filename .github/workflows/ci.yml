@@ -64,7 +64,6 @@ jobs:
       - name: Download dotnet test results
         uses: actions/download-artifact@v4
         with:
-          name: test-results-*
           path: reports
 
       - name: Upload test report
@@ -72,7 +71,7 @@ jobs:
         if: ${{ always() }}
         with:
           name: test-results                # Name of the check run which will be created
-          path: "reports/**/*.trx"           # Path to test results (inside artifact .zip)
+          path: "reports/test-results-*/*.trx"           # Path to test results (inside artifact .zip)
           reporter: dotnet-trx              # Format of test results
           fail-on-error: true
 
