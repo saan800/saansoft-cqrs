@@ -12,6 +12,11 @@ private var pattern = $"^(?=.{{1,90}}$)(?:{string.Join("|", validTypes)})(?:\\(.
 
 private var msg = File.ReadAllLines(Args[0])[0];
 
+if (msg.StartsWith("Merge remote-tracking branch"))
+{
+  return 0;
+}
+
 if (Regex.IsMatch(msg, pattern))
 {
   return 0;
