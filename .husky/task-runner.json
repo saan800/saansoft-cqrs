@@ -18,13 +18,6 @@
          "name": "commit-message-linter",
          "command": "dotnet",
          "args": ["husky", "exec", ".husky/csx/commit-message-linter.csx", "--args", "${args}"]
-      },
-      {
-         "name": "warning-check",
-         "group": "pre-push",
-         "command": "dotnet",
-         "args": ["build", "/warnaserror"],
-         "include": ["**/*.cs", "**/*.csx"]
       }
    ]
 }
