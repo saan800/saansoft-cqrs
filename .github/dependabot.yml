@@ -24,7 +24,7 @@ updates:
       - "npm"
       - "dependabot"
 
-  - package-ecosystem: “nuget”
+  - package-ecosystem: nuget
     directory: "/"
     schedule:
       interval: "daily"
@@ -42,7 +42,7 @@ updates:
       - "nuget"
       - "dependabot"
 
-  - package-ecosystem: “nuget”
+  - package-ecosystem: nuget
     directory: "/"
     schedule:
       interval: "daily"
@@ -61,7 +61,7 @@ updates:
       - "nuget"
       - "dependabot"
 
-  - package-ecosystem: "nuget"
+  - package-ecosystem: nuget
     directory: '/'
     schedule:
       interval: 'weekly'
