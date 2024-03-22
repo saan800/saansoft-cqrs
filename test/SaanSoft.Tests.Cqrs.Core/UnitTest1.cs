@@ -8,8 +8,14 @@ public class Tests
     }
 
     [Test]
-    public void Test1()
+    public void Passing()
     {
         Assert.Pass();
+    }
+
+    [Test]
+    public void Failing()
+    {
+        Assert.Fail();
     }
 }

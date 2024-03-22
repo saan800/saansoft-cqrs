@@ -1,11 +1,9 @@
-name: CI
+name: build-and-test
 
 on:
   pull_request:
-    # paths:
-    # - '**.cs'
-    # - '**.csproj'
-    # - '**.json'
+    paths-ignore:
+      - '**.md'
   push:
     branches:
       - main
@@ -15,7 +13,6 @@ on:
   
 jobs:
   build-and-test:
-
     name: build-and-test-${{matrix.os}}-${{matrix.dotnet-version}}
     runs-on: ${{ matrix.os }}
     strategy:
