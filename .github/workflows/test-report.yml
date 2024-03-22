@@ -11,13 +11,25 @@ permissions:
   checks: write
 
 jobs:
-  report:
+  reports2:
     runs-on: ubuntu-latest
-    steps:
+    permissions:
+      checks: write
 
-    - uses: dorny/test-reporter@v1
-      with:
-        artifact: /test-results-(.*)/     # artifact name
-        name: Dotnet Tests                # Name of the check run which will be created
-        path: '*.xml'                     # Path to test results (inside artifact .zip)
-        reporter: dotnet-trx              # Format of test results
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download dotnet test results
+        uses: actions/download-artifact@v4
+        with:
+          path: reports
+
+      - name: Upload test report
+        uses: dorny/test-reporter@v1
+        if: ${{ always() }}
+        with:
+          name: test-results2                # Name of the check run which will be created
+          path: "reports/test-results-*/*.trx"           # Path to test results (inside artifact .zip)
+          reporter: dotnet-trx              # Format of test results
+          fail-on-error: true
