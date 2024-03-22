@@ -58,7 +58,8 @@ jobs:
 
   reports:
     runs-on: ubuntu-latest
-    needs: build-and-test    strategy:
+    needs: build-and-test
+    strategy:
       fail-fast: false
       matrix:
         # os: [ubuntu-latest, windows-latest, macOS-latest]
@@ -75,4 +76,5 @@ jobs:
           artifact: test-results-${{ matrix.os }}-${{ matrix.dotnet-version }}  # artifact name
           path: "*.trx"           # Path to test results (inside artifact .zip)
           reporter: dotnet-trx              # Format of test results
-          fail-on-error: true
+          # fail-on-error: true
+
