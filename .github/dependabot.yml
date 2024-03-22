@@ -39,7 +39,7 @@ updates:
     commit-message:
       prefix: "dependabot: [nuget] "
     labels:
-      - "nuget”
+      - "nuget"
       - "dependabot"
 
   - package-ecosystem: “nuget”
@@ -58,7 +58,7 @@ updates:
     commit-message:
       prefix: "dependabot: [nuget] "
     labels:
-      - “nuget”
+      - "nuget"
       - "dependabot"
 
 - package-ecosystem: "nuget"
@@ -69,5 +69,5 @@ updates:
       - dependency-name: "*"
         update-types: "version-update:semver-major"
     labels:
-      - "nuget”
+      - "nuget"
       - "dependabot"
