@@ -58,12 +58,12 @@ jobs:
 
       - name: Upload test report
         uses: dorny/test-reporter@v1
-        with:
-          name: dotnet-tests                # Name of the check run which will be created
-          artifact: /test-results-(.*)/     # artifact name
-          path: '*.trx'                     # Path to test results (inside artifact .zip)
-          reporter: dotnet-trx              # Format of test results
         if: ${{ always() }}
+        with:
+          name: test-results-${{ matrix.os }}-${{ matrix.dotnet-version }}                # Name of the check run which will be created
+          artifact: test-results-${{ matrix.os }}-${{ matrix.dotnet-version }}  # artifact name
+          path: "/reports/**.trx"           # Path to test results (inside artifact .zip)
+          reporter: dotnet-trx              # Format of test results
 
       
 
