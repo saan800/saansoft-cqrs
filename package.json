@@ -19,6 +19,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "cspell": "^7.3.8"
+    "cspell": "^8.6.0"
   }
 }
