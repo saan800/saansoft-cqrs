@@ -9,9 +9,7 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     permissions:
-      checks: write
       issues: write
-      pull-requests: write
     steps:
       - uses: actions/checkout@v4
       - uses: marocchino/validate-dependabot@v3
