@@ -5,51 +5,32 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "monthly"
+      interval: monthly
     commit-message:
       prefix: "dependabot: [github-actions] "
-      include: "scope"
-    labels:
-      - "github-actions"
-      - "dependabot"
+      include: scope
 
   - package-ecosystem: npm
     directory: "/"
     schedule:
-      interval: "monthly"
+      interval: monthly
     commit-message:
       prefix: "dependabot: [npm] "
       include: "scope"
-    labels:
-      - "npm"
-      - "dependabot"
 
   - package-ecosystem: nuget
     directory: "/"
-    schedule:
-      interval: "daily"
     groups:
       microsoft:
-        applies-to: version-updates
         patterns:
-        - "Microsoft*"
-        update-types:
-        - "minor"
-        - "patch"
-      testing:
-        applies-to: version-updates
+          - Microsoft*
+      nunit:
         patterns:
-        - "NUnit*"
-        - "coverlet*"
-        update-types:
-        - "minor"
-        - "patch"
+          - NUnit*
     ignore:
-      - dependency-name: "*"
-        update-types:
-        - "version-update:semver-major"
+      - dependency-name: "Microsoft*"
+        update-types: ["version-update:semver-major"]
+    schedule:
+      interval: daily
     commit-message:
       prefix: "dependabot: [nuget] "
-    labels:
-      - "nuget"
-      - "dependabot"
