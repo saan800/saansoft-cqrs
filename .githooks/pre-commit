@@ -6,14 +6,8 @@ export ROOT_DIR="$rootDirectory"
 
 staged_files=$(git diff --cached --name-only --diff-filter=ACMR)
 
-
-# Run dotnet format on changed files
-echo "STAGED FILES" $staged_files
-
 "$rootDirectory/scripts/lint-dotnet.sh" "$staged_files"
 "$rootDirectory/scripts/lint-branch-name.sh"
-
-
 
 # Check the exit code of the script
 if [ $? -ne 0 ]; then
