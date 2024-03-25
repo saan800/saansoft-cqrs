@@ -19,6 +19,7 @@ public class Class1
 
     }
 
+
     public class TestClass
     {
         public required string Name { get; set; }
