@@ -1,9 +1,27 @@
-#!/usr/bin/env pwsh
+#!/bin/sh
 
-Write-Host "IN HERE"
-# Get the staged files
-$stagedFiles = git diff --cached --name-only --diff-filter=ACMRTUXB
-Write-Host "Staged files: $stagedFiles"
+scriptDirectory="$(dirname -- "$0")/../scripts"
+echo "SCRIPT DIRECTORY" $scriptDirectory
+
+# Run dotnet format on staged C# files
+staged_files=$(git diff --cached --name-only --diff-filter=ACMR)
+echo "STAGED FILES" $staged_files
 
 
-return 1;
+# Call your script with arguments
+"$scriptDirectory/lint-dotnet.sh" "$staged_files"
+
+# staged_cs_files=$(echo $staged_files | grep -E '\.cs$')
+# if [ -n "$staged_cs_files" ]; then
+
+#     dotnet format $staged_cs_files
+
+#     # Add the modified files to the staging area
+#     git add $staged_cs_files
+# fi
+
+# Check the exit code of the script
+if [ $? -ne 0 ]; then
+    echo "${RED}Error: Script failed, aborting commit.${NC}"
+    exit 1
+fi
