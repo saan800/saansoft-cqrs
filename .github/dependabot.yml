@@ -7,7 +7,7 @@ updates:
     schedule:
       interval: monthly
     commit-message:
-      prefix: "dependabot(github-actions): "
+      prefix: "dependabot: [github-actions] "
       include: scope
 
   - package-ecosystem: nuget
@@ -27,4 +27,4 @@ updates:
     schedule:
       interval: daily
     commit-message:
-      prefix: "dependabot(nuget): "
+      prefix: "dependabot: [nuget] "
