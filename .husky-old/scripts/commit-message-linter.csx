@@ -7,7 +7,7 @@
 using System.Text.RegularExpressions;
 
 private var validTypes = new string[] { "build", "ci", "chore", "dependabot", "docs", "feature", "fix", "perf", "refactor", "revert", "style", "test" };
-private var pattern = $"^(?=.{{1,90}}$)(?:{string.Join("|", validTypes)})(?:\\(.+\\))*(?::).{{4,}}(?:#\\d+)*(?<![\\.\\s])$";
+private var pattern = $"^(?=.{1,90}$)(?:VAR HERE)(?:\(.+\))*(?::).{4,}(?:#\d+)*(?<![\.\s])$";
 
 
 private var msg = File.ReadAllLines(Args[0])[0];
