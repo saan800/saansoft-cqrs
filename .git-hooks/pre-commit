@@ -5,4 +5,4 @@ $stagedFiles = git diff --cached --name-only --diff-filter=ACMRTUXB
 Write-Host "Staged files: $stagedFiles"
 
 
-exit 1
+return 1;
