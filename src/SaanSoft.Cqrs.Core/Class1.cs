@@ -1,4 +1,4 @@
-﻿namespace SaanSoft.Cqrs.Core;
+namespace SaanSoft.Cqrs.Core;
 
 public class Class1
 {
