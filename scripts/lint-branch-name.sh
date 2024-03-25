@@ -6,7 +6,7 @@ echo "${YELLOW}Running lint-branch-name...${NC}"
 local_branch_name="$(git rev-parse --abbrev-ref HEAD)"
 
 validTypes="bugfix|chore|docs|feature|hotfix"
-valid_branch_regex="^((f$validTypes)\/[a-zA-Z0-9\-]+)$"
+valid_branch_regex="^((f$validTypes)\/[a-zA-Z0-9_\-]+)$"
 # private var pattern = $"^(({string.Join("|", validTypes)})\\/[a-zA-Z0-9\\-_]{{4,}})$";
 
 if [[ ! $local_branch_name =~ $valid_branch_regex ]]; then
@@ -21,7 +21,7 @@ if [[ ! $local_branch_name =~ $valid_branch_regex ]]; then
     echo "    - <scope>: (optional) usually used for a story or issue number"
     echo "    - <subject>: at least 4 characters long"
     echo "  Examples:"
-    echo "    - feature/ABC-123: subject"
+    echo "    - feature/ABC-123_subject"
     echo "    - hotfix/subject"
     exit 1
 fi
