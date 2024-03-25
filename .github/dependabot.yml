@@ -10,14 +10,6 @@ updates:
       prefix: "dependabot: [github-actions] "
       include: scope
 
-  - package-ecosystem: npm
-    directory: "/"
-    schedule:
-      interval: monthly
-    commit-message:
-      prefix: "dependabot: [npm] "
-      include: "scope"
-
   - package-ecosystem: nuget
     directory: "/"
     groups:
