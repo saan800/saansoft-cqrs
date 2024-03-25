@@ -11,5 +11,7 @@ CQRS and Event Sourcing implementation for c#
 
 Run the following to enable git hooks
 ```shell
-git config core.hooksPath /.githooks
+git config core.hooksPath .githooks
 ```
+
+All PRs will run the same scripts as part of the CI pipeline.

@@ -10,9 +10,8 @@ staged_files=$(git diff --cached --name-only --diff-filter=ACMR)
 # Run dotnet format on changed files
 echo "STAGED FILES" $staged_files
 
-# Call your script with arguments
 "$rootDirectory/scripts/lint-dotnet.sh" "$staged_files"
-
+"$rootDirectory/scripts/lint-branch-name.sh"
 
 
 
