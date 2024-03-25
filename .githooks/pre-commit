@@ -1,24 +1,20 @@
 #!/bin/sh
 
-scriptDirectory="$(dirname -- "$0")/../scripts"
-echo "SCRIPT DIRECTORY" $scriptDirectory
+rootDirectory="$(dirname -- "$0")/.."
+source "$rootDirectory/scripts/colours.sh"
+export ROOT_DIR="$rootDirectory"
 
-# Run dotnet format on staged C# files
 staged_files=$(git diff --cached --name-only --diff-filter=ACMR)
+
+
+# Run dotnet format on changed files
 echo "STAGED FILES" $staged_files
 
-
 # Call your script with arguments
-"$scriptDirectory/lint-dotnet.sh" "$staged_files"
+"$rootDirectory/scripts/lint-dotnet.sh" "$staged_files"
 
-# staged_cs_files=$(echo $staged_files | grep -E '\.cs$')
-# if [ -n "$staged_cs_files" ]; then
 
-#     dotnet format $staged_cs_files
 
-#     # Add the modified files to the staging area
-#     git add $staged_cs_files
-# fi
 
 # Check the exit code of the script
 if [ $? -ne 0 ]; then
