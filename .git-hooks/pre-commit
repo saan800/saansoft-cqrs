@@ -1,5 +1,6 @@
 #!/usr/bin/env pwsh
 
+Write-Host "IN HERE"
 # Get the staged files
 $stagedFiles = git diff --cached --name-only --diff-filter=ACMRTUXB
 Write-Host "Staged files: $stagedFiles"
