@@ -4,6 +4,8 @@ rootDirectory="$(dirname -- "$0")/.."
 source "$rootDirectory/scripts/colours.sh"
 export ROOT_DIR="$rootDirectory"
 
+echo "${CYAN}Running pre-commit hooks${NC}"
+
 staged_files=$(git diff --cached --name-only --diff-filter=ACMR)
 
 "$rootDirectory/scripts/validate-branch-name.sh"
