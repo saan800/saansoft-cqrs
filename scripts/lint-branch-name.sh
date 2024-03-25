@@ -6,9 +6,8 @@ echo "${YELLOW}Running lint-branch-name...${NC}"
 local_branch_name="$(git rev-parse --abbrev-ref HEAD)"
 
 validTypes="bugfix|chore|docs|feature|hotfix"
-echo "Valid types: $validTypes"
 valid_branch_regex="^((f$validTypes)\/[a-zA-Z0-9\-]+)$"
-
+# private var pattern = $"^(({string.Join("|", validTypes)})\\/[a-zA-Z0-9\\-_]{{4,}})$";
 
 if [[ ! $local_branch_name =~ $valid_branch_regex ]]; then
     commaSeparatedList=$(echo "$validTypes" | tr '|' ', ')
