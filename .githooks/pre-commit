@@ -21,3 +21,6 @@ if [ $? -ne 0 ]; then
     echo "${RED}Error: Script failed, aborting commit.${NC}"
     exit 1
 fi
+
+# Add any modified files to the staging area
+git add $staged_files
