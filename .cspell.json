@@ -1,19 +1,20 @@
 {
-    "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
-    "caseSensitive": false,
-    "language": "en-GB",
-    "useGitignore": true,
-    "dictionaries": [
-        "project-dictionary"
-    ],
-    "ignorePaths": [
-        "node_modules",
-        "LICENSE"
-    ],
-    "words": [
-        "Cqrs",
-        "nunit",
-        "Saan",
-        "saansoft"
-    ]
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "caseSensitive": false,
+  "language": "en-GB",
+  "useGitignore": true,
+  "dictionaries": [
+    "project-dictionary"
+  ],
+  "ignorePaths": [
+    "LICENSE"
+  ],
+  "dictionaryDefinitions": [
+    {
+      "name": "project-dictionary",
+      "path": "./dictionary.dic",
+      "description": "Words used in this project",
+      "addWords": true
+    }
+  ],
 }
