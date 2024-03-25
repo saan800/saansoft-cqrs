@@ -22,7 +22,6 @@ if (Regex.IsMatch(msg, pattern))
   return 0;
 }
 
-Console.ForegroundColor = ConsoleColor.Red;
 Console.WriteLine("");
 Console.WriteLine($"Invalid commit message: {msg}");
 Console.WriteLine("");
