@@ -14,6 +14,8 @@ public class Class1
         {
             Name = "Bob"
         };
+
+
     }
 
     public class TestClass
