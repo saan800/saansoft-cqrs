@@ -8,14 +8,7 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
     steps:
       - uses: actions/checkout@v4
       - uses: marocchino/validate-dependabot@v3
         id: validate
-      - uses: marocchino/sticky-pull-request-comment@v2
-        if: always()
-        with:
-          header: validate-dependabot
-          message: ${{ steps.validate.outputs.markdown }}
