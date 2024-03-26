@@ -17,14 +17,6 @@ jobs:
         id: dependabot-metadata
         uses: dependabot/fetch-metadata@v1
 
-      # - name: Generate GitHub application token
-      #   id: generate-application-token
-      #   uses: peter-murray/workflow-application-token-action@v3
-      #   with:
-      #     application_id: ${{ secrets.APPLICATION_ID }}
-      #     application_private_key: ${{ secrets.APPLICATION_PRIVATE_KEY }}
-      #     permissions: "contents:write, pull_requests:write, workflows:write"
-
       - name: Checkout code
         uses: actions/checkout@v4
 
