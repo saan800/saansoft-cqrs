@@ -1,10 +1,6 @@
 name: Dependabot auto-approve and merge
 
 on:
-  workflow_run:
-    workflows: ['pr']                     # runs after pr workflow
-    types:
-      - completed
   pull_request_target:
     paths:
       - '**.csproj'
