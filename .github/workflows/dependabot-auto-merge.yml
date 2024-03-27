@@ -1,11 +1,6 @@
 name: Dependabot auto-approve and merge
 
-on:
-  pull_request_target:
-    paths:
-      - '**.csproj'
-      - '**.lock.json'
-      - '.github/workflows/*.yml'
+on: pull_request_target
 
 permissions:
   pull-requests: write

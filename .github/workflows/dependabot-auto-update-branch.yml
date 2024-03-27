@@ -1,14 +1,15 @@
 name: Dependabot auto update branch from main
 
-on:
-  push:
-    branches:
-      - dependabot/*
+on: pull_request_target
 
 jobs:
   autoupdate:
     name: autoupdate
     runs-on: ubuntu-latest
+    # Checking the author and fork will prevent your Action run failing on non-Dependabot PRs
+    if: |
+      github.event.repository.fork == false &&
+      github.event.pull_request.user.login == 'dependabot[bot]'
     steps:
       - uses: docker://chinthakagodawita/autoupdate-action:v1
         env:
