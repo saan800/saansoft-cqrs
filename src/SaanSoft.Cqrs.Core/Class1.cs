@@ -7,14 +7,14 @@ public class Class1
     }
 
     /// <summary>
-    /// Receive recieve 
+    /// Receive recieve
     /// </summary>
     public void Mthod1()
     {
         var temp = "wrning";
         Console.WriteLine(temp);
 
-        var testWrningsAsErrors = new TestClass
+        var testWarningsAsErrors = new TestClass
         {
             Name = "Bob"
         };
