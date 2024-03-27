@@ -28,7 +28,7 @@ permissions:
 
 jobs:
   build-and-test:
-    uses: ./.github/workflows/_build-and-test.yml
+    uses: ./.github/workflows/_build_and_test.yml
 
 
 # jobs:
