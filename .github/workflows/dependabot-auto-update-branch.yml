@@ -5,14 +5,16 @@ on: pull_request
 jobs:
   autoupdate:
     name: autoupdate
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     # Checking the author and fork will prevent your Action run failing on non-Dependabot PRs
     if: |
       github.event.repository.fork == false &&
       github.event.pull_request.user.login == 'dependabot[bot]'
     steps:
-      - uses: docker://chinthakagodawita/autoupdate-action:v1
+      - name: Auto update if necessary
+        uses: docker://chinthakagodawita/autoupdate-action:v1
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
           PR_FILTER: "labelled"
           PR_LABELS: "dependencies"
+          MERGE_MSG: 'auto-update from base'
