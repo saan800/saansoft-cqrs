@@ -7,7 +7,8 @@
     "project-dictionary"
   ],
   "ignorePaths": [
-    "LICENSE"
+    "LICENSE",
+    "./dictionary.dic"
   ],
   "dictionaryDefinitions": [
     {

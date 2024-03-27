@@ -10,6 +10,7 @@ public class Tests
     [Test]
     public void Passing()
     {
+        var temp = "cqragfads";
         Assert.Pass();
     }
 

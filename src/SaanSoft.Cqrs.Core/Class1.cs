@@ -6,11 +6,15 @@ public class Class1
     {
     }
 
-    public void Method1()
+    /// <summary>
+    /// Receive recieve 
+    /// </summary>
+    public void Mthod1()
     {
-        Console.WriteLine("Hello World");
+        var temp = "wrning";
+        Console.WriteLine(temp);
 
-        var testWarningsAsErrors = new TestClass
+        var testWrningsAsErrors = new TestClass
         {
             Name = "Bob"
         };

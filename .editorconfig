@@ -9,7 +9,9 @@ indent_size = 2
 insert_final_newline = true
 trim_trailing_whitespace = true
 max_line_length = 120
-
+spelling_languages = en-GB
+spelling_error_severity = warning
+spelling_exclusion_path = .\dictionary.dic
 
 [*.md]
 max_line_length = off
