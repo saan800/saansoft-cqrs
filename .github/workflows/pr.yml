@@ -29,3 +29,6 @@ permissions:
 jobs:
   build-and-test:
     uses: ./.github/workflows/_build_and_test.yml
+  report-unit-tests:
+    uses: ./.github/workflows/_report_test_results.yml
+    if: success() || failure()
