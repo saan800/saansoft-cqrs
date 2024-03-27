@@ -1,0 +1,31 @@
+name: pr
+
+on:
+  pull_request:
+    paths-ignore:
+      - '.githooks/**'
+      - '.idea/**'
+      - '.vs/**'
+      - '.vscode/**'
+      - 'scripts/**'
+      - '**.dic'
+      - '**.md'
+  push:
+    branches:
+      - main
+      - releases/*
+    paths-ignore:
+      - '.githooks/**'
+      - '.idea/**'
+      - '.vs/**'
+      - '.vscode/**'
+      - 'scripts/**'
+      - '**.dic'
+      - '**.md'
+
+permissions:
+  checks: write
+
+jobs:
+  build-and-test:
+    uses: ./.github/workflows/_build_and_test.yml
