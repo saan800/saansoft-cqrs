@@ -1,4 +1,4 @@
-name: pr
+name: ci-cd
 
 on:
   pull_request:
