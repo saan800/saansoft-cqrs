@@ -32,8 +32,15 @@ jobs:
       - name: Build
         run: dotnet build --no-restore --configuration Release
 
-      - name: Run unit tests
+      - name: Run unit tests with trx logger
         run: dotnet test --no-restore --filter FullyQualifiedName~SaanSoft.Tests --logger "trx;LogFileName=unit-test-results-${{ inputs.runs-on }}-${{ inputs.dotnet-version }}.trx" --results-directory reports
+
+      - name: Run unit tests with GitHubActions logger
+        run: >
+          dotnet test
+          --no-restore
+          --configuration Release
+          --logger "GitHubActions;summary.includePassedTests=true;summary.includeSkippedTests=true"
 
       - name: Archive unit test results
         uses: actions/upload-artifact@v4
