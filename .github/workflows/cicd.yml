@@ -7,25 +7,16 @@ on:
       - '.idea/**'
       - '.vs/**'
       - '.vscode/**'
-      - 'scripts/**'
       - '**.dic'
       - '**.md'
   push:
     branches:
       - main
       - releases/*
-    paths-ignore:
-      - '.githooks/**'
-      - '.idea/**'
-      - '.vs/**'
-      - '.vscode/**'
-      - 'scripts/**'
-      - '**.dic'
-      - '**.md'
+    paths:
+      - 'src/**'
 
 permissions:
-  contents: read
-  actions: read
   checks: write
 
 jobs:
