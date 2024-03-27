@@ -35,7 +35,7 @@ jobs:
       - name: Run unit tests
         run: dotnet test --no-restore --filter FullyQualifiedName~SaanSoft.Tests --logger "trx;LogFileName=unit-test-results-${{ inputs.runs-on }}-${{ inputs.dotnet-version }}.trx" --results-directory reports
 
-      - name: Upload unit test results
+      - name: Archive unit test results
         uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
