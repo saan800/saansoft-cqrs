@@ -6,6 +6,7 @@ on:
       - '**.csproj'
       - '**.json'
       - '**.yml'
+
 permissions:
   pull-requests: write
   contents: write

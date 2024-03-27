@@ -36,13 +36,14 @@ jobs:
         run: dotnet build --no-restore --configuration Release
 
       - name: Run unit tests
-        run: dotnet test --no-restore --configuration Release --filter FullyQualifiedName~SaanSoft.Tests --logger "trx;LogFileName=unit-test-results.trx" --results-directory reports
+        run: dotnet test --no-restore --filter FullyQualifiedName~SaanSoft.Tests --logger "trx;LogFileName=unit-test-results.trx" --results-directory reports
 
       - name: Upload test report
         uses: dorny/test-reporter@v1
         if: ${{ always() }}
         with:
-          name: test-results       # Name of the check run which will be created
-          path: "reports/*.trx"    # Path to test results (inside artifact .zip)
-          reporter: dotnet-trx     # Format of test results
+          # Name of the check run which will be created
+          name: Unit test results (${{ inputs.runs-on }} - ${{ inputs.dotnet-version }})
+          path: "reports/*.trx"
+          reporter: dotnet-trx
           fail-on-error: true
