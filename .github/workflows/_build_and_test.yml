@@ -32,10 +32,7 @@ jobs:
       - name: Build
         run: dotnet build --no-restore --configuration Release
 
-      - name: Run unit tests with trx logger
-        run: dotnet test --no-restore --filter FullyQualifiedName~SaanSoft.Tests --logger "trx;LogFileName=unit-test-results-${{ inputs.runs-on }}-${{ inputs.dotnet-version }}.trx" --results-directory reports
-
-      - name: Run unit tests with GitHubActions logger
+      - name: Run unit tests
         run: >
           dotnet test
           --no-restore
@@ -44,9 +41,9 @@ jobs:
           --
           RunConfiguration.CollectSourceInformation=true
 
-      - name: Archive unit test results
-        uses: actions/upload-artifact@v4
-        if: ${{ always() }}
-        with:
-          name: results-unit-test-${{ inputs.runs-on }}-${{ inputs.dotnet-version }}
-          path: reports
+      # - name: Archive unit test results
+      #   uses: actions/upload-artifact@v4
+      #   if: ${{ always() }}
+      #   with:
+      #     name: results-unit-test-${{ inputs.runs-on }}-${{ inputs.dotnet-version }}
+      #     path: reports

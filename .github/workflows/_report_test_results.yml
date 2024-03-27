@@ -14,17 +14,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Download all reports
-        uses: actions/download-artifact@v4
-        with:
-          path: reports
-          pattern: results-*
-          github-token: ${{ secrets.token }}
+      # - name: Download all reports
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     path: reports
+      #     pattern: results-*
+      #     github-token: ${{ secrets.token }}
 
-      - name: Build and upload unit tests report
-        uses: dorny/test-reporter@v1
-        with:
-          name: Unit test results                     # Name of the check run which will be created
-          path: "reports/results-unit-test-*/*.trx"   # Path to test results (inside artifact .zip)
-          reporter: dotnet-trx                        # Format of test results
-          fail-on-error: true
+      # - name: Build and upload unit tests report
+      #   uses: dorny/test-reporter@v1
+      #   with:
+      #     name: Unit test results                     # Name of the check run which will be created
+      #     path: "reports/results-unit-test-*/*.trx"   # Path to test results (inside artifact .zip)
+      #     reporter: dotnet-trx                        # Format of test results
+      #     fail-on-error: true
