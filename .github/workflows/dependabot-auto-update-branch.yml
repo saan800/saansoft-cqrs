@@ -5,7 +5,7 @@ on: pull_request
 jobs:
   autoupdate:
     name: autoupdate
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     # Checking the author and fork will prevent your Action run failing on non-Dependabot PRs
     if: |
       github.event.repository.fork == false &&
