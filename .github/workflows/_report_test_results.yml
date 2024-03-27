@@ -1,4 +1,8 @@
-on: workflow_call
+on:
+  workflow_call:
+    secrets:
+      token:
+        required: true
 
 permissions:
   checks: write
@@ -16,7 +20,7 @@ jobs:
         with:
           path: reports
           pattern: results-*
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.token }}
 
       - name: TEMP Display structure of downloaded files
         run: ls -R reports

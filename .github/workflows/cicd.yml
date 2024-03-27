@@ -32,6 +32,8 @@ jobs:
   build-and-test:
     uses: ./.github/workflows/_build_and_test.yml
   report-unit-tests:
-    needs: build-and-test
     uses: ./.github/workflows/_report_test_results.yml
+    needs: build-and-test
     if: success() || failure()
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}
