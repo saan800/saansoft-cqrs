@@ -6,7 +6,7 @@ jobs:
   # ------------------------------------------------------------------------------------------------------------------------------------------------
   changed_files:
     runs-on: ubuntu-latest
-    name: Test changed-files
+    name: test-changed-files
     steps:
 
       - name: Checkout
