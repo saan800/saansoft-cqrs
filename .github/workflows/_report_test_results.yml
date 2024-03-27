@@ -18,7 +18,7 @@ jobs:
         #  pattern: unit-test-results-*
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: TEMP: Display structure of downloaded files
+      - name: TEMP Display structure of downloaded files
         run: ls -R reports
 
       - name: Build and upload report
