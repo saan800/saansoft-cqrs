@@ -40,7 +40,7 @@ jobs:
 
       - name: Upload test report
         uses: dorny/test-reporter@v1
-        if: ${{ always() }}
+        if: success() || failure()
         with:
           # Name of the check run which will be created
           name: Unit test results (${{ inputs.runs-on }} - ${{ inputs.dotnet-version }})
