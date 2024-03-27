@@ -7,6 +7,15 @@ CQRS and Event Sourcing implementation for c#
 
 ## Setup
 
+### Signed commits
+
+So we can attribute changes to the people involved we like to have signed commits
+
+```shell
+git config user.name "John Doe"
+git config user.email johndoe@example.com
+```
+
 ### Git Hooks
 
 Run the following to enable git hooks
