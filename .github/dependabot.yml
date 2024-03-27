@@ -24,7 +24,7 @@ updates:
         update-types: ["version-update:semver-major"]
     schedule:
       interval: daily
-      time: "11:00"
+      time: "06:00"
       timezone: "Australia/Perth"
     commit-message:
       prefix: "dependabot(nuget): "
