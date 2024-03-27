@@ -22,9 +22,6 @@ jobs:
           pattern: results-*
           github-token: ${{ secrets.token }}
 
-      - name: TEMP Display structure of downloaded files
-        run: ls -R reports
-
       - name: Build and upload unit tests report
         uses: dorny/test-reporter@v1
         with:
