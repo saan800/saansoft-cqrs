@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   build-and-test:
-    name: Build and test
+    name: build-and-test
     runs-on: ${{ inputs.runs-on }}
     strategy:
       fail-fast: false
