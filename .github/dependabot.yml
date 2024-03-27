@@ -6,7 +6,7 @@ updates:
     directory: "/"
     schedule:
       interval: daily
-      time: "21:45"
+      time: "22:30"
       timezone: "Australia/Perth"
     commit-message:
       prefix: "dependabot(github-actions): "
@@ -26,7 +26,7 @@ updates:
         update-types: ["version-update:semver-major"]
     schedule:
       interval: daily
-      time: "21:45"
+      time: "22:30"
       timezone: "Australia/Perth"
     commit-message:
       prefix: "dependabot(nuget): "
