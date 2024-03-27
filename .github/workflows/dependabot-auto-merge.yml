@@ -6,7 +6,7 @@ permissions:
   contents: write
 
 jobs:
-  dependabot:
+  dependabot-auto-approve-and-merge:
     runs-on: ubuntu-latest
     # Checking the author and fork will prevent your Action run failing on non-Dependabot PRs
     if: |
