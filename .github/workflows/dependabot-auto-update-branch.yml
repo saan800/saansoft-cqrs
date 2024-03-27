@@ -1,6 +1,6 @@
 name: Dependabot auto update branch from main
 
-on: pull_request_target
+on: pull_request
 
 jobs:
   autoupdate:
