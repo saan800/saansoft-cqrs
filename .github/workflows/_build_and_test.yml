@@ -40,7 +40,7 @@ jobs:
           dotnet test
           --no-restore
           --configuration Release
-          --logger "GitHubActions;summary.includePassedTests=true;summary.includeSkippedTests=true"
+          --logger "GitHubActions;summary.includePassedTests=true;summary.includeSkippedTests=true;annotations.titleFormat=@test;annotations.messageFormat=@error\n@trace"
           --
           RunConfiguration.CollectSourceInformation=true
 

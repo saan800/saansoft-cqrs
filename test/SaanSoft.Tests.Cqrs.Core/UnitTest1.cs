@@ -18,7 +18,7 @@ public class Tests
     [Test]
     public void Failing()
     {
-        Assert.Fail();
+        throw new Exception("This test failed!");
     }
 }
 
