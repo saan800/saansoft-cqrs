@@ -35,5 +35,12 @@ jobs:
           ALL_CHANGED_FILES: ${{ steps.changed-csharp-files.outputs.all_changed_files }}
         run: |
           chmod +x ./scripts/lint-dotnet.sh
-          ./scripts/lint-dotnet.sh "${ALL_CHANGED_FILES}" --verify-no-changes
+          ./scripts/lint-dotnet.sh "${ALL_CHANGED_FILES}" --verify-no-changes --report reports/dotnet-format-report.json
+
+      - name: Archive unit test results
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: dotnet-format-failures-report
+          path: reports
 
