@@ -5,7 +5,7 @@ on:
     paths:
       - '**.csproj'
       - '**.lock.json'
-      - '**.yml'
+      - '.github/workflows/*.yml'
 
 permissions:
   pull-requests: write
@@ -20,7 +20,7 @@ jobs:
       github.event.pull_request.user.login == 'dependabot[bot]'
     steps:
       - name: Dependabot metadata
-        uses: dependabot/fetch-metadata@v2
+        uses: dependabot/fetch-metadata@v1
         id: dependabot-metadata
 
       - name: Checkout code
