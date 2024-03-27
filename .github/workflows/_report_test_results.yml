@@ -8,14 +8,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      # - name: Checkout
+      #   uses: actions/checkout@v3
 
       - name: Download all reports
         uses: actions/download-artifact@v4
         with:
           path: reports
-        #  pattern: unit-test-results-*
+        #  pattern: results-*
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: TEMP Display structure of downloaded files
@@ -25,7 +25,7 @@ jobs:
         uses: dorny/test-reporter@v1
         with:
           name: Unit test results                     # Name of the check run which will be created
-          path: "reports/unit-test-results-*/*.trx"   # Path to test results (inside artifact .zip)
+          path: "reports/results-unit-test-*/*.trx"   # Path to test results (inside artifact .zip)
           reporter: dotnet-trx                        # Format of test results
           fail-on-error: true
 

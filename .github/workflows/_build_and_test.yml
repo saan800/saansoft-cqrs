@@ -39,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
-          name: unit-test-results-${{ inputs.runs-on }}-${{ inputs.dotnet-version }}
+          name: results-unit-test-${{ inputs.runs-on }}-${{ inputs.dotnet-version }}
           path: reports
 
       # - name: Upload test report
