@@ -1,0 +1,48 @@
+name: build-and-test
+
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        required: false
+        type: string
+        default: "ubuntu-latest"
+      dotnet-version:
+        required: false
+        type: string
+        default: "8.0"
+
+jobs:
+  build-and-test:
+    runs-on: ${{ inputs.runs-on }}
+    strategy:
+      fail-fast: false
+    permissions:
+      checks: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ inputs.dotnet-version }}
+
+      - name: Restore packages
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Run unit tests
+        run: dotnet test --no-restore --configuration Release --filter FullyQualifiedName~SaanSoft.Tests --logger "trx;LogFileName=unit-test-results.trx" --results-directory reports
+
+      - name: Upload test report
+        uses: dorny/test-reporter@v1
+        if: ${{ always() }}
+        with:
+          name: test-results       # Name of the check run which will be created
+          path: "reports/*.trx"    # Path to test results (inside artifact .zip)
+          reporter: dotnet-trx     # Format of test results
+          fail-on-error: true
