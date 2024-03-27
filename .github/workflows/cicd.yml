@@ -26,7 +26,7 @@ jobs:
     uses: ./.github/workflows/_lint.yml
   upload-reports:
     uses: ./.github/workflows/_report_test_results.yml
-    needs: [build-and-test]
+    needs: [build-and-test, lint]
     if: success() || failure()
     secrets:
       token: ${{ secrets.GITHUB_TOKEN }}
