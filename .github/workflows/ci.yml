@@ -20,6 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
+    permissions:
+      checks: write
 
     steps:
       - name: Checkout
@@ -39,25 +41,25 @@ jobs:
       - name: Run unit tests
         run: dotnet test --no-restore --configuration Release --filter FullyQualifiedName~SaanSoft.Tests --logger "trx;LogFileName=unit-test-results.trx" --results-directory reports
 
-      - name: Upload dotnet test results
-        uses: actions/upload-artifact@v4
-        if: ${{ always() }}
-        with:
-          name: test-results
-          path: reports
+      # - name: Upload dotnet test results
+      #   uses: actions/upload-artifact@v4
+      #   if: ${{ always() }}
+      #   with:
+      #     name: test-results
+      #     path: reports
 
-      - name: Download dotnet test results
-        uses: actions/download-artifact@v4
-        with:
-          path: reports
+      # - name: Download dotnet test results
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     path: reports
 
       - name: Upload test report
         uses: dorny/test-reporter@v1
         if: ${{ always() }}
         with:
-          name: test-results                    # Name of the check run which will be created
-          path: "reports/test-results/*.trx"    # Path to test results (inside artifact .zip)
-          reporter: dotnet-trx                  # Format of test results
+          name: test-results       # Name of the check run which will be created
+          path: "reports/*.trx"    # Path to test results (inside artifact .zip)
+          reporter: dotnet-trx     # Format of test results
           fail-on-error: true
 
   # test-reports:
