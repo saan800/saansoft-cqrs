@@ -6,12 +6,9 @@ public class Class1
     {
     }
 
-    /// <summary>
-    /// Receive recieve
-    /// </summary>
     public void Mthod1()
     {
-        var temp = "wrning";
+        var temp = "warning";
         Console.WriteLine(temp);
 
         var testWarningsAsErrors = new TestClass
