@@ -24,5 +24,3 @@ fi
 if [ -n "$staged_cs_files" ]; then
     dotnet format --verbosity normal --no-restore --include $staged_cs_files $additional_args
 fi
-
-exit 0
