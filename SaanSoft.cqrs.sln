@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Tests.Cqrs.Core", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Example.InMemory.Api", "examples\SaanSoft.Cqrs.Example.InMemory.Api\SaanSoft.Cqrs.Example.InMemory.Api.csproj", "{14FB4E51-D7DF-4045-BF3D-9635FFE3E309}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C22C944B-A9A4-4E23-B3D1-A6D7856304F3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{446FC180-C478-471E-A0A4-DB7B76C0B674}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,5 +29,9 @@ Global
 		{14FB4E51-D7DF-4045-BF3D-9635FFE3E309}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14FB4E51-D7DF-4045-BF3D-9635FFE3E309}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14FB4E51-D7DF-4045-BF3D-9635FFE3E309}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2078A679-EF3E-4967-BF42-8B3FEC7119D3} = {C22C944B-A9A4-4E23-B3D1-A6D7856304F3}
+		{14FB4E51-D7DF-4045-BF3D-9635FFE3E309} = {446FC180-C478-471E-A0A4-DB7B76C0B674}
 	EndGlobalSection
 EndGlobal
