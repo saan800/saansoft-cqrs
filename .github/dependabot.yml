@@ -10,7 +10,6 @@ updates:
       timezone: "Australia/Perth"
     commit-message:
       prefix: "dependencies(github-actions): "
-      include: scope
 
   - package-ecosystem: nuget
     directory: "/"
@@ -29,8 +28,7 @@ updates:
         update-types: ["version-update:semver-major"]
     schedule:
       interval: daily
-      time: "12:10"
+      time: "12:20"
       timezone: "Australia/Perth"
     commit-message:
       prefix: "dependencies(nuget): "
-      include: scope
