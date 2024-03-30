@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   build-and-test:
-    runs-on: ${{ inputs.runs-on }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
     steps:
@@ -24,7 +24,7 @@ jobs:
       - name: Install .NET Core
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ inputs.dotnet-version }}
+          dotnet-version: 8.0
 
       - name: Restore packages
         run: dotnet restore
@@ -45,7 +45,7 @@ jobs:
       #   uses: actions/upload-artifact@v4
       #   if: ${{ always() }}
       #   with:
-      #     name: results-unit-test-${{ inputs.runs-on }}-${{ inputs.dotnet-version }}
+      #     name: results-unit-test
       #     path: reports
 
   lint:
