@@ -30,7 +30,7 @@ jobs:
         id: pr_info
         run: |
           echo "github.actor: ${{ github.actor }}"
-          echo "github.event.pull_request.head: ${{ toJson(github.event.pull_request.head) }}"
+          echo "github.event.pull_request: ${{ toJson(github.event.pull_request) }}"
           echo "github.event.pull_request.user: ${{ toJson(github.event.pull_request.user) }}"
       #    echo "::set-output name=user::${{ github.event.pull_request.user.login }}"
       #    echo "::set-output name=head_ref::${{ github.event.pull_request.head.ref }}"
@@ -38,7 +38,8 @@ jobs:
 
 
       - name: Dry run merge pull request
-        run: git merge --no-commit --no-ff "${{ github.event.pull_request.head.ref }}"
+        # run: git merge --no-commit --no-ff "${{ github.event.pull_request.head.ref }}"
+        run: git merge --no-commit --no-ff "main"
 
       - name: Check for conflicts
         id: check-conflicts
