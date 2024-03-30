@@ -13,9 +13,9 @@ jobs:
   dependabot-auto-approve-and-merge:
     runs-on: ubuntu-latest
     # Checking the author and fork will prevent your Action run failing on non-Dependabot PRs
-    if: |
-      github.event.repository.fork == false &&
-      github.event.workflow_run.conclusion == 'success'
+    # if: |
+    #   github.event.repository.fork == false &&
+    #   github.event.workflow_run.conclusion == 'success'
     # if: |
     #   github.event.repository.fork == false &&
     #   github.event.pull_request.user.login == 'dependabot[bot]'
