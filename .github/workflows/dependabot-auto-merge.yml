@@ -12,7 +12,7 @@ jobs:
     # Checking the author and fork will prevent your Action run failing on non-Dependabot PRs
     if: |
       github.event.repository.fork == false &&
-      github.event.pull_request.user.login == 'dependabot[bot]'
+      github.actor == 'dependabot[bot]'
     steps:
       - name: Dependabot metadata
         uses: dependabot/fetch-metadata@v2
@@ -21,8 +21,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Dry run merge pull request
+        run: git merge --no-commit --no-ff "${{ github.event.pull_request.head.ref }}"
+
+      - name: Check for conflicts
+        id: check-conflicts
+        run: |
+          if git status | grep -q "both modified"; then
+            echo "Conflict detected in the pull request. Please resolve conflicts."
+            echo "::set-output name=is_success::false"
+            exit 1
+          else
+            echo "No conflicts detected. Pull request can be merged."
+            echo "::set-output name=is_success::true"
+          fi
+
       - name: Approve a PR if not already approved
-        if: ${{ steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major' }}
+        if: ${{
+          steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major' &&
+          steps.check-conflicts.outputs.is_success == 'true'
+          }}
         run: |
           gh pr checkout "$PR_URL" # sets the upstream metadata for `gh pr status`
           if [ "$(gh pr status --json reviewDecision -q .currentBranch.reviewDecision)" != "APPROVED" ];
