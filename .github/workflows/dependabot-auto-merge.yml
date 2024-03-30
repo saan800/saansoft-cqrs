@@ -2,7 +2,7 @@ name: dependabot-auto-approve-and-merge
 
 on:
   workflow_run:
-    workflows: ["build-and-test.yml"]
+    workflows: ["build-and-test"]
     types: [completed]
 
 permissions:
