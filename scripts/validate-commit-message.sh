@@ -36,7 +36,7 @@ if [[ ! $commit_message =~ $valid_msg_regex ]]; then
     echo "    - fix: subject"
     echo "  More info: https://www.conventionalcommits.org/en/v1.0.0/"
     echo ""
-    echo "  ${RED}HELP:${NC}"
+    echo "  ${GREEN}HELP:${NC}"
     echo "    - If you are using zhs command line, and the '!' character for breaking changes. You may get the error:"
     echo "      > zsh: illegal modifier:"
     echo "      In your commit message use single quotes around the commit message."

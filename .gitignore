@@ -22,7 +22,7 @@
 
 ################# JetBrains Rider ################
 # For more Rider gitignore rules: https://github.com/JetBrains/resharper-rider-samples/blob/master/.gitignore
-.idea/
+#.idea/
 
 ################## Visual Studio #################
 .mono/
