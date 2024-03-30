@@ -1,0 +1,46 @@
+# Based on https://nextjs.org/docs/pages/building-your-application/deploying/ci-build-caching#github-actions
+
+name: Build and test
+
+inputs:
+  runs-on:
+    required: false
+    type: string
+    default: "ubuntu-latest"
+  dotnet-version:
+    required: false
+    type: string
+    default: "8.0"
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ inputs.dotnet-version }}
+
+    - name: Restore packages
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+
+    - name: Run unit tests
+      run: >
+        dotnet test
+        --no-restore
+        --configuration Release
+        --logger "GitHubActions;summary.includePassedTests=true;summary.includeSkippedTests=true;annotations.titleFormat=@test;annotations.messageFormat=@error\n@trace"
+        --
+        RunConfiguration.CollectSourceInformation=true
+
+    # - name: Archive unit test results
+    #   uses: actions/upload-artifact@v4
+    #   if: ${{ always() }}
+    #   with:
+    #     name: results-unit-test-${{ inputs.runs-on }}-${{ inputs.dotnet-version }}
+    #     path: reports
