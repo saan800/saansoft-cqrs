@@ -25,6 +25,19 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v4
+        
+      - uses: sv-tools/block-merge-conflicts@2fb5852d0efb87ecceed7a3d24ad657dccf47a64
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - uses: ahmadnassri/action-dependabot-auto-merge@v2
+        with:
+          target: patch
+          github-token: ${{secrets.GITHUB_TOKEN}}
+      - uses: ahmadnassri/action-dependabot-auto-merge@v2
+        with:
+          target: minor
+          github-token: ${{secrets.GITHUB_TOKEN}}
 
       - name: Get pull request information
         id: pr_info
