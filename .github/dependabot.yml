@@ -6,7 +6,7 @@ updates:
     directory: "/"
     schedule:
       interval: daily
-      time: "17:00"
+      time: "04:00"
       timezone: "Australia/Perth"
     commit-message:
       prefix: "dependencies(github-actions): "
@@ -20,15 +20,11 @@ updates:
         update-types: ["minor", "patch"]
       testing:
         patterns:
-          - NUnit*
           - xunit*
         update-types: ["minor", "patch"]
-    ignore:
-      - dependency-name: "NUnit*"
-        update-types: ["version-update:semver-major"]
     schedule:
       interval: daily
-      time: "17:00"
+      time: "04:00"
       timezone: "Australia/Perth"
     commit-message:
       prefix: "dependencies(nuget): "
