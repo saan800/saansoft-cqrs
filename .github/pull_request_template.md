@@ -5,5 +5,6 @@
 **Check list:**
 
 - [ ] Linked to any related issues in the PR description
-- [ ] Mark if documentation changes are required or made
-- [ ] Mark if tests were added or updated to cover the changes
+- [ ] Documentation changes are required or have been made
+- [ ] Tests were added or updated to cover the changes
+- [ ] GitHub actions or scripts were updated
