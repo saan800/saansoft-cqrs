@@ -6,10 +6,10 @@ updates:
     directory: "/"
     schedule:
       interval: daily
-      time: "22:30"
+      time: "04:00"
       timezone: "Australia/Perth"
     commit-message:
-      prefix: "dependabot(github-actions): "
+      prefix: "dependencies(github-actions): "
       include: scope
 
   - package-ecosystem: nuget
@@ -18,15 +18,19 @@ updates:
       microsoft:
         patterns:
           - Microsoft*
-      nunit:
+        update-types: ["minor", "patch"]
+      testing:
         patterns:
           - NUnit*
+          - xunit*
+        update-types: ["minor", "patch"]
     ignore:
       - dependency-name: "NUnit*"
         update-types: ["version-update:semver-major"]
     schedule:
       interval: daily
-      time: "22:40"
+      time: "12:10"
       timezone: "Australia/Perth"
     commit-message:
-      prefix: "dependabot(nuget): "
+      prefix: "dependencies(nuget): "
+      include: scope

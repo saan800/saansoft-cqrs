@@ -1,6 +1,10 @@
 name: Dependabot auto-approve and merge
 
-on: pull_request_target
+on:
+  workflow_run:
+    workflows: ["build-and-test"]
+    types:
+      - completed
 
 permissions:
   pull-requests: write
