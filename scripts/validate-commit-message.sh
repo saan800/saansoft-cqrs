@@ -17,7 +17,7 @@ fi
 commit_message="$1"
 
 
-validTypes="breaking change|bugfix|build|ci|chore|docs|feature|fix|hotfix|perf|refactor|revert|style|test"
+validTypes="breaking change|bugfix|build|ci|chore|docs|feat|feature|fix|hotfix|perf|refactor|revert|style|test"
 valid_msg_regex="^($validTypes)(\(.{3,}\))?!?: .{4,}"
 
 if [[ ! $commit_message =~ $valid_msg_regex ]]; then
