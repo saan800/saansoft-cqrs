@@ -1,4 +1,4 @@
-name: Dependabot auto-approve and merge
+name: dependabot-auto-approve-and-merge
 
 on:
   workflow_run:
@@ -15,12 +15,11 @@ jobs:
     # Checking the author and fork will prevent your Action run failing on non-Dependabot PRs
     if: |
       github.event.repository.fork == false &&
-      github.event.workflow_run.event == 'pull_request' &&
-      github.event.workflow_run.conclusion == 'success' &&
-      github.actor == 'dependabot[bot]'
+      github.event.workflow_run.conclusion == 'success'
     # if: |
     #   github.event.repository.fork == false &&
     #   github.event.pull_request.user.login == 'dependabot[bot]'
+    #   github.actor == 'dependabot[bot]'
     steps:
       - name: Dependabot metadata
         uses: dependabot/fetch-metadata@v2
@@ -32,9 +31,11 @@ jobs:
       - name: Get pull request information
         id: pr_info
         run: |
+          echo "github.actor: ${{ github.actor }}"
           echo "github.event.pull_request: ${{ github.event }}"
       #    echo "::set-output name=user::${{ github.event.pull_request.user.login }}"
-        if: github.event_name == 'pull_request'
+      #    echo "::set-output name=head_ref::${{ github.event.pull_request.head.ref }}"
+      # if: github.event_name == 'pull_request'
 
 
       - name: Dry run merge pull request
@@ -52,24 +53,24 @@ jobs:
             echo "::set-output name=is_success::true"
           fi
 
-      - name: Approve a PR if not already approved
-        if: ${{
-          steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major' &&
-          steps.check-conflicts.outputs.is_success == 'true'
-          }}
-        run: |
-          gh pr checkout "$PR_URL" # sets the upstream metadata for `gh pr status`
-          if [ "$(gh pr status --json reviewDecision -q .currentBranch.reviewDecision)" != "APPROVED" ];
-          then gh pr review --approve "$PR_URL" && gh pr merge --auto --squash "${PR_URL}"
-          else echo "PR already approved, skipping additional approvals to minimize emails/notification noise.";
-          fi
-        env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      # - name: Approve a PR if not already approved
+      #   if: ${{
+      #     steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major' &&
+      #     steps.check-conflicts.outputs.is_success == 'true'
+      #     }}
+      #   run: |
+      #     gh pr checkout "$PR_URL" # sets the upstream metadata for `gh pr status`
+      #     if [ "$(gh pr status --json reviewDecision -q .currentBranch.reviewDecision)" != "APPROVED" ];
+      #     then gh pr review --approve "$PR_URL" && gh pr merge --auto --squash "${PR_URL}"
+      #     else echo "PR already approved, skipping additional approvals to minimize emails/notification noise.";
+      #     fi
+      #   env:
+      #     PR_URL: ${{github.event.pull_request.html_url}}
+      #     GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-      - name: Auto-merge for Dependabot PRs
-        if: ${{ steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major' }}
-        run: gh pr merge --auto --squash "$PR_URL"
-        env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      # - name: Auto-merge for Dependabot PRs
+      #   if: ${{ steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major' }}
+      #   run: gh pr merge --auto --squash "$PR_URL"
+      #   env:
+      #     PR_URL: ${{github.event.pull_request.html_url}}
+      #     GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
