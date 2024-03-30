@@ -13,80 +13,34 @@ jobs:
     if: |
       github.event.repository.fork == false &&
       github.event.pull_request.user.login == 'dependabot[bot]'
-    #   github.event.workflow_run.conclusion == 'success'
-    # if: |
-    #   github.event.repository.fork == false &&
-    #   github.event.pull_request.user.login == 'dependabot[bot]'
-    #   github.actor == 'dependabot[bot]'
     steps:
+      - name: Checkout code
+        uses: actions/checkout@1e31de5234b9f8995739874a8ce0492dc87873e2 # v4
+
       - name: Dependabot metadata
         uses: dependabot/fetch-metadata@v2
         id: dependabot-metadata
 
-      - name: Checkout code
-        uses: actions/checkout@v4
-        
-      - uses: sv-tools/block-merge-conflicts@2fb5852d0efb87ecceed7a3d24ad657dccf47a64
+      - name: Check for merge conflicts
+        uses: sv-tools/block-merge-conflicts@2fb5852d0efb87ecceed7a3d24ad657dccf47a64 # v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          
-      - uses: ahmadnassri/action-dependabot-auto-merge@v2
-        with:
-          target: patch
-          github-token: ${{secrets.GITHUB_TOKEN}}
-      - uses: ahmadnassri/action-dependabot-auto-merge@v2
-        with:
-          target: minor
-          github-token: ${{secrets.GITHUB_TOKEN}}
 
-      - name: Get pull request information
-        id: pr_info
+      - name: Approve a PR if not already approved
+        if: ${{ steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major' }}
         run: |
-          echo "github.actor: ${{ github.actor }}"
-          echo "github.event_name: ${{ github.event_name }}"
-          echo "github.event.pull_request.base: ${{ toJson(github.event.pull_request.base) }}"
-      #    echo "::set-output name=user::${{ github.event.pull_request.user.login }}"
-      #    echo "::set-output name=head_ref::${{ github.event.pull_request.head.ref }}"
-      # if: github.event_name == 'pull_request'
-
-      - name: Get latest main
-        # run: git merge --no-commit --no-ff "${{ github.event.pull_request.head.ref }}"
-        run: git fetch origin main
-        
-      - name: Dry run merge pull request
-        # run: git merge --no-commit --no-ff "${{ github.event.pull_request.head.ref }}"
-        run: git merge --no-commit --no-ff main
-
-      - name: Check for conflicts
-        id: check-conflicts
-        run: |
-          if git status | grep -q "both modified"; then
-            echo "Conflict detected in the pull request. Please resolve conflicts."
-            echo "::set-output name=is_success::false"
-            exit 1
-          else
-            echo "No conflicts detected. Pull request can be merged."
-            echo "::set-output name=is_success::true"
+          gh pr checkout "$PR_URL" # sets the upstream metadata for `gh pr status`
+          if [ "$(gh pr status --json reviewDecision -q .currentBranch.reviewDecision)" != "APPROVED" ];
+          then gh pr review --approve "$PR_URL" && gh pr merge --auto --squash "${PR_URL}"
+          else echo "PR already approved, skipping additional approvals to minimize emails/notification noise.";
           fi
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-      # - name: Approve a PR if not already approved
-      #   if: ${{
-      #     steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major' &&
-      #     steps.check-conflicts.outputs.is_success == 'true'
-      #     }}
-      #   run: |
-      #     gh pr checkout "$PR_URL" # sets the upstream metadata for `gh pr status`
-      #     if [ "$(gh pr status --json reviewDecision -q .currentBranch.reviewDecision)" != "APPROVED" ];
-      #     then gh pr review --approve "$PR_URL" && gh pr merge --auto --squash "${PR_URL}"
-      #     else echo "PR already approved, skipping additional approvals to minimize emails/notification noise.";
-      #     fi
-      #   env:
-      #     PR_URL: ${{github.event.pull_request.html_url}}
-      #     GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
-      # - name: Auto-merge for Dependabot PRs
-      #   if: ${{ steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major' }}
-      #   run: gh pr merge --auto --squash "$PR_URL"
-      #   env:
-      #     PR_URL: ${{github.event.pull_request.html_url}}
-      #     GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - name: Auto-merge
+        if: ${{ steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major' }}
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
