@@ -1,6 +1,9 @@
 name: Dependabot auto-approve and merge
 
-on: pull_request
+on:
+  workflow_run:
+    workflows: ["build-and-test.yml"]
+    types: [completed]
 
 permissions:
   pull-requests: write
@@ -12,7 +15,12 @@ jobs:
     # Checking the author and fork will prevent your Action run failing on non-Dependabot PRs
     if: |
       github.event.repository.fork == false &&
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success' &&
       github.actor == 'dependabot[bot]'
+    # if: |
+    #   github.event.repository.fork == false &&
+    #   github.event.pull_request.user.login == 'dependabot[bot]'
     steps:
       - name: Dependabot metadata
         uses: dependabot/fetch-metadata@v2
@@ -20,6 +28,14 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Get pull request information
+        id: pr_info
+        run: |
+          echo "github.event.pull_request: ${{ github.event }}"
+      #    echo "::set-output name=user::${{ github.event.pull_request.user.login }}"
+        if: github.event_name == 'pull_request'
+
 
       - name: Dry run merge pull request
         run: git merge --no-commit --no-ff "${{ github.event.pull_request.head.ref }}"

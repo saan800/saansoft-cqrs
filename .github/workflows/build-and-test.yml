@@ -14,12 +14,81 @@ permissions:
 
 jobs:
   build-and-test:
-    uses: ./.github/workflows/_build_and_test.yml
+    runs-on: ${{ inputs.runs-on }}
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ inputs.dotnet-version }}
+
+      - name: Restore packages
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Run unit tests
+        run: >
+          dotnet test
+          --no-restore
+          --configuration Release
+          --logger "GitHubActions;summary.includePassedTests=true;summary.includeSkippedTests=true;annotations.titleFormat=@test;annotations.messageFormat=@error\n@trace"
+          --
+          RunConfiguration.CollectSourceInformation=true
+
+      # - name: Archive unit test results
+      #   uses: actions/upload-artifact@v4
+      #   if: ${{ always() }}
+      #   with:
+      #     name: results-unit-test-${{ inputs.runs-on }}-${{ inputs.dotnet-version }}
+      #     path: reports
+
   lint:
-    uses: ./.github/workflows/_lint.yml
-  upload-reports:
-    uses: ./.github/workflows/_report_test_results.yml
-    needs: [build-and-test, lint]
-    if: success() || failure()
-    secrets:
-      token: ${{ secrets.GITHUB_TOKEN }}
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get all changed c# files
+        id: changed-csharp-files
+        uses: tj-actions/changed-files@v44
+        with:
+          # Avoid using single or double quotes for multiline patterns
+          files: |
+             **.cs
+
+      - name: List all changed files c# files
+        if: steps.changed-csharp-files.outputs.any_changed == 'true'
+        env:
+          ALL_CHANGED_FILES: ${{ steps.changed-csharp-files.outputs.all_changed_files }}
+        run: |
+          for file in ${ALL_CHANGED_FILES}; do
+            echo "- $file"
+          done
+
+      - name: Lint c# files
+        if: steps.changed-csharp-files.outputs.any_changed == 'true'
+        env:
+          ALL_CHANGED_FILES: ${{ steps.changed-csharp-files.outputs.all_changed_files }}
+        run: |
+          chmod +x ./scripts/lint-dotnet.sh
+          ./scripts/lint-dotnet.sh "${ALL_CHANGED_FILES}" --verify-no-changes --report reports/dotnet-format-report.json
+
+      - name: Archive linc c# results
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: dotnet-format-errors
+          path: reports
+  # upload-reports:
+  #   uses: ./.github/workflows/_report_test_results.yml
+  #   needs: [build-and-test, lint]
+  #   if: success() || failure()
+  #   secrets:
+  #     token: ${{ secrets.GITHUB_TOKEN }}
