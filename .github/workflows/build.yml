@@ -21,7 +21,8 @@ permissions:
 
 jobs:
   build-and-test:
-    uses: ./.github/workflows/_build_and_test.yml
+    #uses: ./.github/workflows/_build_and_test.yml
+    uses: ./.github/actions/build-and-test
   lint:
     uses: ./.github/workflows/_lint.yml
   upload-reports:
