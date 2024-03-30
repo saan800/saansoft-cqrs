@@ -30,7 +30,7 @@ jobs:
         id: pr_info
         run: |
           echo "github.actor: ${{ github.actor }}"
-          echo "github.event.pull_request: ${{ github.event }}"
+          echo "github.event.pull_request: ${{ toJson(github.event) }}"
       #    echo "::set-output name=user::${{ github.event.pull_request.user.login }}"
       #    echo "::set-output name=head_ref::${{ github.event.pull_request.head.ref }}"
       # if: github.event_name == 'pull_request'
