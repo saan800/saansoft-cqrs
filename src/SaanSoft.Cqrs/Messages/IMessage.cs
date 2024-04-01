@@ -36,7 +36,7 @@ public interface IMessage
 /// <summary>
 /// Base class with common properties for all messages
 /// You should never directly inherit from IMessage
-/// Use <see cref="ICommand{TMessageKey}"/>, <see cref="IEvent{TMessageKey, TEntityKey}"/> or <see cref="IQuery{TMessageId, TQuery, TResult}"/> insteead
+/// Use <see cref="ICommand{TMessageKey}"/>, <see cref="IEvent{TMessageKey, TEntityKey}"/> or <see cref="IQuery{TMessageId, TQuery, TResult}"/> instead
 /// </summary>
 public interface IMessage<TMessageId> : IMessage
 {

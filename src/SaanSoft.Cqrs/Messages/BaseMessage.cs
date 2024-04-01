@@ -6,7 +6,7 @@ namespace SaanSoft.Cqrs.Messages;
 /// Base class with common properties for all messages
 /// You should never directly inherit from BaseMessage{TMessageId}
 ///
-/// Use <see cref="BaseCommand{TMessageId}"/>, <see cref="BaseEvent{TMessageId, TEntityKey}"/> or <see cref="BaseQuery{TMessageId, TResult}"/> insteead
+/// Use <see cref="BaseCommand{TMessageId}"/>, <see cref="BaseEvent{TMessageId, TEntityKey}"/> or <see cref="BaseQuery{TMessageId, TResult}"/> instead
 /// </summary>
 public abstract class BaseMessage<TMessageId> : IMessage<TMessageId>
 {
