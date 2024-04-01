@@ -23,7 +23,7 @@ public abstract class BaseEvent<TMessageId, TEntityKey> : BaseMessage<TMessageId
     }
 
     protected BaseEvent(TEntityKey key, TMessageId id, IMessage<TMessageId> triggeredByMessage)
-        : this(key, id, triggeredByMessage.TriggeredById, triggeredByMessage.CorrelationId, triggeredByMessage.AuthenticatedId)
+        : this(key, id, triggeredByMessage.Id, triggeredByMessage.CorrelationId, triggeredByMessage.AuthenticatedId)
     {
     }
 }
