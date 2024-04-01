@@ -18,7 +18,7 @@ public abstract class BaseMessage<TMessageId> : IMessage<TMessageId>
 
     public string TypeFullName { get; set; }
 
-    protected BaseMessage(TMessageId id, TMessageId? triggeredById, string? correlationId = null, string? authenticatedId = null)
+    protected BaseMessage(TMessageId id, TMessageId? triggeredById = default, string? correlationId = null, string? authenticatedId = null)
     {
         Id = id;
         if (!string.IsNullOrWhiteSpace(correlationId)) CorrelationId = correlationId;

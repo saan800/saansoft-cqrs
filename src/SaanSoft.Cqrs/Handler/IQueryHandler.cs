@@ -10,6 +10,7 @@ public interface IQueryHandler<in TQuery, TResult>
     /// Handle the query and return the result, including any errors
     /// </summary>
     /// <param name="query"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public Task<TResult> HandleAsync(TQuery query);
+    public Task<TResult> HandleAsync(TQuery query, CancellationToken cancellationToken = default);
 }

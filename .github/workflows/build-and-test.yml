@@ -7,7 +7,9 @@ on:
       - main
       - releases/*
     paths:
+      - 'examples/**'
       - 'src/**'
+      - 'test/**'
 
 permissions:
   checks: write

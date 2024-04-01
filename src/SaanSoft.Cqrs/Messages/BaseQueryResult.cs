@@ -13,7 +13,7 @@ public abstract class BaseQueryResult : IQueryResult
         ErrorMessage = errorMessage;
     }
 
-    public required bool IsSuccess { get; set; }
+    public bool IsSuccess { get; set; } = false;
 
     public string? ErrorMessage { get; set; }
 }
