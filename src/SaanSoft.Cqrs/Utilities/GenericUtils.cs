@@ -13,7 +13,8 @@ public static class GenericUtils
             return true;
 
         // If value is a value type and equals its default value, return true
-        if (value.Equals(default(TMessageId)))
+        var temp = default(TMessageId);
+        if (value.Equals(temp))
             return true;
 
         // Otherwise, return false
