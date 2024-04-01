@@ -38,18 +38,9 @@ jobs:
           --no-restore
           --configuration Release
           --logger "GitHubActions;summary.includePassedTests=true;summary.includeSkippedTests=true;annotations.titleFormat=@test;annotations.messageFormat=@error\n@trace"
-          --logger=junit
-          --results-directory="./reports/unittests/"
           /p:CollectCoverage=true /p:Exclude="SaanSoft.Tests.*" /p:CoverletOutputFormat=\"opencover,json\" /p:CoverletOutput="../../reports/coverage/"  /p:MergeWith="../../reports/coverage/coverage.json"
           --
           RunConfiguration.CollectSourceInformation=true
-
-      - name: Upload test summary
-        if: always() && github.event_name == 'pull_request'
-        uses: test-summary/action@v2
-        with:
-          paths: |
-            reports/unittests/*.xml
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
