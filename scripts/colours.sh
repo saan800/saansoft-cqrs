@@ -1,4 +1,5 @@
-# More colours in top answer on https://stackoverflow.com/questions/5947742/how-to-change-the-output-color-of-echo-in-linux
+# More colours in top answer on
+# - https://stackoverflow.com/questions/5947742/how-to-change-the-output-color-of-echo-in-linux
 # Add colours to echo console statements.
 # Ensure you reset concole colours after using them with ${NC}
 # > echo ${BLUE}Something is happening...${NC}

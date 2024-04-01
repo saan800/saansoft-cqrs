@@ -14,7 +14,8 @@ public abstract class BaseQuery<TQuery, TResult> : BaseQuery<Guid, TQuery, TResu
         : this(triggeredByMessage.Id, triggeredByMessage.CorrelationId, triggeredByMessage.AuthenticatedId) { }
 }
 
-public abstract class BaseQuery<TMessageId, TQuery, TResult> : BaseMessage<TMessageId>, IQuery<TMessageId, TQuery, TResult>
+public abstract class BaseQuery<TMessageId, TQuery, TResult>
+    : BaseMessage<TMessageId>, IQuery<TMessageId, TQuery, TResult>
     where TQuery : IQuery<TMessageId, TQuery, TResult>
     where TResult : IQueryResult
 {
