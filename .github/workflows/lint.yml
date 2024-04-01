@@ -1,10 +1,6 @@
 name: lint
 
-on:
-  pull_request:
-    paths:
-      - ".github/dependabot.yml"
-      - ".github/workflows/dependabot-validate.yml"
+on: pull_request
 
 jobs:
   build:
