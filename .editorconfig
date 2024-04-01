@@ -13,9 +13,15 @@ spelling_languages = en-GB
 spelling_error_severity = warning
 spelling_exclusion_path = .\dictionary.dic
 
+[*.json]
+insert_final_newline = off
+
 [*.md]
 max_line_length = off
 trim_trailing_whitespace = false
+
+[*.{yml,yaml}]
+max_line_length = off
 
 [*.sln]
 max_line_length = off
