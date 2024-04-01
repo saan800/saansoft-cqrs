@@ -9,7 +9,7 @@ public abstract class BaseEvent : BaseEvent<Guid, Guid>
         : base(key, Guid.NewGuid(), triggeredById, correlationId, authenticatedId) { }
 
     protected BaseEvent(Guid key, IMessage<Guid> triggeredByMessage)
-        : this(key, triggeredByMessage.Id, triggeredByMessage.CorrelationId, triggeredByMessage.AuthenticatedId) { }
+        : base(key, Guid.NewGuid(), triggeredByMessage) { }
 }
 
 public abstract class BaseEvent<TMessageId, TEntityKey> : BaseMessage<TMessageId>, IEvent<TMessageId, TEntityKey>

@@ -11,7 +11,7 @@ public abstract class BaseQuery<TQuery, TResult> : BaseQuery<Guid, TQuery, TResu
         : base(Guid.NewGuid(), triggeredById, correlationId, authenticatedId) { }
 
     protected BaseQuery(IMessage<Guid> triggeredByMessage)
-        : this(triggeredByMessage.Id, triggeredByMessage.CorrelationId, triggeredByMessage.AuthenticatedId) { }
+        : base(Guid.NewGuid(), triggeredByMessage) { }
 }
 
 public abstract class BaseQuery<TMessageId, TQuery, TResult>

@@ -9,7 +9,7 @@ public abstract class BaseCommand : BaseCommand<Guid>
         : base(Guid.NewGuid(), triggeredById, correlationId, authenticatedId) { }
 
     protected BaseCommand(IMessage<Guid> triggeredByMessage)
-        : this(triggeredByMessage.Id, triggeredByMessage.CorrelationId, triggeredByMessage.AuthenticatedId) { }
+        : base(Guid.NewGuid(), triggeredByMessage) { }
 }
 
 public abstract class BaseCommand<TMessageId> : BaseMessage<TMessageId>, ICommand<TMessageId>
