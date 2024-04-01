@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "EditorConfig.EditorConfig",
+    "ms-dotnettools.csdevkit",
     "streetsidesoftware.code-spell-checker",
   ]
 }

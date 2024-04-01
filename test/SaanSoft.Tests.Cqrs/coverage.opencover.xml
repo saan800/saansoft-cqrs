@@ -1,0 +1,509 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CoverageSession>
+  <Summary numSequencePoints="71" visitedSequencePoints="42" numBranchPoints="24" visitedBranchPoints="18" sequenceCoverage="59.15" branchCoverage="75" maxCyclomaticComplexity="55" minCyclomaticComplexity="55" visitedClasses="8" numClasses="10" visitedMethods="21" numMethods="33" />
+  <Modules>
+    <Module hash="F045595C-99AB-4BE5-9FF0-360B3C2DC54D">
+      <ModulePath>SaanSoft.Cqrs.dll</ModulePath>
+      <ModuleTime>2024-04-01T06:50:39</ModuleTime>
+      <ModuleName>SaanSoft.Cqrs</ModuleName>
+      <Files>
+        <File uid="1" fullPath="/Users/sandragreenhalgh/repos/saan800/saansoft-cqrs/src/SaanSoft.Cqrs/Utilities/GenericUtils.cs" />
+        <File uid="2" fullPath="/Users/sandragreenhalgh/repos/saan800/saansoft-cqrs/src/SaanSoft.Cqrs/Messages/BaseCommand.cs" />
+        <File uid="3" fullPath="/Users/sandragreenhalgh/repos/saan800/saansoft-cqrs/src/SaanSoft.Cqrs/Messages/BaseEvent.cs" />
+        <File uid="4" fullPath="/Users/sandragreenhalgh/repos/saan800/saansoft-cqrs/src/SaanSoft.Cqrs/Messages/BaseMessage.cs" />
+        <File uid="5" fullPath="/Users/sandragreenhalgh/repos/saan800/saansoft-cqrs/src/SaanSoft.Cqrs/Messages/BaseQuery.cs" />
+        <File uid="6" fullPath="/Users/sandragreenhalgh/repos/saan800/saansoft-cqrs/src/SaanSoft.Cqrs/Messages/BaseQueryResult.cs" />
+        <File uid="7" fullPath="/Users/sandragreenhalgh/repos/saan800/saansoft-cqrs/src/SaanSoft.Cqrs/Messages/CommandResult.cs" />
+      </Files>
+      <Classes>
+        <Class>
+          <Summary numSequencePoints="9" visitedSequencePoints="7" numBranchPoints="8" visitedBranchPoints="5" sequenceCoverage="77.77" branchCoverage="62.5" maxCyclomaticComplexity="8" minCyclomaticComplexity="8" visitedClasses="1" numClasses="1" visitedMethods="1" numMethods="1" />
+          <FullName>SaanSoft.Cqrs.Utilities.GenericUtils</FullName>
+          <Methods>
+            <Method cyclomaticComplexity="8" nPathComplexity="0" sequenceCoverage="77.77" branchCoverage="62.5" isConstructor="False" isGetter="False" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="9" visitedSequencePoints="7" numBranchPoints="8" visitedBranchPoints="5" sequenceCoverage="77.77" branchCoverage="62.5" maxCyclomaticComplexity="8" minCyclomaticComplexity="8" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
+              <MetadataToken />
+              <Name>System.Boolean SaanSoft.Cqrs.Utilities.GenericUtils::IsNullOrDefault(TMessageId)</Name>
+              <FileRef uid="1" />
+              <SequencePoints>
+                <SequencePoint vc="12" uspid="6" ordinal="0" sl="6" sc="1" el="6" ec="2" bec="0" bev="0" fileid="1" />
+                <SequencePoint vc="12" uspid="8" ordinal="1" sl="8" sc="1" el="8" ec="2" bec="2" bev="1" fileid="1" />
+                <SequencePoint vc="0" uspid="9" ordinal="2" sl="9" sc="1" el="9" ec="2" bec="0" bev="0" fileid="1" />
+                <SequencePoint vc="12" uspid="12" ordinal="3" sl="12" sc="1" el="12" ec="2" bec="2" bev="2" fileid="1" />
+                <SequencePoint vc="6" uspid="13" ordinal="4" sl="13" sc="1" el="13" ec="2" bec="0" bev="0" fileid="1" />
+                <SequencePoint vc="6" uspid="16" ordinal="5" sl="16" sc="1" el="16" ec="2" bec="4" bev="2" fileid="1" />
+                <SequencePoint vc="0" uspid="17" ordinal="6" sl="17" sc="1" el="17" ec="2" bec="0" bev="0" fileid="1" />
+                <SequencePoint vc="6" uspid="20" ordinal="7" sl="20" sc="1" el="20" ec="2" bec="0" bev="0" fileid="1" />
+                <SequencePoint vc="12" uspid="21" ordinal="8" sl="21" sc="1" el="21" ec="2" bec="0" bev="0" fileid="1" />
+              </SequencePoints>
+              <BranchPoints>
+                <BranchPoint vc="0" uspid="8" ordinal="0" path="0" offset="12" offsetend="14" sl="8" fileid="1" />
+                <BranchPoint vc="12" uspid="8" ordinal="1" path="1" offset="12" offsetend="18" sl="8" fileid="1" />
+                <BranchPoint vc="6" uspid="12" ordinal="2" path="0" offset="40" offsetend="42" sl="12" fileid="1" />
+                <BranchPoint vc="6" uspid="12" ordinal="3" path="1" offset="40" offsetend="46" sl="12" fileid="1" />
+                <BranchPoint vc="0" uspid="16" ordinal="4" path="0" offset="62" offsetend="64" sl="16" fileid="1" />
+                <BranchPoint vc="6" uspid="16" ordinal="5" path="1" offset="62" offsetend="72" sl="16" fileid="1" />
+                <BranchPoint vc="0" uspid="16" ordinal="6" path="0" offset="102" offsetend="104" sl="16" fileid="1" />
+                <BranchPoint vc="6" uspid="16" ordinal="7" path="1" offset="102" offsetend="108" sl="16" fileid="1" />
+              </BranchPoints>
+              <MethodPoint vc="7" uspid="0" p8:type="SequencePoint" ordinal="0" offset="0" sc="0" sl="6" ec="1" el="21" bec="0" bev="0" fileid="1" xmlns:p8="xsi" />
+            </Method>
+          </Methods>
+        </Class>
+        <Class>
+          <Summary numSequencePoints="3" visitedSequencePoints="3" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="1" numClasses="1" visitedMethods="3" numMethods="3" />
+          <FullName>SaanSoft.Cqrs.Messages.BaseCommand</FullName>
+          <Methods>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100" branchCoverage="100" isConstructor="True" isGetter="False" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
+              <MetadataToken />
+              <Name>System.Void SaanSoft.Cqrs.Messages.BaseCommand::.ctor(System.String,System.String)</Name>
+              <FileRef uid="2" />
+              <SequencePoints>
+                <SequencePoint vc="12" uspid="6" ordinal="0" sl="6" sc="1" el="6" ec="2" bec="0" bev="0" fileid="2" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="1" uspid="0" p8:type="SequencePoint" ordinal="0" offset="0" sc="0" sl="6" ec="1" el="6" bec="0" bev="0" fileid="2" xmlns:p8="xsi" />
+            </Method>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100" branchCoverage="100" isConstructor="True" isGetter="False" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
+              <MetadataToken />
+              <Name>System.Void SaanSoft.Cqrs.Messages.BaseCommand::.ctor(System.Guid,System.String,System.String)</Name>
+              <FileRef uid="2" />
+              <SequencePoints>
+                <SequencePoint vc="6" uspid="9" ordinal="0" sl="9" sc="1" el="9" ec="2" bec="0" bev="0" fileid="2" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="1" uspid="0" p8:type="SequencePoint" ordinal="1" offset="1" sc="0" sl="9" ec="1" el="9" bec="0" bev="0" fileid="2" xmlns:p8="xsi" />
+            </Method>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100" branchCoverage="100" isConstructor="True" isGetter="False" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
+              <MetadataToken />
+              <Name>System.Void SaanSoft.Cqrs.Messages.BaseCommand::.ctor(SaanSoft.Cqrs.Messages.IMessage`1&lt;System.Guid&gt;)</Name>
+              <FileRef uid="2" />
+              <SequencePoints>
+                <SequencePoint vc="3" uspid="12" ordinal="0" sl="12" sc="1" el="12" ec="2" bec="0" bev="0" fileid="2" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="1" uspid="0" p8:type="SequencePoint" ordinal="2" offset="2" sc="0" sl="12" ec="1" el="12" bec="0" bev="0" fileid="2" xmlns:p8="xsi" />
+            </Method>
+          </Methods>
+        </Class>
+        <Class>
+          <Summary numSequencePoints="2" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="50" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="1" numClasses="1" visitedMethods="1" numMethods="2" />
+          <FullName>SaanSoft.Cqrs.Messages.BaseCommand`1</FullName>
+          <Methods>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100" branchCoverage="100" isConstructor="True" isGetter="False" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
+              <MetadataToken />
+              <Name>System.Void SaanSoft.Cqrs.Messages.BaseCommand`1::.ctor(TMessageId,TMessageId,System.String,System.String)</Name>
+              <FileRef uid="2" />
+              <SequencePoints>
+                <SequencePoint vc="18" uspid="18" ordinal="0" sl="18" sc="1" el="18" ec="2" bec="0" bev="0" fileid="2" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="1" uspid="0" p8:type="SequencePoint" ordinal="0" offset="0" sc="0" sl="18" ec="1" el="18" bec="0" bev="0" fileid="2" xmlns:p8="xsi" />
+            </Method>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="0" branchCoverage="100" isConstructor="True" isGetter="False" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="1" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="0" numMethods="1" />
+              <MetadataToken />
+              <Name>System.Void SaanSoft.Cqrs.Messages.BaseCommand`1::.ctor(TMessageId,SaanSoft.Cqrs.Messages.IMessage`1&lt;TMessageId&gt;)</Name>
+              <FileRef uid="2" />
+              <SequencePoints>
+                <SequencePoint vc="0" uspid="21" ordinal="0" sl="21" sc="1" el="21" ec="2" bec="0" bev="0" fileid="2" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="0" uspid="0" p8:type="SequencePoint" ordinal="1" offset="1" sc="0" sl="21" ec="1" el="21" bec="0" bev="0" fileid="2" xmlns:p8="xsi" />
+            </Method>
+          </Methods>
+        </Class>
+        <Class>
+          <Summary numSequencePoints="3" visitedSequencePoints="3" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="1" numClasses="1" visitedMethods="3" numMethods="3" />
+          <FullName>SaanSoft.Cqrs.Messages.BaseEvent</FullName>
+          <Methods>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100" branchCoverage="100" isConstructor="True" isGetter="False" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
+              <MetadataToken />
+              <Name>System.Void SaanSoft.Cqrs.Messages.BaseEvent::.ctor(System.Guid,System.String,System.String)</Name>
+              <FileRef uid="3" />
+              <SequencePoints>
+                <SequencePoint vc="3" uspid="6" ordinal="0" sl="6" sc="1" el="6" ec="2" bec="0" bev="0" fileid="3" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="1" uspid="0" p8:type="SequencePoint" ordinal="0" offset="0" sc="0" sl="6" ec="1" el="6" bec="0" bev="0" fileid="3" xmlns:p8="xsi" />
+            </Method>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100" branchCoverage="100" isConstructor="True" isGetter="False" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
+              <MetadataToken />
+              <Name>System.Void SaanSoft.Cqrs.Messages.BaseEvent::.ctor(System.Guid,System.Guid,System.String,System.String)</Name>
+              <FileRef uid="3" />
+              <SequencePoints>
+                <SequencePoint vc="6" uspid="9" ordinal="0" sl="9" sc="1" el="9" ec="2" bec="0" bev="0" fileid="3" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="1" uspid="0" p8:type="SequencePoint" ordinal="1" offset="1" sc="0" sl="9" ec="1" el="9" bec="0" bev="0" fileid="3" xmlns:p8="xsi" />
+            </Method>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100" branchCoverage="100" isConstructor="True" isGetter="False" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
+              <MetadataToken />
+              <Name>System.Void SaanSoft.Cqrs.Messages.BaseEvent::.ctor(System.Guid,SaanSoft.Cqrs.Messages.IMessage`1&lt;System.Guid&gt;)</Name>
+              <FileRef uid="3" />
+              <SequencePoints>
+                <SequencePoint vc="3" uspid="12" ordinal="0" sl="12" sc="1" el="12" ec="2" bec="0" bev="0" fileid="3" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="1" uspid="0" p8:type="SequencePoint" ordinal="2" offset="2" sc="0" sl="12" ec="1" el="12" bec="0" bev="0" fileid="3" xmlns:p8="xsi" />
+            </Method>
+          </Methods>
+        </Class>
+        <Class>
+          <Summary numSequencePoints="8" visitedSequencePoints="5" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="62.5" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="1" numClasses="1" visitedMethods="2" numMethods="3" />
+          <FullName>SaanSoft.Cqrs.Messages.BaseEvent`2</FullName>
+          <Methods>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100" branchCoverage="100" isConstructor="False" isGetter="True" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
+              <MetadataToken />
+              <Name>TEntityKey SaanSoft.Cqrs.Messages.BaseEvent`2::get_Key()</Name>
+              <FileRef uid="3" />
+              <SequencePoints>
+                <SequencePoint vc="6" uspid="17" ordinal="0" sl="17" sc="1" el="17" ec="2" bec="0" bev="0" fileid="3" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="1" uspid="0" p8:type="SequencePoint" ordinal="0" offset="0" sc="0" sl="17" ec="1" el="17" bec="0" bev="0" fileid="3" xmlns:p8="xsi" />
+            </Method>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100" branchCoverage="100" isConstructor="True" isGetter="False" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="4" visitedSequencePoints="4" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
+              <MetadataToken />
+              <Name>System.Void SaanSoft.Cqrs.Messages.BaseEvent`2::.ctor(TEntityKey,TMessageId,TMessageId,System.String,System.String)</Name>
+              <FileRef uid="3" />
+              <SequencePoints>
+                <SequencePoint vc="3" uspid="20" ordinal="0" sl="20" sc="1" el="20" ec="2" bec="0" bev="0" fileid="3" />
+                <SequencePoint vc="3" uspid="21" ordinal="1" sl="21" sc="1" el="21" ec="2" bec="0" bev="0" fileid="3" />
+                <SequencePoint vc="3" uspid="22" ordinal="2" sl="22" sc="1" el="22" ec="2" bec="0" bev="0" fileid="3" />
+                <SequencePoint vc="3" uspid="23" ordinal="3" sl="23" sc="1" el="23" ec="2" bec="0" bev="0" fileid="3" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="4" uspid="0" p8:type="SequencePoint" ordinal="1" offset="1" sc="0" sl="20" ec="1" el="23" bec="0" bev="0" fileid="3" xmlns:p8="xsi" />
+            </Method>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="0" branchCoverage="100" isConstructor="True" isGetter="False" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="3" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="0" numMethods="1" />
+              <MetadataToken />
+              <Name>System.Void SaanSoft.Cqrs.Messages.BaseEvent`2::.ctor(TEntityKey,TMessageId,SaanSoft.Cqrs.Messages.IMessage`1&lt;TMessageId&gt;)</Name>
+              <FileRef uid="3" />
+              <SequencePoints>
+                <SequencePoint vc="0" uspid="26" ordinal="0" sl="26" sc="1" el="26" ec="2" bec="0" bev="0" fileid="3" />
+                <SequencePoint vc="0" uspid="27" ordinal="1" sl="27" sc="1" el="27" ec="2" bec="0" bev="0" fileid="3" />
+                <SequencePoint vc="0" uspid="28" ordinal="2" sl="28" sc="1" el="28" ec="2" bec="0" bev="0" fileid="3" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="0" uspid="0" p8:type="SequencePoint" ordinal="2" offset="2" sc="0" sl="26" ec="1" el="28" bec="0" bev="0" fileid="3" xmlns:p8="xsi" />
+            </Method>
+          </Methods>
+        </Class>
+        <Class>
+          <Summary numSequencePoints="20" visitedSequencePoints="19" numBranchPoints="16" visitedBranchPoints="13" sequenceCoverage="95" branchCoverage="81.25" maxCyclomaticComplexity="16" minCyclomaticComplexity="1" visitedClasses="1" numClasses="1" visitedMethods="7" numMethods="8" />
+          <FullName>SaanSoft.Cqrs.Messages.BaseMessage`1</FullName>
+          <Methods>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100" branchCoverage="100" isConstructor="False" isGetter="True" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
+              <MetadataToken />
+              <Name>TMessageId SaanSoft.Cqrs.Messages.BaseMessage`1::get_Id()</Name>
+              <FileRef uid="4" />
+              <SequencePoints>
+                <SequencePoint vc="42" uspid="13" ordinal="0" sl="13" sc="1" el="13" ec="2" bec="0" bev="0" fileid="4" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="1" uspid="0" p8:type="SequencePoint" ordinal="0" offset="0" sc="0" sl="13" ec="1" el="13" bec="0" bev="0" fileid="4" xmlns:p8="xsi" />
+            </Method>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100" branchCoverage="100" isConstructor="False" isGetter="True" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
+              <MetadataToken />
+              <Name>TMessageId SaanSoft.Cqrs.Messages.BaseMessage`1::get_TriggeredById()</Name>
+              <FileRef uid="4" />
+              <SequencePoints>
+                <SequencePoint vc="15" uspid="14" ordinal="0" sl="14" sc="1" el="14" ec="2" bec="0" bev="0" fileid="4" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="1" uspid="0" p8:type="SequencePoint" ordinal="1" offset="1" sc="0" sl="14" ec="1" el="14" bec="0" bev="0" fileid="4" xmlns:p8="xsi" />
+            </Method>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100" branchCoverage="100" isConstructor="False" isGetter="True" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
+              <MetadataToken />
+              <Name>System.String SaanSoft.Cqrs.Messages.BaseMessage`1::get_CorrelationId()</Name>
+              <FileRef uid="4" />
+              <SequencePoints>
+                <SequencePoint vc="24" uspid="15" ordinal="0" sl="15" sc="1" el="15" ec="2" bec="0" bev="0" fileid="4" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="1" uspid="0" p8:type="SequencePoint" ordinal="2" offset="2" sc="0" sl="15" ec="1" el="15" bec="0" bev="0" fileid="4" xmlns:p8="xsi" />
+            </Method>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100" branchCoverage="100" isConstructor="False" isGetter="True" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
+              <MetadataToken />
+              <Name>System.String SaanSoft.Cqrs.Messages.BaseMessage`1::get_AuthenticatedId()</Name>
+              <FileRef uid="4" />
+              <SequencePoints>
+                <SequencePoint vc="24" uspid="16" ordinal="0" sl="16" sc="1" el="16" ec="2" bec="0" bev="0" fileid="4" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="1" uspid="0" p8:type="SequencePoint" ordinal="3" offset="3" sc="0" sl="16" ec="1" el="16" bec="0" bev="0" fileid="4" xmlns:p8="xsi" />
+            </Method>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100" branchCoverage="100" isConstructor="False" isGetter="True" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
+              <MetadataToken />
+              <Name>System.DateTime SaanSoft.Cqrs.Messages.BaseMessage`1::get_ReceivedOnUtc()</Name>
+              <FileRef uid="4" />
+              <SequencePoints>
+                <SequencePoint vc="51" uspid="17" ordinal="0" sl="17" sc="1" el="17" ec="2" bec="0" bev="0" fileid="4" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="1" uspid="0" p8:type="SequencePoint" ordinal="4" offset="4" sc="0" sl="17" ec="1" el="17" bec="0" bev="0" fileid="4" xmlns:p8="xsi" />
+            </Method>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100" branchCoverage="100" isConstructor="False" isGetter="True" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
+              <MetadataToken />
+              <Name>System.String SaanSoft.Cqrs.Messages.BaseMessage`1::get_TypeFullName()</Name>
+              <FileRef uid="4" />
+              <SequencePoints>
+                <SequencePoint vc="45" uspid="19" ordinal="0" sl="19" sc="1" el="19" ec="2" bec="0" bev="0" fileid="4" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="1" uspid="0" p8:type="SequencePoint" ordinal="5" offset="5" sc="0" sl="19" ec="1" el="19" bec="0" bev="0" fileid="4" xmlns:p8="xsi" />
+            </Method>
+            <Method cyclomaticComplexity="16" nPathComplexity="0" sequenceCoverage="100" branchCoverage="81.25" isConstructor="True" isGetter="False" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="13" visitedSequencePoints="13" numBranchPoints="16" visitedBranchPoints="13" sequenceCoverage="100" branchCoverage="81.25" maxCyclomaticComplexity="16" minCyclomaticComplexity="16" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
+              <MetadataToken />
+              <Name>System.Void SaanSoft.Cqrs.Messages.BaseMessage`1::.ctor(TMessageId,TMessageId,System.String,System.String)</Name>
+              <FileRef uid="4" />
+              <SequencePoints>
+                <SequencePoint vc="12" uspid="21" ordinal="0" sl="21" sc="1" el="21" ec="2" bec="0" bev="0" fileid="4" />
+                <SequencePoint vc="12" uspid="22" ordinal="1" sl="22" sc="1" el="22" ec="2" bec="0" bev="0" fileid="4" />
+                <SequencePoint vc="12" uspid="23" ordinal="2" sl="23" sc="1" el="23" ec="2" bec="0" bev="0" fileid="4" />
+                <SequencePoint vc="21" uspid="24" ordinal="3" sl="24" sc="1" el="24" ec="2" bec="2" bev="2" fileid="4" />
+                <SequencePoint vc="21" uspid="25" ordinal="4" sl="25" sc="1" el="25" ec="2" bec="2" bev="2" fileid="4" />
+                <SequencePoint vc="18" uspid="27" ordinal="5" sl="27" sc="1" el="27" ec="2" bec="2" bev="2" fileid="4" />
+                <SequencePoint vc="12" uspid="29" ordinal="6" sl="29" sc="1" el="29" ec="2" bec="4" bev="2" fileid="4" />
+                <SequencePoint vc="12" uspid="30" ordinal="7" sl="30" sc="1" el="30" ec="2" bec="2" bev="2" fileid="4" />
+                <SequencePoint vc="12" uspid="31" ordinal="8" sl="31" sc="1" el="31" ec="2" bec="0" bev="0" fileid="4" />
+                <SequencePoint vc="12" uspid="32" ordinal="9" sl="32" sc="1" el="32" ec="2" bec="0" bev="0" fileid="4" />
+                <SequencePoint vc="12" uspid="33" ordinal="10" sl="33" sc="1" el="33" ec="2" bec="4" bev="3" fileid="4" />
+                <SequencePoint vc="12" uspid="34" ordinal="11" sl="34" sc="1" el="34" ec="2" bec="0" bev="0" fileid="4" />
+                <SequencePoint vc="12" uspid="35" ordinal="12" sl="35" sc="1" el="35" ec="2" bec="0" bev="0" fileid="4" />
+              </SequencePoints>
+              <BranchPoints>
+                <BranchPoint vc="9" uspid="24" ordinal="0" path="0" offset="38" offsetend="40" sl="24" fileid="4" />
+                <BranchPoint vc="12" uspid="24" ordinal="1" path="1" offset="38" offsetend="48" sl="24" fileid="4" />
+                <BranchPoint vc="9" uspid="25" ordinal="2" path="0" offset="60" offsetend="62" sl="25" fileid="4" />
+                <BranchPoint vc="12" uspid="25" ordinal="3" path="1" offset="60" offsetend="71" sl="25" fileid="4" />
+                <BranchPoint vc="6" uspid="27" ordinal="4" path="0" offset="82" offsetend="84" sl="27" fileid="4" />
+                <BranchPoint vc="12" uspid="27" ordinal="5" path="1" offset="82" offsetend="92" sl="27" fileid="4" />
+                <BranchPoint vc="12" uspid="29" ordinal="6" path="0" offset="113" offsetend="115" sl="29" fileid="4" />
+                <BranchPoint vc="0" uspid="29" ordinal="7" path="1" offset="113" offsetend="133" sl="29" fileid="4" />
+                <BranchPoint vc="0" uspid="29" ordinal="8" path="0" offset="136" offsetend="138" sl="29" fileid="4" />
+                <BranchPoint vc="12" uspid="29" ordinal="9" path="1" offset="136" offsetend="150" sl="29" fileid="4" />
+                <BranchPoint vc="12" uspid="30" ordinal="10" path="0" offset="165" offsetend="167" sl="30" fileid="4" />
+                <BranchPoint vc="12" uspid="33" ordinal="12" path="0" offset="182" offsetend="184" sl="33" fileid="4" />
+                <BranchPoint vc="0" uspid="33" ordinal="14" path="0" offset="193" offsetend="195" sl="33" fileid="4" />
+                <BranchPoint vc="12" uspid="33" ordinal="15" path="1" offset="193" offsetend="203" sl="33" fileid="4" />
+                <BranchPoint vc="12" uspid="33" ordinal="13" path="1" offset="182" offsetend="212" sl="33" fileid="4" />
+                <BranchPoint vc="12" uspid="30" ordinal="11" path="1" offset="165" offsetend="213" sl="30" fileid="4" />
+              </BranchPoints>
+              <MethodPoint vc="13" uspid="0" p8:type="SequencePoint" ordinal="6" offset="6" sc="0" sl="21" ec="1" el="35" bec="0" bev="0" fileid="4" xmlns:p8="xsi" />
+            </Method>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="0" branchCoverage="100" isConstructor="True" isGetter="False" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="1" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="0" numMethods="1" />
+              <MetadataToken />
+              <Name>System.Void SaanSoft.Cqrs.Messages.BaseMessage`1::.ctor(TMessageId,SaanSoft.Cqrs.Messages.IMessage`1&lt;TMessageId&gt;)</Name>
+              <FileRef uid="4" />
+              <SequencePoints>
+                <SequencePoint vc="0" uspid="38" ordinal="0" sl="38" sc="1" el="38" ec="2" bec="0" bev="0" fileid="4" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="0" uspid="0" p8:type="SequencePoint" ordinal="7" offset="7" sc="0" sl="38" ec="1" el="38" bec="0" bev="0" fileid="4" xmlns:p8="xsi" />
+            </Method>
+          </Methods>
+        </Class>
+        <Class>
+          <Summary numSequencePoints="3" visitedSequencePoints="3" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="1" numClasses="1" visitedMethods="3" numMethods="3" />
+          <FullName>SaanSoft.Cqrs.Messages.BaseQuery`2</FullName>
+          <Methods>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100" branchCoverage="100" isConstructor="True" isGetter="False" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
+              <MetadataToken />
+              <Name>System.Void SaanSoft.Cqrs.Messages.BaseQuery`2::.ctor(System.String,System.String)</Name>
+              <FileRef uid="5" />
+              <SequencePoints>
+                <SequencePoint vc="3" uspid="8" ordinal="0" sl="8" sc="1" el="8" ec="2" bec="0" bev="0" fileid="5" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="1" uspid="0" p8:type="SequencePoint" ordinal="0" offset="0" sc="0" sl="8" ec="1" el="8" bec="0" bev="0" fileid="5" xmlns:p8="xsi" />
+            </Method>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100" branchCoverage="100" isConstructor="True" isGetter="False" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
+              <MetadataToken />
+              <Name>System.Void SaanSoft.Cqrs.Messages.BaseQuery`2::.ctor(System.Guid,System.String,System.String)</Name>
+              <FileRef uid="5" />
+              <SequencePoints>
+                <SequencePoint vc="6" uspid="11" ordinal="0" sl="11" sc="1" el="11" ec="2" bec="0" bev="0" fileid="5" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="1" uspid="0" p8:type="SequencePoint" ordinal="1" offset="1" sc="0" sl="11" ec="1" el="11" bec="0" bev="0" fileid="5" xmlns:p8="xsi" />
+            </Method>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100" branchCoverage="100" isConstructor="True" isGetter="False" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
+              <MetadataToken />
+              <Name>System.Void SaanSoft.Cqrs.Messages.BaseQuery`2::.ctor(SaanSoft.Cqrs.Messages.IMessage`1&lt;System.Guid&gt;)</Name>
+              <FileRef uid="5" />
+              <SequencePoints>
+                <SequencePoint vc="3" uspid="14" ordinal="0" sl="14" sc="1" el="14" ec="2" bec="0" bev="0" fileid="5" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="1" uspid="0" p8:type="SequencePoint" ordinal="2" offset="2" sc="0" sl="14" ec="1" el="14" bec="0" bev="0" fileid="5" xmlns:p8="xsi" />
+            </Method>
+          </Methods>
+        </Class>
+        <Class>
+          <Summary numSequencePoints="2" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="50" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="1" numClasses="1" visitedMethods="1" numMethods="2" />
+          <FullName>SaanSoft.Cqrs.Messages.BaseQuery`3</FullName>
+          <Methods>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100" branchCoverage="100" isConstructor="True" isGetter="False" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
+              <MetadataToken />
+              <Name>System.Void SaanSoft.Cqrs.Messages.BaseQuery`3::.ctor(TMessageId,TMessageId,System.String,System.String)</Name>
+              <FileRef uid="5" />
+              <SequencePoints>
+                <SequencePoint vc="9" uspid="22" ordinal="0" sl="22" sc="1" el="22" ec="2" bec="0" bev="0" fileid="5" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="1" uspid="0" p8:type="SequencePoint" ordinal="0" offset="0" sc="0" sl="22" ec="1" el="22" bec="0" bev="0" fileid="5" xmlns:p8="xsi" />
+            </Method>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="0" branchCoverage="100" isConstructor="True" isGetter="False" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="1" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="0" numMethods="1" />
+              <MetadataToken />
+              <Name>System.Void SaanSoft.Cqrs.Messages.BaseQuery`3::.ctor(TMessageId,SaanSoft.Cqrs.Messages.IMessage`1&lt;TMessageId&gt;)</Name>
+              <FileRef uid="5" />
+              <SequencePoints>
+                <SequencePoint vc="0" uspid="25" ordinal="0" sl="25" sc="1" el="25" ec="2" bec="0" bev="0" fileid="5" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="0" uspid="0" p8:type="SequencePoint" ordinal="1" offset="1" sc="0" sl="25" ec="1" el="25" bec="0" bev="0" fileid="5" xmlns:p8="xsi" />
+            </Method>
+          </Methods>
+        </Class>
+        <Class>
+          <Summary numSequencePoints="11" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="1" visitedMethods="0" numMethods="4" />
+          <FullName>SaanSoft.Cqrs.Messages.BaseQueryResult</FullName>
+          <Methods>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="0" branchCoverage="100" isConstructor="False" isGetter="True" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="1" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="0" numMethods="1" />
+              <MetadataToken />
+              <Name>System.Boolean SaanSoft.Cqrs.Messages.BaseQueryResult::get_IsSuccess()</Name>
+              <FileRef uid="6" />
+              <SequencePoints>
+                <SequencePoint vc="0" uspid="16" ordinal="0" sl="16" sc="1" el="16" ec="2" bec="0" bev="0" fileid="6" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="0" uspid="0" p8:type="SequencePoint" ordinal="0" offset="0" sc="0" sl="16" ec="1" el="16" bec="0" bev="0" fileid="6" xmlns:p8="xsi" />
+            </Method>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="0" branchCoverage="100" isConstructor="False" isGetter="True" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="1" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="0" numMethods="1" />
+              <MetadataToken />
+              <Name>System.String SaanSoft.Cqrs.Messages.BaseQueryResult::get_ErrorMessage()</Name>
+              <FileRef uid="6" />
+              <SequencePoints>
+                <SequencePoint vc="0" uspid="18" ordinal="0" sl="18" sc="1" el="18" ec="2" bec="0" bev="0" fileid="6" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="0" uspid="0" p8:type="SequencePoint" ordinal="1" offset="1" sc="0" sl="18" ec="1" el="18" bec="0" bev="0" fileid="6" xmlns:p8="xsi" />
+            </Method>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="0" branchCoverage="100" isConstructor="True" isGetter="False" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="4" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="0" numMethods="1" />
+              <MetadataToken />
+              <Name>System.Void SaanSoft.Cqrs.Messages.BaseQueryResult::.ctor()</Name>
+              <FileRef uid="6" />
+              <SequencePoints>
+                <SequencePoint vc="0" uspid="5" ordinal="0" sl="5" sc="1" el="5" ec="2" bec="0" bev="0" fileid="6" />
+                <SequencePoint vc="0" uspid="6" ordinal="1" sl="6" sc="1" el="6" ec="2" bec="0" bev="0" fileid="6" />
+                <SequencePoint vc="0" uspid="7" ordinal="2" sl="7" sc="1" el="7" ec="2" bec="0" bev="0" fileid="6" />
+                <SequencePoint vc="0" uspid="8" ordinal="3" sl="8" sc="1" el="8" ec="2" bec="0" bev="0" fileid="6" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="0" uspid="0" p8:type="SequencePoint" ordinal="2" offset="2" sc="0" sl="5" ec="1" el="8" bec="0" bev="0" fileid="6" xmlns:p8="xsi" />
+            </Method>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="0" branchCoverage="100" isConstructor="True" isGetter="False" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="5" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="0" numMethods="1" />
+              <MetadataToken />
+              <Name>System.Void SaanSoft.Cqrs.Messages.BaseQueryResult::.ctor(System.String)</Name>
+              <FileRef uid="6" />
+              <SequencePoints>
+                <SequencePoint vc="0" uspid="10" ordinal="0" sl="10" sc="1" el="10" ec="2" bec="0" bev="0" fileid="6" />
+                <SequencePoint vc="0" uspid="11" ordinal="1" sl="11" sc="1" el="11" ec="2" bec="0" bev="0" fileid="6" />
+                <SequencePoint vc="0" uspid="12" ordinal="2" sl="12" sc="1" el="12" ec="2" bec="0" bev="0" fileid="6" />
+                <SequencePoint vc="0" uspid="13" ordinal="3" sl="13" sc="1" el="13" ec="2" bec="0" bev="0" fileid="6" />
+                <SequencePoint vc="0" uspid="14" ordinal="4" sl="14" sc="1" el="14" ec="2" bec="0" bev="0" fileid="6" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="0" uspid="0" p8:type="SequencePoint" ordinal="3" offset="3" sc="0" sl="10" ec="1" el="14" bec="0" bev="0" fileid="6" xmlns:p8="xsi" />
+            </Method>
+          </Methods>
+        </Class>
+        <Class>
+          <Summary numSequencePoints="10" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="1" visitedMethods="0" numMethods="4" />
+          <FullName>SaanSoft.Cqrs.Messages.CommandResult</FullName>
+          <Methods>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="0" branchCoverage="100" isConstructor="False" isGetter="True" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="1" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="0" numMethods="1" />
+              <MetadataToken />
+              <Name>System.Boolean SaanSoft.Cqrs.Messages.CommandResult::get_IsSuccess()</Name>
+              <FileRef uid="7" />
+              <SequencePoints>
+                <SequencePoint vc="0" uspid="19" ordinal="0" sl="19" sc="1" el="19" ec="2" bec="0" bev="0" fileid="7" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="0" uspid="0" p8:type="SequencePoint" ordinal="0" offset="0" sc="0" sl="19" ec="1" el="19" bec="0" bev="0" fileid="7" xmlns:p8="xsi" />
+            </Method>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="0" branchCoverage="100" isConstructor="False" isGetter="True" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="1" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="0" numMethods="1" />
+              <MetadataToken />
+              <Name>System.String SaanSoft.Cqrs.Messages.CommandResult::get_ErrorMessage()</Name>
+              <FileRef uid="7" />
+              <SequencePoints>
+                <SequencePoint vc="0" uspid="21" ordinal="0" sl="21" sc="1" el="21" ec="2" bec="0" bev="0" fileid="7" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="0" uspid="0" p8:type="SequencePoint" ordinal="1" offset="1" sc="0" sl="21" ec="1" el="21" bec="0" bev="0" fileid="7" xmlns:p8="xsi" />
+            </Method>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="0" branchCoverage="100" isConstructor="True" isGetter="False" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="3" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="0" numMethods="1" />
+              <MetadataToken />
+              <Name>System.Void SaanSoft.Cqrs.Messages.CommandResult::.ctor()</Name>
+              <FileRef uid="7" />
+              <SequencePoints>
+                <SequencePoint vc="0" uspid="8" ordinal="0" sl="8" sc="1" el="8" ec="2" bec="0" bev="0" fileid="7" />
+                <SequencePoint vc="0" uspid="9" ordinal="1" sl="9" sc="1" el="9" ec="2" bec="0" bev="0" fileid="7" />
+                <SequencePoint vc="0" uspid="10" ordinal="2" sl="10" sc="1" el="10" ec="2" bec="0" bev="0" fileid="7" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="0" uspid="0" p8:type="SequencePoint" ordinal="2" offset="2" sc="0" sl="8" ec="1" el="10" bec="0" bev="0" fileid="7" xmlns:p8="xsi" />
+            </Method>
+            <Method cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="0" branchCoverage="100" isConstructor="True" isGetter="False" isSetter="False" isStatic="True">
+              <Summary numSequencePoints="5" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="0" numMethods="1" />
+              <MetadataToken />
+              <Name>System.Void SaanSoft.Cqrs.Messages.CommandResult::.ctor(System.String)</Name>
+              <FileRef uid="7" />
+              <SequencePoints>
+                <SequencePoint vc="0" uspid="13" ordinal="0" sl="13" sc="1" el="13" ec="2" bec="0" bev="0" fileid="7" />
+                <SequencePoint vc="0" uspid="14" ordinal="1" sl="14" sc="1" el="14" ec="2" bec="0" bev="0" fileid="7" />
+                <SequencePoint vc="0" uspid="15" ordinal="2" sl="15" sc="1" el="15" ec="2" bec="0" bev="0" fileid="7" />
+                <SequencePoint vc="0" uspid="16" ordinal="3" sl="16" sc="1" el="16" ec="2" bec="0" bev="0" fileid="7" />
+                <SequencePoint vc="0" uspid="17" ordinal="4" sl="17" sc="1" el="17" ec="2" bec="0" bev="0" fileid="7" />
+              </SequencePoints>
+              <BranchPoints />
+              <MethodPoint vc="0" uspid="0" p8:type="SequencePoint" ordinal="3" offset="3" sc="0" sl="13" ec="1" el="17" bec="0" bev="0" fileid="7" xmlns:p8="xsi" />
+            </Method>
+          </Methods>
+        </Class>
+      </Classes>
+    </Module>
+  </Modules>
+</CoverageSession>

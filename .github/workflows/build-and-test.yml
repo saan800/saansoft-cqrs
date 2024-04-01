@@ -38,8 +38,18 @@ jobs:
           --no-restore
           --configuration Release
           --logger "GitHubActions;summary.includePassedTests=true;summary.includeSkippedTests=true;annotations.titleFormat=@test;annotations.messageFormat=@error\n@trace"
+          /p:CollectCoverage=true /p:Exclude="SaanSoft.Tests.*" /p:CoverletOutputFormat=\"opencover,json\" /p:CoverletOutput="../../reports/coverage/"  /p:MergeWith="../../reports/coverage/coverage.json"
           --
           RunConfiguration.CollectSourceInformation=true
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          directory: ./reports/coverage/
+          fail_ci_if_error: true
+          flags: unittests
+          slug: saan800/saansoft-cqrs
 
       # - name: Archive unit test results
       #   uses: actions/upload-artifact@v4
@@ -80,12 +90,14 @@ jobs:
           chmod +x ./scripts/lint-dotnet.sh
           ./scripts/lint-dotnet.sh "${ALL_CHANGED_FILES}" --verify-no-changes --report reports/dotnet-format-report.json
 
-      - name: Archive linc c# results
+      - name: Archive lint c# results
         uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: dotnet-format-errors
           path: reports
+
+
   # upload-reports:
   #   uses: ./.github/workflows/_report_test_results.yml
   #   needs: [build-and-test, lint]
