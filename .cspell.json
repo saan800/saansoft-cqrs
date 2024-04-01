@@ -8,7 +8,8 @@
   ],
   "ignorePaths": [
     "LICENSE",
-    "./dictionary.dic"
+    "./dictionary.dic",
+    "**/*.csproj"
   ],
   "dictionaryDefinitions": [
     {
