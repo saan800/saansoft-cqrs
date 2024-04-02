@@ -8,8 +8,9 @@
   ],
   "ignorePaths": [
     "LICENSE",
+    "./.githooks/**",
     "./dictionary.dic",
-    "**/*.csproj"
+    "**/*.csproj",
   ],
   "dictionaryDefinitions": [
     {
