@@ -4,7 +4,6 @@ rootDirectory="$(dirname -- "$0")/.."
 source "$rootDirectory/scripts/colours.sh"
 export ROOT_DIR="$rootDirectory"
 
-echo ""
 echo "${CYAN}Running pre-commit hooks${NC}"
 
 staged_files=$(git diff --cached --name-only --diff-filter=ACMR)
@@ -21,4 +20,5 @@ fi
 # Add any modified files to the staging area
 git add $staged_files
 
+echo ""
 exit 0

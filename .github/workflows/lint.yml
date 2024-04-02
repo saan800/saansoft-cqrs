@@ -32,8 +32,6 @@ jobs:
       - name: Setup linting config
         id: config
         run: |
-          echo "noChangedValidatableFiles = ${noChangedValidatableFiles}"
-          echo "isDependabot = ${isDependabot}"
           if [ "${noChangedValidatableFiles}" ] || [ "${isDependabot}" ]; then
             echo "{VALIDATE_ALL_CODEBASE}=true"
             echo "{VALIDATE_ALL_CODEBASE}=true" >> $GITHUB_OUTPUT
@@ -42,7 +40,7 @@ jobs:
             echo "{VALIDATE_ALL_CODEBASE}=false" >> $GITHUB_OUTPUT
           fi
         env:
-          noChangedValidatableFiles: steps.changed-validatabe-files.outputs.all_changed_files.length == 0
+          noChangedValidatableFiles: ${{ steps.changed-validatabe-files.outputs.all_changed_files.length == 0 }}
           isDependabot: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
 
       - name: Run super-linter
