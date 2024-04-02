@@ -33,10 +33,10 @@ jobs:
         run: |
           if [ "${hasChangedCSharpFiles}" == "true" ]; then
             echo "do all=false"
-            echo "VALIDATE_ALL_CODEBASE=false" >> $"GITHUB_OUTPUT"
+            echo "VALIDATE_ALL_CODEBASE=false" >> "$GITHUB_OUTPUT"
           else
             echo "do all=true"
-            echo "VALIDATE_ALL_CODEBASE=true" >> $"GITHUB_OUTPUT"
+            echo "VALIDATE_ALL_CODEBASE=true" >> "$GITHUB_OUTPUT"
           fi
         env:
           hasChangedCSharpFiles: ${{ steps.changed-csharp-files.outputs.any_changed == 'true' }}
