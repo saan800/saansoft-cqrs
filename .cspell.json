@@ -9,6 +9,8 @@
   "ignorePaths": [
     "LICENSE",
     "./.githooks/**",
+    "./.github/dependabot.yml",
+    "./.github/workflows/**",
     "./dictionary.dic",
     "**/*.csproj",
   ],
