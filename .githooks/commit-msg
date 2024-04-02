@@ -4,7 +4,6 @@ rootDirectory="$(dirname -- "$0")/.."
 source "$rootDirectory/scripts/colours.sh"
 export ROOT_DIR="$rootDirectory"
 
-echo ""
 echo "${CYAN}Running commit-msg hooks${NC}"
 
 # Read the commit message from the file
