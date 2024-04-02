@@ -9,5 +9,6 @@ public interface ICommand : IMessage
 }
 
 public interface ICommand<TMessageId> : ICommand, IMessage<TMessageId>
+    where TMessageId : struct
 {
 }

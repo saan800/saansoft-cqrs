@@ -9,6 +9,7 @@ namespace SaanSoft.Cqrs.Messages;
 /// Use <see cref="BaseCommand{TMessageId}"/>, <see cref="BaseEvent{TMessageId, TEntityKey}"/> or <see cref="BaseQuery{TMessageId, TResult}"/> instead
 /// </summary>
 public abstract class BaseMessage<TMessageId> : IMessage<TMessageId>
+    where TMessageId : struct
 {
     public TMessageId Id { get; set; }
     public TMessageId? TriggeredById { get; set; }
@@ -18,7 +19,7 @@ public abstract class BaseMessage<TMessageId> : IMessage<TMessageId>
 
     public string TypeFullName { get; set; }
 
-    protected BaseMessage(TMessageId id, TMessageId? triggeredById = default, string? correlationId = null, string? authenticatedId = null)
+    protected BaseMessage(TMessageId id, TMessageId? triggeredById = null, string? correlationId = null, string? authenticatedId = null)
     {
         Id = id;
         if (!string.IsNullOrWhiteSpace(correlationId)) CorrelationId = correlationId;
@@ -26,7 +27,7 @@ public abstract class BaseMessage<TMessageId> : IMessage<TMessageId>
 
         if (!GenericUtils.IsNullOrDefault(triggeredById)) TriggeredById = triggeredById;
 
-        if (ReceivedOnUtc == default || ReceivedOnUtc == DateTime.MinValue) ReceivedOnUtc = DateTime.UtcNow;
+        if (ReceivedOnUtc == default || ReceivedOnUtc == default || ReceivedOnUtc == DateTime.MinValue) ReceivedOnUtc = DateTime.UtcNow;
         if (string.IsNullOrWhiteSpace(TypeFullName))
         {
             var type = GetType();

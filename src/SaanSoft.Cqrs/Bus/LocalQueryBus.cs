@@ -10,6 +10,7 @@ public class LocalQueryBus(IServiceProvider serviceProvider)
 
 public abstract class LocalQueryBus<TMessageId>(IServiceProvider serviceProvider)
     : IQueryBus<TMessageId>
+    where TMessageId : struct
 {
     public async Task<TResult> QueryAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
         where TQuery : IQuery<TMessageId, TQuery, TResult>

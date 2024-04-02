@@ -6,7 +6,7 @@ namespace SaanSoft.Cqrs.Store;
 /// ICommandStore is primarily useful for building an audit log and/or debugging
 /// Its not actually used anywhere in SaanSoft.Cqrs
 /// </summary>
-public interface ICommandStore<TMessageId>
+public interface ICommandStore<TMessageId> where TMessageId : struct
 {
     /// <summary>
     /// Save a new command

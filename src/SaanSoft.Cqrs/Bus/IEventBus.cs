@@ -2,7 +2,7 @@ using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Bus;
 
-public interface IEventBus<TMessageId>
+public interface IEventBus<TMessageId> where TMessageId : struct
 {
     /// <summary>
     /// Put the event onto the queue

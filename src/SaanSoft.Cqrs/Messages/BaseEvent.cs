@@ -2,10 +2,7 @@ namespace SaanSoft.Cqrs.Messages;
 
 public abstract class BaseEvent : BaseEvent<Guid, Guid>
 {
-    protected BaseEvent(Guid key, string? correlationId = null, string? authenticatedId = null)
-        : base(key, Guid.NewGuid(), default, correlationId, authenticatedId) { }
-
-    protected BaseEvent(Guid key, Guid triggeredById, string? correlationId = null, string? authenticatedId = null)
+    protected BaseEvent(Guid key, Guid? triggeredById = null, string? correlationId = null, string? authenticatedId = null)
         : base(key, Guid.NewGuid(), triggeredById, correlationId, authenticatedId) { }
 
     protected BaseEvent(Guid key, IMessage<Guid> triggeredByMessage)
@@ -13,10 +10,12 @@ public abstract class BaseEvent : BaseEvent<Guid, Guid>
 }
 
 public abstract class BaseEvent<TMessageId, TEntityKey> : BaseMessage<TMessageId>, IEvent<TMessageId, TEntityKey>
+    where TMessageId : struct
+    where TEntityKey : struct
 {
     public TEntityKey Key { get; set; }
 
-    protected BaseEvent(TEntityKey key, TMessageId id, TMessageId? triggeredById, string? correlationId = null, string? authenticatedId = null)
+    protected BaseEvent(TEntityKey key, TMessageId id, TMessageId? triggeredById = null, string? correlationId = null, string? authenticatedId = null)
         : base(id, triggeredById, correlationId, authenticatedId)
     {
         Key = key;

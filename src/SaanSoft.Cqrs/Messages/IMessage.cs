@@ -38,7 +38,7 @@ public interface IMessage
 /// You should never directly inherit from IMessage
 /// Use <see cref="ICommand{TMessageKey}"/>, <see cref="IEvent{TMessageKey, TEntityKey}"/> or <see cref="IQuery{TMessageId, TQuery, TResult}"/> instead
 /// </summary>
-public interface IMessage<TMessageId> : IMessage
+public interface IMessage<TMessageId> : IMessage where TMessageId : struct
 {
     /// <summary>
     /// Unique Id for the command/event/query

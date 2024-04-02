@@ -18,7 +18,7 @@ public class BaseEventTests
         result.AuthenticatedId.Should().BeNull();
         result.ReceivedOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
         result.TypeFullName.Should().Be(typeof(GuidEvent).FullName);
-        result.TriggeredById.Should().Be(default(Guid)); // :( TODO: Figure out how to make this null
+        result.TriggeredById.Should().BeNull();
     }
 
     [Fact]
@@ -47,7 +47,7 @@ public class BaseEventTests
         var key = Guid.NewGuid();
         var correlationId = Guid.NewGuid().ToString();
         var authId = "someone";
-        var triggeredBy = new GuidCommand(correlationId, authId);
+        var triggeredBy = new GuidCommand(null, correlationId, authId);
 
         Thread.Sleep(50);
 

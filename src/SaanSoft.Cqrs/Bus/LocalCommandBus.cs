@@ -10,6 +10,7 @@ public class LocalCommandBus(IServiceProvider serviceProvider)
 
 public abstract class LocalCommandBus<TMessageId>(IServiceProvider serviceProvider)
     : ICommandBus<TMessageId>
+    where TMessageId : struct
 {
     public async Task<CommandResult> ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : ICommand<TMessageId>

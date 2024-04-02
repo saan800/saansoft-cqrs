@@ -10,6 +10,7 @@ public class LocalEventBus(IServiceProvider serviceProvider)
 
 public abstract class LocalEventBus<TMessageId>(IServiceProvider serviceProvider)
     : IEventBus<TMessageId>
+    where TMessageId : struct
 {
     public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
         where TEvent : IEvent<TMessageId>

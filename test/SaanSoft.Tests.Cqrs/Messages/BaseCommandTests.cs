@@ -15,7 +15,7 @@ public class BaseCommandTests
         result.CorrelationId.Should().BeNull();
         result.AuthenticatedId.Should().BeNull();
         result.ReceivedOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
-        result.TriggeredById.Should().Be(default(Guid)); // :( TODO: Figure out how to make this null
+        result.TriggeredById.Should().BeNull();
         result.TypeFullName.Should().Be(typeof(GuidCommand).FullName);
     }
 
@@ -42,7 +42,7 @@ public class BaseCommandTests
     {
         var correlationId = Guid.NewGuid().ToString();
         var authId = "someone";
-        var triggeredBy = new GuidCommand(correlationId, authId);
+        var triggeredBy = new GuidCommand(null, correlationId, authId);
 
         Thread.Sleep(50);
 

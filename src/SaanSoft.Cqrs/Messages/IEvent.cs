@@ -13,10 +13,13 @@ public interface IEvent : IMessage
 /// use <see cref="IEvent{TMessageId, TEntityKey}"/> instead
 /// </summary>
 public interface IEvent<TMessageId> : IEvent, IMessage<TMessageId>
+    where TMessageId : struct
 {
 }
 
 public interface IEvent<TMessageId, TEntityKey> : IEvent<TMessageId>
+    where TMessageId : struct
+    where TEntityKey : struct
 {
     /// <summary>
     /// The Key of the entity that this event relates to (eg UserId, OrderId, BlogId)

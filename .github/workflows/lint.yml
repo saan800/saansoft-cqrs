@@ -20,6 +20,11 @@ jobs:
           # list of files that changed across commits
           fetch-depth: 0
 
+      - name: setup linting config
+        id: config
+        run: |
+          echo "::set-output name=VALIDATE_ALL_CODEBASE::$(github.event.pull_request.user.login == 'dependabot[bot]' ? true : false)"
+
       - name: super-linter
         uses: super-linter/super-linter@v6.3.0  # x-release-please-version
         env:
@@ -28,7 +33,7 @@ jobs:
           FILTER_REGEX_EXCLUDE: (./\.editorconfig|\.idea/*|\.vscode/*)
           IGNORE_GENERATED_FILES: true
           # false -> only checks changed files
-          VALIDATE_ALL_CODEBASE: false
+          VALIDATE_ALL_CODEBASE: ${{ steps.config.outputs.VALIDATE_ALL_CODEBASE }}
           VALIDATE_CSHARP: true
           VALIDATE_GITHUB_ACTIONS: true
           VALIDATE_YAML: true

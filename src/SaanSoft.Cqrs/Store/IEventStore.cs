@@ -2,14 +2,14 @@ using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Store;
 
-public interface IEventStore<TMessageId>
+public interface IEventStore<TMessageId> where TMessageId : struct
 {
     /// <summary>
     /// Get all events for an entity key
     /// </summary>
     /// <param name="key">(eg UserId, OrderId, BlogId)</param>
     /// <returns></returns>
-    Task<IEnumerable<IEvent<TMessageId, TEntityKey>>> GetAsync<TEntityKey>(TEntityKey key);
+    Task<IEnumerable<IEvent<TMessageId, TEntityKey>>> GetAsync<TEntityKey>(TEntityKey key) where TEntityKey : struct;
 
     /// <summary>
     /// Save a new event

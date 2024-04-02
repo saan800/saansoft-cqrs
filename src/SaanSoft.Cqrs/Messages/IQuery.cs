@@ -21,11 +21,12 @@ public interface IQuery<TQuery, TResult> : IQuery
 /// You should never directly inherit from this interface
 /// use <see cref="IQuery{TMessageId, TQuery, TResult}"/> instead
 /// </summary>
-public interface IQuery<TMessageId> : IMessage<TMessageId>
+public interface IQuery<TMessageId> : IMessage<TMessageId> where TMessageId : struct
 {
 }
 
 public interface IQuery<TMessageId, TQuery, TResult> : IQuery<TQuery, TResult>, IQuery<TMessageId>
+    where TMessageId : struct
     where TQuery : IQuery<TMessageId, TQuery, TResult>
     where TResult : IQueryResult
 {

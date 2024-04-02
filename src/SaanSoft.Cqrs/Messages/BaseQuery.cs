@@ -4,10 +4,7 @@ public abstract class BaseQuery<TQuery, TResult> : BaseQuery<Guid, TQuery, TResu
     where TQuery : IQuery<Guid, TQuery, TResult>
     where TResult : IQueryResult
 {
-    protected BaseQuery(string? correlationId = null, string? authenticatedId = null)
-        : base(Guid.NewGuid(), default, correlationId, authenticatedId) { }
-
-    protected BaseQuery(Guid triggeredById, string? correlationId = null, string? authenticatedId = null)
+    protected BaseQuery(Guid? triggeredById = null, string? correlationId = null, string? authenticatedId = null)
         : base(Guid.NewGuid(), triggeredById, correlationId, authenticatedId) { }
 
     protected BaseQuery(IMessage<Guid> triggeredByMessage)
@@ -16,10 +13,11 @@ public abstract class BaseQuery<TQuery, TResult> : BaseQuery<Guid, TQuery, TResu
 
 public abstract class BaseQuery<TMessageId, TQuery, TResult>
     : BaseMessage<TMessageId>, IQuery<TMessageId, TQuery, TResult>
+    where TMessageId : struct
     where TQuery : IQuery<TMessageId, TQuery, TResult>
     where TResult : IQueryResult
 {
-    protected BaseQuery(TMessageId id, TMessageId? triggeredById, string? correlationId = null, string? authenticatedId = null)
+    protected BaseQuery(TMessageId id, TMessageId? triggeredById = null, string? correlationId = null, string? authenticatedId = null)
         : base(id, triggeredById, correlationId, authenticatedId) { }
 
     protected BaseQuery(TMessageId id, IMessage<TMessageId> triggeredByMessage)

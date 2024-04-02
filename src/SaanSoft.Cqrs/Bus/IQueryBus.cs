@@ -2,7 +2,7 @@ using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Bus;
 
-public interface IQueryBus<TMessageId>
+public interface IQueryBus<TMessageId> where TMessageId : struct
 {
     /// <summary>
     /// Send a query for information

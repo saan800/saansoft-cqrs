@@ -2,10 +2,7 @@ namespace SaanSoft.Cqrs.Messages;
 
 public abstract class BaseCommand : BaseCommand<Guid>
 {
-    protected BaseCommand(string? correlationId = null, string? authenticatedId = null)
-        : base(Guid.NewGuid(), default, correlationId, authenticatedId) { }
-
-    protected BaseCommand(Guid triggeredById, string? correlationId = null, string? authenticatedId = null)
+    protected BaseCommand(Guid? triggeredById = null, string? correlationId = null, string? authenticatedId = null)
         : base(Guid.NewGuid(), triggeredById, correlationId, authenticatedId) { }
 
     protected BaseCommand(IMessage<Guid> triggeredByMessage)
@@ -13,8 +10,9 @@ public abstract class BaseCommand : BaseCommand<Guid>
 }
 
 public abstract class BaseCommand<TMessageId> : BaseMessage<TMessageId>, ICommand<TMessageId>
+    where TMessageId : struct
 {
-    protected BaseCommand(TMessageId id, TMessageId? triggeredById, string? correlationId = null, string? authenticatedId = null)
+    protected BaseCommand(TMessageId id, TMessageId? triggeredById = null, string? correlationId = null, string? authenticatedId = null)
         : base(id, triggeredById, correlationId, authenticatedId) { }
 
     protected BaseCommand(TMessageId id, IMessage<TMessageId> triggeredByMessage)
