@@ -29,19 +29,21 @@ jobs:
              **.cs
              .github/workflows/**
 
-      - name: setup linting config
+      - name: Setup linting config
         id: config
         run: |
-          if [${noChangedFiles} || ${isDependabot}]; then
-            echo "{VALIDATE_ALL_CODEBASE}=true" >> $GITHUB_STATE
+          if [ ${noChangedFiles} || ${isDependabot} ]; then
+            echo "{VALIDATE_ALL_CODEBASE}=true"
+            echo "{VALIDATE_ALL_CODEBASE}=true" >> $GITHUB_OUTPUT
           else
-            echo "{VALIDATE_ALL_CODEBASE}=false" >> $GITHUB_STATE
+            echo "{VALIDATE_ALL_CODEBASE}=false"
+            echo "{VALIDATE_ALL_CODEBASE}=false" >> $GITHUB_OUTPUT
           fi
         env:
           noChangedFiles: steps.changed-files.outputs.all_changed_files.length == 0
           isDependabot: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
 
-      - name: super-linter
+      - name: Run super-linter
         uses: super-linter/super-linter@v6.3.0  # x-release-please-version
         env:
           # To report GitHub Actions status checks
@@ -60,7 +62,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Spell check
+      - name: Spellcheck
         uses: streetsidesoftware/cspell-action@v6
         with:
           config: .cspell.json

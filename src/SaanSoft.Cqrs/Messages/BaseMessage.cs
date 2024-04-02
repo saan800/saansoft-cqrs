@@ -24,10 +24,7 @@ public abstract class BaseMessage<TMessageId> : IMessage<TMessageId>
         Id = id;
         if (!string.IsNullOrWhiteSpace(correlationId)) CorrelationId = correlationId;
         if (!string.IsNullOrWhiteSpace(authenticatedId)) AuthenticatedId = authenticatedId;
-
         if (!GenericUtils.IsNullOrDefault(triggeredById)) TriggeredById = triggeredById;
-
-        if (ReceivedOnUtc == default || ReceivedOnUtc == default || ReceivedOnUtc == DateTime.MinValue) ReceivedOnUtc = DateTime.UtcNow;
         if (string.IsNullOrWhiteSpace(TypeFullName))
         {
             var type = GetType();
