@@ -33,14 +33,12 @@ jobs:
         id: config
         run: |
           if [ "${noChangedValidatableFiles}" ] || [ "${isDependabot}" ]; then
-            echo "{VALIDATE_ALL_CODEBASE}=true"
             echo "{VALIDATE_ALL_CODEBASE}=true" >> $GITHUB_OUTPUT
           else
-            echo "{VALIDATE_ALL_CODEBASE}=false"
             echo "{VALIDATE_ALL_CODEBASE}=false" >> $GITHUB_OUTPUT
           fi
         env:
-          noChangedValidatableFiles: ${{ steps.changed-validatable-files.outputs.all_changed_files.length == 0 }}
+          noChangedValidatableFiles: ${{ steps.changed-validatable-files.outputs.any_changed != 'true' }}
           isDependabot: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
 
       - name: Run super-linter
