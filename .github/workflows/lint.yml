@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
         with:
           # super-linter needs the full git history to get the
           # list of files that changed across commits
@@ -22,7 +22,7 @@ jobs:
 
       - name: Get changed c# files
         id: changed-csharp-files
-        uses: tj-actions/changed-files@v44
+        uses: tj-actions/changed-files@2d756ea4c53f7f6b397767d8723b3a10a9f35bf2 # v44.0.0
         with:
           # Avoid using single or double quotes for multiline patterns
           files: |
@@ -40,7 +40,7 @@ jobs:
           hasChangedCSharpFiles: ${{ steps.changed-csharp-files.outputs.any_changed == 'true' }}
 
       - name: Run super-linter
-        uses: super-linter/super-linter@v6.3.0  # x-release-please-version
+        uses: super-linter/super-linter@e0fc164bba85f4b58c6cd17ba1dfd435d01e8a06 # v6.3.0
         env:
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -56,10 +56,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
 
       - name: Spellcheck
-        uses: streetsidesoftware/cspell-action@v6
+        uses: streetsidesoftware/cspell-action@214db1e3138f326d33b7a6a51c92852e89ab0618 # v6.1.0
         with:
           config: .cspell.json
           check_dot_files: false

@@ -15,14 +15,14 @@ jobs:
       github.event.pull_request.user.login == 'dependabot[bot]'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
 
       - name: Dependabot metadata
-        uses: dependabot/fetch-metadata@v2
+        uses: dependabot/fetch-metadata@0fb21704c18a42ce5aa8d720ea4b912f5e6babef # v2.0.0
         id: dependabot-metadata
 
       - name: Check for merge conflicts
-        uses: sv-tools/block-merge-conflicts@v1.1.0
+        uses: sv-tools/block-merge-conflicts@2fb5852d0efb87ecceed7a3d24ad657dccf47a64 # v1.1.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
