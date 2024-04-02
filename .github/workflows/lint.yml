@@ -72,4 +72,3 @@ jobs:
           config: .cspell.json
           check_dot_files: false
           incremental_files_only: true
-
