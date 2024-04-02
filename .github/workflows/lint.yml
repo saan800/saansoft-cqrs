@@ -20,10 +20,22 @@ jobs:
           # list of files that changed across commits
           fetch-depth: 0
 
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v44
+        with:
+          # Avoid using single or double quotes for multiline patterns
+          files: |
+             **.cs
+             .github/workflows/**
+
       - name: setup linting config
         id: config
         run: |
-          echo "::set-output name=VALIDATE_ALL_CODEBASE::$(github.event.pull_request.user.login == 'dependabot[bot]' ? true : false)"
+          echo "::set-output name=VALIDATE_ALL_CODEBASE::$(${hasChangedFiles} || ${isDependabot})"
+        env:
+          hasChangedFiles: ${{ steps.changed-files.outputs.all_changed_files.length > 0 }}
+          isDependabot: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
 
       - name: super-linter
         uses: super-linter/super-linter@v6.3.0  # x-release-please-version
