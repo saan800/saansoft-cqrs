@@ -28,28 +28,14 @@ jobs:
           files: |
              **.cs
 
-      - name: Get changed github workflow files
-        id: changed-github-files
-        uses: tj-actions/changed-files@v44
-        with:
-          files: |
-             .github/workflows/**
-
       - name: Setup linting config
         id: config
         run: |
-          echo "noChangedCSharpFiles=${noChangedCSharpFiles}"
-          echo "noChangedGitHubFiles=${noChangedGitHubFiles}"
-          if [ "${noChangedCSharpFiles}" == "true" ] || [ "${noChangedGitHubFiles}" == "true" ]; then
-            echo "VALIDATE_ALL_CODEBASE=true"
-            echo "VALIDATE_ALL_CODEBASE=true" >> $GITHUB_OUTPUT
+          if [ "${hasChangedCSharpFiles}" == "true" ]; then
           else
-            echo "VALIDATE_ALL_CODEBASE=false"
-            echo "VALIDATE_ALL_CODEBASE=false" >> $GITHUB_OUTPUT
           fi
         env:
-          noChangedCSharpFiles: ${{ steps.changed-csharp-files.outputs.any_changed != 'true' }}
-          noChangedGitHubFiles: ${{ steps.changed-github-files.outputs.any_changed != 'true' }}
+          hasChangedCSharpFiles: ${{ steps.changed-csharp-files.outputs.any_changed == 'true' }}
 
       - name: Run super-linter
         uses: super-linter/super-linter@v6.3.0  # x-release-please-version
