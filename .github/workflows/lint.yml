@@ -20,26 +20,36 @@ jobs:
           # list of files that changed across commits
           fetch-depth: 0
 
-      - name: Get changed validatable files
-        id: changed-validatable-files
+      - name: Get changed c# files
+        id: changed-csharp-files
         uses: tj-actions/changed-files@v44
         with:
           # Avoid using single or double quotes for multiline patterns
           files: |
              **.cs
+
+      - name: Get changed github workflow files
+        id: changed-github-files
+        uses: tj-actions/changed-files@v44
+        with:
+          files: |
              .github/workflows/**
 
       - name: Setup linting config
         id: config
         run: |
-          if [ "${noChangedValidatableFiles}" ] || [ "${isDependabot}" ]; then
+          echo "noChangedCSharpFiles=${noChangedCSharpFiles}"
+          echo "noChangedGitHubFiles=${noChangedGitHubFiles}"
+          if [ "${noChangedCSharpFiles}" == "true" ] || [ "${noChangedGitHubFiles}" == "true" ]; then
+            echo "VALIDATE_ALL_CODEBASE=true"
             echo "VALIDATE_ALL_CODEBASE=true" >> $GITHUB_OUTPUT
           else
+            echo "VALIDATE_ALL_CODEBASE=false"
             echo "VALIDATE_ALL_CODEBASE=false" >> $GITHUB_OUTPUT
           fi
         env:
-          noChangedValidatableFiles: ${{ steps.changed-validatable-files.outputs.any_changed != 'true' }}
-          isDependabot: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
+          noChangedCSharpFiles: ${{ steps.changed-csharp-files.outputs.any_changed != 'true' }}
+          noChangedGitHubFiles: ${{ steps.changed-github-files.outputs.any_changed != 'true' }}
 
       - name: Run super-linter
         uses: super-linter/super-linter@v6.3.0  # x-release-please-version
