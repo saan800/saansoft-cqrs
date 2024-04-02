@@ -22,7 +22,7 @@ jobs:
         id: dependabot-metadata
 
       - name: Check for merge conflicts
-        uses: sv-tools/block-merge-conflicts@v1.0.0
+        uses: sv-tools/block-merge-conflicts@v1.1.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
