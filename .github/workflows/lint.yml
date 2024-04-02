@@ -32,9 +32,13 @@ jobs:
       - name: setup linting config
         id: config
         run: |
-          echo "::set-output name=VALIDATE_ALL_CODEBASE::$(${hasChangedFiles} || ${isDependabot})"
+          if [${noChangedFiles} || ${isDependabot}]; then
+            echo "{VALIDATE_ALL_CODEBASE}=true" >> $GITHUB_STATE
+          else
+            echo "{VALIDATE_ALL_CODEBASE}=false" >> $GITHUB_STATE
+          fi
         env:
-          hasChangedFiles: ${{ steps.changed-files.outputs.all_changed_files.length > 0 }}
+          noChangedFiles: steps.changed-files.outputs.all_changed_files.length == 0
           isDependabot: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
 
       - name: super-linter
