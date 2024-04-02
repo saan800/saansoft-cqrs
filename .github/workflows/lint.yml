@@ -33,9 +33,9 @@ jobs:
         id: config
         run: |
           if [ "${noChangedValidatableFiles}" ] || [ "${isDependabot}" ]; then
-            echo "{VALIDATE_ALL_CODEBASE}=true" >> $GITHUB_OUTPUT
+            echo "VALIDATE_ALL_CODEBASE=true" >> $GITHUB_OUTPUT
           else
-            echo "{VALIDATE_ALL_CODEBASE}=false" >> $GITHUB_OUTPUT
+            echo "VALIDATE_ALL_CODEBASE=false" >> $GITHUB_OUTPUT
           fi
         env:
           noChangedValidatableFiles: ${{ steps.changed-validatable-files.outputs.any_changed != 'true' }}
