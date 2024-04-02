@@ -39,6 +39,14 @@ jobs:
         env:
           hasChangedCSharpFiles: ${{ steps.changed-csharp-files.outputs.any_changed == 'true' }}
 
+      - name: Cache super-linter docker image
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.docker
+          key: ubuntu-latest-docker-${{ hashFiles('**/docker-lock.json') }}
+          restore-keys: |
+            ubuntu-latest-docker-
+
       - name: Run super-linter
         uses: super-linter/super-linter@v6.3.0  # x-release-please-version
         env:
