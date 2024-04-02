@@ -18,9 +18,10 @@ commit_message="$1"
 
 
 validTypes="breaking change|bugfix|build|ci|chore|docs|feat|feature|fix|hotfix|perf|refactor|revert|style|test"
+system_msg_regex="^(Merge remote-tracking branch|Revert) .*"
 valid_msg_regex="^($validTypes)(\(.{3,}\))?!?: .{4,}"
 
-if [[ ! $commit_message =~ $valid_msg_regex ]]; then
+if [[ ! $commit_message =~ $valid_msg_regex ]] && [[ ! $commit_message =~ $system_msg_regex ]]; then
     commaSeparatedList=$(echo "$validTypes" | tr '|' ', ')
 
     echo "${RED}Invalid commit message: $commit_message${NC}"
