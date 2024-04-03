@@ -12,6 +12,28 @@ public class LocalQueryBusTests
     private readonly ILogger _logger = A.Fake<ILogger>();
 
     [Fact]
+    public void Cant_create_with_null_serviceProvider()
+    {
+        Action act = () => new LocalQueryBus(null, _logger);
+
+        act.Should()
+            .Throw<ArgumentNullException>()
+            .Where(x => x.ParamName == "serviceProvider");
+    }
+
+    [Fact]
+    public void Cant_create_with_null_logger()
+    {
+        var serviceCollection = new ServiceCollection();
+
+        Action act = () => new LocalQueryBus(serviceCollection.BuildServiceProvider(), null);
+
+        act.Should()
+            .Throw<ArgumentNullException>()
+            .Where(x => x.ParamName == "logger");
+    }
+
+    [Fact]
     public async Task QueryAsync_handler_exists_in_serviceProvider()
     {
         var handler = A.Fake<IQueryHandler<GuidQuery, QueryResult>>();

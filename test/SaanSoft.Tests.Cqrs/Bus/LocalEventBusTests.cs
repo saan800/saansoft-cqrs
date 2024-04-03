@@ -12,6 +12,28 @@ public class LocalEventBusTests
     private readonly ILogger _logger = A.Fake<ILogger>();
 
     [Fact]
+    public void Cant_create_with_null_serviceProvider()
+    {
+        Action act = () => new LocalEventBus(null, _logger);
+
+        act.Should()
+            .Throw<ArgumentNullException>()
+            .Where(x => x.ParamName == "serviceProvider");
+    }
+
+    [Fact]
+    public void Cant_create_with_null_logger()
+    {
+        var serviceCollection = new ServiceCollection();
+
+        Action act = () => new LocalEventBus(serviceCollection.BuildServiceProvider(), null);
+
+        act.Should()
+            .Throw<ArgumentNullException>()
+            .Where(x => x.ParamName == "logger");
+    }
+
+    [Fact]
     public async Task ExecuteAsync_single_handler_exists_in_serviceProvider()
     {
         var eventHandler = A.Fake<IEventHandler<GuidEvent>>();

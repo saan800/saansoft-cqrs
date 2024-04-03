@@ -13,6 +13,28 @@ public class LocalCommandBusTests
     private readonly ILogger _logger = A.Fake<ILogger>();
 
     [Fact]
+    public void Cant_create_with_null_serviceProvider()
+    {
+        Action act = () => new LocalCommandBus(null, _logger);
+
+        act.Should()
+            .Throw<ArgumentNullException>()
+            .Where(x => x.ParamName == "serviceProvider");
+    }
+
+    [Fact]
+    public void Cant_create_with_null_logger()
+    {
+        var serviceCollection = new ServiceCollection();
+
+        Action act = () => new LocalCommandBus(serviceCollection.BuildServiceProvider(), null);
+
+        act.Should()
+            .Throw<ArgumentNullException>()
+            .Where(x => x.ParamName == "logger");
+    }
+
+    [Fact]
     public async Task ExecuteAsync_handler_exists_in_serviceProvider()
     {
         var handler = A.Fake<ICommandHandler<GuidCommand>>();
