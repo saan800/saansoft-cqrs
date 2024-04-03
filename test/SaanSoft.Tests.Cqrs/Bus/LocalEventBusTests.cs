@@ -10,6 +10,7 @@ namespace SaanSoft.Tests.Cqrs.Bus;
 public class LocalEventBusTests
 {
     private readonly ILogger _logger = A.Fake<ILogger>();
+    private readonly EventBusOptions _options = new();
 
     [Fact]
     public void Cant_create_with_null_serviceProvider()
@@ -41,7 +42,7 @@ public class LocalEventBusTests
         var serviceCollection = new ServiceCollection();
         serviceCollection.AddScoped<IEventHandler<GuidEvent>>(_ => eventHandler);
 
-        var sut = new LocalEventBus(serviceCollection.BuildServiceProvider(), _logger);
+        var sut = new LocalEventBus(serviceCollection.BuildServiceProvider(), _logger, _options);
         await sut.QueueAsync(new GuidEvent(Guid.NewGuid()));
 
         A.CallTo(() => eventHandler.HandleAsync(A<GuidEvent>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappened();

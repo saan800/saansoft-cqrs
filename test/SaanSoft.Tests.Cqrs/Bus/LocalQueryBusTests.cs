@@ -10,6 +10,7 @@ namespace SaanSoft.Tests.Cqrs.Bus;
 public class LocalQueryBusTests
 {
     private readonly ILogger _logger = A.Fake<ILogger>();
+    private readonly QueryBusOptions _options = new();
 
     [Fact]
     public void Cant_create_with_null_serviceProvider()
@@ -43,7 +44,7 @@ public class LocalQueryBusTests
         var serviceCollection = new ServiceCollection();
         serviceCollection.AddScoped<IQueryHandler<GuidQuery, QueryResult>>(_ => handler);
 
-        var sut = new LocalQueryBus(serviceCollection.BuildServiceProvider(), _logger);
+        var sut = new LocalQueryBus(serviceCollection.BuildServiceProvider(), _logger, _options);
         var result = await sut.QueryAsync<GuidQuery, QueryResult>(new GuidQuery());
         result.IsSuccess.Should().BeTrue();
 

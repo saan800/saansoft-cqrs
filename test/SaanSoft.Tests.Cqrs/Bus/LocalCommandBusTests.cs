@@ -11,6 +11,7 @@ namespace SaanSoft.Tests.Cqrs.Bus;
 public class LocalCommandBusTests
 {
     private readonly ILogger _logger = A.Fake<ILogger>();
+    private readonly CommandBusOptions _options = new();
 
     [Fact]
     public void Cant_create_with_null_serviceProvider()
@@ -44,7 +45,7 @@ public class LocalCommandBusTests
         var serviceCollection = new ServiceCollection();
         serviceCollection.AddScoped<ICommandHandler<GuidCommand>>(_ => handler);
 
-        var sut = new LocalCommandBus(serviceCollection.BuildServiceProvider(), _logger);
+        var sut = new LocalCommandBus(serviceCollection.BuildServiceProvider(), _logger, _options);
         var result = await sut.ExecuteAsync(new GuidCommand());
         result.IsSuccess.Should().BeTrue();
 
