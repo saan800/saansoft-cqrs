@@ -15,9 +15,18 @@ public abstract class LocalCommandBus<TMessageId>(IServiceProvider serviceProvid
     public async Task<CommandResult> ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : ICommand<TMessageId>
     {
-        return await serviceProvider
-            .GetRequiredService<ICommandHandler<TCommand>>()
-            .HandleAsync(command, cancellationToken);
+        var handlers = serviceProvider.GetServices<ICommandHandler<TCommand>>()?.ToList() ?? [];
+        if (handlers.Count == 1)
+        {
+            return await handlers.First().HandleAsync(command, cancellationToken);
+        }
+        if (handlers.Count == 0)
+        {
+            throw new InvalidOperationException($"No service for type '{typeof(ICommandHandler<TCommand>)}' has been registered");
+        }
+
+        var typeNames = handlers.Select(x => x.GetType().FullName).ToList();
+        throw new InvalidOperationException($"Only one service for type '{typeof(ICommandHandler<TCommand>)}' can be registered. Currently have {typeNames.Count} registered: {string.Join("; ", typeNames)}");
     }
 
     public async Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
