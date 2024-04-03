@@ -12,7 +12,7 @@ public class BaseQueryResultTests
     }
 
     [Theory]
-    [InlineAutoData]
+    [AutoFakeData]
     public void Constructor_with_error_message_is_failure_result(string errorMessage)
     {
         var result = new QueryResult(errorMessage);

@@ -19,7 +19,7 @@ public class BaseQueryTests
     }
 
     [Theory]
-    [InlineAutoData]
+    [AutoFakeData]
     public void Init_populates_properties_from_constructor(Guid triggeredById, string correlationId, string authId)
     {
         var startTime = DateTime.UtcNow;
@@ -35,7 +35,7 @@ public class BaseQueryTests
     }
 
     [Theory]
-    [InlineAutoData]
+    [AutoFakeData]
     public void Init_populates_properties_from_triggerMessage(string correlationId, string authId)
     {
         var triggeredBy = new GuidCommand(null, correlationId, authId);

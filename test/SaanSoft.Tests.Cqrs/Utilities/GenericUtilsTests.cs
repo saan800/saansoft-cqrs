@@ -12,7 +12,7 @@ public class GenericUtilsTests
     }
 
     [Theory]
-    [InlineAutoData]
+    [AutoFakeData]
     public void IsNullOrDefault_Nullable_Guid_with_value_should_return_false(Guid? value)
     {
         GenericUtils.IsNullOrDefault(value).Should().Be(false);
@@ -26,7 +26,7 @@ public class GenericUtilsTests
     }
 
     [Theory]
-    [InlineAutoData]
+    [AutoFakeData]
     public void IsNullOrDefault_Guid_with_value_should_return_false(Guid value)
     {
         GenericUtils.IsNullOrDefault(value).Should().BeFalse();

@@ -6,13 +6,17 @@ namespace SaanSoft.Tests.Cqrs.Common.AutoFixture;
 
 public static class AutoFixtureExtensions
 {
-    public static Fixture CreateFixture()
+    public static Fixture Create()
     {
         var fixture = new Fixture();
 
-        fixture.Customize(new AutoFakeItEasyCustomization() { ConfigureMembers = true, GenerateDelegates = true });
+        fixture.Customize(new AutoFakeItEasyCustomization
+        {
+            ConfigureMembers = true,
+            GenerateDelegates = true
+        }
+        );
         fixture.Customize<DateOnly>(composer => composer.FromFactory<DateTime>(DateOnly.FromDateTime));
-
 
         fixture.Register(A.Fake<HttpMessageHandler>);
         fixture.Freeze<HttpMessageHandler>();
