@@ -6,6 +6,9 @@ on:
       - ".github/dependabot.yml"
       - ".github/workflows/dependabot-validate.yml"
 
+permissions:
+  contents: read
+
 jobs:
   dependabot-validate:
     runs-on: ubuntu-latest

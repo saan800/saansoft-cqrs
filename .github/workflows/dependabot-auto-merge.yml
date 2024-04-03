@@ -3,12 +3,17 @@ name: dependabot-auto-approve-and-merge
 on: pull_request
 
 permissions:
-  pull-requests: write
-  contents: write
+  contents: read
+  pull-requests: read
 
 jobs:
   dependabot-auto-approve-and-merge:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
     # Checking the author and fork will prevent your Action run failing on non-Dependabot PRs
     if: |
       github.event.repository.fork == false &&
