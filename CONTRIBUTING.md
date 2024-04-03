@@ -61,3 +61,7 @@ Open the project then go to:
 
 Read more [here](https://learn.microsoft.com/en-us/visualstudio/ide/text-spell-checker)
 
+## Coding guidelines
+
+A consistent coding style is included via [EditorConfig](https://editorconfig.org/) with the file [.editorconfig](./.editorconfig) at the root of the repo. Depending on your editor of choice, it will either support it out of the box or you can [download a plugin](https://editorconfig.org/#download) for the config to be applied.
+
