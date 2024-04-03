@@ -7,6 +7,7 @@ public class GenericUtilsTests
     [Fact]
     public void IsNullOrDefault_Nullable_Guid_without_value_should_return_true()
     {
+        Assert.Fail();
         Guid? guidValue = null;
         GenericUtils.IsNullOrDefault(guidValue).Should().Be(true);
     }
