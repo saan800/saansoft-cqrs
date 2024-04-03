@@ -21,14 +21,11 @@ public class BaseEventTests
         result.TriggeredById.Should().BeNull();
     }
 
-    [Fact]
-    public void Init_populates_properties_from_constructor()
+    [Theory]
+    [InlineAutoData]
+    public void Init_populates_properties_from_constructor(Guid key, Guid triggeredById, string correlationId, string authId)
     {
         var startTime = DateTime.UtcNow;
-        var key = Guid.NewGuid();
-        var triggeredById = Guid.NewGuid();
-        var correlationId = Guid.NewGuid().ToString();
-        var authId = "someone";
         var result = new GuidEvent(key, triggeredById, correlationId, authId);
 
         result.Key.Should().Be(key);
@@ -41,12 +38,10 @@ public class BaseEventTests
         result.TriggeredById.Should().Be(triggeredById);
     }
 
-    [Fact]
-    public void Init_populates_properties_from_triggerMessage()
+    [Theory]
+    [InlineAutoData]
+    public void Init_populates_properties_from_triggerMessage(Guid key, string correlationId, string authId)
     {
-        var key = Guid.NewGuid();
-        var correlationId = Guid.NewGuid().ToString();
-        var authId = "someone";
         var triggeredBy = new GuidCommand(null, correlationId, authId);
 
         Thread.Sleep(50);

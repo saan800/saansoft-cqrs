@@ -18,13 +18,11 @@ public class BaseQueryTests
         result.TriggeredById.Should().BeNull();
     }
 
-    [Fact]
-    public void Init_populates_properties_from_constructor()
+    [Theory]
+    [InlineAutoData]
+    public void Init_populates_properties_from_constructor(Guid triggeredById, string correlationId, string authId)
     {
         var startTime = DateTime.UtcNow;
-        var triggeredById = Guid.NewGuid();
-        var correlationId = Guid.NewGuid().ToString();
-        var authId = "someone";
         var result = new GuidQuery(triggeredById, correlationId, authId);
 
         result.Id.Should().NotBeEmpty();
@@ -36,11 +34,10 @@ public class BaseQueryTests
         result.TypeFullName.Should().Be(typeof(GuidQuery).FullName);
     }
 
-    [Fact]
-    public void Init_populates_properties_from_triggerMessage()
+    [Theory]
+    [InlineAutoData]
+    public void Init_populates_properties_from_triggerMessage(string correlationId, string authId)
     {
-        var correlationId = Guid.NewGuid().ToString();
-        var authId = "someone";
         var triggeredBy = new GuidCommand(null, correlationId, authId);
 
         Thread.Sleep(50);

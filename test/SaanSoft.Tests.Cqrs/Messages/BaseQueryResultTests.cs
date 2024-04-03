@@ -11,10 +11,10 @@ public class BaseQueryResultTests
         result.IsSuccess.Should().BeTrue();
     }
 
-    [Fact]
-    public void Constructor_with_error_message_is_failure_result()
+    [Theory]
+    [InlineAutoData]
+    public void Constructor_with_error_message_is_failure_result(string errorMessage)
     {
-        const string errorMessage = "It didn't work";
         var result = new QueryResult(errorMessage);
         result.IsSuccess.Should().BeFalse();
         result.ErrorMessage.Should().Be(errorMessage);

@@ -22,7 +22,7 @@ public static class AutoFixtureExtensions
             var httpMessageHandler = fixture.Freeze<HttpMessageHandler>();
             return new HttpClient(httpMessageHandler)
             {
-                // inject a default baseUri for httpclient, this is required for dependencies that expect
+                // inject a default baseUri for httpClient, this is required for dependencies that expect
                 // HttpClientFactory to configure their defaults correctly, in that case even if you mock out the
                 // message handler things will fail when generating the target uri
                 BaseAddress = new Uri("http://localhost")

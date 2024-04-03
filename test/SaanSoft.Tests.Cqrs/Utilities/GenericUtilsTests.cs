@@ -4,25 +4,31 @@ namespace SaanSoft.Tests.Cqrs.Utilities;
 
 public class GenericUtilsTests
 {
-    [Theory]
-    [InlineData(null, true)]
-    [InlineData("", true)]
-    [InlineData("00000000-0000-0000-0000-000000000000", false)]
-    [InlineData("3311621e-c1c5-47f0-8ceb-638833210fab", false)]
-    public void IsNullOrDefault_Nullable_Guid(string? valueAsString, bool expectedResult)
+    [Fact]
+    public void IsNullOrDefault_Nullable_Guid_without_value_should_return_true()
     {
-        Guid? guidValue = string.IsNullOrWhiteSpace(valueAsString) ? null : Guid.Parse(valueAsString);
-        GenericUtils.IsNullOrDefault(guidValue).Should().Be(expectedResult);
+        Guid? guidValue = null;
+        GenericUtils.IsNullOrDefault(guidValue).Should().Be(true);
     }
 
     [Theory]
-    [InlineData(null, true)]
-    [InlineData("", true)]
-    [InlineData("00000000-0000-0000-0000-000000000000", true)]
-    [InlineData("3311621e-c1c5-47f0-8ceb-638833210fab", false)]
-    public void IsNullOrDefault_Guid(string? valueAsString, bool expectedResult)
+    [InlineAutoData]
+    public void IsNullOrDefault_Nullable_Guid_with_value_should_return_false(Guid? value)
     {
-        Guid guidValue = string.IsNullOrWhiteSpace(valueAsString) ? default : Guid.Parse(valueAsString);
-        GenericUtils.IsNullOrDefault(guidValue).Should().Be(expectedResult);
+        GenericUtils.IsNullOrDefault(value).Should().Be(false);
+    }
+
+    [Fact]
+    public void IsNullOrDefault_Guid_with_default_value_should_return_true()
+    {
+        Guid guidValue = default;
+        GenericUtils.IsNullOrDefault(guidValue).Should().BeTrue();
+    }
+
+    [Theory]
+    [InlineAutoData]
+    public void IsNullOrDefault_Guid_with_value_should_return_false(Guid value)
+    {
+        GenericUtils.IsNullOrDefault(value).Should().BeFalse();
     }
 }
