@@ -5,10 +5,10 @@ using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Bus;
 
-public class LocalQueryBus(IServiceProvider serviceProvider, ILogger logger, QueryBusOptions? options = null)
-    : LocalQueryBus<Guid>(serviceProvider, logger, options);
+public class InMemoryQueryBus(IServiceProvider serviceProvider, ILogger logger, QueryBusOptions? options = null)
+    : InMemoryQueryBus<Guid>(serviceProvider, logger, options);
 
-public abstract class LocalQueryBus<TMessageId> :
+public abstract class InMemoryQueryBus<TMessageId> :
     IQueryBus<TMessageId>
     where TMessageId : struct
 {
@@ -19,7 +19,7 @@ public abstract class LocalQueryBus<TMessageId> :
     protected readonly ILogger Logger;
     // ReSharper restore MemberCanBePrivate.Global
 
-    protected LocalQueryBus(IServiceProvider serviceProvider, ILogger logger, QueryBusOptions? options = null)
+    protected InMemoryQueryBus(IServiceProvider serviceProvider, ILogger logger, QueryBusOptions? options = null)
     {
         Options = options ?? new QueryBusOptions();
         LogLevel = Options.LogLevel;
@@ -32,7 +32,7 @@ public abstract class LocalQueryBus<TMessageId> :
         where TQuery : IQuery<TQuery, TResponse>
         where TResponse : IQueryResponse
     {
-        var handlers = ServiceProvider.GetServices<IQueryHandler<TQuery, TResponse>>()?.ToList() ?? [];
+        var handlers = ServiceProvider.GetServices<IQueryHandler<TQuery, TResponse>>().ToList();
         switch (handlers.Count)
         {
             case 1:

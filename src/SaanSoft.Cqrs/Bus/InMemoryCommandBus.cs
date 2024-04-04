@@ -5,10 +5,10 @@ using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Bus;
 
-public class LocalCommandBus(IServiceProvider serviceProvider, ILogger logger, CommandBusOptions? options = null)
-    : LocalCommandBus<Guid>(serviceProvider, logger, options);
+public class InMemoryCommandBus(IServiceProvider serviceProvider, ILogger logger, CommandBusOptions? options = null)
+    : InMemoryCommandBus<Guid>(serviceProvider, logger, options);
 
-public abstract class LocalCommandBus<TMessageId>
+public abstract class InMemoryCommandBus<TMessageId>
     : ICommandBus<TMessageId>
     where TMessageId : struct
 {
@@ -19,7 +19,7 @@ public abstract class LocalCommandBus<TMessageId>
     protected readonly ILogger Logger;
     // ReSharper restore MemberCanBePrivate.Global
 
-    protected LocalCommandBus(IServiceProvider serviceProvider, ILogger logger, CommandBusOptions? options = null)
+    protected InMemoryCommandBus(IServiceProvider serviceProvider, ILogger logger, CommandBusOptions? options = null)
     {
         Options = options ?? new CommandBusOptions();
         LogLevel = Options.LogLevel;
@@ -31,12 +31,16 @@ public abstract class LocalCommandBus<TMessageId>
     public async Task<CommandResponse> ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : ICommand<TMessageId>
     {
-        var handlers = ServiceProvider.GetServices<ICommandHandler<TCommand>>()?.ToList() ?? [];
+        var handlers = ServiceProvider.GetServices<ICommandHandler<TCommand>>().ToList();
         switch (handlers.Count)
         {
             case 1:
                 var handler = handlers.Single();
-                Logger.Log(LogLevel, "Running command handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, typeof(TCommand).FullName);
+
+                if (Logger.IsEnabled(LogLevel))
+                {
+                    Logger.Log(LogLevel, "Running command handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, typeof(TCommand).FullName);
+                }
                 return await handler.HandleAsync(command, cancellationToken);
             case 0:
                 throw new InvalidOperationException($"No service for type '{typeof(ICommandHandler<TCommand>)}' has been registered.");

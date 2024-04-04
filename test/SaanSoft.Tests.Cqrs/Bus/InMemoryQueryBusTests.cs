@@ -7,12 +7,12 @@ using SaanSoft.Tests.Cqrs.TestHelpers;
 
 namespace SaanSoft.Tests.Cqrs.Bus;
 
-public class LocalQueryBusTests
+public class InMemoryQueryBusTests
 {
     private readonly ILogger _logger;
     private readonly QueryBusOptions _options;
 
-    public LocalQueryBusTests()
+    public InMemoryQueryBusTests()
     {
         _options = new QueryBusOptions { LogLevel = LogLevel.Information };
         _logger = A.Fake<ILogger>();
@@ -22,7 +22,7 @@ public class LocalQueryBusTests
     [Fact]
     public void Cant_create_with_null_serviceProvider()
     {
-        Action act = () => new LocalQueryBus(null, _logger);
+        Action act = () => new InMemoryQueryBus(null, _logger);
 
         act.Should()
             .Throw<ArgumentNullException>()
@@ -34,7 +34,7 @@ public class LocalQueryBusTests
     {
         var serviceCollection = new ServiceCollection();
 
-        Action act = () => new LocalQueryBus(serviceCollection.BuildServiceProvider(), null);
+        Action act = () => new InMemoryQueryBus(serviceCollection.BuildServiceProvider(), null);
 
         act.Should()
             .Throw<ArgumentNullException>()
@@ -51,7 +51,7 @@ public class LocalQueryBusTests
         var serviceCollection = new ServiceCollection();
         serviceCollection.AddScoped<IQueryHandler<MyQuery, QueryResponse>>(_ => handler);
 
-        var sut = new LocalQueryBus(serviceCollection.BuildServiceProvider(), _logger, _options);
+        var sut = new InMemoryQueryBus(serviceCollection.BuildServiceProvider(), _logger, _options);
         var result = await sut.QueryAsync(new MyQuery());
         result.Should().NotBeNull();
         //result.IsSuccess.Should().BeTrue();
@@ -64,7 +64,7 @@ public class LocalQueryBusTests
     {
         var serviceCollection = new ServiceCollection();
 
-        var sut = new LocalQueryBus(serviceCollection.BuildServiceProvider(), _logger);
+        var sut = new InMemoryQueryBus(serviceCollection.BuildServiceProvider(), _logger);
 
         await sut.Invoking(y => y.QueryAsync(new MyQuery()))
             .Should().ThrowAsync<InvalidOperationException>()
@@ -84,7 +84,7 @@ public class LocalQueryBusTests
         serviceCollection.AddScoped<IQueryHandler<MyQuery, QueryResponse>>(_ => handler1);
         serviceCollection.AddScoped<IQueryHandler<MyQuery, QueryResponse>>(_ => handler2);
 
-        var sut = new LocalQueryBus(serviceCollection.BuildServiceProvider(), _logger);
+        var sut = new InMemoryQueryBus(serviceCollection.BuildServiceProvider(), _logger);
         await sut.Invoking(y => y.QueryAsync(new MyQuery()))
             .Should().ThrowAsync<InvalidOperationException>()
             .Where(x =>
