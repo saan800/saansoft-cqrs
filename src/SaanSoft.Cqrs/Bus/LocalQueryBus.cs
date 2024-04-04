@@ -8,9 +8,9 @@ namespace SaanSoft.Cqrs.Bus;
 public class LocalQueryBus(IServiceProvider serviceProvider, ILogger logger, QueryBusOptions? options = null)
     : LocalQueryBus<Guid>(serviceProvider, logger, options);
 
-public abstract class LocalQueryBus<TMessageId> : IQueryBus
-     //     : IQueryBus<TMessageId>
-     where TMessageId : struct
+public abstract class LocalQueryBus<TMessageId> :
+    IQueryBus<TMessageId>
+    where TMessageId : struct
 {
     // ReSharper disable MemberCanBePrivate.Global
     protected readonly QueryBusOptions Options;

@@ -9,8 +9,15 @@ namespace SaanSoft.Tests.Cqrs.Bus;
 
 public class LocalQueryBusTests
 {
-    private readonly ILogger _logger = A.Fake<ILogger>();
-    private readonly QueryBusOptions _options = new();
+    private readonly ILogger _logger;
+    private readonly QueryBusOptions _options;
+
+    public LocalQueryBusTests()
+    {
+        _options = new QueryBusOptions { LogLevel = LogLevel.Information };
+        _logger = A.Fake<ILogger>();
+        A.CallTo(() => _logger.IsEnabled(A<LogLevel>.Ignored)).Returns(true);
+    }
 
     [Fact]
     public void Cant_create_with_null_serviceProvider()
