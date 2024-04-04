@@ -2,7 +2,7 @@ namespace SaanSoft.Cqrs.Messages;
 
 /// <summary>
 /// You should never directly inherit from this interface
-/// use <see cref="ICommand{TMessageKey}"/> instead
+/// use <see cref="ICommand{TMessageId}"/> instead
 /// </summary>
 public interface ICommand : IMessage
 {

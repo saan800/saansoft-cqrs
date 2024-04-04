@@ -2,7 +2,7 @@ namespace SaanSoft.Cqrs.Messages;
 
 /// <summary>
 /// You should never directly inherit from this interface
-/// use <see cref="IMessage{TMessageKey}"/> instead
+/// use <see cref="IMessage{TMessageId}"/> instead
 /// </summary>
 public interface IMessage
 {
@@ -36,7 +36,7 @@ public interface IMessage
 /// <summary>
 /// Base class with common properties for all messages
 /// You should never directly inherit from IMessage
-/// Use <see cref="ICommand{TMessageKey}"/>, <see cref="IEvent{TMessageKey, TEntityKey}"/> or <see cref="IQuery{TQuery, TResult}"/> instead
+/// Use <see cref="ICommand{TMessageId}"/>, <see cref="IEvent{TMessageId, TEntityKey}"/> or <see cref="IQuery{TMessageId, TQuery, TResponse}"/> instead
 /// </summary>
 public interface IMessage<TMessageId> : IMessage where TMessageId : struct
 {
