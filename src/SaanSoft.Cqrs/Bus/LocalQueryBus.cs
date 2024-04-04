@@ -40,7 +40,7 @@ public abstract class LocalQueryBus<TMessageId> :
                 {
                     Logger.Log(LogLevel, "Running query handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, typeof(TQuery).FullName);
                 }
-                return await handler.HandleAsync(query);
+                return await handler.HandleAsync(query, cancellationToken);
             case 0:
                 throw new InvalidOperationException($"No service for type '{typeof(IQueryHandler<TQuery, TResponse>)}' has been registered.");
             default:

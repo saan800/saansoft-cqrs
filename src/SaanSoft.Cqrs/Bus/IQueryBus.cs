@@ -17,5 +17,5 @@ public interface IQueryBus<TMessageId> where TMessageId : struct
     /// <returns></returns>
     Task<TResponse> QueryAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
        where TQuery : IQuery<TQuery, TResponse>;
-    // where TResult : IQueryResult;
+    // TODO: where TResult : IQueryResult;
 }
