@@ -8,13 +8,13 @@ public class BaseQueryTests
     public void Init_populates_properties_with_defaults()
     {
         var startTime = DateTime.UtcNow;
-        var result = new GuidQuery();
+        var result = new MyQuery();
         result.Id.Should().NotBeEmpty();
         result.Id.Should().NotBe(default(Guid));
         result.CorrelationId.Should().BeNull();
         result.AuthenticatedId.Should().BeNull();
         result.ReceivedOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
-        result.TypeFullName.Should().Be(typeof(GuidQuery).FullName);
+        result.TypeFullName.Should().Be(typeof(MyQuery).FullName);
         result.TriggeredById.Should().BeNull();
     }
 
@@ -23,7 +23,7 @@ public class BaseQueryTests
     public void Init_populates_properties_from_constructor(Guid triggeredById, string correlationId, string authId)
     {
         var startTime = DateTime.UtcNow;
-        var result = new GuidQuery(triggeredById, correlationId, authId);
+        var result = new MyQuery(triggeredById, correlationId, authId);
 
         result.Id.Should().NotBeEmpty();
         result.Id.Should().NotBe(default(Guid));
@@ -31,20 +31,20 @@ public class BaseQueryTests
         result.AuthenticatedId.Should().Be(authId);
         result.ReceivedOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
         result.TriggeredById.Should().Be(triggeredById);
-        result.TypeFullName.Should().Be(typeof(GuidQuery).FullName);
+        result.TypeFullName.Should().Be(typeof(MyQuery).FullName);
     }
 
     [Theory]
     [AutoFakeData]
     public void Init_populates_properties_from_triggerMessage(string correlationId, string authId)
     {
-        var triggeredBy = new GuidCommand(null, correlationId, authId);
+        var triggeredBy = new MyCommand(null, correlationId, authId);
 
         Thread.Sleep(50);
 
         var startTime = DateTime.UtcNow;
 
-        var result = new GuidQuery(triggeredBy);
+        var result = new MyQuery(triggeredBy);
         result.Id.Should().NotBeEmpty();
         result.Id.Should().NotBe(default(Guid));
         result.Id.Should().NotBe(triggeredBy.Id);
@@ -53,6 +53,6 @@ public class BaseQueryTests
         result.ReceivedOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
         result.ReceivedOnUtc.Should().NotBe(triggeredBy.ReceivedOnUtc);
         result.TriggeredById.Should().Be(triggeredBy.Id);
-        result.TypeFullName.Should().Be(typeof(GuidQuery).FullName);
+        result.TypeFullName.Should().Be(typeof(MyQuery).FullName);
     }
 }

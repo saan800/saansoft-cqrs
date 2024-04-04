@@ -9,14 +9,14 @@ public class BaseCommandTests
     {
         var startTime = DateTime.UtcNow;
 
-        var result = new GuidCommand();
+        var result = new MyCommand();
         result.Id.Should().NotBeEmpty();
         result.Id.Should().NotBe(default(Guid));
         result.CorrelationId.Should().BeNull();
         result.AuthenticatedId.Should().BeNull();
         result.ReceivedOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
         result.TriggeredById.Should().BeNull();
-        result.TypeFullName.Should().Be(typeof(GuidCommand).FullName);
+        result.TypeFullName.Should().Be(typeof(MyCommand).FullName);
     }
 
     [Theory]
@@ -25,7 +25,7 @@ public class BaseCommandTests
     {
         var startTime = DateTime.UtcNow;
 
-        var result = new GuidCommand(triggeredById, correlationId, authId);
+        var result = new MyCommand(triggeredById, correlationId, authId);
 
         result.Id.Should().NotBeEmpty();
         result.Id.Should().NotBe(default(Guid));
@@ -33,20 +33,20 @@ public class BaseCommandTests
         result.AuthenticatedId.Should().Be(authId);
         result.ReceivedOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
         result.TriggeredById.Should().Be(triggeredById);
-        result.TypeFullName.Should().Be(typeof(GuidCommand).FullName);
+        result.TypeFullName.Should().Be(typeof(MyCommand).FullName);
     }
 
     [Theory]
     [AutoFakeData]
     public void Init_populates_properties_from_triggerMessage(string correlationId, string authId)
     {
-        var triggeredBy = new GuidCommand(null, correlationId, authId);
+        var triggeredBy = new MyCommand(null, correlationId, authId);
 
         Thread.Sleep(50);
 
         var startTime = DateTime.UtcNow;
 
-        var result = new GuidCommand(triggeredBy);
+        var result = new MyCommand(triggeredBy);
         result.Id.Should().NotBeEmpty();
         result.Id.Should().NotBe(default(Guid));
         result.Id.Should().NotBe(triggeredBy.Id);
@@ -55,6 +55,6 @@ public class BaseCommandTests
         result.ReceivedOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
         result.ReceivedOnUtc.Should().NotBe(triggeredBy.ReceivedOnUtc);
         result.TriggeredById.Should().Be(triggeredBy.Id);
-        result.TypeFullName.Should().Be(typeof(GuidCommand).FullName);
+        result.TypeFullName.Should().Be(typeof(MyCommand).FullName);
     }
 }

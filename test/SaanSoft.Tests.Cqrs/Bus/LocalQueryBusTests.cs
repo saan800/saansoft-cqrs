@@ -37,18 +37,19 @@ public class LocalQueryBusTests
     [Fact]
     public async Task QueryAsync_handler_exists_in_serviceProvider()
     {
-        var handler = A.Fake<IQueryHandler<GuidQuery, QueryResult>>();
-        A.CallTo(() => handler.HandleAsync(A<GuidQuery>.Ignored, A<CancellationToken>.Ignored))
+        var handler = A.Fake<IQueryHandler<MyQuery, QueryResult>>();
+        A.CallTo(() => handler.HandleAsync(A<MyQuery>.Ignored, A<CancellationToken>.Ignored))
             .Returns(new QueryResult());
 
         var serviceCollection = new ServiceCollection();
-        serviceCollection.AddScoped<IQueryHandler<GuidQuery, QueryResult>>(_ => handler);
+        serviceCollection.AddScoped<IQueryHandler<MyQuery, QueryResult>>(_ => handler);
 
         var sut = new LocalQueryBus(serviceCollection.BuildServiceProvider(), _logger, _options);
-        var result = await sut.QueryAsync<GuidQuery, QueryResult>(new GuidQuery());
-        result.IsSuccess.Should().BeTrue();
+        var result = await sut.QueryAsync(new MyQuery());
+        result.Should().NotBeNull();
+        //result.IsSuccess.Should().BeTrue();
 
-        A.CallTo(() => handler.HandleAsync(A<GuidQuery>.Ignored, A<CancellationToken>.Ignored)).MustHaveHappened();
+        A.CallTo(() => handler.HandleAsync(A<MyQuery>.Ignored, A<CancellationToken>.Ignored)).MustHaveHappened();
     }
 
     [Fact]
@@ -58,7 +59,7 @@ public class LocalQueryBusTests
 
         var sut = new LocalQueryBus(serviceCollection.BuildServiceProvider(), _logger);
 
-        await sut.Invoking(y => y.QueryAsync<GuidQuery, QueryResult>(new GuidQuery()))
+        await sut.Invoking(y => y.QueryAsync(new MyQuery()))
             .Should().ThrowAsync<InvalidOperationException>()
             .Where(x =>
                 x.Message.StartsWith("No service for type") &&
@@ -69,22 +70,22 @@ public class LocalQueryBusTests
     [Fact]
     public async Task QueryAsync_multiple_handlers_exists_in_serviceProvider_should_throw_error()
     {
-        var handler1 = A.Fake<IQueryHandler<GuidQuery, QueryResult>>();
-        var handler2 = A.Fake<IQueryHandler<GuidQuery, QueryResult>>();
+        var handler1 = A.Fake<IQueryHandler<MyQuery, QueryResult>>();
+        var handler2 = A.Fake<IQueryHandler<MyQuery, QueryResult>>();
 
         var serviceCollection = new ServiceCollection();
-        serviceCollection.AddScoped<IQueryHandler<GuidQuery, QueryResult>>(_ => handler1);
-        serviceCollection.AddScoped<IQueryHandler<GuidQuery, QueryResult>>(_ => handler2);
+        serviceCollection.AddScoped<IQueryHandler<MyQuery, QueryResult>>(_ => handler1);
+        serviceCollection.AddScoped<IQueryHandler<MyQuery, QueryResult>>(_ => handler2);
 
         var sut = new LocalQueryBus(serviceCollection.BuildServiceProvider(), _logger);
-        await sut.Invoking(y => y.QueryAsync<GuidQuery, QueryResult>(new GuidQuery()))
+        await sut.Invoking(y => y.QueryAsync(new MyQuery()))
             .Should().ThrowAsync<InvalidOperationException>()
             .Where(x =>
                 x.Message.StartsWith("Only one service for type") &&
                 x.Message.Contains("can be registered")
             );
 
-        A.CallTo(() => handler1.HandleAsync(A<GuidQuery>.Ignored, A<CancellationToken>.Ignored)).MustNotHaveHappened();
-        A.CallTo(() => handler2.HandleAsync(A<GuidQuery>.Ignored, A<CancellationToken>.Ignored)).MustNotHaveHappened();
+        A.CallTo(() => handler1.HandleAsync(A<MyQuery>.Ignored, A<CancellationToken>.Ignored)).MustNotHaveHappened();
+        A.CallTo(() => handler2.HandleAsync(A<MyQuery>.Ignored, A<CancellationToken>.Ignored)).MustNotHaveHappened();
     }
 }

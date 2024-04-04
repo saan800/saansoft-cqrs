@@ -37,15 +37,15 @@ public class LocalEventBusTests
     [Fact]
     public async Task ExecuteAsync_single_handler_exists_in_serviceProvider()
     {
-        var eventHandler = A.Fake<IEventHandler<GuidEvent>>();
+        var eventHandler = A.Fake<IEventHandler<MyEvent>>();
 
         var serviceCollection = new ServiceCollection();
-        serviceCollection.AddScoped<IEventHandler<GuidEvent>>(_ => eventHandler);
+        serviceCollection.AddScoped<IEventHandler<MyEvent>>(_ => eventHandler);
 
         var sut = new LocalEventBus(serviceCollection.BuildServiceProvider(), _logger, _options);
-        await sut.QueueAsync(new GuidEvent(Guid.NewGuid()));
+        await sut.QueueAsync(new MyEvent(Guid.NewGuid()));
 
-        A.CallTo(() => eventHandler.HandleAsync(A<GuidEvent>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappened();
+        A.CallTo(() => eventHandler.HandleAsync(A<MyEvent>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappened();
     }
 
     /// <summary>
@@ -55,18 +55,18 @@ public class LocalEventBusTests
     [Fact]
     public async Task ExecuteAsync_multiple_handlers_exists_in_serviceProvider()
     {
-        var eventHandler = A.Fake<IEventHandler<GuidEvent>>();
-        var anotherEventHandler = A.Fake<IEventHandler<GuidEvent>>();
+        var eventHandler = A.Fake<IEventHandler<MyEvent>>();
+        var anotherEventHandler = A.Fake<IEventHandler<MyEvent>>();
 
         var serviceCollection = new ServiceCollection();
-        serviceCollection.AddScoped<IEventHandler<GuidEvent>>(_ => eventHandler);
-        serviceCollection.AddScoped<IEventHandler<GuidEvent>>(_ => anotherEventHandler);
+        serviceCollection.AddScoped<IEventHandler<MyEvent>>(_ => eventHandler);
+        serviceCollection.AddScoped<IEventHandler<MyEvent>>(_ => anotherEventHandler);
 
         var sut = new LocalEventBus(serviceCollection.BuildServiceProvider(), _logger);
-        await sut.QueueAsync(new GuidEvent(Guid.NewGuid()));
+        await sut.QueueAsync(new MyEvent(Guid.NewGuid()));
 
-        A.CallTo(() => eventHandler.HandleAsync(A<GuidEvent>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappened();
-        A.CallTo(() => anotherEventHandler.HandleAsync(A<GuidEvent>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappened();
+        A.CallTo(() => eventHandler.HandleAsync(A<MyEvent>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappened();
+        A.CallTo(() => anotherEventHandler.HandleAsync(A<MyEvent>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappened();
     }
 
     /// <summary>
@@ -78,7 +78,7 @@ public class LocalEventBusTests
         var serviceCollection = new ServiceCollection();
 
         var sut = new LocalEventBus(serviceCollection.BuildServiceProvider(), _logger);
-        await sut.QueueAsync(new GuidEvent(Guid.NewGuid()));
+        await sut.QueueAsync(new MyEvent(Guid.NewGuid()));
 
         Assert.True(true);
     }

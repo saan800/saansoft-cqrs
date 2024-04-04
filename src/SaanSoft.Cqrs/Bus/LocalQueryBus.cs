@@ -8,9 +8,9 @@ namespace SaanSoft.Cqrs.Bus;
 public class LocalQueryBus(IServiceProvider serviceProvider, ILogger logger, QueryBusOptions? options = null)
     : LocalQueryBus<Guid>(serviceProvider, logger, options);
 
-public abstract class LocalQueryBus<TMessageId>
-    : IQueryBus<TMessageId>
-    where TMessageId : struct
+public abstract class LocalQueryBus<TMessageId> : IQueryBus
+     //     : IQueryBus<TMessageId>
+     where TMessageId : struct
 {
     // ReSharper disable MemberCanBePrivate.Global
     protected readonly QueryBusOptions Options;
@@ -28,23 +28,25 @@ public abstract class LocalQueryBus<TMessageId>
         Logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async Task<TResult> QueryAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken = default)
-        where TQuery : IQuery<TMessageId, TQuery, TResult>
-        where TResult : IQueryResult
+    public async Task<TResponse> QueryAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
+        where TQuery : IQuery<TQuery, TResponse>
     {
-        var handlers = ServiceProvider.GetServices<IQueryHandler<TQuery, TResult>>()?.ToList() ?? [];
+        var handlers = ServiceProvider.GetServices<IQueryHandler<TQuery, TResponse>>()?.ToList() ?? [];
         switch (handlers.Count)
         {
             case 1:
                 var handler = handlers.Single();
-                Logger.Log(LogLevel, "Running query handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, typeof(TQuery).FullName);
-                return await handlers.First().HandleAsync(query, cancellationToken);
+                if (Logger.IsEnabled(LogLevel))
+                {
+                    Logger.Log(LogLevel, "Running query handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, typeof(TQuery).FullName);
+                }
+                return await handler.HandleAsync(query);
             case 0:
-                throw new InvalidOperationException($"No service for type '{typeof(IQueryHandler<TQuery, TResult>)}' has been registered.");
+                throw new InvalidOperationException($"No service for type '{typeof(IQueryHandler<TQuery, TResponse>)}' has been registered.");
             default:
                 {
                     var typeNames = handlers.Select(x => x.GetType().FullName).ToList();
-                    throw new InvalidOperationException($"Only one service for type '{typeof(IQueryHandler<TQuery, TResult>)}' can be registered. Currently have {typeNames.Count} registered: {string.Join("; ", typeNames)}");
+                    throw new InvalidOperationException($"Only one service for type '{typeof(IQueryHandler<TQuery, TResponse>)}' can be registered. Currently have {typeNames.Count} registered: {string.Join("; ", typeNames)}");
                 }
         }
     }
