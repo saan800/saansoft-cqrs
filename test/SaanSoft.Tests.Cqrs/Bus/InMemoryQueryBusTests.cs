@@ -54,7 +54,7 @@ public class InMemoryQueryBusTests
         var sut = new InMemoryQueryBus(serviceCollection.BuildServiceProvider(), _logger, _options);
         var result = await sut.QueryAsync(new MyQuery());
         result.Should().NotBeNull();
-        //result.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
 
         A.CallTo(() => handler.HandleAsync(A<MyQuery>.Ignored, A<CancellationToken>.Ignored)).MustHaveHappened();
     }
