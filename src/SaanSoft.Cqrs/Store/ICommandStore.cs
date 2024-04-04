@@ -14,11 +14,4 @@ public interface ICommandStore<TMessageId> where TMessageId : struct
     /// <param name="command"></param>
     /// <returns></returns>
     Task InsertAsync<TCommand>(TCommand command) where TCommand : ICommand<TMessageId>;
-
-    /// <summary>
-    /// Save new commands
-    /// </summary>
-    /// <param name="commands"></param>
-    /// <returns></returns>
-    Task InsertManyAsync<TCommand>(IEnumerable<TCommand> commands) where TCommand : ICommand<TMessageId>;
 }

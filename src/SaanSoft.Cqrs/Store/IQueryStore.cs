@@ -13,14 +13,5 @@ public interface IQueryStore<TMessageId> where TMessageId : struct
     /// </summary>
     /// <param name="query"></param>
     /// <returns></returns>
-    Task InsertAsync<TQuery>(TQuery query) where TQuery : IQuery;
-    //Task InsertAsync<TQuery>(TQuery query) where TQuery : IQuery<TMessageId>;
-
-    /// <summary>
-    /// Save queries
-    /// </summary>
-    /// <param name="query"></param>
-    /// <returns></returns>
-    //Task InsertManyAsync<TQuery>(IEnumerable<TQuery> query) where TQuery : IQuery<TMessageId>;
-    Task InsertManyAsync<TQuery>(IEnumerable<TQuery> query) where TQuery : IQuery;
+    Task InsertAsync<TQuery>(TQuery query) where TQuery : IQuery<TMessageId>;
 }
