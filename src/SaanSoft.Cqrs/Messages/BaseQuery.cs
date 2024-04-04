@@ -2,6 +2,7 @@ namespace SaanSoft.Cqrs.Messages;
 
 public abstract class BaseQuery<TQuery, TResponse> : BaseQuery<Guid, TQuery, TResponse>
     where TQuery : IQuery<Guid, TQuery, TResponse>
+    // TODO: where TResponse : IQueryResult
 {
     protected BaseQuery(Guid? triggeredById = null, string? correlationId = null, string? authenticatedId = null)
         : base(Guid.NewGuid(), triggeredById, correlationId, authenticatedId)

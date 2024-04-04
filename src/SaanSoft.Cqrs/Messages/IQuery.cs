@@ -31,9 +31,3 @@ public interface IQuery<TMessageId, TQuery, TResponse> : IMessage<TMessageId>, I
     where TQuery : IQuery<TMessageId, TQuery, TResponse>
 {
 }
-
-
-
-
-
-
