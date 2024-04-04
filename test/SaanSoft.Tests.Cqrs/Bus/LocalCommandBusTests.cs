@@ -40,7 +40,7 @@ public class LocalCommandBusTests
     {
         var handler = A.Fake<ICommandHandler<MyCommand>>();
         A.CallTo(() => handler.HandleAsync(A<MyCommand>.Ignored, A<CancellationToken>.Ignored))
-            .Returns(new CommandResult());
+            .Returns(new CommandResponse());
 
         var serviceCollection = new ServiceCollection();
         serviceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler);

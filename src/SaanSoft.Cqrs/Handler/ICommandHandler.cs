@@ -12,5 +12,5 @@ public interface ICommandHandler<in TCommand> where TCommand : ICommand
     /// <param name="command"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>If the command was successful or not, and an error message if applicable.</returns>
-    Task<CommandResult> HandleAsync(TCommand command, CancellationToken cancellationToken = default);
+    Task<CommandResponse> HandleAsync(TCommand command, CancellationToken cancellationToken = default);
 }

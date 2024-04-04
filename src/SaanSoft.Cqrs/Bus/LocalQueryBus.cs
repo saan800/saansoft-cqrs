@@ -30,6 +30,7 @@ public abstract class LocalQueryBus<TMessageId> :
 
     public async Task<TResponse> QueryAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
         where TQuery : IQuery<TQuery, TResponse>
+        where TResponse : IQueryResponse
     {
         var handlers = ServiceProvider.GetServices<IQueryHandler<TQuery, TResponse>>()?.ToList() ?? [];
         switch (handlers.Count)

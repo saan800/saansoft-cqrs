@@ -44,12 +44,12 @@ public class LocalQueryBusTests
     [Fact]
     public async Task QueryAsync_handler_exists_in_serviceProvider()
     {
-        var handler = A.Fake<IQueryHandler<MyQuery, QueryResult>>();
+        var handler = A.Fake<IQueryHandler<MyQuery, QueryResponse>>();
         A.CallTo(() => handler.HandleAsync(A<MyQuery>.Ignored, A<CancellationToken>.Ignored))
-            .Returns(new QueryResult());
+            .Returns(new QueryResponse());
 
         var serviceCollection = new ServiceCollection();
-        serviceCollection.AddScoped<IQueryHandler<MyQuery, QueryResult>>(_ => handler);
+        serviceCollection.AddScoped<IQueryHandler<MyQuery, QueryResponse>>(_ => handler);
 
         var sut = new LocalQueryBus(serviceCollection.BuildServiceProvider(), _logger, _options);
         var result = await sut.QueryAsync(new MyQuery());
@@ -77,12 +77,12 @@ public class LocalQueryBusTests
     [Fact]
     public async Task QueryAsync_multiple_handlers_exists_in_serviceProvider_should_throw_error()
     {
-        var handler1 = A.Fake<IQueryHandler<MyQuery, QueryResult>>();
-        var handler2 = A.Fake<IQueryHandler<MyQuery, QueryResult>>();
+        var handler1 = A.Fake<IQueryHandler<MyQuery, QueryResponse>>();
+        var handler2 = A.Fake<IQueryHandler<MyQuery, QueryResponse>>();
 
         var serviceCollection = new ServiceCollection();
-        serviceCollection.AddScoped<IQueryHandler<MyQuery, QueryResult>>(_ => handler1);
-        serviceCollection.AddScoped<IQueryHandler<MyQuery, QueryResult>>(_ => handler2);
+        serviceCollection.AddScoped<IQueryHandler<MyQuery, QueryResponse>>(_ => handler1);
+        serviceCollection.AddScoped<IQueryHandler<MyQuery, QueryResponse>>(_ => handler2);
 
         var sut = new LocalQueryBus(serviceCollection.BuildServiceProvider(), _logger);
         await sut.Invoking(y => y.QueryAsync(new MyQuery()))

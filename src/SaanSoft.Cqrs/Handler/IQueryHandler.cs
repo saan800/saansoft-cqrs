@@ -4,7 +4,7 @@ namespace SaanSoft.Cqrs.Handler;
 
 public interface IQueryHandler<TQuery, TResponse>
     where TQuery : IQuery<TQuery, TResponse>
-    // TODO: where TResponse : IQueryResult
+    where TResponse : IQueryResponse
 {
     /// <summary>
     /// Handle the query and return the result, including any errors
@@ -14,4 +14,3 @@ public interface IQueryHandler<TQuery, TResponse>
     /// <returns></returns>
     Task<TResponse> HandleAsync(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default);
 }
-

@@ -28,7 +28,7 @@ public abstract class LocalCommandBus<TMessageId>
         Logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async Task<CommandResult> ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
+    public async Task<CommandResponse> ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : ICommand<TMessageId>
     {
         var handlers = ServiceProvider.GetServices<ICommandHandler<TCommand>>()?.ToList() ?? [];

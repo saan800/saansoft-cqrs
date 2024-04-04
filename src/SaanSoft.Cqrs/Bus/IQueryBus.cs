@@ -15,7 +15,8 @@ public interface IQueryBus<TMessageId> where TMessageId : struct
     ///     Also contains information on if the query was successful or not, and error messages.
     /// </typeparam>
     /// <returns></returns>
-    Task<TResponse> QueryAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
-       where TQuery : IQuery<TQuery, TResponse>;
-    // TODO: where TResponse : IQueryResult;
+    Task<TResponse> QueryAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
+        CancellationToken cancellationToken = default)
+        where TQuery : IQuery<TQuery, TResponse>
+        where TResponse : IQueryResponse;
 }

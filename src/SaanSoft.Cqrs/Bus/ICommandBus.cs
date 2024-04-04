@@ -18,7 +18,7 @@ public interface ICommandBus<TMessageId> where TMessageId : struct
     /// <param name="cancellationToken"></param>
     /// <typeparam name="TCommand"></typeparam>
     /// <returns></returns>
-    Task<CommandResult> ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand<TMessageId>;
+    Task<CommandResponse> ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand<TMessageId>;
 
     /// <summary>
     /// Put the command onto the queue (i.e. fire and forget).
