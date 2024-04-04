@@ -23,9 +23,9 @@ public interface IMessage
 
     /// <summary>
     /// When the command/event/query was raised.
-    /// When running events in order, use ReceivedOnUtc to correctly
+    /// When running events in order, use MessageOnUtc to run them in the correct order
     /// </summary>
-    DateTime ReceivedOnUtc { get; set; }
+    DateTime MessageOnUtc { get; set; }
 
     /// <summary>
     /// FullName for the type of the event

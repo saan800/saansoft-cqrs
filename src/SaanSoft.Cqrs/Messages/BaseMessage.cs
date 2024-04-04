@@ -15,7 +15,7 @@ public abstract class BaseMessage<TMessageId> : IMessage<TMessageId>
     public TMessageId? TriggeredById { get; set; }
     public string? CorrelationId { get; set; }
     public string? AuthenticatedId { get; set; }
-    public DateTime ReceivedOnUtc { get; set; } = DateTime.UtcNow;
+    public DateTime MessageOnUtc { get; set; } = DateTime.UtcNow;
 
     public string TypeFullName { get; set; }
 
