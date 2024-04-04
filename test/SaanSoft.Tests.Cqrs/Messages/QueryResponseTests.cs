@@ -2,7 +2,7 @@ using SaanSoft.Tests.Cqrs.TestHelpers;
 
 namespace SaanSoft.Tests.Cqrs.Messages;
 
-public class BaseQueryResponseTests
+public class QueryResponseTests
 {
     [Fact]
     public void Empty_constructor_is_successful_result()

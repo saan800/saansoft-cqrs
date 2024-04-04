@@ -1,28 +1,17 @@
-using FakeItEasy;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using SaanSoft.Cqrs.Bus;
 using SaanSoft.Cqrs.Handler;
 using SaanSoft.Tests.Cqrs.TestHelpers;
 
 namespace SaanSoft.Tests.Cqrs.Bus;
 
-public class InMemoryQueryBusTests
+public class InMemoryQueryBusTests : TestSetup
 {
-    private readonly ILogger _logger;
-    private readonly QueryBusOptions _options;
-
-    public InMemoryQueryBusTests()
-    {
-        _options = new QueryBusOptions { LogLevel = LogLevel.Information };
-        _logger = A.Fake<ILogger>();
-        A.CallTo(() => _logger.IsEnabled(A<LogLevel>.Ignored)).Returns(true);
-    }
+    private readonly QueryBusOptions _options = new() { LogLevel = LogLevel.Information };
 
     [Fact]
     public void Cant_create_with_null_serviceProvider()
     {
-        Action act = () => new InMemoryQueryBus(null, _logger);
+        Action act = () => new InMemoryQueryBus(null, Logger);
 
         act.Should()
             .Throw<ArgumentNullException>()
@@ -32,9 +21,7 @@ public class InMemoryQueryBusTests
     [Fact]
     public void Cant_create_with_null_logger()
     {
-        var serviceCollection = new ServiceCollection();
-
-        Action act = () => new InMemoryQueryBus(serviceCollection.BuildServiceProvider(), null);
+        Action act = () => new InMemoryQueryBus(GetServiceProvider(), null);
 
         act.Should()
             .Throw<ArgumentNullException>()
@@ -48,10 +35,9 @@ public class InMemoryQueryBusTests
         A.CallTo(() => handler.HandleAsync(A<MyQuery>.Ignored, A<CancellationToken>.Ignored))
             .Returns(new QueryResponse());
 
-        var serviceCollection = new ServiceCollection();
-        serviceCollection.AddScoped<IQueryHandler<MyQuery, QueryResponse>>(_ => handler);
+        ServiceCollection.AddScoped<IQueryHandler<MyQuery, QueryResponse>>(_ => handler);
 
-        var sut = new InMemoryQueryBus(serviceCollection.BuildServiceProvider(), _logger, _options);
+        var sut = new InMemoryQueryBus(GetServiceProvider(), Logger, _options);
         var result = await sut.QueryAsync(new MyQuery());
         result.Should().NotBeNull();
         result.IsSuccess.Should().BeTrue();
@@ -62,9 +48,7 @@ public class InMemoryQueryBusTests
     [Fact]
     public async Task QueryAsync_no_handler_in_serviceProvider_should_throw_error()
     {
-        var serviceCollection = new ServiceCollection();
-
-        var sut = new InMemoryQueryBus(serviceCollection.BuildServiceProvider(), _logger);
+        var sut = new InMemoryQueryBus(GetServiceProvider(), Logger);
 
         await sut.Invoking(y => y.QueryAsync(new MyQuery()))
             .Should().ThrowAsync<InvalidOperationException>()
@@ -80,11 +64,10 @@ public class InMemoryQueryBusTests
         var handler1 = A.Fake<IQueryHandler<MyQuery, QueryResponse>>();
         var handler2 = A.Fake<IQueryHandler<MyQuery, QueryResponse>>();
 
-        var serviceCollection = new ServiceCollection();
-        serviceCollection.AddScoped<IQueryHandler<MyQuery, QueryResponse>>(_ => handler1);
-        serviceCollection.AddScoped<IQueryHandler<MyQuery, QueryResponse>>(_ => handler2);
+        ServiceCollection.AddScoped<IQueryHandler<MyQuery, QueryResponse>>(_ => handler1);
+        ServiceCollection.AddScoped<IQueryHandler<MyQuery, QueryResponse>>(_ => handler2);
 
-        var sut = new InMemoryQueryBus(serviceCollection.BuildServiceProvider(), _logger);
+        var sut = new InMemoryQueryBus(GetServiceProvider(), Logger);
         await sut.Invoking(y => y.QueryAsync(new MyQuery()))
             .Should().ThrowAsync<InvalidOperationException>()
             .Where(x =>

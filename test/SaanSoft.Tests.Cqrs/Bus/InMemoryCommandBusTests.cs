@@ -1,6 +1,3 @@
-using FakeItEasy;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using SaanSoft.Cqrs.Bus;
 using SaanSoft.Cqrs.Handler;
 using SaanSoft.Cqrs.Messages;
@@ -8,22 +5,14 @@ using SaanSoft.Tests.Cqrs.TestHelpers;
 
 namespace SaanSoft.Tests.Cqrs.Bus;
 
-public class InMemoryCommandBusTests
+public class InMemoryCommandBusTests : TestSetup
 {
-    private readonly ILogger _logger;
-    private readonly CommandBusOptions _options;
-
-    public InMemoryCommandBusTests()
-    {
-        _options = new CommandBusOptions { LogLevel = LogLevel.Information };
-        _logger = A.Fake<ILogger>();
-        A.CallTo(() => _logger.IsEnabled(A<LogLevel>.Ignored)).Returns(true);
-    }
+    private readonly CommandBusOptions _options = new() { LogLevel = LogLevel.Information };
 
     [Fact]
     public void Cant_create_with_null_serviceProvider()
     {
-        Action act = () => new InMemoryCommandBus(null, _logger);
+        Action act = () => new InMemoryCommandBus(null, Logger);
 
         act.Should()
             .Throw<ArgumentNullException>()
@@ -33,9 +22,7 @@ public class InMemoryCommandBusTests
     [Fact]
     public void Cant_create_with_null_logger()
     {
-        var serviceCollection = new ServiceCollection();
-
-        Action act = () => new InMemoryCommandBus(serviceCollection.BuildServiceProvider(), null);
+        Action act = () => new InMemoryCommandBus(GetServiceProvider(), null);
 
         act.Should()
             .Throw<ArgumentNullException>()
@@ -49,10 +36,9 @@ public class InMemoryCommandBusTests
         A.CallTo(() => handler.HandleAsync(A<MyCommand>.Ignored, A<CancellationToken>.Ignored))
             .Returns(new CommandResponse());
 
-        var serviceCollection = new ServiceCollection();
-        serviceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler);
+        ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler);
 
-        var sut = new InMemoryCommandBus(serviceCollection.BuildServiceProvider(), _logger, _options);
+        var sut = new InMemoryCommandBus(GetServiceProvider(), Logger, _options);
         var result = await sut.ExecuteAsync(new MyCommand());
         result.IsSuccess.Should().BeTrue();
 
@@ -62,9 +48,7 @@ public class InMemoryCommandBusTests
     [Fact]
     public async Task ExecuteAsync_no_handler_in_serviceProvider_should_throw_error()
     {
-        var serviceCollection = new ServiceCollection();
-
-        var sut = new InMemoryCommandBus(serviceCollection.BuildServiceProvider(), _logger);
+        var sut = new InMemoryCommandBus(GetServiceProvider(), Logger);
 
         await sut.Invoking(y => y.ExecuteAsync(new MyCommand()))
             .Should().ThrowAsync<InvalidOperationException>()
@@ -80,11 +64,10 @@ public class InMemoryCommandBusTests
         var handler1 = A.Fake<ICommandHandler<MyCommand>>();
         var handler2 = A.Fake<ICommandHandler<MyCommand>>();
 
-        var serviceCollection = new ServiceCollection();
-        serviceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler1);
-        serviceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler2);
+        ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler1);
+        ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler2);
 
-        var sut = new InMemoryCommandBus(serviceCollection.BuildServiceProvider(), _logger);
+        var sut = new InMemoryCommandBus(GetServiceProvider(), Logger);
         await sut.Invoking(y => y.ExecuteAsync(new MyCommand()))
             .Should().ThrowAsync<InvalidOperationException>()
             .Where(x =>
@@ -101,10 +84,9 @@ public class InMemoryCommandBusTests
     {
         var handler = A.Fake<ICommandHandler<MyCommand>>();
 
-        var serviceCollection = new ServiceCollection();
-        serviceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler);
+        ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler);
 
-        var sut = new InMemoryCommandBus(serviceCollection.BuildServiceProvider(), _logger);
+        var sut = new InMemoryCommandBus(GetServiceProvider(), Logger);
         await sut.QueueAsync(new MyCommand());
 
         A.CallTo(() => handler.HandleAsync(A<MyCommand>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappened();
@@ -113,9 +95,7 @@ public class InMemoryCommandBusTests
     [Fact]
     public async Task QueueAsync_no_handler_in_serviceProvider_should_throw_error()
     {
-        var serviceCollection = new ServiceCollection();
-
-        var sut = new InMemoryCommandBus(serviceCollection.BuildServiceProvider(), _logger);
+        var sut = new InMemoryCommandBus(GetServiceProvider(), Logger);
 
         await sut.Invoking(y => y.ExecuteAsync(new MyCommand()))
             .Should().ThrowAsync<InvalidOperationException>()
@@ -131,11 +111,10 @@ public class InMemoryCommandBusTests
         var handler1 = A.Fake<ICommandHandler<MyCommand>>();
         var handler2 = A.Fake<ICommandHandler<MyCommand>>();
 
-        var serviceCollection = new ServiceCollection();
-        serviceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler1);
-        serviceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler2);
+        ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler1);
+        ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler2);
 
-        var sut = new InMemoryCommandBus(serviceCollection.BuildServiceProvider(), _logger);
+        var sut = new InMemoryCommandBus(GetServiceProvider(), Logger);
         await sut.Invoking(y => y.QueueAsync(new MyCommand()))
             .Should().ThrowAsync<InvalidOperationException>()
             .Where(x =>

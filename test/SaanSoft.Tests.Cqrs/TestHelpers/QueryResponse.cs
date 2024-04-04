@@ -1,8 +1,6 @@
-using SaanSoft.Cqrs.Messages;
-
 namespace SaanSoft.Tests.Cqrs.TestHelpers;
 
-public class QueryResponse : BaseQueryResponse
+public class QueryResponse : SaanSoft.Cqrs.Messages.QueryResponse
 {
     public QueryResponse() { }
 

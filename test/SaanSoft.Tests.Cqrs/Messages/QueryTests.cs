@@ -2,7 +2,7 @@ using SaanSoft.Tests.Cqrs.TestHelpers;
 
 namespace SaanSoft.Tests.Cqrs.Messages;
 
-public class BaseQueryTests
+public class QueryTests
 {
     [Fact]
     public void Init_populates_properties_with_defaults()

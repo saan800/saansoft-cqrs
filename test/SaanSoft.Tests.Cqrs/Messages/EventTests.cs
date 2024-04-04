@@ -2,7 +2,7 @@ using SaanSoft.Tests.Cqrs.TestHelpers;
 
 namespace SaanSoft.Tests.Cqrs.Messages;
 
-public class BaseEventTests
+public class EventTests
 {
     [Fact]
     public void Init_populates_properties_with_defaults()

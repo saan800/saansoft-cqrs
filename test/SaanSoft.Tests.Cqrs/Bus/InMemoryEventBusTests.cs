@@ -1,28 +1,17 @@
-using FakeItEasy;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using SaanSoft.Cqrs.Bus;
 using SaanSoft.Cqrs.Handler;
 using SaanSoft.Tests.Cqrs.TestHelpers;
 
 namespace SaanSoft.Tests.Cqrs.Bus;
 
-public class InMemoryEventBusTests
+public class InMemoryEventBusTests : TestSetup
 {
-    private readonly ILogger _logger;
-    private readonly EventBusOptions _options;
-
-    public InMemoryEventBusTests()
-    {
-        _options = new EventBusOptions { LogLevel = LogLevel.Information };
-        _logger = A.Fake<ILogger>();
-        A.CallTo(() => _logger.IsEnabled(A<LogLevel>.Ignored)).Returns(true);
-    }
+    private readonly EventBusOptions _options = new() { LogLevel = LogLevel.Information };
 
     [Fact]
     public void Cant_create_with_null_serviceProvider()
     {
-        Action act = () => new InMemoryEventBus(null, _logger);
+        Action act = () => new InMemoryEventBus(null, Logger);
 
         act.Should()
             .Throw<ArgumentNullException>()
@@ -32,9 +21,7 @@ public class InMemoryEventBusTests
     [Fact]
     public void Cant_create_with_null_logger()
     {
-        var serviceCollection = new ServiceCollection();
-
-        Action act = () => new InMemoryEventBus(serviceCollection.BuildServiceProvider(), null);
+        Action act = () => new InMemoryEventBus(GetServiceProvider(), null);
 
         act.Should()
             .Throw<ArgumentNullException>()
@@ -46,10 +33,9 @@ public class InMemoryEventBusTests
     {
         var eventHandler = A.Fake<IEventHandler<MyEvent>>();
 
-        var serviceCollection = new ServiceCollection();
-        serviceCollection.AddScoped<IEventHandler<MyEvent>>(_ => eventHandler);
+        ServiceCollection.AddScoped<IEventHandler<MyEvent>>(_ => eventHandler);
 
-        var sut = new InMemoryEventBus(serviceCollection.BuildServiceProvider(), _logger, _options);
+        var sut = new InMemoryEventBus(GetServiceProvider(), Logger, _options);
         await sut.QueueAsync(new MyEvent(Guid.NewGuid()));
 
         A.CallTo(() => eventHandler.HandleAsync(A<MyEvent>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappened();
@@ -65,11 +51,10 @@ public class InMemoryEventBusTests
         var eventHandler = A.Fake<IEventHandler<MyEvent>>();
         var anotherEventHandler = A.Fake<IEventHandler<MyEvent>>();
 
-        var serviceCollection = new ServiceCollection();
-        serviceCollection.AddScoped<IEventHandler<MyEvent>>(_ => eventHandler);
-        serviceCollection.AddScoped<IEventHandler<MyEvent>>(_ => anotherEventHandler);
+        ServiceCollection.AddScoped<IEventHandler<MyEvent>>(_ => eventHandler);
+        ServiceCollection.AddScoped<IEventHandler<MyEvent>>(_ => anotherEventHandler);
 
-        var sut = new InMemoryEventBus(serviceCollection.BuildServiceProvider(), _logger);
+        var sut = new InMemoryEventBus(GetServiceProvider(), Logger);
         await sut.QueueAsync(new MyEvent(Guid.NewGuid()));
 
         A.CallTo(() => eventHandler.HandleAsync(A<MyEvent>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappened();
@@ -82,9 +67,7 @@ public class InMemoryEventBusTests
     [Fact]
     public async Task ExecuteAsync_no_handler_in_serviceProvider_should_do_nothing()
     {
-        var serviceCollection = new ServiceCollection();
-
-        var sut = new InMemoryEventBus(serviceCollection.BuildServiceProvider(), _logger);
+        var sut = new InMemoryEventBus(GetServiceProvider(), Logger);
         await sut.QueueAsync(new MyEvent(Guid.NewGuid()));
 
         Assert.True(true);
