@@ -29,7 +29,7 @@ jobs:
 
       - name: Get changed c# files
         id: changed-csharp-files
-        uses: tj-actions/changed-files@20576b4b9ed46d41e2d45a2256e5e2316dde6834 # v43.0.1
+        uses: tj-actions/changed-files@e052d30e1c0bdf27cd806b01ca3b393f47b50c62 # v44.1.0
         with:
           # Avoid using single or double quotes for multiline patterns
           files: |
