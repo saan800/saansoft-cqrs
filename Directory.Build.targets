@@ -5,9 +5,5 @@
     <CoverletOutputFormat>opencover,json</CoverletOutputFormat>
     <MergeWith>$(CoverletOutput)/coverage.json</MergeWith>
     <Exclude>[SaanSoft.Tests.*]*,[xunit.*]*</Exclude>
-    <!-- <ExcludeByAttribute>GeneratedCodeAttribute</ExcludeByAttribute>
-    <Threshold>65</Threshold> -->
-    <!-- /p:CollectCoverage=true /p:Exclude="SaanSoft.Tests.*" /p:CoverletOutputFormat=\"opencover,json\" /p:CoverletOutput="../../reports/coverage/"  /p:MergeWith="../../reports/coverage/coverage.json"
-           -->
   </PropertyGroup>
 </Project>
