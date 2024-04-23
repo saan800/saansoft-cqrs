@@ -29,16 +29,17 @@ public abstract class EventStore<TMessageId, TEntityKey>(IMongoDatabase database
     protected IMongoCollection<IEvent<TMessageId, TEntityKey>> EventCollection =>
         Database.GetCollection<IEvent<TMessageId, TEntityKey>>(MessageCollectionName);
 
-    public async Task<List<IEvent<TMessageId, TEntityKey>>> GetAsync(TEntityKey key, CancellationToken cancellationToken = default)
-        => await EventCollection
+    public async Task<List<IEvent<TMessageId, TEntityKey>>> GetAsync(TEntityKey key,
+        CancellationToken cancellationToken = default)
+        => (await EventCollection
             .Find(x => x.Key.Equals(key))
-            .SortBy(x => x.MessageOnUtc)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken))
+            .OrderBy(x => x.MessageOnUtc).ToList();
 
     /// <summary>
     /// Call this on your app startup to ensure that the necessary indexes are created
     /// </summary>
-    public override async Task EnsureIndexes(CancellationToken cancellationToken)
+    public override async Task EnsureIndexes(CancellationToken cancellationToken = default)
     {
         var indexes = EventCollection.Indexes;
 

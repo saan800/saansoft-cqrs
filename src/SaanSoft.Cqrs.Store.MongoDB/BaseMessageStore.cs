@@ -35,6 +35,7 @@ public abstract class BaseMessageStore<TMessageId, TMessage>(IMongoDatabase data
         {
             msg.Id = NewMessageId();
         }
+
         await MessageCollection.InsertManyAsync(localMessages, new InsertManyOptions(), cancellationToken);
     }
 

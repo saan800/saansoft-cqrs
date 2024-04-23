@@ -12,8 +12,7 @@ public class GuidIdConvention : ConventionBase, IPostProcessingConvention
         var idMemberMap = classMap.IdMemberMap;
         if (idMemberMap != null && idMemberMap.MemberName == "Id" && idMemberMap.MemberType == typeof(Guid))
         {
-            classMap.MapIdProperty("Id")
-                .SetIdGenerator(new GuidGenerator());
+            classMap.MapIdProperty("Id").SetIdGenerator(new GuidGenerator());
         }
     }
 }

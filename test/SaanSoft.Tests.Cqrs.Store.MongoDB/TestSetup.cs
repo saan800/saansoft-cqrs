@@ -7,7 +7,7 @@ namespace SaanSoft.Tests.Cqrs.Store.MongoDB;
 
 public class TestSetup : SaanSoft.Tests.Cqrs.Common.TestSetup
 {
-    public TestSetup() : base()
+    protected TestSetup() : base()
     {
         string name = Guid.NewGuid().ToString("N");
         Lazy<IMongoClient> mongoClient = new Lazy<IMongoClient>((Func<IMongoClient>)(() => (IMongoClient)new MongoClient(_temporaryMongoDb.Value.ConnectionString)));
@@ -22,11 +22,4 @@ public class TestSetup : SaanSoft.Tests.Cqrs.Common.TestSetup
     })));
     private readonly Lazy<IMongoDatabase> _database;
     public IMongoDatabase Database => _database.Value;
-
-    // public IMongoCollection<T> GetCollection<T>(string? collectionName)
-    // {
-    //     var name = collectionName ?? typeof(T).Name;
-    //     Database.CreateCollection(name);
-    //     return Database.GetCollection<T>(name, new MongoCollectionSettings{});
-    // }
 }

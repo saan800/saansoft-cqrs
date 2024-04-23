@@ -9,24 +9,36 @@ namespace SaanSoft.Cqrs.Store.MongoDB;
 
 public static class MongoDbConfiguration
 {
-    public static void Setup()
+    private static bool _hasAlreadyRun;
+
+    /// <summary>
+    /// Configuration for MongoDB message stores (and some MongoDB things in general)
+    /// Should only be run once on startup
+    /// </summary>
+    /// <param name="options">@default MongoDbConfigurationOptions</param>
+    public static void Setup(MongoDbConfigurationOptions? options = null)
     {
+        if (_hasAlreadyRun) return;
+        _hasAlreadyRun = true;
+
+        options ??= new MongoDbConfigurationOptions();
+        if (options.ConfigureGuidSerialisation)
+        {
 #pragma warning disable CS0618 // Type or member is obsolete
-        BsonDefaults.GuidRepresentationMode = GuidRepresentationMode.V3;
+            BsonDefaults.GuidRepresentationMode = GuidRepresentationMode.V3;
 #pragma warning restore CS0618 // Type or member is obsolete
-        BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+            BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+        }
 
-        // var objectDiscriminatorConvention = BsonSerializer.LookupDiscriminatorConvention(typeof(object));
-        // var guidObjectSerializer = new ObjectSerializer(objectDiscriminatorConvention, GuidRepresentation.Standard);
-        // BsonSerializer.RegisterSerializer(guidObjectSerializer);
-
-        //ConventionRegistry.Register("NamedId", new ConventionPack{ new NamedIdMemberConvention(["Id"], MemberTypes.Property)}, _ => true);
-        ConventionRegistry.Register("IgnoreNull", new ConventionPack { new IgnoreIfNullConvention(true) }, _ => true);
-        ConventionRegistry.Register("IgnoreExtras", new ConventionPack { new IgnoreExtraElementsConvention(true) }, _ => true);
-        // ConventionRegistry.Register("GuidIdConvention", new ConventionPack { new GuidIdConvention() }, _ => true);
+        if (options.IgnoreNulls) ConventionRegistry.Register("IgnoreNull", new ConventionPack { new IgnoreIfNullConvention(true) }, _ => true);
+        if (options.IgnoreExtraElements) ConventionRegistry.Register("IgnoreExtraElements", new ConventionPack { new IgnoreExtraElementsConvention(true) }, _ => true);
+        if (options.ConfigureGuidId) ConventionRegistry.Register("GuidIdConvention", new ConventionPack { new GuidIdConvention() }, _ => true);
+        if (options.ConfigureObjectId) ConventionRegistry.Register("ObjectIdIdConvention", new ConventionPack { new StringObjectIdIdGeneratorConvention() }, _ => true);
 
         var objectSerializer = new ObjectSerializer(type => ObjectSerializer.DefaultAllowedTypes(type) || type.IsAssignableTo(typeof(IMessage)));
         BsonSerializer.RegisterSerializer(objectSerializer);
+
+        RegisterClassMaps(options.RegisterClassMapForAssemblies);
     }
 
     /// <summary>
