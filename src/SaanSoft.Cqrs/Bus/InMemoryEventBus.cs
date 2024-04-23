@@ -31,11 +31,19 @@ public abstract class InMemoryEventBus<TMessageId>
 
     public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
         where TEvent : IEvent<TMessageId>
-        => await QueueManyAsync([evt], cancellationToken);
+    {
+        // get subscriber via ServiceProvider so it runs through any decorators
+        var subscriber = ServiceProvider.GetRequiredService<IEventSubscriber<TMessageId>>();
+        await subscriber.RunAsync(evt, cancellationToken);
+    }
 
     public async Task QueueManyAsync<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default)
         where TEvent : IEvent<TMessageId>
-        => await RunManyAsync(events, cancellationToken);
+    {
+        // get subscriber via ServiceProvider so it runs through any decorators
+        var subscriber = ServiceProvider.GetRequiredService<IEventSubscriber<TMessageId>>();
+        await subscriber.RunManyAsync(events, cancellationToken);
+    }
 
     public async Task RunAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default) where TEvent : IEvent<TMessageId>
         => await RunManyAsync([evt], cancellationToken);

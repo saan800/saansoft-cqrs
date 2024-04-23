@@ -11,7 +11,7 @@ public class QueryStoreTests : TestSetup
     public QueryStoreTests()
     {
         _queryStore = new QueryStore(Database);
-        _collection = Database.GetCollection<IMessage<Guid>>(_queryStore.MessageCollectionName);
+        _collection = _queryStore.MessageCollection;
     }
 
     [Fact]

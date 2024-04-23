@@ -4,9 +4,14 @@ using SaanSoft.Cqrs.Messages;
 namespace SaanSoft.Cqrs.Store.MongoDB;
 
 public class EventStore(IMongoDatabase database)
-    : EventStore<Guid, Guid>(database)
+    : EventStore<Guid>(database)
 {
-    protected override Guid NewMessageId() => Guid.NewGuid();
+}
+
+public class EventStore<TEntityKey>(IMongoDatabase database)
+    : EventStore<Guid, TEntityKey>(database)
+    where TEntityKey : struct
+{
 }
 
 /// <summary>

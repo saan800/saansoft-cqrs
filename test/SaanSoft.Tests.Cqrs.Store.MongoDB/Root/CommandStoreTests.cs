@@ -11,7 +11,7 @@ public class CommandStoreTests : TestSetup
     public CommandStoreTests()
     {
         _commandStore = new CommandStore(Database);
-        _collection = Database.GetCollection<IMessage<Guid>>(_commandStore.MessageCollectionName);
+        _collection = _commandStore.MessageCollection;
     }
 
     [Fact]

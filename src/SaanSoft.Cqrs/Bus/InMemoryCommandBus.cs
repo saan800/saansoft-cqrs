@@ -29,13 +29,22 @@ public abstract class InMemoryCommandBus<TMessageId>
         Logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async Task<CommandResponse> ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
+    public async Task<CommandResponse> ExecuteAsync<TCommand>(TCommand command,
+        CancellationToken cancellationToken = default)
         where TCommand : ICommand<TMessageId>
-        => await RunAsync(command, cancellationToken);
+    {
+        // get subscriber via ServiceProvider so it runs through any decorators
+        var subscriber = ServiceProvider.GetRequiredService<ICommandSubscriber<TMessageId>>();
+        return await subscriber.RunAsync(command, cancellationToken);
+    }
 
     public async Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : ICommand<TMessageId>
-        => await RunAsync(command, cancellationToken);
+    {
+        // get subscriber via ServiceProvider so it runs through any decorators
+        var subscriber = ServiceProvider.GetRequiredService<ICommandSubscriber<TMessageId>>();
+        await subscriber.RunAsync(command, cancellationToken);
+    }
 
     public async Task<CommandResponse> RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand<TMessageId>
     {

@@ -33,7 +33,11 @@ public abstract class InMemoryQueryBus<TMessageId> :
         CancellationToken cancellationToken = default)
         where TQuery : IQuery<TQuery, TResponse>
         where TResponse : IQueryResponse
-        => await RunAsync(query, cancellationToken);
+    {
+        // get subscriber via ServiceProvider so it runs through any decorators
+        var subscriber = ServiceProvider.GetRequiredService<IQuerySubscriber<TMessageId>>();
+        return await subscriber.RunAsync(query, cancellationToken);
+    }
 
     public async Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
         where TQuery : IQuery<TQuery, TResponse>

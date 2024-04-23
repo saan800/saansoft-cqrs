@@ -18,10 +18,10 @@ public abstract class BaseMessageStore<TMessageId, TMessage>(IMongoDatabase data
 {
     // ReSharper disable once MemberCanBePrivate.Global
     protected readonly IMongoDatabase Database = database;
-    protected abstract TMessageId NewMessageId();
+
     public abstract string MessageCollectionName { get; }
 
-    protected IMongoCollection<TMessage> MessageCollection => Database.GetCollection<TMessage>(MessageCollectionName);
+    public IMongoCollection<IMessage<TMessageId>> MessageCollection => Database.GetCollection<IMessage<TMessageId>>(MessageCollectionName);
 
     public async Task InsertAsync(TMessage message, CancellationToken cancellationToken = default)
         => await InsertManyAsync([message], cancellationToken);
@@ -30,11 +30,6 @@ public abstract class BaseMessageStore<TMessageId, TMessage>(IMongoDatabase data
     {
         var localMessages = message.Where(x => !x.IsReplay).ToList();
         if (localMessages.Count == 0) return;
-
-        foreach (var msg in localMessages.Where(msg => GenericUtils.IsNullOrDefault(msg.Id)))
-        {
-            msg.Id = NewMessageId();
-        }
 
         await MessageCollection.InsertManyAsync(localMessages, new InsertManyOptions(), cancellationToken);
     }
@@ -46,17 +41,24 @@ public abstract class BaseMessageStore<TMessageId, TMessage>(IMongoDatabase data
     {
         var indexes = MessageCollection.Indexes;
 
-        var keyIndex = Builders<TMessage>.IndexKeys
+        var keyIndex = Builders<IMessage<TMessageId>>.IndexKeys
             .Ascending(x => x.TypeFullName)
             .Ascending(x => x.TriggeredById)
             .Ascending(x => x.AuthenticationId)
             .Ascending(x => x.MessageOnUtc);
 
+        var indexModel =
+            new CreateIndexModel<IMessage<TMessageId>>(keyIndex, new CreateIndexOptions { Unique = false, Background = false });
+
+        // await indexes.CreateOneAsync(
+        //     Builders<IMessage<TMessageId>>.IndexKeys.Ascending(_ => _.TypeFullName).Descending(_ => _.TriggeredById),
+        //     new CreateIndexOptions { Background = true },
+        //     cancellationToken);
+
         await indexes.CreateOneAsync(
-                new CreateIndexModel<TMessage>(keyIndex, new CreateIndexOptions { Unique = false }),
-                null,
+            indexModel,
+                new CreateOneIndexOptions { },
                 cancellationToken
             );
     }
-
 }

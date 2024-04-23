@@ -9,7 +9,7 @@ public static class ServiceCollectionExtensions
     /// Adds the Guid implementations of the command, event and query stores
     /// </summary>
     /// <param name="serviceCollection"></param>
-    public static void AddAllStores(this IServiceCollection serviceCollection)
+    public static void AddGuidStores(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddCommandStore();
         serviceCollection.AddEventStore();
@@ -20,13 +20,20 @@ public static class ServiceCollectionExtensions
     /// Adds the provided type implementations of the command, event and query stores
     /// </summary>
     /// <param name="serviceCollection"></param>
-    public static void AddAllStores<TMessageId, TEntityKey>(this IServiceCollection serviceCollection)
-        where TMessageId : struct
+    public static void AddGuidStores<TEntityKey>(this IServiceCollection serviceCollection)
         where TEntityKey : struct
     {
-        serviceCollection.AddCommandStore<TMessageId>();
-        serviceCollection.AddEventStore<TMessageId, TEntityKey>();
-        serviceCollection.AddQueryStore<TMessageId>();
+        serviceCollection.AddCommandStore();
+        serviceCollection.AddQueryStore();
+
+        if (typeof(TEntityKey) == typeof(Guid))
+        {
+            serviceCollection.AddEventStore();
+        }
+        else
+        {
+            serviceCollection.AddEventStore<TEntityKey>();
+        }
     }
 
     public static void AddCommandStore(this IServiceCollection serviceCollection)
@@ -34,32 +41,19 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddScoped<ICommandStore<Guid>, CommandStore>();
     }
 
-    public static void AddCommandStore<TMessageId>(this IServiceCollection serviceCollection)
-        where TMessageId : struct
-    {
-        serviceCollection.AddScoped<ICommandStore<TMessageId>, CommandStore<TMessageId>>();
-    }
-
     public static void AddEventStore(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddScoped<IEventStore<Guid, Guid>, EventStore>();
     }
 
-    public static void AddEventStore<TMessageId, TEntityKey>(this IServiceCollection serviceCollection)
-        where TMessageId : struct
+    public static void AddEventStore<TEntityKey>(this IServiceCollection serviceCollection)
         where TEntityKey : struct
     {
-        serviceCollection.AddScoped<IEventStore<TMessageId, TEntityKey>, EventStore<TMessageId, TEntityKey>>();
+        serviceCollection.AddScoped<IEventStore<Guid, TEntityKey>, EventStore<TEntityKey>>();
     }
 
     public static void AddQueryStore(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddScoped<IQueryStore<Guid>, QueryStore>();
-    }
-
-    public static void AddQueryStore<TMessageId>(this IServiceCollection serviceCollection)
-        where TMessageId : struct
-    {
-        serviceCollection.AddScoped<IQueryStore<TMessageId>, QueryStore<TMessageId>>();
     }
 }
