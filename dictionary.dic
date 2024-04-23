@@ -1,6 +1,8 @@
+bson
 color
 cqrs
 extern
+nojournal
 opencover
 Saan
 SaanSoft

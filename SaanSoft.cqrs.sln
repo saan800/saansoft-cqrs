@@ -17,6 +17,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Store.MongoDB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Tests.Cqrs.Store.MongoDB", "test\SaanSoft.Tests.Cqrs.Store.MongoDB\SaanSoft.Tests.Cqrs.Store.MongoDB.csproj", "{2F2E1D89-634E-4CC4-AED6-179DAA952A93}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_solution", "_solution", "{8962FA21-773D-4F0E-81CB-AF1D7AE5B9A7}"
+	ProjectSection(SolutionItems) = preProject
+		SECURITY.md = SECURITY.md
+		README.md = README.md
+		CONTRIBUTING.md = CONTRIBUTING.md
+		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
+		dictionary.dic = dictionary.dic
+	EndProjectSection
+EndProject
 Global
 				GlobalSection(SolutionConfigurationPlatforms) = preSolution
 								Debug|Any CPU = Debug|Any CPU
