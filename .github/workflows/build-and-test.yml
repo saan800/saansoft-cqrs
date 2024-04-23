@@ -43,13 +43,22 @@ jobs:
       - name: Build
         run: dotnet build --no-restore --configuration Release
 
+      # - name: Run unit tests
+      #   run: >
+      #     dotnet test
+      #     --no-restore
+      #     --configuration Release
+      #     --logger "GitHubActions;summary.includePassedTests=true;summary.includeSkippedTests=true;annotations.titleFormat=@test;annotations.messageFormat=@error\n@trace"
+      #     /p:CollectCoverage=true /p:Exclude="SaanSoft.Tests.*" /p:CoverletOutputFormat=\"opencover,json\" /p:CoverletOutput="../../reports/coverage/"  /p:MergeWith="../../reports/coverage/coverage.json"
+      #     --
+      #     RunConfiguration.CollectSourceInformation=true
+
       - name: Run unit tests
         run: >
           dotnet test
           --no-restore
           --configuration Release
           --logger "GitHubActions;summary.includePassedTests=true;summary.includeSkippedTests=true;annotations.titleFormat=@test;annotations.messageFormat=@error\n@trace"
-          /p:CollectCoverage=true /p:Exclude="SaanSoft.Tests.*" /p:CoverletOutputFormat=\"opencover,json\" /p:CoverletOutput="../../reports/coverage/"  /p:MergeWith="../../reports/coverage/coverage.json"
           --
           RunConfiguration.CollectSourceInformation=true
 
