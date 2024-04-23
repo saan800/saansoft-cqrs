@@ -3,7 +3,7 @@
     <CollectCoverage>true</CollectCoverage>
     <CoverletOutput>$([System.IO.Path]::Combine($(ArtifactPath), "../../", 'reports', 'coverage'))</CoverletOutput>
     <CoverletOutputFormat>opencover,json</CoverletOutputFormat>
-    <MergeWith>$(CoverletOutput)coverage.json</MergeWith>
+    <MergeWith>$(CoverletOutput)/coverage.json</MergeWith>
     <Exclude>[SaanSoft.Tests.*]*,[xunit.*]*</Exclude>
     <!-- <ExcludeByAttribute>GeneratedCodeAttribute</ExcludeByAttribute>
     <Threshold>65</Threshold> -->
