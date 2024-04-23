@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace SaanSoft.Cqrs.Messages;
 
-public sealed class CommandResponse
+public sealed class CommandResponse : IMessageResponse
 {
     [SetsRequiredMembers]
     public CommandResponse()

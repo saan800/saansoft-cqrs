@@ -9,7 +9,8 @@ public class InMemoryCommandBus(IServiceProvider serviceProvider, ILogger logger
     : InMemoryCommandBus<Guid>(serviceProvider, logger, options);
 
 public abstract class InMemoryCommandBus<TMessageId>
-    : ICommandBus<TMessageId>
+    : ICommandPublisher<TMessageId>,
+    ICommandSubscriber<TMessageId>
     where TMessageId : struct
 {
     // ReSharper disable MemberCanBePrivate.Global
@@ -30,13 +31,20 @@ public abstract class InMemoryCommandBus<TMessageId>
 
     public async Task<CommandResponse> ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : ICommand<TMessageId>
+        => await RunAsync(command, cancellationToken);
+
+    public async Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
+        where TCommand : ICommand<TMessageId>
+        => await RunAsync(command, cancellationToken);
+
+    public async Task<CommandResponse> RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand<TMessageId>
     {
+        if (command.IsReplay) return new CommandResponse { IsSuccess = true, ErrorMessage = "Commands do not run in replay mode" };
         var handlers = ServiceProvider.GetServices<ICommandHandler<TCommand>>().ToList();
         switch (handlers.Count)
         {
             case 1:
                 var handler = handlers.Single();
-
                 if (Logger.IsEnabled(LogLevel))
                 {
                     Logger.Log(LogLevel, "Running command handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, typeof(TCommand).FullName);
@@ -51,8 +59,4 @@ public abstract class InMemoryCommandBus<TMessageId>
                 }
         }
     }
-
-    public async Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : ICommand<TMessageId>
-        => await ExecuteAsync(command, cancellationToken);
 }

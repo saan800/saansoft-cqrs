@@ -2,26 +2,23 @@ using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Store;
 
-public interface IEventStore<TMessageId> where TMessageId : struct
+/// <summary>
+/// Keeps a record of all events that have been raised in the system.
+/// </summary>
+/// <typeparam name="TMessageId"></typeparam>
+/// <typeparam name="TEntityKey"></typeparam>
+public interface IEventStore<TMessageId, TEntityKey> : IMessageStore<TMessageId, IEvent<TMessageId>>
+    where TMessageId : struct
+    where TEntityKey : struct
 {
     /// <summary>
-    /// Get all events for an entity key
+    /// Get all events for an entity key.
     /// </summary>
     /// <param name="key">(eg UserId, OrderId, BlogId)</param>
-    /// <returns></returns>
-    Task<IEnumerable<IEvent<TMessageId, TEntityKey>>> GetAsync<TEntityKey>(TEntityKey key) where TEntityKey : struct;
-
-    /// <summary>
-    /// Save a new event
-    /// </summary>
-    /// <param name="evt"></param>
-    /// <returns></returns>
-    Task InsertAsync<TEvent>(TEvent evt) where TEvent : IEvent<TMessageId>;
-
-    /// <summary>
-    /// Save new events
-    /// </summary>
-    /// <param name="events"></param>
-    /// <returns></returns>
-    Task InsertAsync<TEvent>(IEnumerable<TEvent> events) where TEvent : IEvent<TMessageId>;
+    /// <param name="cancellationToken"></param>
+    /// <returns>
+    /// All events for the key, sorted by MessageOnUtc ascending order.
+    /// If no events are found for the key, it will return an empty List
+    /// </returns>
+    Task<List<IEvent<TMessageId, TEntityKey>>> GetAsync(TEntityKey key, CancellationToken cancellationToken = default);
 }

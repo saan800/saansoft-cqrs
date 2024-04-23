@@ -11,20 +11,24 @@ namespace SaanSoft.Cqrs.Messages;
 public abstract class BaseMessage<TMessageId> : IMessage<TMessageId>
     where TMessageId : struct
 {
+    protected abstract TMessageId NewMessageId();
+
     public TMessageId Id { get; set; }
     public TMessageId? TriggeredById { get; set; }
     public string? CorrelationId { get; set; }
-    public string? AuthenticatedId { get; set; }
+    public string? AuthenticationId { get; set; }
     public DateTime MessageOnUtc { get; set; } = DateTime.UtcNow;
 
     public string TypeFullName { get; set; }
 
-    protected BaseMessage(TMessageId id, TMessageId? triggeredById = null, string? correlationId = null, string? authenticatedId = null)
+    public bool IsReplay { get; set; } = false;
+
+    protected BaseMessage(string? correlationId = null, string? authenticatedId = null)
     {
-        Id = id;
+        // ReSharper disable once VirtualMemberCallInConstructor
+        if (GenericUtils.IsNullOrDefault(Id)) Id = NewMessageId();
         if (!string.IsNullOrWhiteSpace(correlationId)) CorrelationId = correlationId;
-        if (!string.IsNullOrWhiteSpace(authenticatedId)) AuthenticatedId = authenticatedId;
-        if (!GenericUtils.IsNullOrDefault(triggeredById)) TriggeredById = triggeredById;
+        if (!string.IsNullOrWhiteSpace(authenticatedId)) AuthenticationId = authenticatedId;
         if (string.IsNullOrWhiteSpace(TypeFullName))
         {
             var type = GetType();
@@ -32,7 +36,10 @@ public abstract class BaseMessage<TMessageId> : IMessage<TMessageId>
         }
     }
 
-    protected BaseMessage(TMessageId id, IMessage<TMessageId> triggeredByMessage)
-        : this(id, triggeredByMessage.Id, triggeredByMessage.CorrelationId, triggeredByMessage.AuthenticatedId) { }
-
+    protected BaseMessage(IMessage<TMessageId> triggeredByMessage)
+        : this(triggeredByMessage.CorrelationId, triggeredByMessage.AuthenticationId)
+    {
+        TriggeredById = triggeredByMessage.Id;
+        IsReplay = triggeredByMessage.IsReplay;
+    }
 }

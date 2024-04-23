@@ -9,7 +9,8 @@ public class InMemoryQueryBus(IServiceProvider serviceProvider, ILogger logger, 
     : InMemoryQueryBus<Guid>(serviceProvider, logger, options);
 
 public abstract class InMemoryQueryBus<TMessageId> :
-    IQueryBus<TMessageId>
+    IQueryPublisher<TMessageId>,
+    IQuerySubscriber<TMessageId>
     where TMessageId : struct
 {
     // ReSharper disable MemberCanBePrivate.Global
@@ -28,7 +29,13 @@ public abstract class InMemoryQueryBus<TMessageId> :
         Logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async Task<TResponse> QueryAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
+    public async Task<TResponse> QueryAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
+        CancellationToken cancellationToken = default)
+        where TQuery : IQuery<TQuery, TResponse>
+        where TResponse : IQueryResponse
+        => await RunAsync(query, cancellationToken);
+
+    public async Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
         where TQuery : IQuery<TQuery, TResponse>
         where TResponse : IQueryResponse
     {

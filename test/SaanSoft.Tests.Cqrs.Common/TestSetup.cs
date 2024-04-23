@@ -1,4 +1,8 @@
-namespace SaanSoft.Tests.Cqrs;
+using FakeItEasy;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+namespace SaanSoft.Tests.Cqrs.Common;
 
 public abstract class TestSetup
 {

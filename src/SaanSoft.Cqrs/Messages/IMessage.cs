@@ -16,10 +16,10 @@ public interface IMessage
     string? CorrelationId { get; set; }
 
     /// <summary>
-    /// Who triggered the command/event/query (eg UserId, AuthToken)
+    /// Who triggered the command/event/query (eg UserId, third party (eg Auth0) Id)
     /// Should be propagated between related messages
     /// </summary>
-    string? AuthenticatedId { get; set; }
+    string? AuthenticationId { get; set; }
 
     /// <summary>
     /// When the command/event/query was raised.
@@ -31,10 +31,15 @@ public interface IMessage
     /// FullName for the type of the event
     /// </summary>
     string TypeFullName { get; set; }
+
+    /// <summary>
+    /// Whether the message is being replayed or not
+    /// </summary>
+    bool IsReplay { get; set; }
 }
 
 /// <summary>
-/// Base class with common properties for all messages
+/// Base interface with common properties for all messages
 /// You should never directly inherit from IMessage
 /// Use <see cref="ICommand{TMessageId}"/>, <see cref="IEvent{TMessageId, TEntityKey}"/> or <see cref="IQuery{TMessageId, TQuery, TResponse}"/> instead
 /// </summary>

@@ -2,11 +2,12 @@ using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Bus;
 
-public interface IEventBus<TMessageId> where TMessageId : struct
+public interface IEventPublisher<TMessageId> where TMessageId : struct
 {
     /// <summary>
     /// Put the event onto the queue
-    /// It will not return any indication if the event was successfully executed or not
+    /// It will not return any indication if the event was successfully executed or not.
+    /// Events will be run in replay mode.
     /// </summary>
     /// <param name="evt"></param>
     /// <param name="cancellationToken"></param>
@@ -16,7 +17,8 @@ public interface IEventBus<TMessageId> where TMessageId : struct
 
     /// <summary>
     /// Put the events onto the queue
-    /// It will not return any indication if the events were successfully executed or not
+    /// It will not return any indication if the events were successfully executed or not.
+    /// Events will be run in replay mode.
     /// </summary>
     /// <param name="events"></param>
     /// <param name="cancellationToken"></param>

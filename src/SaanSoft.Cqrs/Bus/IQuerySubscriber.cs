@@ -2,10 +2,11 @@ using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Bus;
 
-public interface IQueryBus<TMessageId> where TMessageId : struct
+public interface IQuerySubscriber<TMessageId> where TMessageId : struct
 {
     /// <summary>
-    /// Send a query for information
+    /// Run a query for information
+    /// Queries will be run in replay mode.
     /// </summary>
     /// <param name="query"></param>
     /// <param name="cancellationToken"></param>
@@ -15,7 +16,7 @@ public interface IQueryBus<TMessageId> where TMessageId : struct
     ///     Also contains information on if the query was successful or not, and error messages.
     /// </typeparam>
     /// <returns></returns>
-    Task<TResponse> QueryAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
+    Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
         CancellationToken cancellationToken = default)
         where TQuery : IQuery<TQuery, TResponse>
         where TResponse : IQueryResponse;

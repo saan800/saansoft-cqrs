@@ -1,4 +1,4 @@
-namespace SaanSoft.Tests.Cqrs.TestHelpers;
+namespace SaanSoft.Tests.Cqrs.Common.TestModels;
 
 public class QueryResponse : SaanSoft.Cqrs.Messages.QueryResponse
 {

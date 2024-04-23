@@ -9,7 +9,8 @@ public class InMemoryEventBus(IServiceProvider serviceProvider, ILogger logger, 
     : InMemoryEventBus<Guid>(serviceProvider, logger, options);
 
 public abstract class InMemoryEventBus<TMessageId>
-    : IEventBus<TMessageId>
+    : IEventPublisher<TMessageId>,
+      IEventSubscriber<TMessageId>
     where TMessageId : struct
 {
     // ReSharper disable MemberCanBePrivate.Global
@@ -34,6 +35,12 @@ public abstract class InMemoryEventBus<TMessageId>
 
     public async Task QueueManyAsync<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default)
         where TEvent : IEvent<TMessageId>
+        => await RunManyAsync(events, cancellationToken);
+
+    public async Task RunAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default) where TEvent : IEvent<TMessageId>
+        => await RunManyAsync([evt], cancellationToken);
+
+    public async Task RunManyAsync<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default) where TEvent : IEvent<TMessageId>
     {
         var handlers = ServiceProvider.GetServices<IEventHandler<TEvent>>().ToList();
         foreach (var evt in events)
