@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup Condition=" '$(IsTestProject)' == 'true'">
     <CollectCoverage>true</CollectCoverage>
-    <CoverletOutput>$([System.IO.Path]::Combine($(MSBuildProjectDirectory), "../../", 'reports', 'coverage'))</CoverletOutput>
+    <CoverletOutput>$([System.IO.Path]::Combine($(MSBuildProjectDirectory), "../../", 'reports', 'coverage'))/</CoverletOutput>
     <CoverletOutputFormat>opencover,json</CoverletOutputFormat>
     <MergeWith>$(CoverletOutput)/coverage.json</MergeWith>
     <Exclude>[SaanSoft.Tests.*]*,[xunit.*]*</Exclude>
