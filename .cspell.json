@@ -12,6 +12,7 @@
     "./.github/dependabot.yml",
     "./.github/workflows/**",
     "./dictionary.dic",
+    "./Directory.*.props",
     "**/*.csproj",
   ],
   "dictionaryDefinitions": [

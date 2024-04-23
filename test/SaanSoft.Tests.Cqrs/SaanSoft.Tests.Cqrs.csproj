@@ -11,28 +11,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <!-- <PackageReference Include="coverlet.collector">
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-          <PrivateAssets>all</PrivateAssets>
-        </PackageReference>
-        <PackageReference Include="coverlet.msbuild">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="GitHubActionsTestLogger">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference> -->
-
-        <!-- <PackageReference Include="Microsoft.NET.Test.Sdk"/>
-        <PackageReference Include="xunit" /> -->
-    </ItemGroup>
-
-    <ItemGroup>
-        <Using Include="Xunit"/>
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\..\src\SaanSoft.Cqrs\SaanSoft.Cqrs.csproj" />
       <ProjectReference Include="..\SaanSoft.Tests.Cqrs.Common\SaanSoft.Tests.Cqrs.Common.csproj" />
     </ItemGroup>

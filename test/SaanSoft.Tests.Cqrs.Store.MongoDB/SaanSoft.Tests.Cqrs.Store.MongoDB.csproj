@@ -7,31 +7,14 @@
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
+        <NoWarn>NETSDK1206</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
-        <!-- <PackageReference Include="coverlet.collector">
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-          <PrivateAssets>all</PrivateAssets>
-        </PackageReference>
-        <PackageReference Include="coverlet.msbuild">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference> -->
         <PackageReference Include="EphemeralMongo.Core" />
         <PackageReference Include="EphemeralMongo6.runtime.ubuntu.22.04-x64" />
         <PackageReference Include="EphemeralMongo6.runtime.win-x64" />
         <PackageReference Include="EphemeralMongo6.runtime.osx-x64" />
-        <!-- <PackageReference Include="GitHubActionsTestLogger">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference> -->
-        <!-- <PackageReference Include="Microsoft.NET.Test.Sdk" />
-        <PackageReference Include="xunit" /> -->
-    </ItemGroup>
-
-    <ItemGroup>
-        <Using Include="Xunit"/>
     </ItemGroup>
 
     <ItemGroup>
