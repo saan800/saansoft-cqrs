@@ -5,7 +5,8 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: daily
+      interval: weekly
+      day: friday
       time: "04:00"
       timezone: "Australia/Perth"
     commit-message:
@@ -23,7 +24,8 @@ updates:
           - xunit*
         update-types: ["minor", "patch"]
     schedule:
-      interval: daily
+      interval: weekly
+      day: friday
       time: "04:00"
       timezone: "Australia/Perth"
     commit-message:
@@ -32,14 +34,17 @@ updates:
   - package-ecosystem: nuget
     directory: /examples/SaanSoft.Cqrs.Example.InMemory.Api
     schedule:
-      interval: daily
+      interval: weekly
+      day: friday
 
   - package-ecosystem: nuget
     directory: /src/SaanSoft.Cqrs
     schedule:
-      interval: daily
+      interval: weekly
+      day: friday
 
   - package-ecosystem: nuget
     directory: /test/SaanSoft.Tests.Cqrs
     schedule:
-      interval: daily
+      interval: weekly
+      day: friday
