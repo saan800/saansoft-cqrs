@@ -26,25 +26,8 @@ updates:
     schedule:
       interval: weekly
       day: friday
-      time: "04:00"
+      time: "05:00"
       timezone: "Australia/Perth"
     commit-message:
       prefix: "dependencies(nuget): "
 
-  - package-ecosystem: nuget
-    directory: /examples/SaanSoft.Cqrs.Example.InMemory.Api
-    schedule:
-      interval: weekly
-      day: friday
-
-  - package-ecosystem: nuget
-    directory: /src/SaanSoft.Cqrs
-    schedule:
-      interval: weekly
-      day: friday
-
-  - package-ecosystem: nuget
-    directory: /test/SaanSoft.Tests.Cqrs
-    schedule:
-      interval: weekly
-      day: friday
