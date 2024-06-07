@@ -28,7 +28,7 @@ public class InMemoryEventBusTests : TestSetup
     }
 
     [Fact]
-    public async Task ExecuteAsync_single_handler_exists_in_serviceProvider()
+    public async Task QueueAsync_single_handler_exists_in_serviceProvider()
     {
         var eventHandler = A.Fake<IEventHandler<MyEvent>>();
 
@@ -45,7 +45,7 @@ public class InMemoryEventBusTests : TestSetup
     /// and both event handlers should be run
     /// </summary>
     [Fact]
-    public async Task ExecuteAsync_multiple_handlers_exists_in_serviceProvider()
+    public async Task QueueAsync_multiple_handlers_exists_in_serviceProvider()
     {
         var eventHandler = A.Fake<IEventHandler<MyEvent>>();
         var anotherEventHandler = A.Fake<IEventHandler<MyEvent>>();
@@ -64,11 +64,25 @@ public class InMemoryEventBusTests : TestSetup
     /// Unlike commands and queries, having no event handlers is fine, it just does nothing.
     /// </summary>
     [Fact]
-    public async Task ExecuteAsync_no_handler_in_serviceProvider_should_do_nothing()
+    public async Task QueueAsync_no_handler_in_serviceProvider_should_do_nothing()
     {
         var sut = new InMemoryEventBus(GetServiceProvider(), Logger);
         await sut.QueueAsync(new MyEvent(Guid.NewGuid()));
 
         Assert.True(true);
+    }
+
+    [Fact]
+    public async Task QueueManyAsync_executes_multiple_events_of_same_type()
+    {
+        var eventHandler = A.Fake<IEventHandler<MyEvent>>();
+        ServiceCollection.AddScoped<IEventHandler<MyEvent>>(_ => eventHandler);
+        var event1 = new MyEvent(Guid.NewGuid());
+        var event2 = new MyEvent(Guid.NewGuid());
+
+        var sut = new InMemoryEventBus(GetServiceProvider(), Logger, _options);
+        await sut.QueueManyAsync([event1, event2]);
+
+        A.CallTo(() => eventHandler.HandleAsync(A<MyEvent>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappened(2, Times.Exactly);
     }
 }

@@ -1,17 +1,21 @@
+using AutoFixture.Xunit2;
 using SaanSoft.Cqrs.Messages;
 using SaanSoft.Cqrs.Store.MongoDB;
+using SaanSoft.Cqrs.Store.MongoDB.Models;
 
 namespace SaanSoft.Tests.Cqrs.Store.MongoDB.Root;
 
 public class EventStoreTests : TestSetup
 {
     private readonly IMongoCollection<Event> _collection;
+    private readonly IMongoCollection<MessagePublisherRecord<Guid>> _publisherCollection;
     private readonly EventStore _eventStore;
 
     public EventStoreTests()
     {
         _eventStore = new EventStore(Database);
         _collection = Database.GetCollection<Event>(_eventStore.MessageCollectionName);
+        _publisherCollection = _eventStore.PublisherCollection;
     }
 
     [Fact]
@@ -56,5 +60,41 @@ public class EventStoreTests : TestSetup
             record.Key.Should().Be(message.Key);
             record.TypeFullName.Should().Be(message.GetType().FullName);
         }
+    }
+
+    [Theory]
+    [InlineAutoData]
+    public async Task UpsertPublisherAsync_can_insert_record(string messageName, string publisherName)
+    {
+        await _eventStore.UpsertPublisherAsync(messageName, publisherName);
+
+        // check the collection that the record exists
+        var record = await _publisherCollection
+            .Find(x =>
+                x.MessageTypeName == messageName
+                && x.PublisherTypeName == publisherName
+            ).SingleOrDefaultAsync();
+
+        record.Should().NotBeNull();
+    }
+
+    [Theory]
+    [InlineAutoData]
+    public async Task UpsertPublisherAsync_multiple_times_only_creates_one_record(string messageName, string publisherName)
+    {
+        await _eventStore.UpsertPublisherAsync(messageName, publisherName);
+        await _eventStore.UpsertPublisherAsync(messageName, publisherName);
+        await _eventStore.UpsertPublisherAsync(messageName, publisherName);
+
+        // check the collection that the record exists
+        var records = await _publisherCollection
+            .Find(x =>
+                x.MessageTypeName == messageName
+                && x.PublisherTypeName == publisherName
+            )
+            .ToListAsync();
+
+        records.Should().NotBeNull();
+        records.Count.Should().Be(1);
     }
 }

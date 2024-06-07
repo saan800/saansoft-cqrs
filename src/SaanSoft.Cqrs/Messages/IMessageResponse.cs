@@ -3,7 +3,7 @@ namespace SaanSoft.Cqrs.Messages;
 public interface IMessageResponse
 {
     /// <summary>
-    /// Was the query successful or not
+    /// Was the message successful or not
     /// </summary>
     bool IsSuccess { get; set; }
 

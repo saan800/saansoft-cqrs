@@ -38,5 +38,5 @@ public interface ICommandPublisher<TMessageId> where TMessageId : struct
     /// <param name="cancellationToken"></param>
     /// <typeparam name="TCommand"></typeparam>
     /// <returns></returns>
-    Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken) where TCommand : ICommand<TMessageId>;
+    Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand<TMessageId>;
 }
