@@ -5,6 +5,7 @@ namespace SaanSoft.Cqrs.Store.MongoDB;
 
 public class QueryStore(IMongoDatabase database) : QueryStore<Guid>(database)
 {
+    protected override Guid NewMessageId() => Guid.NewGuid();
 }
 
 public abstract class QueryStore<TMessageId>(IMongoDatabase database) :
@@ -13,4 +14,5 @@ public abstract class QueryStore<TMessageId>(IMongoDatabase database) :
     where TMessageId : struct
 {
     public override string MessageCollectionName => "Queries";
+    public override string PublisherCollectionName => "QueryPublishers";
 }

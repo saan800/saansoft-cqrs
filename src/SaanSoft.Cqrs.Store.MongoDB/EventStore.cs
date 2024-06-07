@@ -12,6 +12,7 @@ public class EventStore<TEntityKey>(IMongoDatabase database)
     : EventStore<Guid, TEntityKey>(database)
     where TEntityKey : struct
 {
+    protected override Guid NewMessageId() => Guid.NewGuid();
 }
 
 /// <summary>
@@ -30,6 +31,7 @@ public abstract class EventStore<TMessageId, TEntityKey>(IMongoDatabase database
     where TEntityKey : struct
 {
     public override string MessageCollectionName => "Events";
+    public override string PublisherCollectionName => "EventPublishers";
 
     protected IMongoCollection<IEvent<TMessageId, TEntityKey>> EventCollection =>
         Database.GetCollection<IEvent<TMessageId, TEntityKey>>(MessageCollectionName);
@@ -44,7 +46,7 @@ public abstract class EventStore<TMessageId, TEntityKey>(IMongoDatabase database
     /// <summary>
     /// Call this on your app startup to ensure that the necessary indexes are created
     /// </summary>
-    public override async Task EnsureIndexes(CancellationToken cancellationToken = default)
+    public override async Task EnsureMessageCollectionIndexes(CancellationToken cancellationToken = default)
     {
         var indexes = EventCollection.Indexes;
 

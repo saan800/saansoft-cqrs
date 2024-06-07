@@ -3,12 +3,12 @@ namespace SaanSoft.Cqrs.Messages;
 public interface IMessageResponse
 {
     /// <summary>
-    /// Was the query successful or not
+    /// Was the message successful or not
     /// </summary>
     bool IsSuccess { get; set; }
 
     /// <summary>
-    /// Reason for failure, if applicable
+    /// Reason for failure, if IsSuccess=false
     /// </summary>
     string? ErrorMessage { get; set; }
 }
