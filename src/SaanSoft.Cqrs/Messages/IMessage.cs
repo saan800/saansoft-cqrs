@@ -34,6 +34,10 @@ public interface IMessage
 
     /// <summary>
     /// Whether the message is being replayed or not
+    /// Note:
+    /// - Events should replay
+    /// - Queries should replay
+    /// - Commands should NOT replay
     /// </summary>
     bool IsReplay { get; set; }
 }

@@ -43,8 +43,28 @@ public class CommandStoreTests : TestSetup
             .Find(x =>
                 x.MessageTypeName == messageName
                 && x.PublisherTypeName == publisherName
-            ).FirstOrDefaultAsync();
+            ).SingleOrDefaultAsync();
 
         record.Should().NotBeNull();
+    }
+
+    [Theory]
+    [InlineAutoData]
+    public async Task UpsertPublisherAsync_multiple_times_only_creates_one_record(string messageName, string publisherName)
+    {
+        await _commandStore.UpsertPublisherAsync(messageName, publisherName);
+        await _commandStore.UpsertPublisherAsync(messageName, publisherName);
+        await _commandStore.UpsertPublisherAsync(messageName, publisherName);
+
+        // check the collection that the record exists
+        var records = await _publisherCollection
+            .Find(x =>
+                x.MessageTypeName == messageName
+                && x.PublisherTypeName == publisherName
+            )
+            .ToListAsync();
+
+        records.Should().NotBeNull();
+        records.Count.Should().Be(1);
     }
 }

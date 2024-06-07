@@ -26,6 +26,7 @@ public class EventStore<TEntityKey>(IMongoDatabase database)
 /// <typeparam name="TEntityKey"></typeparam>
 public abstract class EventStore<TMessageId, TEntityKey>(IMongoDatabase database) :
     BaseMessageStore<TMessageId, IEvent<TMessageId>>(database),
+    IEventPublisherStore,
     IEventStore<TMessageId, TEntityKey>
     where TMessageId : struct
     where TEntityKey : struct

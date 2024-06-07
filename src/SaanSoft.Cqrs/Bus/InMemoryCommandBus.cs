@@ -48,11 +48,12 @@ public abstract class InMemoryCommandBus<TMessageId>
 
     public async Task<CommandResponse> RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand<TMessageId>
     {
-        if (command.IsReplay) return new CommandResponse { IsSuccess = true, ErrorMessage = "Commands do not run in replay mode" };
         var handlers = ServiceProvider.GetServices<ICommandHandler<TCommand>>().ToList();
         switch (handlers.Count)
         {
             case 1:
+                if (command.IsReplay) return new CommandResponse { IsSuccess = true, ErrorMessage = "Commands do not run in replay mode" };
+
                 var handler = handlers.Single();
                 if (Logger.IsEnabled(LogLevel))
                 {

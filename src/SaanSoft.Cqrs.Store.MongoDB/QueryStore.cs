@@ -10,6 +10,7 @@ public class QueryStore(IMongoDatabase database) : QueryStore<Guid>(database)
 
 public abstract class QueryStore<TMessageId>(IMongoDatabase database) :
     BaseMessageStore<TMessageId, IQuery<TMessageId>>(database),
+    IQueryPublisherStore,
     IQueryStore<TMessageId>
     where TMessageId : struct
 {

@@ -8,7 +8,7 @@ public interface IMessageResponse
     bool IsSuccess { get; set; }
 
     /// <summary>
-    /// Reason for failure, if IsSuccess=false
+    /// Reason for failure, if applicable
     /// </summary>
     string? ErrorMessage { get; set; }
 }
