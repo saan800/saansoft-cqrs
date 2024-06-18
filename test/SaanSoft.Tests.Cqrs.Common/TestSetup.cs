@@ -1,6 +1,7 @@
 using FakeItEasy;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using SaanSoft.Cqrs.Bus;
 
 namespace SaanSoft.Tests.Cqrs.Common;

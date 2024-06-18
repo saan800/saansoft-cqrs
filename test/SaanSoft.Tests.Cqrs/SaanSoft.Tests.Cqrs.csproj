@@ -12,4 +12,8 @@
       <ProjectReference Include="..\SaanSoft.Tests.Cqrs.Common\SaanSoft.Tests.Cqrs.Common.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Bus\Decorator\" />
+    </ItemGroup>
+
 </Project>

@@ -9,7 +9,7 @@ public class InMemoryCommandBusTests : TestSetup
     private readonly CommandBusOptions _options = new() { LogLevel = LogLevel.Information };
 
     [Fact]
-    public void Cant_create_with_null_serviceProvider()
+    public void Can_not_create_with_null_serviceProvider()
     {
         Action act = () => new InMemoryCommandBus(null, Logger);
 
@@ -19,7 +19,7 @@ public class InMemoryCommandBusTests : TestSetup
     }
 
     [Fact]
-    public void Cant_create_with_null_logger()
+    public void Can_not_create_with_null_logger()
     {
         Action act = () => new InMemoryCommandBus(GetServiceProvider(), null);
 
