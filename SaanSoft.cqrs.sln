@@ -13,9 +13,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Tests.Cqrs", "test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Tests.Cqrs.Common", "test\SaanSoft.Tests.Cqrs.Common\SaanSoft.Tests.Cqrs.Common.csproj", "{1EB2016E-BF8F-4C47-9983-423E825D4B45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Store.MongoDB", "src\SaanSoft.Cqrs.Store.MongoDB\SaanSoft.Cqrs.Store.MongoDB.csproj", "{73DF9405-CA2A-4A08-AEF2-1549471DD0AB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Decorator.Store.MongoDB", "src\SaanSoft.Cqrs.Decorator.Store.MongoDB\SaanSoft.Cqrs.Decorator.Store.MongoDB.csproj", "{73DF9405-CA2A-4A08-AEF2-1549471DD0AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Tests.Cqrs.Store.MongoDB", "test\SaanSoft.Tests.Cqrs.Store.MongoDB\SaanSoft.Tests.Cqrs.Store.MongoDB.csproj", "{2F2E1D89-634E-4CC4-AED6-179DAA952A93}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB", "test\SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB\SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.csproj", "{2F2E1D89-634E-4CC4-AED6-179DAA952A93}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_solution", "_solution", "{8962FA21-773D-4F0E-81CB-AF1D7AE5B9A7}"
 	ProjectSection(SolutionItems) = preProject
@@ -24,7 +24,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_solution", "_solution", "{
 		CONTRIBUTING.md = CONTRIBUTING.md
 		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
 		dictionary.dic = dictionary.dic
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		Directory.Packages.props = Directory.Packages.props
+		nuget.config = nuget.config
+		LICENSE = LICENSE
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Decorator", "src\SaanSoft.Cqrs.Decorator\SaanSoft.Cqrs.Decorator.csproj", "{6BA1D9E1-0229-49B7-ACA1-5DAADBED02A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Tests.Cqrs.Decorator", "test\SaanSoft.Tests.Cqrs.Decorator\SaanSoft.Tests.Cqrs.Decorator.csproj", "{241D036D-F677-4F05-94F9-BCE8FBE671DE}"
 EndProject
 Global
 				GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,11 +65,20 @@ Global
 					{2F2E1D89-634E-4CC4-AED6-179DAA952A93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 					{2F2E1D89-634E-4CC4-AED6-179DAA952A93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 					{2F2E1D89-634E-4CC4-AED6-179DAA952A93}.Release|Any CPU.Build.0 = Release|Any CPU
+					{6BA1D9E1-0229-49B7-ACA1-5DAADBED02A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+					{6BA1D9E1-0229-49B7-ACA1-5DAADBED02A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+					{6BA1D9E1-0229-49B7-ACA1-5DAADBED02A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+					{6BA1D9E1-0229-49B7-ACA1-5DAADBED02A6}.Release|Any CPU.Build.0 = Release|Any CPU
+					{241D036D-F677-4F05-94F9-BCE8FBE671DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+					{241D036D-F677-4F05-94F9-BCE8FBE671DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+					{241D036D-F677-4F05-94F9-BCE8FBE671DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+					{241D036D-F677-4F05-94F9-BCE8FBE671DE}.Release|Any CPU.Build.0 = Release|Any CPU
 				EndGlobalSection
 				GlobalSection(NestedProjects) = preSolution
 								{14FB4E51-D7DF-4045-BF3D-9635FFE3E309} = {446FC180-C478-471E-A0A4-DB7B76C0B674}
 								{8CD0D9A9-6455-449E-ABCC-6F5DF49B3026} = {C22C944B-A9A4-4E23-B3D1-A6D7856304F3}
 					{1EB2016E-BF8F-4C47-9983-423E825D4B45} = {C22C944B-A9A4-4E23-B3D1-A6D7856304F3}
 					{2F2E1D89-634E-4CC4-AED6-179DAA952A93} = {C22C944B-A9A4-4E23-B3D1-A6D7856304F3}
+					{241D036D-F677-4F05-94F9-BCE8FBE671DE} = {C22C944B-A9A4-4E23-B3D1-A6D7856304F3}
 				EndGlobalSection
 EndGlobal
