@@ -15,7 +15,10 @@ public abstract class StoreCommandSubscriberDecorator<TMessageId>(IServiceProvid
 
     public async Task<CommandResponse> RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand<TMessageId>
     {
-        await StoreSubscriber<TCommand, ICommandHandler<TCommand>>(cancellationToken);
+        if (!command.IsReplay)
+        {
+            await StoreSubscriber<TCommand, ICommandHandler<TCommand>>(cancellationToken);
+        }
         return await next.RunAsync(command, cancellationToken);
     }
 }

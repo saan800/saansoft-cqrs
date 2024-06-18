@@ -17,6 +17,18 @@ public class StoreCommandPublisherDecoratorTests : TestSetup
     }
 
     [Fact]
+    public async Task ExecuteAsync_for_IsReply_command_should_not_store_publisher_details()
+    {
+        var commandPublisher = A.Fake<ICommandPublisher<Guid>>();
+        var store = A.Fake<ICommandPublisherStore>();
+
+        var sut = new StoreCommandPublisherDecorator(store, commandPublisher);
+        await sut.ExecuteAsync(new MyCommand { IsReplay = true });
+
+        A.CallTo(() => store.UpsertPublisherAsync(A<string>._, A<string>._, A<CancellationToken>._)).MustNotHaveHappened();
+    }
+
+    [Fact]
     public async Task ExecuteAsync_multiple_decorators_should_store_publisher_details()
     {
         var commandPublisher = A.Fake<ICommandPublisher<Guid>>();
@@ -40,6 +52,18 @@ public class StoreCommandPublisherDecoratorTests : TestSetup
         await sut.QueueAsync(new MyCommand());
 
         A.CallTo(() => store.UpsertPublisherAsync(typeof(MyCommand).FullName!, this.GetType().FullName!, A<CancellationToken>._)).MustHaveHappened();
+    }
+
+    [Fact]
+    public async Task QueueAsync_for_IsReply_command_should_not_store_publisher_details()
+    {
+        var commandPublisher = A.Fake<ICommandPublisher<Guid>>();
+        var store = A.Fake<ICommandPublisherStore>();
+
+        var sut = new StoreCommandPublisherDecorator(store, commandPublisher);
+        await sut.QueueAsync(new MyCommand { IsReplay = true });
+
+        A.CallTo(() => store.UpsertPublisherAsync(A<string>._, A<string>._, A<CancellationToken>._)).MustNotHaveHappened();
     }
 
     [Fact]
