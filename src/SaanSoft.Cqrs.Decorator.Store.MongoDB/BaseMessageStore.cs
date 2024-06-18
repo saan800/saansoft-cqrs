@@ -92,7 +92,7 @@ public abstract class BaseMessageStore<TMessageId, TMessage>(IMongoDatabase data
 
     #endregion
 
-    #region IMesageSubscriberStore
+    #region IMessageSubscriberStore
 
     public virtual async Task UpsertSubscriberAsync(string messageTypeName, IEnumerable<string> subscriberClassTypeNames, CancellationToken cancellationToken = default)
     {
