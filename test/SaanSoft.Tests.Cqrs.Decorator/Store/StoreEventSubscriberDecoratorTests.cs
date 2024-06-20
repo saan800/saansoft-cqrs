@@ -54,6 +54,27 @@ public class StoreEventSubscriberDecoratorTests : TestSetup
         A.CallTo(() => store.UpsertSubscriberAsync(A<MyEvent>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
     }
 
+    [Fact]
+    public async Task RunAsync_store_subscribers_details_when_next_throws_exception()
+    {
+        var handler = A.Fake<IEventHandler<MyEvent>>();
+        A.CallTo(() => handler.HandleAsync(A<MyEvent>.Ignored, A<CancellationToken>.Ignored))
+            .ThrowsAsync(new Exception("it went wrong"));
+        ServiceCollection.AddScoped<IEventHandler<MyEvent>>(_ => handler);
+
+        var eventSubscriber = new TestEventSubscriber(GetServiceProvider());
+        var store = A.Fake<IEventSubscriberStore<Guid>>();
+
+        var sut = new StoreEventSubscriberDecorator(store, eventSubscriber);
+
+        await sut.Invoking(y => y.RunAsync(new MyEvent(Guid.NewGuid())))
+            .Should().ThrowAsync<Exception>()
+            .Where(x => x.Message.StartsWith("it went wrong"));
+
+        A.CallTo(() => store.UpsertSubscriberAsync(A<MyEvent>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
+        A.CallTo(() => store.UpsertSubscriberAsync(A<MyEvent>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappenedOnceExactly();
+    }
+
     #endregion
 
 }

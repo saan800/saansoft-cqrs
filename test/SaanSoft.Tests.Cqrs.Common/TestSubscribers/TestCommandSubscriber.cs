@@ -13,7 +13,7 @@ public class TestCommandSubscriber(IServiceProvider serviceProvider) : ICommandS
 {
     public Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : ICommand<Guid>
-        => Task.FromResult(GetHandler<TCommand>());
+        => GetHandler<TCommand>().HandleAsync(command, cancellationToken);
 
     public ICommandHandler<TCommand> GetHandler<TCommand>() where TCommand : ICommand<Guid>
     {

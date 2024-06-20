@@ -8,10 +8,7 @@ namespace SaanSoft.Tests.Cqrs.Common.TestSubscribers;
 public class TestQuerySubscriber(IServiceProvider serviceProvider) : IQuerySubscriber<Guid>
 {
     public async Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default) where TQuery : IQuery<TQuery, TResponse>, IQuery<Guid>, IMessage<Guid> where TResponse : IQueryResponse
-    {
-        var handler = GetHandler<TQuery, TResponse>();
-        return await handler.HandleAsync(query, cancellationToken);
-    }
+        => await GetHandler<TQuery, TResponse>().HandleAsync(query, cancellationToken);
 
     public IQueryHandler<TQuery, TResponse> GetHandler<TQuery, TResponse>() where TQuery : IQuery<TQuery, TResponse>, IQuery<Guid>, IMessage<Guid> where TResponse : IQueryResponse
     {

@@ -56,4 +56,25 @@ public class StoreQuerySubscriberDecoratorTests : TestSetup
         A.CallTo(() => store.UpsertSubscriberAsync(A<MyQuery>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
         A.CallTo(() => store.UpsertSubscriberAsync(A<MyQuery>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
     }
+
+    [Fact]
+    public async Task RunAsync_store_subscribers_details_when_next_throws_exception()
+    {
+        var handler = A.Fake<IQueryHandler<MyQuery, QueryResponse>>();
+        A.CallTo(() => handler.HandleAsync(A<MyQuery>.Ignored, A<CancellationToken>.Ignored))
+            .ThrowsAsync(new Exception("it went wrong"));
+        ServiceCollection.AddScoped<IQueryHandler<MyQuery, QueryResponse>>(_ => handler);
+
+        var commandSubscriber = new TestQuerySubscriber(GetServiceProvider());
+        var store = A.Fake<IQuerySubscriberStore<Guid>>();
+
+        var sut = new StoreQuerySubscriberDecorator(store, commandSubscriber);
+
+        await sut.Invoking(y => y.RunAsync(new MyQuery()))
+            .Should().ThrowAsync<Exception>()
+            .Where(x => x.Message.StartsWith("it went wrong"));
+
+        A.CallTo(() => store.UpsertSubscriberAsync(A<MyQuery>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
+        A.CallTo(() => store.UpsertSubscriberAsync(A<MyQuery>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappenedOnceExactly();
+    }
 }
