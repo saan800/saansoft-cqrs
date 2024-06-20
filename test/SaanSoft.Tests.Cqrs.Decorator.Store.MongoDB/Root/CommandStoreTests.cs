@@ -82,6 +82,7 @@ public class CommandStoreTests : TestSetup
             ).SingleOrDefaultAsync();
 
         record.Should().NotBeNull();
+        record.MessageAssembly.Should().Be("SaanSoft.Tests.Cqrs.Common");
     }
 
     [Theory]

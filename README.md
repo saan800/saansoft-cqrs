@@ -17,6 +17,8 @@ Todo...
 ## TODO
 
 event handlers - have attribute on handler that indicates running order priority
+signal r example
+AWS Gateway example for web sockets
 
 ## Features
 
