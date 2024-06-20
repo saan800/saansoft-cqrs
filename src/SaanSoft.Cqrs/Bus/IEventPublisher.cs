@@ -13,7 +13,8 @@ public interface IEventPublisher<TMessageId> where TMessageId : struct
     /// <param name="cancellationToken"></param>
     /// <typeparam name="TEvent"></typeparam>
     /// <returns></returns>
-    Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default) where TEvent : IEvent<TMessageId>;
+    Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
+        where TEvent : IEvent<TMessageId>;
 
     /// <summary>
     /// Put the events onto the queue
@@ -24,5 +25,6 @@ public interface IEventPublisher<TMessageId> where TMessageId : struct
     /// <param name="cancellationToken"></param>
     /// <typeparam name="TEvent"></typeparam>
     /// <returns></returns>
-    Task QueueManyAsync<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default) where TEvent : IEvent<TMessageId>;
+    Task QueueManyAsync<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default)
+        where TEvent : IEvent<TMessageId>;
 }

@@ -35,7 +35,8 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
         await subscriber.RunAsync(command, cancellationToken);
     }
 
-    public async Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand<TMessageId>
+    public async Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
+        where TCommand : ICommand<TMessageId>
     {
         var handlers = ServiceProvider.GetServices<ICommandHandler<TCommand>>().ToList();
         switch (handlers.Count)

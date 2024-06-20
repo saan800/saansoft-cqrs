@@ -12,5 +12,6 @@ public interface ICommandSubscriber<TMessageId> where TMessageId : struct
     /// <param name="command"></param>
     /// <param name="cancellationToken"></param>
     /// <typeparam name="TCommand"></typeparam>
-    Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand<TMessageId>;
+    Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
+        where TCommand : ICommand<TMessageId>;
 }

@@ -13,7 +13,9 @@ public abstract class StoreQuerySubscriberDecorator<TMessageId>(IServiceProvider
 {
     protected override bool AllowMultipleSubscribers => false;
 
-    public async Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default) where TQuery : IQuery<TQuery, TResponse> where TResponse : IQueryResponse
+    public async Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
+        where TQuery : IQuery<TQuery, TResponse>, IMessage<TMessageId>
+        where TResponse : IQueryResponse
     {
         await StoreSubscriber<TQuery, IQueryHandler<TQuery, TResponse>>(cancellationToken);
         return await next.RunAsync(query, cancellationToken);

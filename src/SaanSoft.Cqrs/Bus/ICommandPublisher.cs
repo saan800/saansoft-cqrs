@@ -18,7 +18,8 @@ public interface ICommandPublisher<TMessageId> where TMessageId : struct
     /// <param name="command"></param>
     /// <param name="cancellationToken"></param>
     /// <typeparam name="TCommand"></typeparam>
-    Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand<TMessageId>;
+    Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
+        where TCommand : ICommand<TMessageId>;
 
     /// <summary>
     /// Put the command onto the queue (i.e. fire and forget).
@@ -33,5 +34,6 @@ public interface ICommandPublisher<TMessageId> where TMessageId : struct
     /// <param name="command"></param>
     /// <param name="cancellationToken"></param>
     /// <typeparam name="TCommand"></typeparam>
-    Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand<TMessageId>;
+    Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
+        where TCommand : ICommand<TMessageId>;
 }

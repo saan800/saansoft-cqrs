@@ -29,7 +29,7 @@ public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvi
     }
 
     public async Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
-        where TQuery : IQuery<TQuery, TResponse>
+        where TQuery : IQuery<TQuery, TResponse>, IMessage<TMessageId>
         where TResponse : IQueryResponse
     {
         var handlers = ServiceProvider.GetServices<IQueryHandler<TQuery, TResponse>>().ToList();

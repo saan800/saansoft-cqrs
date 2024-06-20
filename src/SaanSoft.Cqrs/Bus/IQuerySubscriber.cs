@@ -18,6 +18,6 @@ public interface IQuerySubscriber<TMessageId> where TMessageId : struct
     /// <returns></returns>
     Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
         CancellationToken cancellationToken = default)
-        where TQuery : IQuery<TQuery, TResponse>
+        where TQuery : IQuery<TQuery, TResponse>, IMessage<TMessageId>
         where TResponse : IQueryResponse;
 }

@@ -67,8 +67,8 @@ public abstract class BaseMessageStore<TMessageId, TMessage>(IMongoDatabase data
     #region IMessagePublisherStore
 
 
-    public virtual async Task UpsertPublisherAsync<TMessage>(TMessage message, Type publisherType, CancellationToken cancellationToken = default)
-       where TMessage : IMessage<TMessageId>
+    public virtual async Task UpsertPublisherAsync<TMessage1>(TMessage1 message, Type publisherType, CancellationToken cancellationToken = default)
+       where TMessage1 : IMessage<TMessageId>
     {
         var now = DateTime.UtcNow;
         var messageType = typeof(TMessage);

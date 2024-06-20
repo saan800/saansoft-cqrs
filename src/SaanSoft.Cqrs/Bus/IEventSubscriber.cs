@@ -11,5 +11,6 @@ public interface IEventSubscriber<TMessageId> where TMessageId : struct
     /// <param name="cancellationToken"></param>
     /// <typeparam name="TEvent"></typeparam>
     /// <returns></returns>
-    Task RunAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default) where TEvent : IEvent<TMessageId>;
+    Task RunAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
+        where TEvent : IEvent<TMessageId>;
 }

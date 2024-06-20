@@ -11,7 +11,7 @@ namespace SaanSoft.Cqrs.Decorator.Store;
 /// <typeparam name="TMessage"></typeparam>
 public interface IMessageStore<TMessageId, in TMessage>
     where TMessageId : struct
-    where TMessage : class, IMessage<TMessageId>
+    where TMessage : IMessage<TMessageId>
 {
     /// <summary>
     /// Add a message to the Store
