@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SaanSoft.Cqrs.Handler;
 using SaanSoft.Cqrs.Messages;
+using SaanSoft.Cqrs.Utilities;
 
 namespace SaanSoft.Cqrs.Bus;
 
@@ -38,11 +39,21 @@ public abstract class InMemoryEventBus<TMessageId>(IServiceProvider serviceProvi
     public async Task RunAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
         where TEvent : IEvent<TMessageId>
     {
-        var handlers = ServiceProvider.GetServices<IEventHandler<TEvent>>().ToList();
-        foreach (var handler in handlers)
+        // run each group of handlers in the given priority order
+        foreach (var tasks in GetHandlers<TEvent>()
+                     .Select(group => group.Select(handler => RunAsync(evt, handler, cancellationToken)))
+                 )
         {
-            Logger.LogInformation("Running event handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, typeof(TEvent).FullName);
-            await handler.HandleAsync(evt, cancellationToken);
+            await Task.WhenAll(tasks);
         }
     }
+
+    public async Task RunAsync<TEvent>(TEvent evt, IEventHandler<TEvent> handler, CancellationToken cancellationToken = default) where TEvent : IEvent<TMessageId>
+    {
+        Logger.LogInformation("Running event handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, typeof(TEvent).FullName);
+        await handler.HandleAsync(evt, cancellationToken);
+    }
+
+    public List<IGrouping<int, IEventHandler<TEvent>>> GetHandlers<TEvent>() where TEvent : IEvent<TMessageId>
+        => ServiceProvider.GetPrioritisedEventHandlers<TEvent, TMessageId>();
 }

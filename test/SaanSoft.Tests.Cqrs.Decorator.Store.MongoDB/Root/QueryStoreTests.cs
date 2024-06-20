@@ -111,15 +111,16 @@ public class QueryStoreTests : TestSetup
 
     [Theory]
     [InlineAutoData]
-    public async Task UpsertSubscriberAsync_can_insert_record(string messageName, string subscriberName)
+    public async Task UpsertSubscriberAsync_can_insert_record(Type subscriberType)
     {
-        await _queryStore.UpsertSubscriberAsync(messageName, [subscriberName]);
+        var query = new MyQuery();
+        await _queryStore.UpsertSubscriberAsync(query, subscriberType);
 
         // check the collection that the record exists
         var record = await _subscriberCollection
             .Find(x =>
-                x.MessageTypeName == messageName
-                && x.SubscriberTypeName == subscriberName
+                x.MessageTypeName == query.GetType().FullName
+                && x.SubscriberTypeName == subscriberType.FullName
             ).SingleOrDefaultAsync();
 
         record.Should().NotBeNull();
@@ -127,17 +128,18 @@ public class QueryStoreTests : TestSetup
 
     [Theory]
     [InlineAutoData]
-    public async Task UpsertSubscriberAsync_multiple_times_only_creates_one_record(string messageName, string subscriberName)
+    public async Task UpsertSubscriberAsync_multiple_times_only_creates_one_record(Type subscriberType)
     {
-        await _queryStore.UpsertSubscriberAsync(messageName, [subscriberName]);
-        await _queryStore.UpsertSubscriberAsync(messageName, [subscriberName]);
-        await _queryStore.UpsertSubscriberAsync(messageName, [subscriberName]);
+        var query = new MyQuery();
+        await _queryStore.UpsertSubscriberAsync(query, subscriberType);
+        await _queryStore.UpsertSubscriberAsync(query, subscriberType);
+        await _queryStore.UpsertSubscriberAsync(query, subscriberType);
 
         // check the collection that the record exists
         var records = await _subscriberCollection
             .Find(x =>
-                x.MessageTypeName == messageName
-                && x.SubscriberTypeName == subscriberName
+                x.MessageTypeName == query.GetType().FullName
+                && x.SubscriberTypeName == subscriberType.FullName
             )
             .ToListAsync();
 
@@ -147,44 +149,47 @@ public class QueryStoreTests : TestSetup
 
     [Theory]
     [InlineAutoData]
-    public async Task UpsertSubscriberAsync_creates_one_record_per_subscriber(string messageName, string subscriberName1, string subscriberName2)
+    public async Task UpsertSubscriberAsync_creates_one_record_per_subscriber(Type subscriberType1, Type subscriberType2)
     {
-        await _queryStore.UpsertSubscriberAsync(messageName, [subscriberName1, subscriberName2]);
-        await _queryStore.UpsertSubscriberAsync(messageName, [subscriberName2]);
-        await _queryStore.UpsertSubscriberAsync(messageName, [subscriberName2]);
+        var query = new MyQuery();
+        await _queryStore.UpsertSubscriberAsync(query, subscriberType1);
+        await _queryStore.UpsertSubscriberAsync(query, subscriberType2);
+        await _queryStore.UpsertSubscriberAsync(query, subscriberType2);
 
         // check the collection that the record exists
         var records = await _subscriberCollection
             .Find(x =>
-                x.MessageTypeName == messageName
+                x.MessageTypeName == query.GetType().FullName
             )
             .ToListAsync();
 
         records.Should().NotBeNull();
 
-        records.Count(x => x.SubscriberTypeName == subscriberName1).Should().Be(1);
-        records.Count(x => x.SubscriberTypeName == subscriberName2).Should().Be(1);
+        records.Count(x => x.SubscriberTypeName == subscriberType1.FullName).Should().Be(1);
+        records.Count(x => x.SubscriberTypeName == subscriberType2.FullName).Should().Be(1);
     }
 
     [Theory]
     [InlineAutoData]
-    public async Task UpsertSubscriberAsync_creates_one_record_per_messageName(string messageName1, string messageName2, string subscriberName)
+    public async Task UpsertSubscriberAsync_creates_one_record_per_messageName(Type subscriberType)
     {
-        await _queryStore.UpsertSubscriberAsync(messageName1, [subscriberName]);
-        await _queryStore.UpsertSubscriberAsync(messageName1, [subscriberName]);
-        await _queryStore.UpsertSubscriberAsync(messageName2, [subscriberName]);
+        var query1 = new MyQuery();
+        var query2 = new AnotherQuery();
+        await _queryStore.UpsertSubscriberAsync(query1, subscriberType);
+        await _queryStore.UpsertSubscriberAsync(query1, subscriberType);
+        await _queryStore.UpsertSubscriberAsync(query2, subscriberType);
 
         // check the collection that the record exists
         var records = await _subscriberCollection
             .Find(x =>
-                x.SubscriberTypeName == subscriberName
+                x.SubscriberTypeName == subscriberType.FullName
             )
             .ToListAsync();
 
         records.Should().NotBeNull();
 
-        records.Count(x => x.MessageTypeName == messageName1).Should().Be(1);
-        records.Count(x => x.MessageTypeName == messageName2).Should().Be(1);
+        records.Count(x => x.MessageTypeName == query1.GetType().FullName).Should().Be(1);
+        records.Count(x => x.MessageTypeName == query2.GetType().FullName).Should().Be(1);
     }
 
     #endregion

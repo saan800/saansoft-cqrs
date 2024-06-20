@@ -156,15 +156,16 @@ public class CommandStoreTests : TestSetup
 
     [Theory]
     [InlineAutoData]
-    public async Task UpsertSubscriberAsync_can_insert_record(string messageName, string subscriberName)
+    public async Task UpsertSubscriberAsync_can_insert_record(Type subscriberType)
     {
-        await _commandStore.UpsertSubscriberAsync(messageName, [subscriberName]);
+        var command = new MyCommand();
+        await _commandStore.UpsertSubscriberAsync(command, subscriberType);
 
         // check the collection that the record exists
         var record = await _subscriberCollection
             .Find(x =>
-                x.MessageTypeName == messageName
-                && x.SubscriberTypeName == subscriberName
+                x.MessageTypeName == command.GetType().FullName
+                && x.SubscriberTypeName == subscriberType.FullName
             ).SingleOrDefaultAsync();
 
         record.Should().NotBeNull();
@@ -172,17 +173,18 @@ public class CommandStoreTests : TestSetup
 
     [Theory]
     [InlineAutoData]
-    public async Task UpsertSubscriberAsync_multiple_times_only_creates_one_record(string messageName, string subscriberName)
+    public async Task UpsertSubscriberAsync_multiple_times_only_creates_one_record(Type subscriberType)
     {
-        await _commandStore.UpsertSubscriberAsync(messageName, [subscriberName]);
-        await _commandStore.UpsertSubscriberAsync(messageName, [subscriberName]);
-        await _commandStore.UpsertSubscriberAsync(messageName, [subscriberName]);
+        var command = new MyCommand();
+        await _commandStore.UpsertSubscriberAsync(command, subscriberType);
+        await _commandStore.UpsertSubscriberAsync(command, subscriberType);
+        await _commandStore.UpsertSubscriberAsync(command, subscriberType);
 
         // check the collection that the record exists
         var records = await _subscriberCollection
             .Find(x =>
-                x.MessageTypeName == messageName
-                && x.SubscriberTypeName == subscriberName
+                x.MessageTypeName == command.GetType().FullName
+                && x.SubscriberTypeName == subscriberType.FullName
             )
             .ToListAsync();
 
@@ -192,44 +194,47 @@ public class CommandStoreTests : TestSetup
 
     [Theory]
     [InlineAutoData]
-    public async Task UpsertSubscriberAsync_creates_one_record_per_subscriber(string messageName, string subscriberName1, string subscriberName2)
+    public async Task UpsertSubscriberAsync_creates_one_record_per_subscriber(Type subscriberType1, Type subscriberType2)
     {
-        await _commandStore.UpsertSubscriberAsync(messageName, [subscriberName1, subscriberName2]);
-        await _commandStore.UpsertSubscriberAsync(messageName, [subscriberName1, subscriberName2]);
-        await _commandStore.UpsertSubscriberAsync(messageName, [subscriberName2]);
+        var command = new MyCommand();
+        await _commandStore.UpsertSubscriberAsync(command, subscriberType1);
+        await _commandStore.UpsertSubscriberAsync(command, subscriberType1);
+        await _commandStore.UpsertSubscriberAsync(command, subscriberType2);
 
         // check the collection that the record exists
         var records = await _subscriberCollection
             .Find(x =>
-                x.MessageTypeName == messageName
+                x.MessageTypeName == command.GetType().FullName
             )
             .ToListAsync();
 
         records.Should().NotBeNull();
 
-        records.Count(x => x.SubscriberTypeName == subscriberName1).Should().Be(1);
-        records.Count(x => x.SubscriberTypeName == subscriberName2).Should().Be(1);
+        records.Count(x => x.SubscriberTypeName == subscriberType1.FullName).Should().Be(1);
+        records.Count(x => x.SubscriberTypeName == subscriberType2.FullName).Should().Be(1);
     }
 
     [Theory]
     [InlineAutoData]
-    public async Task UpsertSubscriberAsync_creates_one_record_per_messageName(string messageName1, string messageName2, string subscriberName)
+    public async Task UpsertSubscriberAsync_creates_one_record_per_messageName(Type subscriberType)
     {
-        await _commandStore.UpsertSubscriberAsync(messageName1, [subscriberName]);
-        await _commandStore.UpsertSubscriberAsync(messageName1, [subscriberName]);
-        await _commandStore.UpsertSubscriberAsync(messageName2, [subscriberName]);
+        var command1 = new MyCommand();
+        var command2 = new MyCommand();
+        await _commandStore.UpsertSubscriberAsync(command1, subscriberType);
+        await _commandStore.UpsertSubscriberAsync(command1, subscriberType);
+        await _commandStore.UpsertSubscriberAsync(command2, subscriberType);
 
         // check the collection that the record exists
         var records = await _subscriberCollection
             .Find(x =>
-                x.SubscriberTypeName == subscriberName
+                x.SubscriberTypeName == subscriberType.FullName
             )
             .ToListAsync();
 
         records.Should().NotBeNull();
 
-        records.Count(x => x.MessageTypeName == messageName1).Should().Be(1);
-        records.Count(x => x.MessageTypeName == messageName2).Should().Be(1);
+        records.Count(x => x.MessageTypeName == command1.GetType().FullName).Should().Be(1);
+        records.Count(x => x.MessageTypeName == command2.GetType().FullName).Should().Be(1);
     }
 
     #endregion

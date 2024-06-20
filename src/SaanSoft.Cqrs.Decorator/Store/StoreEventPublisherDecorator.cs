@@ -8,12 +8,12 @@ public class StoreEventPublisherDecorator(IEventPublisherStore<Guid> store, IEve
 
 // ReSharper disable once SuggestBaseTypeForParameterInConstructor
 public abstract class StoreEventPublisherDecorator<TMessageId>(IEventPublisherStore<TMessageId> store, IEventPublisher<TMessageId> next) :
-    BaseStoreMessagePublisherDecorator<TMessageId>(store),
+    BaseStoreMessagePublisherDecorator<TMessageId, IEvent<TMessageId>>(store),
     IEventPublisher<TMessageId> where TMessageId : struct
 {
     public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default) where TEvent : IEvent<TMessageId>
     {
-        await StorePublisher<TEvent, IEventPublisher<TMessageId>>(evt, cancellationToken);
+        await StorePublisher<IEventPublisher<TMessageId>>(evt, cancellationToken);
         await next.QueueAsync(evt, cancellationToken);
     }
 
@@ -22,7 +22,7 @@ public abstract class StoreEventPublisherDecorator<TMessageId>(IEventPublisherSt
         var eventList = events.ToList();
         if (eventList.Any())
         {
-            await StorePublisher<TEvent, IEventPublisher<TMessageId>>(eventList.Last(), cancellationToken);
+            await StorePublisher<IEventPublisher<TMessageId>>(eventList.Last(), cancellationToken);
         }
         await next.QueueManyAsync(eventList, cancellationToken);
     }

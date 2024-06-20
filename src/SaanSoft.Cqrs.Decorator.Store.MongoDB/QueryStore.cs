@@ -17,7 +17,7 @@ public abstract class QueryStore<TMessageId>(IMongoDatabase database) :
     BaseMessageStore<TMessageId, IQuery<TMessageId>>(database),
     IQueryMongoDbStore<TMessageId>,
     IQueryPublisherStore<TMessageId>,
-    IQuerySubscriberStore
+    IQuerySubscriberStore<TMessageId>
     where TMessageId : struct
 {
     public override string MessageCollectionName => "QueryMessages";

@@ -34,7 +34,7 @@ public abstract class EventStore<TMessageId, TEntityKey>(IMongoDatabase database
     BaseMessageStore<TMessageId, IEvent<TMessageId>>(database),
     IEventMongoDbStore<TMessageId, TEntityKey>,
     IEventPublisherStore<TMessageId>,
-    IEventSubscriberStore
+    IEventSubscriberStore<TMessageId>
     where TMessageId : struct
     where TEntityKey : struct
 {

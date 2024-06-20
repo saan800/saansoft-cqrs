@@ -4,20 +4,34 @@ using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public class StoreQuerySubscriberDecorator(IServiceProvider serviceProvider, IQuerySubscriberStore store, IQuerySubscriber<Guid> next)
-    : StoreQuerySubscriberDecorator<Guid>(serviceProvider, store, next);
+public class StoreQuerySubscriberDecorator(IQuerySubscriberStore<Guid> store, IQuerySubscriber<Guid> next)
+    : StoreQuerySubscriberDecorator<Guid>(store, next);
 
-public abstract class StoreQuerySubscriberDecorator<TMessageId>(IServiceProvider serviceProvider, IQuerySubscriberStore store, IQuerySubscriber<TMessageId> next) :
-    BaseStoreMessageSubscriberDecorator(serviceProvider, store),
+public abstract class StoreQuerySubscriberDecorator<TMessageId>(IQuerySubscriberStore<TMessageId> store, IQuerySubscriber<TMessageId> next) :
+    BaseStoreMessageSubscriberDecorator<TMessageId, IQuery<TMessageId>>(store),
     IQuerySubscriber<TMessageId> where TMessageId : struct
 {
-    protected override bool AllowMultipleSubscribers => false;
-
     public async Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
-        where TQuery : IQuery<TQuery, TResponse>, IMessage<TMessageId>
+        where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
         where TResponse : IQueryResponse
     {
-        await StoreSubscriber<TQuery, IQueryHandler<TQuery, TResponse>>(cancellationToken);
-        return await next.RunAsync(query, cancellationToken);
+        var handler = GetHandler<TQuery, TResponse>();
+        var typedQuery = (TQuery)query;
+        try
+        {
+            var response = await next.RunAsync(query, cancellationToken);
+            await Store.UpsertSubscriberAsync(typedQuery, handler.GetType(), null, cancellationToken);
+            return response;
+        }
+        catch (Exception exception)
+        {
+            await Store.UpsertSubscriberAsync(typedQuery, handler.GetType(), exception, cancellationToken);
+            throw;
+        }
     }
+
+    public IQueryHandler<TQuery, TResponse> GetHandler<TQuery, TResponse>()
+        where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
+        where TResponse : IQueryResponse
+        => next.GetHandler<TQuery, TResponse>();
 }

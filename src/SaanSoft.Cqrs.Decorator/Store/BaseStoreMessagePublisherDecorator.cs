@@ -5,12 +5,12 @@ using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public abstract class BaseStoreMessagePublisherDecorator<TMessageId>(IMessagePublisherStore<TMessageId> store) :
+public abstract class BaseStoreMessagePublisherDecorator<TMessageId, TMessage>(IMessagePublisherStore<TMessageId, TMessage> store) :
     IPublisherDecorator
+    where TMessage : IMessage<TMessageId>
     where TMessageId : struct
 {
-    protected async Task StorePublisher<TMessage, TPublisher>(TMessage message, CancellationToken cancellationToken)
-        where TMessage : IMessage<TMessageId>
+    protected async Task StorePublisher<TPublisher>(TMessage message, CancellationToken cancellationToken)
     {
         var callerClassType = new StackTrace().GetFrames()
             .Where(f => !string.IsNullOrWhiteSpace(f.GetMethod()?.DeclaringType?.Namespace))

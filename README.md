@@ -14,6 +14,10 @@ CQRS and Event Sourcing implementation for C#
 
 Todo...
 
+## TODO
+
+event handlers - have attribute on handler that indicates running order priority
+
 ## Features
 
 ### Other

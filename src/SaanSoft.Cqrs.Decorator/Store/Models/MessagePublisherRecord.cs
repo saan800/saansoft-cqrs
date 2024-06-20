@@ -16,5 +16,5 @@ public class MessagePublisherRecord<TId> where TId : struct
 
     public required DateTime LastMessageOnUtc { get; set; }
 
-    public required TId LastProcessedMessageId { get; set; }
+    public required TId LastMessageId { get; set; }
 }

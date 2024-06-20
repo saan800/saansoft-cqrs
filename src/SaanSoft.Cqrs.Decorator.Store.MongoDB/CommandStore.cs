@@ -18,7 +18,7 @@ public abstract class CommandStore<TMessageId>(IMongoDatabase database) :
     BaseMessageStore<TMessageId, ICommand<TMessageId>>(database),
     ICommandMongoDbStore<TMessageId>,
     ICommandPublisherStore<TMessageId>,
-    ICommandSubscriberStore
+    ICommandSubscriberStore<TMessageId>
     where TMessageId : struct
 {
     public override string MessageCollectionName => "CommandMessages";

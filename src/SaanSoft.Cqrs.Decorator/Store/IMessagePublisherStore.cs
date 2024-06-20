@@ -2,8 +2,9 @@ using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public interface IMessagePublisherStore<TMessageId>
+public interface IMessagePublisherStore<TMessageId, in TMessage>
     where TMessageId : struct
+    where TMessage : IMessage<TMessageId>
 {
     /// <summary>
     /// Store the class of the publishers of messages.
@@ -13,6 +14,5 @@ public interface IMessagePublisherStore<TMessageId>
     /// <param name="publisherType">Class that published the message</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task UpsertPublisherAsync<TMessage>(TMessage message, Type publisherType, CancellationToken cancellationToken = default)
-        where TMessage : IMessage<TMessageId>;
+    Task UpsertPublisherAsync(TMessage message, Type publisherType, CancellationToken cancellationToken = default);
 }

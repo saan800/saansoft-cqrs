@@ -8,20 +8,20 @@ public class StoreCommandPublisherDecorator(ICommandPublisherStore<Guid> store, 
 
 // ReSharper disable once SuggestBaseTypeForParameterInConstructor
 public abstract class StoreCommandPublisherDecorator<TMessageId>(ICommandPublisherStore<TMessageId> store, ICommandPublisher<TMessageId> next) :
-      BaseStoreMessagePublisherDecorator<TMessageId>(store),
+      BaseStoreMessagePublisherDecorator<TMessageId, ICommand<TMessageId>>(store),
       ICommandPublisher<TMessageId> where TMessageId : struct
 {
     public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : ICommand<TMessageId>
     {
-        await StorePublisher<TCommand, ICommandPublisher<TMessageId>>(command, cancellationToken);
+        await StorePublisher<ICommandPublisher<TMessageId>>(command, cancellationToken);
         await next.ExecuteAsync(command, cancellationToken);
     }
 
     public async Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : ICommand<TMessageId>
     {
-        await StorePublisher<TCommand, ICommandPublisher<TMessageId>>(command, cancellationToken);
+        await StorePublisher<ICommandPublisher<TMessageId>>(command, cancellationToken);
         await next.QueueAsync(command, cancellationToken);
     }
 }

@@ -34,7 +34,7 @@ public class StoreQueryPublisherDecoratorTests : TestSetup
     {
         public Task<TResponse> QueryAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
             CancellationToken cancellationToken = default)
-            where TQuery : IQuery<TQuery, TResponse>, IMessage<Guid>
+            where TQuery : IQuery<TQuery, TResponse>, IQuery<Guid>, IMessage<Guid>
             where TResponse : IQueryResponse
             => next.QueryAsync(query, cancellationToken);
     }

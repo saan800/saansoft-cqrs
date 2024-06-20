@@ -38,16 +38,18 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
     public async Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : ICommand<TMessageId>
     {
+        var handler = GetHandler<TCommand>();
+        Logger.LogInformation("Running command handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, typeof(TCommand).FullName);
+        await handler.HandleAsync(command, cancellationToken);
+    }
+
+    public virtual ICommandHandler<TCommand> GetHandler<TCommand>() where TCommand : ICommand<TMessageId>
+    {
         var handlers = ServiceProvider.GetServices<ICommandHandler<TCommand>>().ToList();
         switch (handlers.Count)
         {
             case 1:
-                if (command.IsReplay) return;
-
-                var handler = handlers.Single();
-                Logger.LogInformation("Running command handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, typeof(TCommand).FullName);
-                await handler.HandleAsync(command, cancellationToken);
-                return;
+                return handlers.Single();
             case 0:
                 throw new InvalidOperationException($"No handler for type '{typeof(ICommandHandler<TCommand>)}' has been registered.");
             default:
