@@ -1,6 +1,6 @@
 using AutoFixture.Xunit2;
+using SaanSoft.Cqrs.Decorator.Store.Models;
 using SaanSoft.Cqrs.Decorator.Store.MongoDB;
-using SaanSoft.Cqrs.Decorator.Store.MongoDB.Models;
 using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.Root;
@@ -69,15 +69,16 @@ public class QueryStoreTests : TestSetup
 
     [Theory]
     [InlineAutoData]
-    public async Task UpsertPublisherAsync_can_insert_record(string messageName, string publisherName)
+    public async Task UpsertPublisherAsync_can_insert_record(Type publisherType)
     {
-        await _queryStore.UpsertPublisherAsync(messageName, publisherName);
+        var query = new MyQuery();
+        await _queryStore.UpsertPublisherAsync(query, publisherType);
 
         // check the collection that the record exists
         var record = await _publisherCollection
             .Find(x =>
-                x.MessageTypeName == messageName
-                && x.PublisherTypeName == publisherName
+                x.MessageTypeName == query.GetType().FullName
+                && x.PublisherTypeName == publisherType.FullName
             ).SingleOrDefaultAsync();
 
         record.Should().NotBeNull();
@@ -85,17 +86,18 @@ public class QueryStoreTests : TestSetup
 
     [Theory]
     [InlineAutoData]
-    public async Task UpsertPublisherAsync_multiple_times_only_creates_one_record(string messageName, string publisherName)
+    public async Task UpsertPublisherAsync_multiple_times_only_creates_one_record(Type publisherType)
     {
-        await _queryStore.UpsertPublisherAsync(messageName, publisherName);
-        await _queryStore.UpsertPublisherAsync(messageName, publisherName);
-        await _queryStore.UpsertPublisherAsync(messageName, publisherName);
+        var query = new MyQuery();
+        await _queryStore.UpsertPublisherAsync(query, publisherType);
+        await _queryStore.UpsertPublisherAsync(query, publisherType);
+        await _queryStore.UpsertPublisherAsync(query, publisherType);
 
         // check the collection that the record exists
         var records = await _publisherCollection
             .Find(x =>
-                x.MessageTypeName == messageName
-                && x.PublisherTypeName == publisherName
+                x.MessageTypeName == query.GetType().FullName
+                && x.PublisherTypeName == publisherType.FullName
             )
             .ToListAsync();
 

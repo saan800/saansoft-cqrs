@@ -1,5 +1,5 @@
 using MongoDB.Driver;
-using SaanSoft.Cqrs.Decorator.Store.MongoDB.Models;
+using SaanSoft.Cqrs.Decorator.Store.Models;
 using SaanSoft.Cqrs.Messages;
 using SaanSoft.Cqrs.Utilities;
 
@@ -16,7 +16,7 @@ namespace SaanSoft.Cqrs.Decorator.Store.MongoDB;
 /// <typeparam name="TMessageId"></typeparam>
 /// <typeparam name="TMessage"></typeparam>
 public abstract class BaseMessageStore<TMessageId, TMessage>(IMongoDatabase database) :
-    IMessagePublisherStore,
+    IMessagePublisherStore<TMessageId>,
     IMessageSubscriberStore,
     IMessageStore<TMessageId, TMessage>
     where TMessageId : struct
@@ -66,24 +66,50 @@ public abstract class BaseMessageStore<TMessageId, TMessage>(IMongoDatabase data
 
     #region IMessagePublisherStore
 
-    public virtual async Task UpsertPublisherAsync(string messageTypeName, string publisherTypeName, CancellationToken cancellationToken = default)
-    {
-        if (string.IsNullOrWhiteSpace(publisherTypeName)) return;
 
-        var record = await PublisherCollection
-                         .Find(x => x.MessageTypeName == messageTypeName && x.PublisherTypeName == publisherTypeName)
-                         .FirstOrDefaultAsync(cancellationToken)
-                    ?? new MessagePublisherRecord<TMessageId>
-                    {
-                        Id = NewMessageId(),
-                        MessageTypeName = messageTypeName,
-                        PublisherTypeName = publisherTypeName,
-                        CreatedOnUtc = DateTime.UtcNow
-                    };
-        record.LastMessageOnUtc = DateTime.UtcNow;
+    public virtual async Task UpsertPublisherAsync<TMessage>(TMessage message, Type publisherType, CancellationToken cancellationToken = default)
+       where TMessage : IMessage<TMessageId>
+    {
+        var now = DateTime.UtcNow;
+        var messageType = typeof(TMessage);
+        var messageTypeName = messageType.FullName ?? messageType.Name;
+        var messageAssembly = messageType.Assembly.FullName ?? messageType.Assembly.GetName().FullName;
+        var publisherTypeName = publisherType.FullName ?? publisherType.Name;
+        var publisherAssembly = publisherType.Assembly.FullName ?? publisherType.Assembly.GetName().FullName;
+        if (string.IsNullOrWhiteSpace(messageTypeName) || string.IsNullOrWhiteSpace(publisherTypeName)) return;
+
+        var record = await PublisherCollection.Find(x =>
+                                x.MessageTypeName == messageTypeName &&
+                                x.MessageAssembly == messageAssembly &&
+                                x.PublisherTypeName == publisherTypeName &&
+                                x.PublisherAssembly == publisherAssembly
+                            )
+                            .FirstOrDefaultAsync(cancellationToken);
+        if (record == null)
+        {
+            record = new MessagePublisherRecord<TMessageId>
+            {
+                Id = NewMessageId(),
+                MessageTypeName = messageTypeName,
+                MessageAssembly = messageAssembly,
+                PublisherTypeName = publisherTypeName,
+                PublisherAssembly = publisherAssembly,
+                CreatedOnUtc = now,
+                LastMessageOnUtc = now,
+                LastProcessedMessageId = message.Id
+            };
+        }
+        else
+        {
+            record.LastMessageOnUtc = now;
+            record.LastProcessedMessageId = message.Id;
+        }
 
         await PublisherCollection.ReplaceOneAsync(
-            x => x.MessageTypeName == messageTypeName && x.PublisherTypeName == publisherTypeName,
+            x => x.MessageTypeName == messageTypeName &&
+                 x.MessageAssembly == messageAssembly &&
+                 x.PublisherTypeName == publisherTypeName &&
+                 x.PublisherAssembly == publisherAssembly,
             record,
             new ReplaceOptions { IsUpsert = true },
             cancellationToken
@@ -201,7 +227,9 @@ public abstract class BaseMessageStore<TMessageId, TMessage>(IMongoDatabase data
     {
         var keyIndex = Builders<MessagePublisherRecord<TMessageId>>.IndexKeys
             .Ascending(x => x.MessageTypeName)
-            .Ascending(x => x.PublisherTypeName);
+            .Ascending(x => x.MessageAssembly)
+            .Ascending(x => x.PublisherTypeName)
+            .Ascending(x => x.PublisherAssembly);
 
         var indexModel =
             new CreateIndexModel<MessagePublisherRecord<TMessageId>>(keyIndex, new CreateIndexOptions { Unique = true, Background = true });

@@ -1,4 +1,4 @@
-namespace SaanSoft.Cqrs.Decorator.Store.MongoDB.Models;
+namespace SaanSoft.Cqrs.Decorator.Store.Models;
 
 public class MessageSubscriberRecord<TId> where TId : struct
 {

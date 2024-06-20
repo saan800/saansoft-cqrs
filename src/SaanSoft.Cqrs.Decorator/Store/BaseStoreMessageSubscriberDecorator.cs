@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public abstract class BaseStoreMessageSubscriberDecorator(IServiceProvider serviceProvider, IMessageSubscriberStore store)
+public abstract class BaseStoreMessageSubscriberDecorator(IServiceProvider serviceProvider, IMessageSubscriberStore store) : ISubscriberDecorator
 {
     protected abstract bool AllowMultipleSubscribers { get; }
 

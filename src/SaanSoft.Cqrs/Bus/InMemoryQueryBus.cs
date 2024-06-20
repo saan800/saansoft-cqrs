@@ -20,7 +20,7 @@ public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvi
 
     public async Task<TResponse> QueryAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
         CancellationToken cancellationToken = default)
-        where TQuery : IQuery<TQuery, TResponse>
+        where TQuery : IQuery<TQuery, TResponse>, IMessage<TMessageId>
         where TResponse : IQueryResponse
     {
         // get subscriber via ServiceProvider so it runs through any decorators

@@ -3,30 +3,25 @@ using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public class StoreCommandPublisherDecorator(ICommandPublisherStore store, ICommandPublisher<Guid> next)
+public class StoreCommandPublisherDecorator(ICommandPublisherStore<Guid> store, ICommandPublisher<Guid> next)
     : StoreCommandPublisherDecorator<Guid>(store, next);
 
-public abstract class StoreCommandPublisherDecorator<TMessageId>(ICommandPublisherStore store, ICommandPublisher<TMessageId> next) :
-      BaseStoreMessagePublisherDecorator(store),
+// ReSharper disable once SuggestBaseTypeForParameterInConstructor
+public abstract class StoreCommandPublisherDecorator<TMessageId>(ICommandPublisherStore<TMessageId> store, ICommandPublisher<TMessageId> next) :
+      BaseStoreMessagePublisherDecorator<TMessageId>(store),
       ICommandPublisher<TMessageId> where TMessageId : struct
 {
     public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : ICommand<TMessageId>
     {
-        if (!command.IsReplay)
-        {
-            await StorePublisher<TCommand, ICommandPublisher<TMessageId>>(cancellationToken);
-        }
+        await StorePublisher<TCommand, ICommandPublisher<TMessageId>>(command, cancellationToken);
         await next.ExecuteAsync(command, cancellationToken);
     }
 
     public async Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : ICommand<TMessageId>
     {
-        if (!command.IsReplay)
-        {
-            await StorePublisher<TCommand, ICommandPublisher<TMessageId>>(cancellationToken);
-        }
+        await StorePublisher<TCommand, ICommandPublisher<TMessageId>>(command, cancellationToken);
         await next.QueueAsync(command, cancellationToken);
     }
 }

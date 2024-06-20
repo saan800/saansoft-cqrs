@@ -1,6 +1,6 @@
 using AutoFixture.Xunit2;
+using SaanSoft.Cqrs.Decorator.Store.Models;
 using SaanSoft.Cqrs.Decorator.Store.MongoDB;
-using SaanSoft.Cqrs.Decorator.Store.MongoDB.Models;
 using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.Root;
@@ -111,15 +111,16 @@ public class EventStoreTests : TestSetup
 
     [Theory]
     [InlineAutoData]
-    public async Task UpsertPublisherAsync_can_insert_record(string messageName, string publisherName)
+    public async Task UpsertPublisherAsync_can_insert_record(Type publisherType)
     {
-        await _eventStore.UpsertPublisherAsync(messageName, publisherName);
+        var evt = new MyEvent(Guid.NewGuid());
+        await _eventStore.UpsertPublisherAsync(evt, publisherType);
 
         // check the collection that the record exists
         var record = await _publisherCollection
             .Find(x =>
-                x.MessageTypeName == messageName
-                && x.PublisherTypeName == publisherName
+                x.MessageTypeName == evt.GetType().FullName
+                && x.PublisherTypeName == publisherType.FullName
             ).SingleOrDefaultAsync();
 
         record.Should().NotBeNull();
@@ -127,17 +128,18 @@ public class EventStoreTests : TestSetup
 
     [Theory]
     [InlineAutoData]
-    public async Task UpsertPublisherAsync_multiple_times_only_creates_one_record(string messageName, string publisherName)
+    public async Task UpsertPublisherAsync_multiple_times_only_creates_one_record(Type publisherType)
     {
-        await _eventStore.UpsertPublisherAsync(messageName, publisherName);
-        await _eventStore.UpsertPublisherAsync(messageName, publisherName);
-        await _eventStore.UpsertPublisherAsync(messageName, publisherName);
+        var evt = new MyEvent(Guid.NewGuid());
+        await _eventStore.UpsertPublisherAsync(evt, publisherType);
+        await _eventStore.UpsertPublisherAsync(evt, publisherType);
+        await _eventStore.UpsertPublisherAsync(evt, publisherType);
 
         // check the collection that the record exists
         var records = await _publisherCollection
             .Find(x =>
-                x.MessageTypeName == messageName
-                && x.PublisherTypeName == publisherName
+                x.MessageTypeName == evt.GetType().FullName
+                && x.PublisherTypeName == publisherType.FullName
             )
             .ToListAsync();
 
@@ -147,44 +149,47 @@ public class EventStoreTests : TestSetup
 
     [Theory]
     [InlineAutoData]
-    public async Task UpsertPublisherAsync_creates_one_record_per_publisher(string messageName, string publisherName1, string publisherName2)
+    public async Task UpsertPublisherAsync_creates_one_record_per_publisher(Type publisherType1, Type publisherType2)
     {
-        await _eventStore.UpsertPublisherAsync(messageName, publisherName1);
-        await _eventStore.UpsertPublisherAsync(messageName, publisherName2);
-        await _eventStore.UpsertPublisherAsync(messageName, publisherName2);
+        var evt = new MyEvent(Guid.NewGuid());
+        await _eventStore.UpsertPublisherAsync(evt, publisherType1);
+        await _eventStore.UpsertPublisherAsync(evt, publisherType2);
+        await _eventStore.UpsertPublisherAsync(evt, publisherType2);
 
         // check the collection that the record exists
         var records = await _publisherCollection
             .Find(x =>
-                x.MessageTypeName == messageName
+                x.MessageTypeName == evt.GetType().FullName
             )
             .ToListAsync();
 
         records.Should().NotBeNull();
 
-        records.Count(x => x.PublisherTypeName == publisherName1).Should().Be(1);
-        records.Count(x => x.PublisherTypeName == publisherName2).Should().Be(1);
+        records.Count(x => x.PublisherTypeName == publisherType1.FullName).Should().Be(1);
+        records.Count(x => x.PublisherTypeName == publisherType2.FullName).Should().Be(1);
     }
 
     [Theory]
     [InlineAutoData]
-    public async Task UpsertPublisherAsync_creates_one_record_per_messageName(string messageName1, string messageName2, string publisherName)
+    public async Task UpsertPublisherAsync_creates_one_record_per_messageName(Type publisherType)
     {
-        await _eventStore.UpsertPublisherAsync(messageName1, publisherName);
-        await _eventStore.UpsertPublisherAsync(messageName1, publisherName);
-        await _eventStore.UpsertPublisherAsync(messageName2, publisherName);
+        var event1 = new MyEvent(Guid.NewGuid());
+        var event2 = new MyEvent(Guid.NewGuid());
+        await _eventStore.UpsertPublisherAsync(event1, publisherType);
+        await _eventStore.UpsertPublisherAsync(event1, publisherType);
+        await _eventStore.UpsertPublisherAsync(event2, publisherType);
 
         // check the collection that the record exists
         var records = await _publisherCollection
             .Find(x =>
-                x.PublisherTypeName == publisherName
+                x.PublisherTypeName == publisherType.FullName
             )
             .ToListAsync();
 
         records.Should().NotBeNull();
 
-        records.Count(x => x.MessageTypeName == messageName1).Should().Be(1);
-        records.Count(x => x.MessageTypeName == messageName2).Should().Be(1);
+        records.Count(x => x.MessageTypeName == event1.GetType().FullName).Should().Be(1);
+        records.Count(x => x.MessageTypeName == event2.GetType().FullName).Should().Be(1);
     }
 
     #endregion

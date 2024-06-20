@@ -17,7 +17,7 @@ public class CommandStore(IMongoDatabase database)
 public abstract class CommandStore<TMessageId>(IMongoDatabase database) :
     BaseMessageStore<TMessageId, ICommand<TMessageId>>(database),
     ICommandMongoDbStore<TMessageId>,
-    ICommandPublisherStore,
+    ICommandPublisherStore<TMessageId>,
     ICommandSubscriberStore
     where TMessageId : struct
 {
