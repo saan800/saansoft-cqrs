@@ -26,7 +26,7 @@ Todo...
 * :eyes: Store - Store messages, publishers and subscribers
 * ILogger Scope
 * CorrelationId
-* Encryption / decription
+* Encryption / Decryption
 
 ### Message Stores
 
@@ -78,7 +78,7 @@ TodoList
 * Run Api in Github Actions CI
   * Will eventually want to run a test matrix of Api tests
 * Run same tests against each example Api to ensure functionality is the same from a users perspective
-  * Specflow + Playwrite
+  * Specflow + Playwright
 * Enrich each test matrix to ensure decorators/db/etc are working
 
 ### MongoDB Store Api
