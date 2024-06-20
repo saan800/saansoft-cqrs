@@ -190,7 +190,9 @@ public class CommandStoreTests : TestSetup
         record.Should().NotBeNull();
         record.LastMessageId.Should().Be(command.Id);
         record.LastCompletedMessageId.Should().BeNull();
-        record.LastFailedMessages.First().Should().Be(command.Id);
+        record.LastFailedMessages.First().MessageId.Should().Be(command.Id);
+        record.LastFailedMessages.First().Exception.TypeName.Should().Be("System.Exception");
+        record.LastFailedMessages.First().Exception.Message.Should().Be(exception.Message);
     }
 
     [Theory]

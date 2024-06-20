@@ -165,7 +165,12 @@ public abstract class BaseMessageStore<TMessageId, TMessage>(IMongoDatabase data
             {
                 MessageId = message.Id,
                 MessageOnUtc = message.MessageOnUtc,
-                Exception = exception
+                Exception = new MessageSubscriberRecord<TMessageId>.LogException
+                {
+                    Message = exception.Message,
+                    TypeName = exception.GetType().FullName ?? exception.GetType().Name,
+                    StackTrace = exception.StackTrace
+                }
             });
         }
 

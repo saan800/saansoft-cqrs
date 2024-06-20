@@ -26,6 +26,13 @@ public class MessageSubscriberRecord<TId> where TId : struct
     {
         public required TId MessageId { get; set; }
         public required DateTime MessageOnUtc { get; set; }
-        public required Exception Exception { get; set; }
+        public required LogException Exception { get; set; }
+    }
+
+    public class LogException
+    {
+        public required string Message { get; set; }
+        public required string TypeName { get; set; }
+        public string? StackTrace { get; set; }
     }
 }
