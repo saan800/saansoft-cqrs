@@ -13,12 +13,12 @@ public abstract class StoreCommandSubscriberDecorator<TMessageId>(IServiceProvid
 {
     protected override bool AllowMultipleSubscribers => false;
 
-    public async Task<CommandResponse> RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand<TMessageId>
+    public async Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand<TMessageId>
     {
         if (!command.IsReplay)
         {
             await StoreSubscriber<TCommand, ICommandHandler<TCommand>>(cancellationToken);
         }
-        return await next.RunAsync(command, cancellationToken);
+        await next.RunAsync(command, cancellationToken);
     }
 }

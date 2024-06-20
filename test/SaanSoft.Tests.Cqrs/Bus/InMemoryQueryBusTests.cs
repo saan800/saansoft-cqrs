@@ -5,8 +5,6 @@ namespace SaanSoft.Tests.Cqrs.Bus;
 
 public class InMemoryQueryBusTests : TestSetup
 {
-    private readonly QueryBusOptions _options = new() { LogLevel = LogLevel.Information };
-
     [Fact]
     public void Cant_create_with_null_serviceProvider()
     {
@@ -36,7 +34,7 @@ public class InMemoryQueryBusTests : TestSetup
 
         ServiceCollection.AddScoped<IQueryHandler<MyQuery, QueryResponse>>(_ => handler);
 
-        var sut = new InMemoryQueryBus(GetServiceProvider(), Logger, _options);
+        var sut = new InMemoryQueryBus(GetServiceProvider(), Logger);
         var result = await sut.QueryAsync(new MyQuery());
         result.Should().NotBeNull();
         result.IsSuccess.Should().BeTrue();

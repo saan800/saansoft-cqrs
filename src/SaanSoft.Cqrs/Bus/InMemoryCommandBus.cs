@@ -5,37 +5,26 @@ using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Bus;
 
-public class InMemoryCommandBus(IServiceProvider serviceProvider, ILogger logger, CommandBusOptions? options = null)
-    : InMemoryCommandBus<Guid>(serviceProvider, logger, options);
+public class InMemoryCommandBus(IServiceProvider serviceProvider, ILogger logger)
+    : InMemoryCommandBus<Guid>(serviceProvider, logger);
 
-public abstract class InMemoryCommandBus<TMessageId>
+public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider serviceProvider, ILogger logger)
     : ICommandPublisher<TMessageId>,
-    ICommandSubscriber<TMessageId>
+      ICommandSubscriber<TMessageId>
     where TMessageId : struct
 {
     // ReSharper disable MemberCanBePrivate.Global
-    protected readonly CommandBusOptions Options;
-    protected readonly LogLevel LogLevel;
-    protected readonly IServiceProvider ServiceProvider;
-    protected readonly ILogger Logger;
+    protected readonly IServiceProvider ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+    protected readonly ILogger Logger = logger ?? throw new ArgumentNullException(nameof(logger));
     // ReSharper restore MemberCanBePrivate.Global
 
-    protected InMemoryCommandBus(IServiceProvider serviceProvider, ILogger logger, CommandBusOptions? options = null)
-    {
-        Options = options ?? new CommandBusOptions();
-        LogLevel = Options.LogLevel;
-
-        ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-        Logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
-
-    public async Task<CommandResponse> ExecuteAsync<TCommand>(TCommand command,
+    public async Task ExecuteAsync<TCommand>(TCommand command,
         CancellationToken cancellationToken = default)
         where TCommand : ICommand<TMessageId>
     {
         // get subscriber via ServiceProvider so it runs through any decorators
         var subscriber = ServiceProvider.GetRequiredService<ICommandSubscriber<TMessageId>>();
-        return await subscriber.RunAsync(command, cancellationToken);
+        await subscriber.RunAsync(command, cancellationToken);
     }
 
     public async Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
@@ -46,26 +35,24 @@ public abstract class InMemoryCommandBus<TMessageId>
         await subscriber.RunAsync(command, cancellationToken);
     }
 
-    public async Task<CommandResponse> RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand<TMessageId>
+    public async Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand<TMessageId>
     {
         var handlers = ServiceProvider.GetServices<ICommandHandler<TCommand>>().ToList();
         switch (handlers.Count)
         {
             case 1:
-                if (command.IsReplay) return new CommandResponse { IsSuccess = true, ErrorMessage = "Commands do not run in replay mode" };
+                if (command.IsReplay) return;
 
                 var handler = handlers.Single();
-                if (Logger.IsEnabled(LogLevel))
-                {
-                    Logger.Log(LogLevel, "Running command handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, typeof(TCommand).FullName);
-                }
-                return await handler.HandleAsync(command, cancellationToken);
+                Logger.LogInformation("Running command handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, typeof(TCommand).FullName);
+                await handler.HandleAsync(command, cancellationToken);
+                return;
             case 0:
-                throw new InvalidOperationException($"No service for type '{typeof(ICommandHandler<TCommand>)}' has been registered.");
+                throw new InvalidOperationException($"No handler for type '{typeof(ICommandHandler<TCommand>)}' has been registered.");
             default:
                 {
                     var typeNames = handlers.Select(x => x.GetType().FullName).ToList();
-                    throw new InvalidOperationException($"Only one service for type '{typeof(ICommandHandler<TCommand>)}' can be registered. Currently have {typeNames.Count} registered: {string.Join("; ", typeNames)}");
+                    throw new InvalidOperationException($"Only one handler for type '{typeof(ICommandHandler<TCommand>)}' can be registered. Currently have {typeNames.Count} registered: {string.Join("; ", typeNames)}");
                 }
         }
     }

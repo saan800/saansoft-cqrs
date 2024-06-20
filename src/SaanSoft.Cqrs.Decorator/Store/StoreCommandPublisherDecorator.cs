@@ -10,14 +10,14 @@ public abstract class StoreCommandPublisherDecorator<TMessageId>(ICommandPublish
       BaseStoreMessagePublisherDecorator(store),
       ICommandPublisher<TMessageId> where TMessageId : struct
 {
-    public async Task<CommandResponse> ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
+    public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : ICommand<TMessageId>
     {
         if (!command.IsReplay)
         {
             await StorePublisher<TCommand, ICommandPublisher<TMessageId>>(cancellationToken);
         }
-        return await next.ExecuteAsync(command, cancellationToken);
+        await next.ExecuteAsync(command, cancellationToken);
     }
 
     public async Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)

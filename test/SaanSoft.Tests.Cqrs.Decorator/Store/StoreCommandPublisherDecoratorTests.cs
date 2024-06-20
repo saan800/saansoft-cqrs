@@ -82,7 +82,7 @@ public class StoreCommandPublisherDecoratorTests : TestSetup
 
     private class WrapperCommandPublisher(ICommandPublisher<Guid> next) : ICommandPublisher<Guid>
     {
-        public Task<CommandResponse> ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand<Guid>
+        public Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand<Guid>
             => next.ExecuteAsync(command, cancellationToken);
 
         public Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand<Guid>

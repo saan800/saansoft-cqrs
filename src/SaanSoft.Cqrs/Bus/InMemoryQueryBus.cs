@@ -5,29 +5,18 @@ using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Bus;
 
-public class InMemoryQueryBus(IServiceProvider serviceProvider, ILogger logger, QueryBusOptions? options = null)
-    : InMemoryQueryBus<Guid>(serviceProvider, logger, options);
+public class InMemoryQueryBus(IServiceProvider serviceProvider, ILogger logger)
+    : InMemoryQueryBus<Guid>(serviceProvider, logger);
 
-public abstract class InMemoryQueryBus<TMessageId> :
+public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvider, ILogger logger) :
     IQueryPublisher<TMessageId>,
     IQuerySubscriber<TMessageId>
     where TMessageId : struct
 {
     // ReSharper disable MemberCanBePrivate.Global
-    protected readonly QueryBusOptions Options;
-    protected readonly LogLevel LogLevel;
-    protected readonly IServiceProvider ServiceProvider;
-    protected readonly ILogger Logger;
+    protected readonly IServiceProvider ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+    protected readonly ILogger Logger = logger ?? throw new ArgumentNullException(nameof(logger));
     // ReSharper restore MemberCanBePrivate.Global
-
-    protected InMemoryQueryBus(IServiceProvider serviceProvider, ILogger logger, QueryBusOptions? options = null)
-    {
-        Options = options ?? new QueryBusOptions();
-        LogLevel = Options.LogLevel;
-
-        ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-        Logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
 
     public async Task<TResponse> QueryAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
         CancellationToken cancellationToken = default)
@@ -48,10 +37,7 @@ public abstract class InMemoryQueryBus<TMessageId> :
         {
             case 1:
                 var handler = handlers.Single();
-                if (Logger.IsEnabled(LogLevel))
-                {
-                    Logger.Log(LogLevel, "Running query handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, typeof(TQuery).FullName);
-                }
+                Logger.LogInformation("Running query handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, typeof(TQuery).FullName);
                 return await handler.HandleAsync(query, cancellationToken);
             case 0:
                 throw new InvalidOperationException($"No service for type '{typeof(IQueryHandler<TQuery, TResponse>)}' has been registered.");

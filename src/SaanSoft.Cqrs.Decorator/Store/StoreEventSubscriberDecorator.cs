@@ -18,10 +18,4 @@ public abstract class StoreEventSubscriberDecorator<TMessageId>(IServiceProvider
         await StoreSubscriber<TEvent, IEventHandler<TEvent>>(cancellationToken);
         await next.RunAsync(evt, cancellationToken);
     }
-
-    public async Task RunManyAsync<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default) where TEvent : IEvent<TMessageId>
-    {
-        await StoreSubscriber<TEvent, IEventHandler<TEvent>>(cancellationToken);
-        await next.RunManyAsync(events, cancellationToken);
-    }
 }
