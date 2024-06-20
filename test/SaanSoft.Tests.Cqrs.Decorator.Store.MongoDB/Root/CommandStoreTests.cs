@@ -174,6 +174,27 @@ public class CommandStoreTests : TestSetup
 
     [Theory]
     [InlineAutoData]
+    public async Task UpsertSubscriberAsync_with_error(Type subscriberType)
+    {
+        var command = new MyCommand();
+        var exception = new Exception("it went wrong");
+        await _commandStore.UpsertSubscriberAsync(command, subscriberType, exception);
+
+        // check the collection that the record exists
+        var record = await _subscriberCollection
+            .Find(x =>
+                x.MessageTypeName == command.GetType().FullName
+                && x.SubscriberTypeName == subscriberType.FullName
+            ).SingleOrDefaultAsync();
+
+        record.Should().NotBeNull();
+        record.LastMessageId.Should().Be(command.Id);
+        record.LastCompletedMessageId.Should().BeNull();
+        record.LastFailedMessages.First().Should().Be(command.Id);
+    }
+
+    [Theory]
+    [InlineAutoData]
     public async Task UpsertSubscriberAsync_multiple_times_only_creates_one_record(Type subscriberType)
     {
         var command = new MyCommand();
