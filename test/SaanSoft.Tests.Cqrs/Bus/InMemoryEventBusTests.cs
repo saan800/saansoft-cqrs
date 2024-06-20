@@ -5,8 +5,6 @@ namespace SaanSoft.Tests.Cqrs.Bus;
 
 public class InMemoryEventBusTests : TestSetup
 {
-    private readonly EventBusOptions _options = new() { LogLevel = LogLevel.Information };
-
     [Fact]
     public void Cant_create_with_null_serviceProvider()
     {
@@ -34,7 +32,7 @@ public class InMemoryEventBusTests : TestSetup
 
         ServiceCollection.AddScoped<IEventHandler<MyEvent>>(_ => eventHandler);
 
-        var sut = new InMemoryEventBus(GetServiceProvider(), Logger, _options);
+        var sut = new InMemoryEventBus(GetServiceProvider(), Logger);
         await sut.QueueAsync(new MyEvent(Guid.NewGuid()));
 
         A.CallTo(() => eventHandler.HandleAsync(A<MyEvent>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappened();
@@ -80,7 +78,7 @@ public class InMemoryEventBusTests : TestSetup
         var event1 = new MyEvent(Guid.NewGuid());
         var event2 = new MyEvent(Guid.NewGuid());
 
-        var sut = new InMemoryEventBus(GetServiceProvider(), Logger, _options);
+        var sut = new InMemoryEventBus(GetServiceProvider(), Logger);
         await sut.QueueManyAsync([event1, event2]);
 
         A.CallTo(() => eventHandler.HandleAsync(A<MyEvent>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappened(2, Times.Exactly);

@@ -8,40 +8,40 @@ public class StoreEventPublisherDecoratorTests : TestSetup
     public async Task QueueAsync_should_store_publisher_details()
     {
         var eventPublisher = A.Fake<IEventPublisher<Guid>>();
-        var store = A.Fake<IEventPublisherStore>();
+        var store = A.Fake<IEventPublisherStore<Guid>>();
 
         var sut = new StoreEventPublisherDecorator(store, eventPublisher);
         await sut.QueueAsync(new MyEvent(Guid.NewGuid()));
 
-        A.CallTo(() => store.UpsertPublisherAsync(typeof(MyEvent).FullName!, this.GetType().FullName!, A<CancellationToken>._)).MustHaveHappened();
+        A.CallTo(() => store.UpsertPublisherAsync(A<MyEvent>._, this.GetType(), A<CancellationToken>._)).MustHaveHappened();
     }
 
     [Fact]
     public async Task QueueAsync_multiple_decorators_should_store_publisher_details()
     {
         var eventPublisher = A.Fake<IEventPublisher<Guid>>();
-        var store = A.Fake<IEventPublisherStore>();
+        var store = A.Fake<IEventPublisherStore<Guid>>();
 
         var sut = new StoreEventPublisherDecorator(store, eventPublisher);
         var wrappedInDecorator = new WrapperEventPublisher(sut);
 
         await wrappedInDecorator.QueueAsync(new MyEvent(Guid.NewGuid()));
 
-        A.CallTo(() => store.UpsertPublisherAsync(typeof(MyEvent).FullName!, this.GetType().FullName!, A<CancellationToken>._)).MustHaveHappened();
+        A.CallTo(() => store.UpsertPublisherAsync(A<MyEvent>._, this.GetType(), A<CancellationToken>._)).MustHaveHappened();
     }
 
     [Fact]
     public async Task QueueManyAsync_should_store_publisher_details()
     {
         var eventPublisher = A.Fake<IEventPublisher<Guid>>();
-        var store = A.Fake<IEventPublisherStore>();
+        var store = A.Fake<IEventPublisherStore<Guid>>();
         var event1 = new MyEvent(Guid.NewGuid());
         var event2 = new MyEvent(Guid.NewGuid());
 
         var sut = new StoreEventPublisherDecorator(store, eventPublisher);
         await sut.QueueManyAsync([event1, event2]);
 
-        A.CallTo(() => store.UpsertPublisherAsync(typeof(MyEvent).FullName!, this.GetType().FullName!, A<CancellationToken>._)).MustHaveHappened(1, Times.Exactly);
+        A.CallTo(() => store.UpsertPublisherAsync(A<MyEvent>._, this.GetType(), A<CancellationToken>._)).MustHaveHappened(1, Times.Exactly);
     }
 
     private class WrapperEventPublisher(IEventPublisher<Guid> next) : IEventPublisher<Guid>

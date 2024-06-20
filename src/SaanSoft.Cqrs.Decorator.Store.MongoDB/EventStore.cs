@@ -33,8 +33,8 @@ public class EventStore<TEntityKey>(IMongoDatabase database)
 public abstract class EventStore<TMessageId, TEntityKey>(IMongoDatabase database) :
     BaseMessageStore<TMessageId, IEvent<TMessageId>>(database),
     IEventMongoDbStore<TMessageId, TEntityKey>,
-    IEventPublisherStore,
-    IEventSubscriberStore
+    IEventPublisherStore<TMessageId>,
+    IEventSubscriberStore<TMessageId>
     where TMessageId : struct
     where TEntityKey : struct
 {

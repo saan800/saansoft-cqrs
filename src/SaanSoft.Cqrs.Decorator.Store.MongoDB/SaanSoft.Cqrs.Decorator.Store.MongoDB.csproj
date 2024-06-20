@@ -13,4 +13,8 @@
     <ProjectReference Include="..\SaanSoft.Cqrs\SaanSoft.Cqrs.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
 </Project>

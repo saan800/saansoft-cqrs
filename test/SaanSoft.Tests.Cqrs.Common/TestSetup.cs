@@ -14,7 +14,6 @@ public abstract class TestSetup
     protected TestSetup()
     {
         Logger = A.Fake<ILogger>();
-        A.CallTo(() => Logger.IsEnabled(A<LogLevel>.Ignored)).Returns(true);
 
         ServiceCollection = new ServiceCollection();
         ServiceCollection.AddScoped<ILogger>(_ => Logger);

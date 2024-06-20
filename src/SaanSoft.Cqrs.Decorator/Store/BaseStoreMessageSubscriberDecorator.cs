@@ -1,26 +1,12 @@
-using Microsoft.Extensions.DependencyInjection;
+using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public abstract class BaseStoreMessageSubscriberDecorator(IServiceProvider serviceProvider, IMessageSubscriberStore store)
+public abstract class BaseStoreMessageSubscriberDecorator<TMessageId, TMessage>(IMessageSubscriberStore<TMessageId, TMessage> store)
+    : ISubscriberDecorator
+    where TMessage : IMessage<TMessageId>
+    where TMessageId : struct
 {
-    protected abstract bool AllowMultipleSubscribers { get; }
-
-    protected async Task StoreSubscriber<TMessage, TSubscriber>(CancellationToken cancellationToken) where TSubscriber : notnull
-    {
-        var messageType = typeof(TMessage);
-        var handlers = serviceProvider.GetServices<TSubscriber>().ToList();
-        if (handlers.Count == 0 || (handlers.Count > 1 && !AllowMultipleSubscribers)) return;
-
-        var messageTypeName = messageType.FullName ?? messageType.Name;
-        var subscriberNames = handlers.Select(x =>
-        {
-            var type = x.GetType();
-            return type.FullName ?? type.Name;
-        })
-        .ToList();
-
-        await store.UpsertSubscriberAsync(messageTypeName, subscriberNames, cancellationToken);
-    }
+    protected readonly IMessageSubscriberStore<TMessageId, TMessage> Store = store;
 }
 

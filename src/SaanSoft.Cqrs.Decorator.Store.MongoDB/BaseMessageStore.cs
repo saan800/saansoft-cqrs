@@ -1,5 +1,5 @@
 using MongoDB.Driver;
-using SaanSoft.Cqrs.Decorator.Store.MongoDB.Models;
+using SaanSoft.Cqrs.Decorator.Store.Models;
 using SaanSoft.Cqrs.Messages;
 using SaanSoft.Cqrs.Utilities;
 
@@ -16,8 +16,8 @@ namespace SaanSoft.Cqrs.Decorator.Store.MongoDB;
 /// <typeparam name="TMessageId"></typeparam>
 /// <typeparam name="TMessage"></typeparam>
 public abstract class BaseMessageStore<TMessageId, TMessage>(IMongoDatabase database) :
-    IMessagePublisherStore,
-    IMessageSubscriberStore,
+    IMessagePublisherStore<TMessageId, TMessage>,
+    IMessageSubscriberStore<TMessageId, TMessage>,
     IMessageStore<TMessageId, TMessage>
     where TMessageId : struct
     where TMessage : class, IMessage<TMessageId>
@@ -66,24 +66,47 @@ public abstract class BaseMessageStore<TMessageId, TMessage>(IMongoDatabase data
 
     #region IMessagePublisherStore
 
-    public virtual async Task UpsertPublisherAsync(string messageTypeName, string publisherTypeName, CancellationToken cancellationToken = default)
+    public virtual async Task UpsertPublisherAsync(TMessage message, Type publisherType, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrWhiteSpace(publisherTypeName)) return;
+        var messageType = message.GetType();
+        var messageTypeName = messageType.FullName;
+        var messageAssembly = messageType.Assembly.GetName().Name ?? messageType.Assembly.GetName().FullName;
+        var publisherTypeName = publisherType.FullName ?? publisherType.Name;
+        var publisherAssembly = publisherType.Assembly.GetName().Name ?? publisherType.Assembly.GetName().FullName;
+        if (string.IsNullOrWhiteSpace(messageTypeName) || string.IsNullOrWhiteSpace(publisherTypeName)) return;
 
-        var record = await PublisherCollection
-                         .Find(x => x.MessageTypeName == messageTypeName && x.PublisherTypeName == publisherTypeName)
-                         .FirstOrDefaultAsync(cancellationToken)
-                    ?? new MessagePublisherRecord<TMessageId>
-                    {
-                        Id = NewMessageId(),
-                        MessageTypeName = messageTypeName,
-                        PublisherTypeName = publisherTypeName,
-                        CreatedOnUtc = DateTime.UtcNow
-                    };
-        record.LastMessageOnUtc = DateTime.UtcNow;
+        var record = await PublisherCollection.Find(x =>
+                                x.MessageTypeName == messageTypeName &&
+                                x.MessageAssembly == messageAssembly &&
+                                x.PublisherTypeName == publisherTypeName &&
+                                x.PublisherAssembly == publisherAssembly
+                            )
+                            .FirstOrDefaultAsync(cancellationToken);
+        if (record == null)
+        {
+            record = new MessagePublisherRecord<TMessageId>
+            {
+                Id = NewMessageId(),
+                MessageTypeName = messageTypeName,
+                MessageAssembly = messageAssembly,
+                PublisherTypeName = publisherTypeName,
+                PublisherAssembly = publisherAssembly,
+                CreatedOnUtc = message.MessageOnUtc,
+                LastMessageOnUtc = message.MessageOnUtc,
+                LastMessageId = message.Id
+            };
+        }
+        else
+        {
+            record.LastMessageOnUtc = message.MessageOnUtc;
+            record.LastMessageId = message.Id;
+        }
 
         await PublisherCollection.ReplaceOneAsync(
-            x => x.MessageTypeName == messageTypeName && x.PublisherTypeName == publisherTypeName,
+            x => x.MessageTypeName == messageTypeName &&
+                 x.MessageAssembly == messageAssembly &&
+                 x.PublisherTypeName == publisherTypeName &&
+                 x.PublisherAssembly == publisherAssembly,
             record,
             new ReplaceOptions { IsUpsert = true },
             cancellationToken
@@ -94,83 +117,72 @@ public abstract class BaseMessageStore<TMessageId, TMessage>(IMongoDatabase data
 
     #region IMessageSubscriberStore
 
-    public virtual async Task UpsertSubscriberAsync(string messageTypeName, IEnumerable<string> subscriberClassTypeNames, CancellationToken cancellationToken = default)
+    public virtual async Task UpsertSubscriberAsync(TMessage message, Type subscriberType, Exception? exception = null,
+        CancellationToken cancellationToken = default)
     {
-        var typeNames = subscriberClassTypeNames
-            .Where(x => !string.IsNullOrWhiteSpace(x))
-            .Select(x => x.Trim())
-            .ToList();
+        var messageType = message.GetType();
+        var messageTypeName = messageType.FullName ?? messageType.Name;
+        var messageAssembly = messageType.Assembly.GetName().Name ?? messageType.Assembly.GetName().FullName;
+        var subscriberTypeName = subscriberType.FullName ?? subscriberType.Name;
+        var subscriberAssembly = subscriberType.Assembly.GetName().Name ?? subscriberType.Assembly.GetName().FullName;
+        if (string.IsNullOrWhiteSpace(messageTypeName) || string.IsNullOrWhiteSpace(subscriberTypeName)) return;
 
-        if (typeNames.Count == 0) return;
-        if (typeNames.Count == 1)
+        var record = await SubscriberCollection.Find(x =>
+                x.MessageTypeName == messageTypeName &&
+                x.MessageAssembly == messageAssembly &&
+                x.SubscriberTypeName == subscriberTypeName &&
+                x.SubscriberAssembly == subscriberAssembly
+            )
+            .FirstOrDefaultAsync(cancellationToken);
+        if (record == null)
         {
-            // only one subscriber - do more efficient mongo upsert
-            var typeName = typeNames.First();
-
-            var record = await SubscriberCollection
-                             .Find(x => x.MessageTypeName == messageTypeName && x.SubscriberTypeName == typeName)
-                             .FirstOrDefaultAsync(cancellationToken)
-                         ?? new MessageSubscriberRecord<TMessageId>
-                         {
-                             Id = NewMessageId(),
-                             MessageTypeName = messageTypeName,
-                             SubscriberTypeName = typeName,
-                             CreatedOnUtc = DateTime.UtcNow
-                         };
-            record.LastMessageOnUtc = DateTime.UtcNow;
-
-            await SubscriberCollection.ReplaceOneAsync(
-                x => x.MessageTypeName == messageTypeName && x.SubscriberTypeName == typeName,
-                record,
-                new ReplaceOptions { IsUpsert = true },
-                cancellationToken
-            );
-            return;
+            record = new MessageSubscriberRecord<TMessageId>
+            {
+                Id = NewMessageId(),
+                MessageTypeName = messageTypeName,
+                MessageAssembly = messageAssembly,
+                SubscriberTypeName = subscriberTypeName,
+                SubscriberAssembly = subscriberAssembly,
+                CreatedOnUtc = message.MessageOnUtc,
+                LastMessageOnUtc = message.MessageOnUtc,
+                LastMessageId = message.Id
+            };
+        }
+        else
+        {
+            record.LastMessageOnUtc = message.MessageOnUtc;
+            record.LastMessageId = message.Id;
         }
 
-        // multiple subscribers - find which ones to update, which to insert
-        var records = await SubscriberCollection
-                         .Find(x => x.MessageTypeName.Equals(messageTypeName, StringComparison.OrdinalIgnoreCase))
-                         .Project(x => new { x.Id, x.SubscriberTypeName })
-                         .ToListAsync(cancellationToken);
-
-        var newRecords = new List<MessageSubscriberRecord<TMessageId>>();
-        var existingRecords = new List<TMessageId>();
-
-        foreach (var subscriberClassTypeName in typeNames)
+        if (exception == null)
         {
-            var record = records.FirstOrDefault(x => x.SubscriberTypeName.Equals(subscriberClassTypeName, StringComparison.OrdinalIgnoreCase));
-            if (record == null)
+            record.LastCompletedMessageId = message.Id;
+            record.LastFailedMessages = [];
+        }
+        else
+        {
+            record.LastFailedMessages.Add(new MessageSubscriberRecord<TMessageId>.FailedMessage
             {
-                newRecords.Add(new MessageSubscriberRecord<TMessageId>
+                MessageId = message.Id,
+                MessageOnUtc = message.MessageOnUtc,
+                Exception = new MessageSubscriberRecord<TMessageId>.LogException
                 {
-                    Id = NewMessageId(),
-                    MessageTypeName = messageTypeName,
-                    SubscriberTypeName = subscriberClassTypeName,
-                    CreatedOnUtc = DateTime.UtcNow,
-                    LastMessageOnUtc = DateTime.UtcNow
-                });
-            }
-            else
-            {
-                existingRecords.Add(record.Id);
-            }
+                    Message = exception.Message,
+                    TypeName = exception.GetType().FullName ?? exception.GetType().Name,
+                    StackTrace = exception.StackTrace
+                }
+            });
         }
 
-        if (newRecords.Count > 0)
-        {
-            await SubscriberCollection.InsertManyAsync(newRecords, new InsertManyOptions(), cancellationToken);
-        }
-
-        if (existingRecords.Count > 0)
-        {
-            await SubscriberCollection.UpdateManyAsync(
-                x => existingRecords.Contains(x.Id),
-                Builders<MessageSubscriberRecord<TMessageId>>.Update.Set(x => x.LastMessageOnUtc, DateTime.UtcNow),
-                new UpdateOptions { IsUpsert = false },
-                cancellationToken
-                );
-        }
+        await SubscriberCollection.ReplaceOneAsync(
+            x => x.MessageTypeName == messageTypeName &&
+                 x.MessageAssembly == messageAssembly &&
+                 x.SubscriberTypeName == subscriberTypeName &&
+                 x.SubscriberAssembly == subscriberAssembly,
+            record,
+            new ReplaceOptions { IsUpsert = true },
+            cancellationToken
+        );
     }
 
     #endregion
@@ -201,7 +213,9 @@ public abstract class BaseMessageStore<TMessageId, TMessage>(IMongoDatabase data
     {
         var keyIndex = Builders<MessagePublisherRecord<TMessageId>>.IndexKeys
             .Ascending(x => x.MessageTypeName)
-            .Ascending(x => x.PublisherTypeName);
+            .Ascending(x => x.MessageAssembly)
+            .Ascending(x => x.PublisherTypeName)
+            .Ascending(x => x.PublisherAssembly);
 
         var indexModel =
             new CreateIndexModel<MessagePublisherRecord<TMessageId>>(keyIndex, new CreateIndexOptions { Unique = true, Background = true });

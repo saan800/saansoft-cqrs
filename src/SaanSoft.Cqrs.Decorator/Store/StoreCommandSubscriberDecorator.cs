@@ -4,21 +4,30 @@ using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public class StoreCommandSubscriberDecorator(IServiceProvider serviceProvider, ICommandSubscriberStore store, ICommandSubscriber<Guid> next)
-    : StoreCommandSubscriberDecorator<Guid>(serviceProvider, store, next);
+public class StoreCommandSubscriberDecorator(ICommandSubscriberStore<Guid> store, ICommandSubscriber<Guid> next)
+    : StoreCommandSubscriberDecorator<Guid>(store, next);
 
-public abstract class StoreCommandSubscriberDecorator<TMessageId>(IServiceProvider serviceProvider, ICommandSubscriberStore store, ICommandSubscriber<TMessageId> next) :
-    BaseStoreMessageSubscriberDecorator(serviceProvider, store),
-    ICommandSubscriber<TMessageId> where TMessageId : struct
+public abstract class StoreCommandSubscriberDecorator<TMessageId>(ICommandSubscriberStore<TMessageId> store, ICommandSubscriber<TMessageId> next)
+    : BaseStoreMessageSubscriberDecorator<TMessageId, ICommand<TMessageId>>(store),
+      ICommandSubscriber<TMessageId>
+    where TMessageId : struct
 {
-    protected override bool AllowMultipleSubscribers => false;
-
-    public async Task<CommandResponse> RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand<TMessageId>
+    public async Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
+        where TCommand : ICommand<TMessageId>
     {
-        if (!command.IsReplay)
+        var handler = GetHandler<TCommand>();
+        try
         {
-            await StoreSubscriber<TCommand, ICommandHandler<TCommand>>(cancellationToken);
+            await next.RunAsync(command, cancellationToken);
+            await Store.UpsertSubscriberAsync(command, handler.GetType(), null, cancellationToken);
         }
-        return await next.RunAsync(command, cancellationToken);
+        catch (Exception exception)
+        {
+            await Store.UpsertSubscriberAsync(command, handler.GetType(), exception, cancellationToken);
+            throw;
+        }
     }
+
+    public ICommandHandler<TCommand> GetHandler<TCommand>() where TCommand : ICommand<TMessageId>
+        => next.GetHandler<TCommand>();
 }

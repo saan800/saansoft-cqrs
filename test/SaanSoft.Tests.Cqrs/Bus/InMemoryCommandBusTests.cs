@@ -1,13 +1,10 @@
 using SaanSoft.Cqrs.Bus;
 using SaanSoft.Cqrs.Handler;
-using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Tests.Cqrs.Bus;
 
 public class InMemoryCommandBusTests : TestSetup
 {
-    private readonly CommandBusOptions _options = new() { LogLevel = LogLevel.Information };
-
     [Fact]
     public void Can_not_create_with_null_serviceProvider()
     {
@@ -32,14 +29,12 @@ public class InMemoryCommandBusTests : TestSetup
     public async Task ExecuteAsync_handler_exists_in_serviceProvider()
     {
         var handler = A.Fake<ICommandHandler<MyCommand>>();
-        A.CallTo(() => handler.HandleAsync(A<MyCommand>.Ignored, A<CancellationToken>.Ignored))
-            .Returns(new CommandResponse());
+        // TODO: A.CallTo(() => handler.HandleAsync(A<MyCommand>.Ignored, A<CancellationToken>.Ignored));
 
         ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler);
 
-        var sut = new InMemoryCommandBus(GetServiceProvider(), Logger, _options);
-        var result = await sut.ExecuteAsync(new MyCommand());
-        result.IsSuccess.Should().BeTrue();
+        var sut = new InMemoryCommandBus(GetServiceProvider(), Logger);
+        await sut.ExecuteAsync(new MyCommand());
 
         A.CallTo(() => handler.HandleAsync(A<MyCommand>.Ignored, A<CancellationToken>._)).MustHaveHappened();
     }
@@ -52,7 +47,7 @@ public class InMemoryCommandBusTests : TestSetup
         await sut.Invoking(y => y.ExecuteAsync(new MyCommand()))
             .Should().ThrowAsync<InvalidOperationException>()
             .Where(x =>
-                x.Message.StartsWith("No service for type") &&
+                x.Message.StartsWith("No handler for type") &&
                 x.Message.EndsWith("has been registered.")
             );
     }
@@ -70,7 +65,7 @@ public class InMemoryCommandBusTests : TestSetup
         await sut.Invoking(y => y.ExecuteAsync(new MyCommand()))
             .Should().ThrowAsync<InvalidOperationException>()
             .Where(x =>
-                x.Message.StartsWith("Only one service for type") &&
+                x.Message.StartsWith("Only one handler for type") &&
                 x.Message.Contains("can be registered")
             );
 
@@ -99,7 +94,7 @@ public class InMemoryCommandBusTests : TestSetup
         await sut.Invoking(y => y.ExecuteAsync(new MyCommand()))
             .Should().ThrowAsync<InvalidOperationException>()
             .Where(x =>
-                x.Message.StartsWith("No service for type") &&
+                x.Message.StartsWith("No handler for type") &&
                 x.Message.EndsWith("has been registered.")
             );
     }
@@ -117,7 +112,7 @@ public class InMemoryCommandBusTests : TestSetup
         await sut.Invoking(y => y.QueueAsync(new MyCommand()))
             .Should().ThrowAsync<InvalidOperationException>()
             .Where(x =>
-                x.Message.StartsWith("Only one service for type") &&
+                x.Message.StartsWith("Only one handler for type") &&
                 x.Message.Contains("can be registered")
             );
 
