@@ -14,6 +14,7 @@
     "./.github/workflows/**",
     "./dictionary.dic",
     "./Directory.*.props",
+    "./Directory.*.targets",
     "**/*.csproj",
   ],
   "dictionaryDefinitions": [
