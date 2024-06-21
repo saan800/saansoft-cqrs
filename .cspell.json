@@ -8,6 +8,7 @@
   ],
   "ignorePaths": [
     "LICENSE",
+    ".editorconfig",
     "./.githooks/**",
     "./.github/dependabot.yml",
     "./.github/workflows/**",
