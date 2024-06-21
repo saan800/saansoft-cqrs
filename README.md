@@ -36,9 +36,6 @@ split mongo store into 3
 
 event handlers - have attribute on handler that indicates running order priority
 
-signal r example
-AWS Gateway example for web sockets
-
 ## Feature ideas
 
 ### Other
