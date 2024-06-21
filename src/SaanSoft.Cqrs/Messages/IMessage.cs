@@ -18,8 +18,9 @@ public interface IMessage
     /// <summary>
     /// Who triggered the command/event/query (eg UserId, third party (eg Auth0) Id)
     /// Should be propagated between related messages
+    //) IMPORTANT: Do not use any PII data
     /// </summary>
-    string? AuthenticationId { get; set; }
+    string? TriggeredByUser { get; set; }
 
     /// <summary>
     /// When the command/event/query was raised.
