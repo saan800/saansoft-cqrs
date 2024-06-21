@@ -26,7 +26,7 @@ trim_trailing_whitespace = false
 indent_size = 2
 max_line_length = off
 
-[*.{js,jsx,ts,tsx}]
+[*.{js,jsx,ts,tsx,svetle}]
 indent_size = 2
 
 [*.{css,scss}]
