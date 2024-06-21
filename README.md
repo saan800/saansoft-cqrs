@@ -16,7 +16,26 @@ Todo...
 
 ## TODO
 
+IInMemery***Bus for publishers
+- tryExecute / queue / fetch
+
+split guid to own project
+add IIdGenerator interface
+
+decorator project readme
+- no new packages
+- add doc for each decirator
+
+use IMessageBus naming for publishers
+
+stores => repository 
+
+no base interface for repos, use types for messages
+
+split mongo store into 3
+
 event handlers - have attribute on handler that indicates running order priority
+
 signal r example
 AWS Gateway example for web sockets
 
