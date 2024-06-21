@@ -1,7 +1,6 @@
 using SaanSoft.Cqrs.Decorator.Store;
 using SaanSoft.Cqrs.Handler;
 using SaanSoft.Tests.Cqrs.Common.TestHandlers;
-using SaanSoft.Tests.Cqrs.Common.TestSubscribers;
 
 namespace SaanSoft.Tests.Cqrs.Decorator.Store;
 
@@ -14,7 +13,7 @@ public class StoreEventSubscriberDecoratorTests : TestSetup
     {
         ServiceCollection.AddScoped<IEventHandler<MyEvent>, EventsHandler>();
 
-        var eventSubscriber = new TestEventSubscriber(GetServiceProvider());
+        var eventSubscriber = new InMemoryEventBus(GetServiceProvider(), Logger);
         var store = A.Fake<IEventSubscriberStore<Guid>>();
 
         var sut = new StoreEventSubscriberDecorator(store, eventSubscriber);
@@ -27,7 +26,7 @@ public class StoreEventSubscriberDecoratorTests : TestSetup
     [Fact]
     public async Task RunAsync_should_not_store_zero_subscriber_details()
     {
-        var eventSubscriber = new TestEventSubscriber(GetServiceProvider());
+        var eventSubscriber = new InMemoryEventBus(GetServiceProvider(), Logger);
         var store = A.Fake<IEventSubscriberStore<Guid>>();
 
         var sut = new StoreEventSubscriberDecorator(store, eventSubscriber);
@@ -44,7 +43,7 @@ public class StoreEventSubscriberDecoratorTests : TestSetup
         ServiceCollection.AddScoped<IEventHandler<MyEvent>>(_ => handler1);
         ServiceCollection.AddScoped<IEventHandler<MyEvent>, EventsHandler>();
 
-        var eventSubscriber = new TestEventSubscriber(GetServiceProvider());
+        var eventSubscriber = new InMemoryEventBus(GetServiceProvider(), Logger);
         var store = A.Fake<IEventSubscriberStore<Guid>>();
 
         var sut = new StoreEventSubscriberDecorator(store, eventSubscriber);
@@ -62,7 +61,7 @@ public class StoreEventSubscriberDecoratorTests : TestSetup
             .ThrowsAsync(new Exception("it went wrong"));
         ServiceCollection.AddScoped<IEventHandler<MyEvent>>(_ => handler);
 
-        var eventSubscriber = new TestEventSubscriber(GetServiceProvider());
+        var eventSubscriber = new InMemoryEventBus(GetServiceProvider(), Logger);
         var store = A.Fake<IEventSubscriberStore<Guid>>();
 
         var sut = new StoreEventSubscriberDecorator(store, eventSubscriber);

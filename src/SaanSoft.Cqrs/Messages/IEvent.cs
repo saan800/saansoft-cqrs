@@ -22,7 +22,7 @@ public interface IEvent<TMessageId, TEntityKey> : IEvent<TMessageId>
     where TEntityKey : struct
 {
     /// <summary>
-    /// The Key of the entity that this event relates to (eg UserId, OrderId, BlogId)
+    /// The Key of the entity that this event relates to (eg UserKey, OrderKey, BlogKey)
     /// </summary>
     TEntityKey Key { get; set; }
 }

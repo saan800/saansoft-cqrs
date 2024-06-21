@@ -16,18 +16,18 @@ public abstract class StoreEventSubscriberDecorator<TMessageId>(IEventSubscriber
     {
         // run each group of handlers in the given priority order
         foreach (var tasks in GetHandlers<TEvent>()
-                     .Select(group => group.Select(handler => RunAsync(evt, handler, cancellationToken)))
+                     .Select(group => group.Select(handler => RunOneAsync(evt, handler, cancellationToken)))
                 )
         {
             await Task.WhenAll(tasks);
         }
     }
 
-    public async Task RunAsync<TEvent>(TEvent evt, IEventHandler<TEvent> handler, CancellationToken cancellationToken = default) where TEvent : IEvent<TMessageId>
+    public async Task RunOneAsync<TEvent>(TEvent evt, IEventHandler<TEvent> handler, CancellationToken cancellationToken = default) where TEvent : IEvent<TMessageId>
     {
         try
         {
-            await next.RunAsync(evt, handler, cancellationToken);
+            await next.RunOneAsync(evt, handler, cancellationToken);
             await Store.UpsertSubscriberAsync(evt, handler.GetType(), null, cancellationToken);
         }
         catch (Exception exception)

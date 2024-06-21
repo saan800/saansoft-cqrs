@@ -7,9 +7,9 @@ on:
       - main
       - releases/*
     paths:
-      - 'examples/**'
-      - 'src/**'
-      - 'test/**'
+      - "examples/**"
+      - "src/**"
+      - "test/**"
 
 permissions:
   contents: read
@@ -58,6 +58,6 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           directory: ./reports/coverage/
-          fail_ci_if_error: true
+          fail_ci_if_error: false
           flags: unittests
           slug: saan800/saansoft-cqrs

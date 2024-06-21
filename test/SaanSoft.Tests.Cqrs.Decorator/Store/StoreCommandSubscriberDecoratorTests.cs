@@ -1,7 +1,6 @@
 using SaanSoft.Cqrs.Decorator.Store;
 using SaanSoft.Cqrs.Handler;
 using SaanSoft.Tests.Cqrs.Common.TestHandlers;
-using SaanSoft.Tests.Cqrs.Common.TestSubscribers;
 
 namespace SaanSoft.Tests.Cqrs.Decorator.Store;
 
@@ -12,7 +11,7 @@ public class StoreCommandSubscriberDecoratorTests : TestSetup
     {
         ServiceCollection.AddScoped<ICommandHandler<MyCommand>, CommandHandler>();
 
-        var commandSubscriber = new TestCommandSubscriber(GetServiceProvider());
+        var commandSubscriber = new InMemoryCommandBus(GetServiceProvider(), Logger);
         var store = A.Fake<ICommandSubscriberStore<Guid>>();
 
         var sut = new StoreCommandSubscriberDecorator(store, commandSubscriber);
@@ -25,7 +24,7 @@ public class StoreCommandSubscriberDecoratorTests : TestSetup
     [Fact]
     public async Task RunAsync_should_not_store_zero_subscriber_details()
     {
-        var commandSubscriber = new TestCommandSubscriber(GetServiceProvider());
+        var commandSubscriber = new InMemoryCommandBus(GetServiceProvider(), Logger);
         var store = A.Fake<ICommandSubscriberStore<Guid>>();
 
         var sut = new StoreCommandSubscriberDecorator(store, commandSubscriber);
@@ -44,7 +43,7 @@ public class StoreCommandSubscriberDecoratorTests : TestSetup
         ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler1);
         ServiceCollection.AddScoped<ICommandHandler<MyCommand>, CommandHandler>();
 
-        var commandSubscriber = new TestCommandSubscriber(GetServiceProvider());
+        var commandSubscriber = new InMemoryCommandBus(GetServiceProvider(), Logger);
         var store = A.Fake<ICommandSubscriberStore<Guid>>();
 
         var sut = new StoreCommandSubscriberDecorator(store, commandSubscriber);
@@ -65,7 +64,7 @@ public class StoreCommandSubscriberDecoratorTests : TestSetup
             .ThrowsAsync(new Exception("it went wrong"));
         ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler);
 
-        var commandSubscriber = new TestCommandSubscriber(GetServiceProvider());
+        var commandSubscriber = new InMemoryCommandBus(GetServiceProvider(), Logger);
         var store = A.Fake<ICommandSubscriberStore<Guid>>();
 
         var sut = new StoreCommandSubscriberDecorator(store, commandSubscriber);

@@ -41,14 +41,14 @@ public abstract class InMemoryEventBus<TMessageId>(IServiceProvider serviceProvi
     {
         // run each group of handlers in the given priority order
         foreach (var tasks in GetHandlers<TEvent>()
-                     .Select(group => group.Select(handler => RunAsync(evt, handler, cancellationToken)))
+                     .Select(group => group.Select(handler => RunOneAsync(evt, handler, cancellationToken)))
                  )
         {
             await Task.WhenAll(tasks);
         }
     }
 
-    public async Task RunAsync<TEvent>(TEvent evt, IEventHandler<TEvent> handler, CancellationToken cancellationToken = default) where TEvent : IEvent<TMessageId>
+    public async Task RunOneAsync<TEvent>(TEvent evt, IEventHandler<TEvent> handler, CancellationToken cancellationToken = default) where TEvent : IEvent<TMessageId>
     {
         Logger.LogInformation("Running event handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, typeof(TEvent).FullName);
         await handler.HandleAsync(evt, cancellationToken);

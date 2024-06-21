@@ -1,7 +1,6 @@
 ---
 version: 2
 updates:
-
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -19,8 +18,16 @@ updates:
         patterns:
           - Microsoft*
         update-types: ["minor", "patch"]
+      EphemeralMongo:
+        patterns:
+          - EphemeralMongo*
+        update-types: ["minor", "patch"]
       testing:
         patterns:
+          - AutoFixture*
+          - coverlet*
+          - FluentAssertions*
+          - GitHubActionsTestLogger
           - xunit*
         update-types: ["minor", "patch"]
     schedule:
@@ -30,4 +37,3 @@ updates:
       timezone: "Australia/Perth"
     commit-message:
       prefix: "dependencies(nuget): "
-

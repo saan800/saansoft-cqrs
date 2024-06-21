@@ -5,7 +5,7 @@ root = true
 charset = utf-8
 end_of_line = lf
 indent_style = space
-indent_size = 2
+indent_size = 4
 insert_final_newline = true
 trim_trailing_whitespace = true
 max_line_length = 120
@@ -15,22 +15,31 @@ spelling_exclusion_path = .\dictionary.dic
 
 [*.json]
 insert_final_newline = false
+indent_size = 2
 
 [*.md]
+indent_size = 2
 max_line_length = off
 trim_trailing_whitespace = false
 
 [*.{yml,yaml}]
+indent_size = 2
 max_line_length = off
 
-[*.sln]
+[*.{js,jsx,ts,tsx}]
+indent_size = 2
+
+[*.{css,scss}]
+indent_size = 2
+
+[*.{html,htm,liquid}]
+indent_size = 2
+
+[*.sln, *.csproj, *.ruleset, *.props, *.targets]
+indent_size = 2
 max_line_length = off
-indent_size = 4
 
 [*.cs]
-indent_style = space
-indent_size = 4
-
 ################# .NET Coding Conventions #################
 # Organize usings
 dotnet_separate_import_directive_groups = false
@@ -73,9 +82,9 @@ dotnet_remove_unnecessary_suppression_exclusions = none
 ################# C# Coding Conventions #################
 
 # var preferences
-csharp_style_var_elsewhere = false:silent
-csharp_style_var_for_built_in_types = false:silent
-csharp_style_var_when_type_is_apparent = false:silent
+csharp_style_var_elsewhere = true:silent
+csharp_style_var_for_built_in_types = true:silent
+csharp_style_var_when_type_is_apparent = true:silent
 
 # Expression-bodied members
 csharp_style_expression_bodied_accessors = true:silent
@@ -168,4 +177,3 @@ csharp_space_between_square_brackets = false
 # Wrapping preferences
 csharp_preserve_single_line_blocks = true
 csharp_preserve_single_line_statements = true
-
