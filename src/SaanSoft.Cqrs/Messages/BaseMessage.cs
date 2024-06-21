@@ -14,21 +14,25 @@ public abstract class BaseMessage<TMessageId> : IMessage<TMessageId>
     protected abstract TMessageId NewMessageId();
 
     public TMessageId Id { get; set; }
+        
     public TMessageId? TriggeredById { get; set; }
+        
     public string? CorrelationId { get; set; }
-    public string? AuthenticationId { get; set; }
+        
+    public string? TriggeredByUser { get; set; }
+        
     public DateTime MessageOnUtc { get; set; } = DateTime.UtcNow;
 
     public string TypeFullName { get; set; }
 
     public bool IsReplay { get; set; } = false;
 
-    protected BaseMessage(string? correlationId = null, string? authenticatedId = null)
+    protected BaseMessage(string? correlationId = null, string? triggeredByUser = null)
     {
         // ReSharper disable once VirtualMemberCallInConstructor
         if (GenericUtils.IsNullOrDefault(Id)) Id = NewMessageId();
         if (!string.IsNullOrWhiteSpace(correlationId)) CorrelationId = correlationId;
-        if (!string.IsNullOrWhiteSpace(authenticatedId)) AuthenticationId = authenticatedId;
+        if (!string.IsNullOrWhiteSpace(triggeredByUser)) TriggeredByUser = triggeredByUser;
         if (string.IsNullOrWhiteSpace(TypeFullName))
         {
             var type = GetType();
