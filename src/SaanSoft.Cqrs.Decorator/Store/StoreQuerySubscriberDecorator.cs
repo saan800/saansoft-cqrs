@@ -13,7 +13,6 @@ public abstract class StoreQuerySubscriberDecorator<TMessageId>(IQuerySubscriber
 {
     public async Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
         where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
-        where TResponse : IQueryResponse
     {
         var handler = GetHandler<TQuery, TResponse>();
         var typedQuery = (TQuery)query;
@@ -32,6 +31,5 @@ public abstract class StoreQuerySubscriberDecorator<TMessageId>(IQuerySubscriber
 
     public IQueryHandler<TQuery, TResponse> GetHandler<TQuery, TResponse>()
         where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
-        where TResponse : IQueryResponse
         => next.GetHandler<TQuery, TResponse>();
 }

@@ -18,6 +18,5 @@ public interface IQueryPublisher<TMessageId> where TMessageId : struct
     /// <returns></returns>
     Task<TResponse> QueryAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
         CancellationToken cancellationToken = default)
-        where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
-        where TResponse : IQueryResponse;
+        where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>;
 }

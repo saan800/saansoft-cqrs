@@ -2,7 +2,6 @@ namespace SaanSoft.Cqrs.Messages;
 
 public abstract class Query<TQuery, TResponse> : Query<Guid, TQuery, TResponse>
     where TQuery : IQuery<Guid, TQuery, TResponse>
-    where TResponse : IQueryResponse
 {
     protected override Guid NewMessageId() => Guid.NewGuid();
 
@@ -19,7 +18,6 @@ public abstract class Query<TQuery, TResponse> : Query<Guid, TQuery, TResponse>
 public abstract class Query<TMessageId, TQuery, TResponse> : BaseMessage<TMessageId>, IQuery<TMessageId, TQuery, TResponse>
     where TMessageId : struct
     where TQuery : IQuery<TMessageId, TQuery, TResponse>
-    where TResponse : IQueryResponse
 {
     protected Query(string? correlationId = null, string? authenticatedId = null)
         : base(correlationId, authenticatedId)

@@ -14,13 +14,11 @@ public interface IQuerySubscriber<TMessageId> where TMessageId : struct
     /// <typeparam name="TQuery"></typeparam>
     /// <typeparam name="TResponse">
     ///     Contains the payload result of the query.
-    ///     Also contains information on if the query was successful or not, and error messages.
     /// </typeparam>
     /// <returns></returns>
     Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
         CancellationToken cancellationToken = default)
-        where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
-        where TResponse : IQueryResponse;
+        where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>;
 
     /// <summary>
     /// Get the handler for the query.
@@ -31,6 +29,5 @@ public interface IQuerySubscriber<TMessageId> where TMessageId : struct
     /// <typeparam name="TResponse"></typeparam>
     /// <returns></returns>
     IQueryHandler<TQuery, TResponse> GetHandler<TQuery, TResponse>()
-        where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
-        where TResponse : IQueryResponse;
+        where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>;
 }

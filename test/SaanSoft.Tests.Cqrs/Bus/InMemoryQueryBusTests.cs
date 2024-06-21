@@ -1,3 +1,4 @@
+using AutoFixture.Xunit2;
 using SaanSoft.Cqrs.Bus;
 using SaanSoft.Cqrs.Handler;
 
@@ -25,19 +26,20 @@ public class InMemoryQueryBusTests : TestSetup
             .Where(x => x.ParamName == "logger");
     }
 
-    [Fact]
-    public async Task QueryAsync_handler_exists_in_serviceProvider()
+    [Theory]
+    [InlineAutoData]
+    public async Task QueryAsync_handler_exists_in_serviceProvider(string data)
     {
         var handler = A.Fake<IQueryHandler<MyQuery, MyQueryResponse>>();
         A.CallTo(() => handler.HandleAsync(A<MyQuery>.Ignored, A<CancellationToken>.Ignored))
-            .Returns(new MyQueryResponse());
+            .Returns(new MyQueryResponse(data));
 
         ServiceCollection.AddScoped<IQueryHandler<MyQuery, MyQueryResponse>>(_ => handler);
 
         var sut = new InMemoryQueryBus(GetServiceProvider(), Logger);
         var result = await sut.QueryAsync(new MyQuery());
         result.Should().NotBeNull();
-        result.IsSuccess.Should().BeTrue();
+        result.SomeData.Should().Be(data);
 
         A.CallTo(() => handler.HandleAsync(A<MyQuery>.Ignored, A<CancellationToken>.Ignored)).MustHaveHappened();
     }

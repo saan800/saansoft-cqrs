@@ -13,3 +13,15 @@ public interface ICommandHandler<in TCommand> where TCommand : ICommand
     /// <param name="cancellationToken"></param>
     Task HandleAsync(TCommand command, CancellationToken cancellationToken = default);
 }
+
+public interface ICommandHandler<TCommand, TResponse>
+    where TCommand : ICommand<TCommand, TResponse>
+{
+    /// <summary>
+    /// Handle the command and return the result
+    /// </summary>
+    /// <param name="command"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<TResponse> HandleAsync(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default);
+}
