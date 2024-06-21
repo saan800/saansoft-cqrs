@@ -39,7 +39,7 @@ event handlers - have attribute on handler that indicates running order priority
 signal r example
 AWS Gateway example for web sockets
 
-## Features
+## Feature ideas
 
 ### Other
 
@@ -52,6 +52,12 @@ AWS Gateway example for web sockets
 * ILogger Scope
 * CorrelationId
 * Encryption / Decryption
+* retry with polly
+* Metrics
+  * Track: number of messages, time to process, success/failure
+  * on both bus and subscribers
+  * OpenTelemetry
+  * Azure AppInsight (think this might be able to work from open telemetry)
 
 ### Message Stores
 
