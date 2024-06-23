@@ -80,7 +80,7 @@ event handlers - have attribute on handler that indicates running order priority
 ### DI frameworks
 
 * :eyes: c# IServiceCollection
-* Autofaq
+* SimpleInjection
 
 ## Examples
 
