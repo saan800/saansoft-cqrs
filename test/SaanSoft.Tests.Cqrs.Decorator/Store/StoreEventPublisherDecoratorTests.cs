@@ -7,8 +7,8 @@ public class StoreEventPublisherDecoratorTests : TestSetup
     [Fact]
     public async Task QueueAsync_should_store_publisher_details()
     {
-        var eventPublisher = A.Fake<IEventPublisher<Guid>>();
-        var store = A.Fake<IEventPublisherStore<Guid>>();
+        var eventPublisher = A.Fake<IEventBus<Guid>>();
+        var store = A.Fake<IEventPublisherRepository<Guid>>();
 
         var sut = new StoreEventPublisherDecorator(store, eventPublisher);
         await sut.QueueAsync(new MyEvent(Guid.NewGuid()));
@@ -19,11 +19,11 @@ public class StoreEventPublisherDecoratorTests : TestSetup
     [Fact]
     public async Task QueueAsync_multiple_decorators_should_store_publisher_details()
     {
-        var eventPublisher = A.Fake<IEventPublisher<Guid>>();
-        var store = A.Fake<IEventPublisherStore<Guid>>();
+        var eventPublisher = A.Fake<IEventBus<Guid>>();
+        var store = A.Fake<IEventPublisherRepository<Guid>>();
 
         var sut = new StoreEventPublisherDecorator(store, eventPublisher);
-        var wrappedInDecorator = new WrapperEventPublisher(sut);
+        var wrappedInDecorator = new WrapperEventBusDecorator(sut);
 
         await wrappedInDecorator.QueueAsync(new MyEvent(Guid.NewGuid()));
 
@@ -33,8 +33,8 @@ public class StoreEventPublisherDecoratorTests : TestSetup
     [Fact]
     public async Task QueueManyAsync_should_store_publisher_details()
     {
-        var eventPublisher = A.Fake<IEventPublisher<Guid>>();
-        var store = A.Fake<IEventPublisherStore<Guid>>();
+        var eventPublisher = A.Fake<IEventBus<Guid>>();
+        var store = A.Fake<IEventPublisherRepository<Guid>>();
         var event1 = new MyEvent(Guid.NewGuid());
         var event2 = new MyEvent(Guid.NewGuid());
 
@@ -44,7 +44,7 @@ public class StoreEventPublisherDecoratorTests : TestSetup
         A.CallTo(() => store.UpsertPublisherAsync(A<MyEvent>._, this.GetType(), A<CancellationToken>._)).MustHaveHappened(1, Times.Exactly);
     }
 
-    private class WrapperEventPublisher(IEventPublisher<Guid> next) : IEventPublisher<Guid>
+    private class WrapperEventBusDecorator(IEventBus<Guid> next) : IEventBus<Guid>
     {
         public Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default) where TEvent : IEvent<Guid>
             => next.QueueAsync(evt, cancellationToken);

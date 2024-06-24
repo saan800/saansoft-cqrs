@@ -17,9 +17,9 @@ public abstract class TestSetup
 
         ServiceCollection = new ServiceCollection();
         ServiceCollection.AddScoped<ILogger>(_ => Logger);
-        ServiceCollection.AddScoped<ICommandSubscriber<Guid>, InMemoryCommandBus>();
-        ServiceCollection.AddScoped<IEventSubscriber<Guid>, InMemoryEventBus>();
-        ServiceCollection.AddScoped<IQuerySubscriber<Guid>, InMemoryQueryBus>();
+        ServiceCollection.AddScoped<ICommandSubscriptionBus<Guid>, InMemoryCommandBus>();
+        ServiceCollection.AddScoped<IEventSubscriptionBus<Guid>, InMemoryEventBus>();
+        ServiceCollection.AddScoped<IQuerySubscriptionBus<Guid>, InMemoryQueryBus>();
     }
 
     private IServiceProvider? _serviceProvider = null;

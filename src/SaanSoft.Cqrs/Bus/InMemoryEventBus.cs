@@ -10,8 +10,8 @@ public class InMemoryEventBus(IServiceProvider serviceProvider, ILogger logger)
     : InMemoryEventBus<Guid>(serviceProvider, logger);
 
 public abstract class InMemoryEventBus<TMessageId>(IServiceProvider serviceProvider, ILogger logger)
-    : IEventPublisher<TMessageId>,
-      IEventSubscriber<TMessageId>
+    : IEventBus<TMessageId>,
+      IEventSubscriptionBus<TMessageId>
     where TMessageId : struct
 {
     // ReSharper disable MemberCanBePrivate.Global
@@ -22,17 +22,17 @@ public abstract class InMemoryEventBus<TMessageId>(IServiceProvider serviceProvi
     public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
         where TEvent : IEvent<TMessageId>
     {
-        // get subscriber via ServiceProvider so it runs through any decorators
-        var subscriber = ServiceProvider.GetRequiredService<IEventSubscriber<TMessageId>>();
-        await subscriber.RunAsync(evt, cancellationToken);
+        // get subscription bus via ServiceProvider so it runs through any decorators
+        var subscriptionBus = ServiceProvider.GetRequiredService<IEventSubscriptionBus<TMessageId>>();
+        await subscriptionBus.RunAsync(evt, cancellationToken);
     }
 
     public async Task QueueManyAsync<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default)
         where TEvent : IEvent<TMessageId>
     {
-        // get subscriber via ServiceProvider so it runs through any decorators
-        var subscriber = ServiceProvider.GetRequiredService<IEventSubscriber<TMessageId>>();
-        var tasks = events.Select(evt => subscriber.RunAsync(evt, cancellationToken));
+        // get subscription bus via ServiceProvider so it runs through any decorators
+        var subscriptionBus = ServiceProvider.GetRequiredService<IEventSubscriptionBus<TMessageId>>();
+        var tasks = events.Select(evt => subscriptionBus.RunAsync(evt, cancellationToken));
         await Task.WhenAll(tasks);
     }
 

@@ -9,8 +9,8 @@ public class InMemoryCommandBus(IServiceProvider serviceProvider, ILogger logger
     : InMemoryCommandBus<Guid>(serviceProvider, logger);
 
 public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider serviceProvider, ILogger logger)
-    : ICommandPublisher<TMessageId>,
-      ICommandSubscriber<TMessageId>
+    : ICommandBus<TMessageId>,
+      ICommandSubscriptionBus<TMessageId>
     where TMessageId : struct
 {
     // ReSharper disable MemberCanBePrivate.Global
@@ -21,25 +21,25 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
     public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : ICommand<TMessageId>
     {
-        // get subscriber via ServiceProvider so it runs through any decorators
-        var subscriber = ServiceProvider.GetRequiredService<ICommandSubscriber<TMessageId>>();
-        await subscriber.RunAsync(command, cancellationToken);
+        // get subscription bus via ServiceProvider so it runs through any decorators
+        var subscriptionBus = ServiceProvider.GetRequiredService<ICommandSubscriptionBus<TMessageId>>();
+        await subscriptionBus.RunAsync(command, cancellationToken);
     }
 
     public async Task<TResponse> ExecuteAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
         where TCommand : ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
     {
-        // get subscriber via ServiceProvider so it runs through any decorators
-        var subscriber = ServiceProvider.GetRequiredService<ICommandSubscriber<TMessageId>>();
-        return await subscriber.RunAsync(command, cancellationToken);
+        // get subscription bus via ServiceProvider so it runs through any decorators
+        var subscriptionBus = ServiceProvider.GetRequiredService<ICommandSubscriptionBus<TMessageId>>();
+        return await subscriptionBus.RunAsync(command, cancellationToken);
     }
 
     public async Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : ICommand<TMessageId>
     {
-        // get subscriber via ServiceProvider so it runs through any decorators
-        var subscriber = ServiceProvider.GetRequiredService<ICommandSubscriber<TMessageId>>();
-        await subscriber.RunAsync(command, cancellationToken);
+        // get subscription bus via ServiceProvider so it runs through any decorators
+        var subscriptionBus = ServiceProvider.GetRequiredService<ICommandSubscriptionBus<TMessageId>>();
+        await subscriptionBus.RunAsync(command, cancellationToken);
     }
 
     public async Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)

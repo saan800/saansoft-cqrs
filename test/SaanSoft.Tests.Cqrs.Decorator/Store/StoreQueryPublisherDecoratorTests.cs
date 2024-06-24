@@ -7,8 +7,8 @@ public class StoreQueryPublisherDecoratorTests : TestSetup
     [Fact]
     public async Task QueryAsync_should_store_publisher_details()
     {
-        var queryPublisher = A.Fake<IQueryPublisher<Guid>>();
-        var store = A.Fake<IQueryPublisherStore<Guid>>();
+        var queryPublisher = A.Fake<IQueryBus<Guid>>();
+        var store = A.Fake<IQueryPublisherRepository<Guid>>();
 
         var sut = new StoreQueryPublisherDecorator(store, queryPublisher);
         await sut.QueryAsync(new MyQuery());
@@ -19,18 +19,18 @@ public class StoreQueryPublisherDecoratorTests : TestSetup
     [Fact]
     public async Task QueryAsync_multiple_decorators_should_store_publisher_details()
     {
-        var queryPublisher = A.Fake<IQueryPublisher<Guid>>();
-        var store = A.Fake<IQueryPublisherStore<Guid>>();
+        var queryPublisher = A.Fake<IQueryBus<Guid>>();
+        var store = A.Fake<IQueryPublisherRepository<Guid>>();
 
         var sut = new StoreQueryPublisherDecorator(store, queryPublisher);
-        var wrappedInDecorator = new WrapperQueryPublisher(sut);
+        var wrappedInDecorator = new WrapperQueryBusDecorator(sut);
 
         await wrappedInDecorator.QueryAsync(new MyQuery());
 
         A.CallTo(() => store.UpsertPublisherAsync(A<MyQuery>._, this.GetType(), A<CancellationToken>._)).MustHaveHappened();
     }
 
-    private class WrapperQueryPublisher(IQueryPublisher<Guid> next) : IQueryPublisher<Guid>
+    private class WrapperQueryBusDecorator(IQueryBus<Guid> next) : IQueryBus<Guid>
     {
         public Task<TResponse> QueryAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
             CancellationToken cancellationToken = default)

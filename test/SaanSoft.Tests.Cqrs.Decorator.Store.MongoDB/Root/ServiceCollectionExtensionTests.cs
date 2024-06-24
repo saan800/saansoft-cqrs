@@ -20,17 +20,17 @@ public class ServiceCollectionExtensionTests : TestSetup
         _serviceCollection.AddGuidStores();
         var serviceProvider = _serviceCollection.BuildServiceProvider();
 
-        var commandStore = serviceProvider.GetRequiredService<ICommandStore<Guid>>();
-        commandStore.Should().BeOfType<CommandStore>();
-        commandStore.Should().BeAssignableTo<CommandStore<Guid>>();
+        var commandStore = serviceProvider.GetRequiredService<ICommandRepository<Guid>>();
+        commandStore.Should().BeOfType<CommandRepository>();
+        commandStore.Should().BeAssignableTo<CommandRepository<Guid>>();
 
-        var eventStore = serviceProvider.GetRequiredService<IEventStore<Guid, Guid>>();
-        eventStore.Should().BeOfType<EventStore>();
-        eventStore.Should().BeAssignableTo<EventStore<Guid, Guid>>();
+        var eventStore = serviceProvider.GetRequiredService<IEventRepository<Guid, Guid>>();
+        eventStore.Should().BeOfType<EventRepository>();
+        eventStore.Should().BeAssignableTo<EventRepository<Guid, Guid>>();
 
-        var queryStore = serviceProvider.GetRequiredService<IQueryStore<Guid>>();
-        queryStore.Should().BeOfType<QueryStore>();
-        queryStore.Should().BeAssignableTo<QueryStore<Guid>>();
+        var queryStore = serviceProvider.GetRequiredService<IQueryRepository<Guid>>();
+        queryStore.Should().BeOfType<QueryRepository>();
+        queryStore.Should().BeAssignableTo<QueryRepository<Guid>>();
     }
 
     [Fact]
@@ -39,17 +39,17 @@ public class ServiceCollectionExtensionTests : TestSetup
         _serviceCollection.AddGuidStores<ObjectId>();
         var serviceProvider = _serviceCollection.BuildServiceProvider();
 
-        var commandStore = serviceProvider.GetRequiredService<ICommandStore<Guid>>();
-        commandStore.Should().BeOfType<CommandStore>();
-        commandStore.Should().BeAssignableTo<CommandStore<Guid>>();
+        var commandStore = serviceProvider.GetRequiredService<ICommandRepository<Guid>>();
+        commandStore.Should().BeOfType<CommandRepository>();
+        commandStore.Should().BeAssignableTo<CommandRepository<Guid>>();
 
-        var eventStore = serviceProvider.GetRequiredService<IEventStore<Guid, ObjectId>>();
-        eventStore.Should().BeAssignableTo<EventStore<ObjectId>>();
-        eventStore.Should().BeAssignableTo<EventStore<Guid, ObjectId>>();
+        var eventStore = serviceProvider.GetRequiredService<IEventRepository<Guid, ObjectId>>();
+        eventStore.Should().BeAssignableTo<EventRepository<ObjectId>>();
+        eventStore.Should().BeAssignableTo<EventRepository<Guid, ObjectId>>();
 
-        var queryStore = serviceProvider.GetRequiredService<IQueryStore<Guid>>();
-        queryStore.Should().BeOfType<QueryStore>();
-        queryStore.Should().BeAssignableTo<QueryStore<Guid>>();
+        var queryStore = serviceProvider.GetRequiredService<IQueryRepository<Guid>>();
+        queryStore.Should().BeOfType<QueryRepository>();
+        queryStore.Should().BeAssignableTo<QueryRepository<Guid>>();
     }
 
     [Fact]
@@ -58,16 +58,16 @@ public class ServiceCollectionExtensionTests : TestSetup
         _serviceCollection.AddGuidStores<Guid>();
         var serviceProvider = _serviceCollection.BuildServiceProvider();
 
-        var commandStore = serviceProvider.GetRequiredService<ICommandStore<Guid>>();
-        commandStore.Should().BeOfType<CommandStore>();
-        commandStore.Should().BeAssignableTo<CommandStore<Guid>>();
+        var commandStore = serviceProvider.GetRequiredService<ICommandRepository<Guid>>();
+        commandStore.Should().BeOfType<CommandRepository>();
+        commandStore.Should().BeAssignableTo<CommandRepository<Guid>>();
 
-        var eventStore = serviceProvider.GetRequiredService<IEventStore<Guid, Guid>>();
-        eventStore.Should().BeAssignableTo<EventStore<Guid>>();
-        eventStore.Should().BeAssignableTo<EventStore<Guid, Guid>>();
+        var eventStore = serviceProvider.GetRequiredService<IEventRepository<Guid, Guid>>();
+        eventStore.Should().BeAssignableTo<EventRepository<Guid>>();
+        eventStore.Should().BeAssignableTo<EventRepository<Guid, Guid>>();
 
-        var queryStore = serviceProvider.GetRequiredService<IQueryStore<Guid>>();
-        queryStore.Should().BeOfType<QueryStore>();
-        queryStore.Should().BeAssignableTo<QueryStore<Guid>>();
+        var queryStore = serviceProvider.GetRequiredService<IQueryRepository<Guid>>();
+        queryStore.Should().BeOfType<QueryRepository>();
+        queryStore.Should().BeAssignableTo<QueryRepository<Guid>>();
     }
 }

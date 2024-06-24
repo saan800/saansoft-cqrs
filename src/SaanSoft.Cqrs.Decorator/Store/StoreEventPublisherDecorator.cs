@@ -3,17 +3,17 @@ using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public class StoreEventPublisherDecorator(IEventPublisherStore<Guid> store, IEventPublisher<Guid> next)
-    : StoreEventPublisherDecorator<Guid>(store, next);
+public class StoreEventPublisherDecorator(IEventPublisherRepository<Guid> repository, IEventBus<Guid> next)
+    : StoreEventPublisherDecorator<Guid>(repository, next);
 
 // ReSharper disable once SuggestBaseTypeForParameterInConstructor
-public abstract class StoreEventPublisherDecorator<TMessageId>(IEventPublisherStore<TMessageId> store, IEventPublisher<TMessageId> next) :
-    BaseStoreMessagePublisherDecorator<TMessageId, IEvent<TMessageId>>(store),
-    IEventPublisher<TMessageId> where TMessageId : struct
+public abstract class StoreEventPublisherDecorator<TMessageId>(IEventPublisherRepository<TMessageId> repository, IEventBus<TMessageId> next) :
+    BaseStoreMessagePublisherDecorator<TMessageId, IEvent<TMessageId>>(repository),
+    IEventBus<TMessageId> where TMessageId : struct
 {
     public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default) where TEvent : IEvent<TMessageId>
     {
-        await StorePublisher<IEventPublisher<TMessageId>>(evt, cancellationToken);
+        await StorePublisher<IEventBus<TMessageId>>(evt, cancellationToken);
         await next.QueueAsync(evt, cancellationToken);
     }
 
@@ -22,7 +22,7 @@ public abstract class StoreEventPublisherDecorator<TMessageId>(IEventPublisherSt
         var eventList = events.ToList();
         if (eventList.Any())
         {
-            await StorePublisher<IEventPublisher<TMessageId>>(eventList.Last(), cancellationToken);
+            await StorePublisher<IEventBus<TMessageId>>(eventList.Last(), cancellationToken);
         }
         await next.QueueManyAsync(eventList, cancellationToken);
     }

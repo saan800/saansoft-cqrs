@@ -24,12 +24,7 @@ add IIdGenerator interface
 
 decorator project readme
 - no new packages
-- add doc for each decorator 
-
-use IMessageBus naming for publishers
-use IMessageSubscriptionBus for subscribers
-
-stores => repository 
+- add doc for each decorator
 
 no base interface for repositories, use types for messages
 
@@ -49,7 +44,7 @@ event handlers - have attribute on handler that indicates running order priority
 
 ### Decorators
 
-* :eyes: Store - Store messages, publishers and subscribers
+* :eyes: Store - Store messages, publishers and handlers
 * ILogger Scope
 * CorrelationId provider
   * Guid
@@ -61,7 +56,7 @@ event handlers - have attribute on handler that indicates running order priority
 * retry with polly
 * Metrics
   * Track: number of messages, time to process, success/failure
-  * on both bus and subscribers
+  * on both message bus and subscription bus
   * OpenTelemetry
   * Azure AppInsight (think this might be able to work from open telemetry)
 
