@@ -16,25 +16,29 @@ public interface IMessage
     string? CorrelationId { get; set; }
 
     /// <summary>
-    /// Who triggered the command/event/query (eg UserId, third party (eg Auth0) Id)
-    /// Should be propagated between related messages
-    //) IMPORTANT: Do not use any PII data
+    /// Who triggered the command/event/query (eg UserId, third party (eg Auth0) Id).
+    ///
+    /// Should be propagated between related messages.
+    ///
+    /// IMPORTANT: Do not use any PII data.
     /// </summary>
     string? TriggeredByUser { get; set; }
 
     /// <summary>
     /// When the command/event/query was raised.
+    ///
     /// When running events in order, use MessageOnUtc to run them in the correct order
     /// </summary>
     DateTime MessageOnUtc { get; set; }
 
     /// <summary>
-    /// FullName for the type of the event
+    /// FullName for the type of the message
     /// </summary>
     string TypeFullName { get; set; }
 
     /// <summary>
     /// Whether the message is being replayed or not
+    ///
     /// Note:
     /// - Events should replay
     /// - Queries should replay

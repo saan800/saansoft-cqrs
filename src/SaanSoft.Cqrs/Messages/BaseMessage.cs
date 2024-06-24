@@ -14,13 +14,13 @@ public abstract class BaseMessage<TMessageId> : IMessage<TMessageId>
     protected abstract TMessageId NewMessageId();
 
     public TMessageId Id { get; set; }
-        
+
     public TMessageId? TriggeredById { get; set; }
-        
-    public string? CorrelationId { get; set; }
-        
+
     public string? TriggeredByUser { get; set; }
-        
+
+    public string? CorrelationId { get; set; }
+
     public DateTime MessageOnUtc { get; set; } = DateTime.UtcNow;
 
     public string TypeFullName { get; set; }
@@ -41,7 +41,7 @@ public abstract class BaseMessage<TMessageId> : IMessage<TMessageId>
     }
 
     protected BaseMessage(IMessage<TMessageId> triggeredByMessage)
-        : this(triggeredByMessage.CorrelationId, triggeredByMessage.AuthenticationId)
+        : this(triggeredByMessage.CorrelationId, triggeredByMessage.TriggeredByUser)
     {
         TriggeredById = triggeredByMessage.Id;
         IsReplay = triggeredByMessage.IsReplay;

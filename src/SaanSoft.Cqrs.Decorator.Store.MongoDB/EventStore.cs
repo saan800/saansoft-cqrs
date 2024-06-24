@@ -63,7 +63,7 @@ public abstract class EventStore<TMessageId, TEntityKey>(IMongoDatabase database
             .Ascending(x => x.Key)
             .Ascending(x => x.TypeFullName)
             .Ascending(x => x.TriggeredById)
-            .Ascending(x => x.AuthenticationId)
+            .Ascending(x => x.TriggeredByUser)
             .Ascending(x => x.MessageOnUtc);
 
         await indexes.CreateOneAsync(

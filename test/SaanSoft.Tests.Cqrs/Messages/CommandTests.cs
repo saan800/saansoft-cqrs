@@ -11,7 +11,7 @@ public class CommandTests
         result.Id.Should().NotBeEmpty();
         result.Id.Should().NotBe(default(Guid));
         result.CorrelationId.Should().BeNull();
-        result.AuthenticationId.Should().BeNull();
+        result.TriggeredByUser.Should().BeNull();
         result.MessageOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
         result.TriggeredById.Should().BeNull();
         result.TypeFullName.Should().Be(typeof(MyCommand).FullName);
@@ -28,7 +28,7 @@ public class CommandTests
         result.Id.Should().NotBeEmpty();
         result.Id.Should().NotBe(default(Guid));
         result.CorrelationId.Should().Be(correlationId);
-        result.AuthenticationId.Should().Be(authId);
+        result.TriggeredByUser.Should().Be(authId);
         result.MessageOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
         result.TriggeredById.Should().BeNull();
         result.TypeFullName.Should().Be(typeof(MyCommand).FullName);
@@ -49,7 +49,7 @@ public class CommandTests
         result.Id.Should().NotBe(default(Guid));
         result.Id.Should().NotBe(triggeredBy.Id);
         result.CorrelationId.Should().Be(triggeredBy.CorrelationId);
-        result.AuthenticationId.Should().Be(triggeredBy.AuthenticationId);
+        result.TriggeredByUser.Should().Be(triggeredBy.TriggeredByUser);
         result.MessageOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
         result.MessageOnUtc.Should().NotBe(triggeredBy.MessageOnUtc);
         result.TriggeredById.Should().Be(triggeredBy.Id);

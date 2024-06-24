@@ -198,7 +198,7 @@ public abstract class BaseMessageStore<TMessageId, TMessage>(IMongoDatabase data
             .Ascending(x => x.TypeFullName)
             .Ascending(x => x.MessageOnUtc)
             .Ascending(x => x.TriggeredById)
-            .Ascending(x => x.AuthenticationId);
+            .Ascending(x => x.TriggeredByUser);
 
         var indexModel =
             new CreateIndexModel<IMessage<TMessageId>>(keyIndex, new CreateIndexOptions { Unique = false, Background = false });

@@ -13,7 +13,7 @@ public class EventTests
         result.Id.Should().NotBeEmpty();
         result.Id.Should().NotBe(default(Guid));
         result.CorrelationId.Should().BeNull();
-        result.AuthenticationId.Should().BeNull();
+        result.TriggeredByUser.Should().BeNull();
         result.MessageOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
         result.TypeFullName.Should().Be(typeof(MyEvent).FullName);
         result.TriggeredById.Should().BeNull();
@@ -30,7 +30,7 @@ public class EventTests
         result.Id.Should().NotBeEmpty();
         result.Id.Should().NotBe(default(Guid));
         result.CorrelationId.Should().Be(correlationId);
-        result.AuthenticationId.Should().Be(authId);
+        result.TriggeredByUser.Should().Be(authId);
         result.MessageOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
         result.TypeFullName.Should().Be(typeof(MyEvent).FullName);
         result.TriggeredById.Should().BeNull();
@@ -51,7 +51,7 @@ public class EventTests
         result.Id.Should().NotBe(default(Guid));
         result.Id.Should().NotBe(triggeredBy.Id);
         result.CorrelationId.Should().Be(triggeredBy.CorrelationId);
-        result.AuthenticationId.Should().Be(triggeredBy.AuthenticationId);
+        result.TriggeredByUser.Should().Be(triggeredBy.TriggeredByUser);
         result.MessageOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
         result.MessageOnUtc.Should().NotBe(triggeredBy.MessageOnUtc);
         result.TriggeredById.Should().Be(triggeredBy.Id);
