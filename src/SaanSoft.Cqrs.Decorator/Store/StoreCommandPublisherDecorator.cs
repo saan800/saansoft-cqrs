@@ -18,6 +18,14 @@ public abstract class StoreCommandPublisherDecorator<TMessageId>(ICommandPublish
         await next.ExecuteAsync(command, cancellationToken);
     }
 
+    public async Task<TResponse> ExecuteAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
+        where TCommand : ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+    {
+        var typedCommand = (TCommand)command;
+        await StorePublisher<ICommandPublisher<TMessageId>>(typedCommand, cancellationToken);
+        return await next.ExecuteAsync(command, cancellationToken);
+    }
+
     public async Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : ICommand<TMessageId>
     {

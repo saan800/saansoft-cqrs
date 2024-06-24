@@ -5,16 +5,13 @@ namespace SaanSoft.Cqrs.Bus;
 public interface IQueryPublisher<TMessageId> where TMessageId : struct
 {
     /// <summary>
-    /// Send a query for information
-    /// Queries will be run in replay mode.
+    /// Send a query for information.
+    /// Any issues in the query could result in an exception being thrown.
     /// </summary>
     /// <param name="query"></param>
     /// <param name="cancellationToken"></param>
     /// <typeparam name="TQuery"></typeparam>
-    /// <typeparam name="TResponse">
-    ///     Contains the payload result of the query.
-    ///     Also contains information on if the query was successful or not, and error messages.
-    /// </typeparam>
+    /// <typeparam name="TResponse"></typeparam>
     /// <returns></returns>
     Task<TResponse> QueryAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
         CancellationToken cancellationToken = default)

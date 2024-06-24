@@ -66,7 +66,7 @@ public abstract class BaseMessageStore<TMessageId, TMessage>(IMongoDatabase data
 
     #region IMessagePublisherStore
 
-    public virtual async Task UpsertPublisherAsync(TMessage message, Type publisherType, CancellationToken cancellationToken = default)
+    public virtual async Task UpsertPublisherAsync(IMessage<TMessageId> message, Type publisherType, CancellationToken cancellationToken = default)
     {
         var messageType = message.GetType();
         var messageTypeName = messageType.FullName;
@@ -117,7 +117,7 @@ public abstract class BaseMessageStore<TMessageId, TMessage>(IMongoDatabase data
 
     #region IMessageSubscriberStore
 
-    public virtual async Task UpsertSubscriberAsync(TMessage message, Type subscriberType, Exception? exception = null,
+    public virtual async Task UpsertSubscriberAsync(IMessage<TMessageId> message, Type subscriberType, Exception? exception = null,
         CancellationToken cancellationToken = default)
     {
         var messageType = message.GetType();

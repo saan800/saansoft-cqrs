@@ -31,7 +31,7 @@ public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvi
         where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
     {
         var handler = GetHandler<TQuery, TResponse>();
-        Logger.LogInformation("Running query handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, typeof(TQuery).FullName);
+        Logger.LogInformation("Running query handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, query.TypeFullName);
         return await handler.HandleAsync(query, cancellationToken);
     }
 
@@ -47,7 +47,7 @@ public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvi
                 throw new InvalidOperationException($"No service for type '{typeof(IQueryHandler<TQuery, TResponse>)}' has been registered.");
             default:
                 {
-                    var typeNames = handlers.Select(x => x.GetType().FullName).ToList();
+                    var typeNames = handlers.Select(handler => handler.GetType().FullName ?? handler.GetType().Name).ToList();
                     throw new InvalidOperationException($"Only one service for type '{typeof(IQueryHandler<TQuery, TResponse>)}' can be registered. Currently have {typeNames.Count} registered: {string.Join("; ", typeNames)}");
                 }
         }

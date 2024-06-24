@@ -7,14 +7,12 @@ public interface IQuerySubscriber<TMessageId> where TMessageId : struct
 {
     /// <summary>
     /// Run a query for information
-    /// Queries will be run in replay mode.
+    /// Any issues in the query could result in an exception being thrown.
     /// </summary>
     /// <param name="query"></param>
     /// <param name="cancellationToken"></param>
     /// <typeparam name="TQuery"></typeparam>
-    /// <typeparam name="TResponse">
-    ///     Contains the payload result of the query.
-    /// </typeparam>
+    /// <typeparam name="TResponse"></typeparam>
     /// <returns></returns>
     Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
         CancellationToken cancellationToken = default)

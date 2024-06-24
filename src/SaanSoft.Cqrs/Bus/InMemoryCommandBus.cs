@@ -18,13 +18,20 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
     protected readonly ILogger Logger = logger ?? throw new ArgumentNullException(nameof(logger));
     // ReSharper restore MemberCanBePrivate.Global
 
-    public async Task ExecuteAsync<TCommand>(TCommand command,
-        CancellationToken cancellationToken = default)
+    public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : ICommand<TMessageId>
     {
         // get subscriber via ServiceProvider so it runs through any decorators
         var subscriber = ServiceProvider.GetRequiredService<ICommandSubscriber<TMessageId>>();
         await subscriber.RunAsync(command, cancellationToken);
+    }
+
+    public async Task<TResponse> ExecuteAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
+        where TCommand : ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+    {
+        // get subscriber via ServiceProvider so it runs through any decorators
+        var subscriber = ServiceProvider.GetRequiredService<ICommandSubscriber<TMessageId>>();
+        return await subscriber.RunAsync(command, cancellationToken);
     }
 
     public async Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
@@ -39,23 +46,39 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
         where TCommand : ICommand<TMessageId>
     {
         var handler = GetHandler<TCommand>();
-        Logger.LogInformation("Running command handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, typeof(TCommand).FullName);
+        Logger.LogInformation("Running command handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, command.TypeFullName);
         await handler.HandleAsync(command, cancellationToken);
     }
 
-    public virtual ICommandHandler<TCommand> GetHandler<TCommand>() where TCommand : ICommand<TMessageId>
+    public async Task<TResponse> RunAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
+        where TCommand : ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
     {
-        var handlers = ServiceProvider.GetServices<ICommandHandler<TCommand>>().ToList();
+        var handler = GetHandler<TCommand, TResponse>();
+        Logger.LogInformation("Running command handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, command.TypeFullName);
+        return await handler.HandleAsync(command, cancellationToken);
+    }
+
+    public virtual ICommandHandler<TCommand> GetHandler<TCommand>()
+        where TCommand : ICommand<TMessageId>
+        => GetCommandHandler<ICommandHandler<TCommand>>();
+
+    public ICommandHandler<TCommand, TResponse> GetHandler<TCommand, TResponse>()
+        where TCommand : ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+        => GetCommandHandler<ICommandHandler<TCommand, TResponse>>();
+
+    private TCommandHandler GetCommandHandler<TCommandHandler>()
+    {
+        var handlers = ServiceProvider.GetServices<TCommandHandler>().ToList();
         switch (handlers.Count)
         {
             case 1:
                 return handlers.Single();
             case 0:
-                throw new InvalidOperationException($"No handler for type '{typeof(ICommandHandler<TCommand>)}' has been registered.");
+                throw new InvalidOperationException($"No handler for type '{typeof(TCommandHandler)}' has been registered.");
             default:
                 {
-                    var typeNames = handlers.Select(x => x.GetType().FullName).ToList();
-                    throw new InvalidOperationException($"Only one handler for type '{typeof(ICommandHandler<TCommand>)}' can be registered. Currently have {typeNames.Count} registered: {string.Join("; ", typeNames)}");
+                    var typeNames = handlers.Select(handler => handler!.GetType().FullName ?? handler!.GetType().Name).ToList();
+                    throw new InvalidOperationException($"Only one handler for type '{typeof(TCommandHandler)}' can be registered. Currently have {typeNames.Count} registered: {string.Join("; ", typeNames)}");
                 }
         }
     }

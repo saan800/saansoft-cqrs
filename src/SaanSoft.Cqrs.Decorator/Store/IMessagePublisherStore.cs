@@ -14,5 +14,5 @@ public interface IMessagePublisherStore<TMessageId, in TMessage>
     /// <param name="publisherType">Class that published the message</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task UpsertPublisherAsync(TMessage message, Type publisherType, CancellationToken cancellationToken = default);
+    Task UpsertPublisherAsync(IMessage<TMessageId> message, Type publisherType, CancellationToken cancellationToken = default);
 }

@@ -82,10 +82,16 @@ public class StoreCommandPublisherDecoratorTests : TestSetup
 
     private class WrapperCommandPublisher(ICommandPublisher<Guid> next) : ICommandPublisher<Guid>
     {
-        public Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand<Guid>
+        public Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
+            where TCommand : ICommand<Guid>
             => next.ExecuteAsync(command, cancellationToken);
 
-        public Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand<Guid>
+        public Task<TResponse> ExecuteAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
+            where TCommand : ICommand<TCommand, TResponse>, ICommand<Guid, TCommand, TResponse>
+            => next.ExecuteAsync(command, cancellationToken);
+
+        public Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
+            where TCommand : ICommand<Guid>
             => next.QueueAsync(command, cancellationToken);
     }
 }

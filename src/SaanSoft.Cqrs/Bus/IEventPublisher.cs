@@ -5,9 +5,8 @@ namespace SaanSoft.Cqrs.Bus;
 public interface IEventPublisher<TMessageId> where TMessageId : struct
 {
     /// <summary>
-    /// Put the event onto the queue
+    /// Put the event onto the queue.
     /// It will not return any indication if the event was successfully executed or not.
-    /// Events will be run in replay mode.
     /// </summary>
     /// <param name="evt"></param>
     /// <param name="cancellationToken"></param>

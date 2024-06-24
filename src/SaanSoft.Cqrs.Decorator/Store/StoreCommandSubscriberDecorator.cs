@@ -28,6 +28,28 @@ public abstract class StoreCommandSubscriberDecorator<TMessageId>(ICommandSubscr
         }
     }
 
+    public async Task<TResponse> RunAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
+        where TCommand : ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+    {
+        var handler = GetHandler<TCommand, TResponse>();
+        var typedCommand = (TCommand)command;
+        try
+        {
+            var response = await next.RunAsync(command, cancellationToken);
+            await Store.UpsertSubscriberAsync(typedCommand, handler.GetType(), null, cancellationToken);
+            return response;
+        }
+        catch (Exception exception)
+        {
+            await Store.UpsertSubscriberAsync(typedCommand, handler.GetType(), exception, cancellationToken);
+            throw;
+        }
+    }
+
     public ICommandHandler<TCommand> GetHandler<TCommand>() where TCommand : ICommand<TMessageId>
         => next.GetHandler<TCommand>();
+
+    public ICommandHandler<TCommand, TResponse> GetHandler<TCommand, TResponse>()
+        where TCommand : ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+        => next.GetHandler<TCommand, TResponse>();
 }

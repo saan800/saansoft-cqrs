@@ -19,5 +19,5 @@ public interface IMessageSubscriberStore<TMessageId, in TMessage>
     /// </param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task UpsertSubscriberAsync(TMessage message, Type subscriberType, Exception? exception = null, CancellationToken cancellationToken = default);
+    Task UpsertSubscriberAsync(IMessage<TMessageId> message, Type subscriberType, Exception? exception = null, CancellationToken cancellationToken = default);
 }

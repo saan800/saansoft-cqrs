@@ -10,7 +10,7 @@ public abstract class BaseStoreMessagePublisherDecorator<TMessageId, TMessage>(I
     where TMessage : IMessage<TMessageId>
     where TMessageId : struct
 {
-    protected async Task StorePublisher<TPublisher>(TMessage message, CancellationToken cancellationToken)
+    protected async Task StorePublisher<TPublisher>(IMessage<TMessageId> message, CancellationToken cancellationToken)
     {
         var callerClassType = new StackTrace().GetFrames()
             .Where(f => !string.IsNullOrWhiteSpace(f.GetMethod()?.DeclaringType?.Namespace))

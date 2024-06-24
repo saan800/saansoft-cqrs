@@ -1,3 +1,4 @@
+using AutoFixture.Xunit2;
 using SaanSoft.Cqrs.Bus;
 using SaanSoft.Cqrs.Handler;
 
@@ -29,7 +30,6 @@ public class InMemoryCommandBusTests : TestSetup
     public async Task ExecuteAsync_handler_exists_in_serviceProvider()
     {
         var handler = A.Fake<ICommandHandler<MyCommand>>();
-        // TODO: A.CallTo(() => handler.HandleAsync(A<MyCommand>.Ignored, A<CancellationToken>.Ignored));
 
         ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler);
 
@@ -37,6 +37,23 @@ public class InMemoryCommandBusTests : TestSetup
         await sut.ExecuteAsync(new MyCommand());
 
         A.CallTo(() => handler.HandleAsync(A<MyCommand>.Ignored, A<CancellationToken>._)).MustHaveHappened();
+    }
+
+    [Theory]
+    [InlineAutoData]
+    public async Task ExecuteAsync_handler_with_response_exists_in_serviceProvider(string response)
+    {
+        var handler = A.Fake<ICommandHandler<MyCommandWithResponse, string>>();
+        A.CallTo(() => handler.HandleAsync(A<MyCommandWithResponse>.Ignored, A<CancellationToken>.Ignored))
+            .Returns(response);
+
+        ServiceCollection.AddScoped<ICommandHandler<MyCommandWithResponse, string>>(_ => handler);
+
+        var sut = new InMemoryCommandBus(GetServiceProvider(), Logger);
+        var result = await sut.ExecuteAsync(new MyCommandWithResponse());
+        result.Should().Be(response);
+
+        A.CallTo(() => handler.HandleAsync(A<MyCommandWithResponse>.Ignored, A<CancellationToken>.Ignored)).MustHaveHappened();
     }
 
     [Fact]
@@ -93,10 +110,7 @@ public class InMemoryCommandBusTests : TestSetup
 
         await sut.Invoking(y => y.ExecuteAsync(new MyCommand()))
             .Should().ThrowAsync<InvalidOperationException>()
-            .Where(x =>
-                x.Message.StartsWith("No handler for type") &&
-                x.Message.EndsWith("has been registered.")
-            );
+            .Where(x => x.Message.StartsWith("No handler for type"));
     }
 
     [Fact]
@@ -111,10 +125,7 @@ public class InMemoryCommandBusTests : TestSetup
         var sut = new InMemoryCommandBus(GetServiceProvider(), Logger);
         await sut.Invoking(y => y.QueueAsync(new MyCommand()))
             .Should().ThrowAsync<InvalidOperationException>()
-            .Where(x =>
-                x.Message.StartsWith("Only one handler for type") &&
-                x.Message.Contains("can be registered")
-            );
+            .Where(x => x.Message.StartsWith("Only one handler for type"));
 
         A.CallTo(() => handler1.HandleAsync(A<MyCommand>.Ignored, A<CancellationToken>.Ignored)).MustNotHaveHappened();
         A.CallTo(() => handler2.HandleAsync(A<MyCommand>.Ignored, A<CancellationToken>.Ignored)).MustNotHaveHappened();

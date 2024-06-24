@@ -22,7 +22,7 @@ public interface ICommand<TCommand, TResponse> : ICommand
 {
 }
 
-public interface ICommand<TMessageId, TCommand, TResponse> : ICommand<TCommand, TResponse>, ICommand<TMessageId>
+public interface ICommand<TMessageId, TCommand, TResponse> : ICommand<TCommand, TResponse>, IMessage<TMessageId>
     where TMessageId : struct
     where TCommand : ICommand<TMessageId, TCommand, TResponse>
 {
