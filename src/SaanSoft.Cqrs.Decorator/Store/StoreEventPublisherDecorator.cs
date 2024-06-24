@@ -9,7 +9,7 @@ public class StoreEventPublisherDecorator(IEventPublisherRepository<Guid> reposi
 // ReSharper disable once SuggestBaseTypeForParameterInConstructor
 public abstract class StoreEventPublisherDecorator<TMessageId>(IEventPublisherRepository<TMessageId> repository, IEventBus<TMessageId> next) :
     BaseStoreMessagePublisherDecorator<TMessageId, IEvent<TMessageId>>(repository),
-    IEventBus<TMessageId> where TMessageId : struct
+    IEventBusDecorator<TMessageId> where TMessageId : struct
 {
     public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default) where TEvent : IEvent<TMessageId>
     {

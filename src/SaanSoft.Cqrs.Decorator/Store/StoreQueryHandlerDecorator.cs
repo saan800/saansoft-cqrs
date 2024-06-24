@@ -9,7 +9,7 @@ public class StoreQueryHandlerDecorator(IQueryHandlerRepository<Guid> repository
 
 public abstract class StoreQueryHandlerDecorator<TMessageId>(IQueryHandlerRepository<TMessageId> repository, IQuerySubscriptionBus<TMessageId> next) :
     BaseStoreMessageHandlerDecorator<TMessageId, IQuery<TMessageId>>(repository),
-    IQuerySubscriptionBus<TMessageId> where TMessageId : struct
+    IQuerySubscriptionBusDecorator<TMessageId> where TMessageId : struct
 {
     public async Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
         where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>

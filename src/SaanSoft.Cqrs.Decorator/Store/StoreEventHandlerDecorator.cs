@@ -9,7 +9,7 @@ public class StoreEventHandlerDecorator(IEventHandlerRepository<Guid> repository
 
 public abstract class StoreEventHandlerDecorator<TMessageId>(IEventHandlerRepository<TMessageId> repository, IEventSubscriptionBus<TMessageId> next)
     : BaseStoreMessageHandlerDecorator<TMessageId, IEvent<TMessageId>>(repository),
-      IEventSubscriptionBus<TMessageId>
+      IEventSubscriptionBusDecorator<TMessageId>
     where TMessageId : struct
 {
     public async Task RunAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default) where TEvent : IEvent<TMessageId>

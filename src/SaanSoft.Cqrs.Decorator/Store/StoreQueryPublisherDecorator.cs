@@ -8,14 +8,14 @@ public class StoreQueryPublisherDecorator(IQueryPublisherRepository<Guid> reposi
 
 public abstract class StoreQueryPublisherDecorator<TMessageId>(IQueryPublisherRepository<TMessageId> repository, IQueryBus<TMessageId> next) :
     BaseStoreMessagePublisherDecorator<TMessageId, IQuery<TMessageId>>(repository),
-    IQueryBus<TMessageId>
+    IQueryBusDecorator<TMessageId>
     where TMessageId : struct
 {
-    public async Task<TResponse> QueryAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
+    public async Task<TResponse> FetchAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
         where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
     {
         var typedQuery = (TQuery)query;
         await StorePublisher<IQueryBus<TMessageId>>(typedQuery, cancellationToken);
-        return await next.QueryAsync(query, cancellationToken);
+        return await next.FetchAsync(query, cancellationToken);
     }
 }

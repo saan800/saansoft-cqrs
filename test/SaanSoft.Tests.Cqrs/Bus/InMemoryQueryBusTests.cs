@@ -28,7 +28,7 @@ public class InMemoryQueryBusTests : TestSetup
 
     [Theory]
     [InlineAutoData]
-    public async Task QueryAsync_handler_exists_in_serviceProvider(string data)
+    public async Task FetchAsync_handler_exists_in_serviceProvider(string data)
     {
         var handler = A.Fake<IQueryHandler<MyQuery, MyQueryResponse>>();
         A.CallTo(() => handler.HandleAsync(A<MyQuery>.Ignored, A<CancellationToken>.Ignored))
@@ -37,7 +37,7 @@ public class InMemoryQueryBusTests : TestSetup
         ServiceCollection.AddScoped<IQueryHandler<MyQuery, MyQueryResponse>>(_ => handler);
 
         var sut = new InMemoryQueryBus(GetServiceProvider(), Logger);
-        var result = await sut.QueryAsync(new MyQuery());
+        var result = await sut.FetchAsync(new MyQuery());
         result.Should().NotBeNull();
         result.SomeData.Should().Be(data);
 
@@ -45,11 +45,11 @@ public class InMemoryQueryBusTests : TestSetup
     }
 
     [Fact]
-    public async Task QueryAsync_no_handler_in_serviceProvider_should_throw_error()
+    public async Task FetchAsync_no_handler_in_serviceProvider_should_throw_error()
     {
         var sut = new InMemoryQueryBus(GetServiceProvider(), Logger);
 
-        await sut.Invoking(y => y.QueryAsync(new MyQuery()))
+        await sut.Invoking(y => y.FetchAsync(new MyQuery()))
             .Should().ThrowAsync<InvalidOperationException>()
             .Where(x =>
                 x.Message.StartsWith("No service for type") &&
@@ -58,7 +58,7 @@ public class InMemoryQueryBusTests : TestSetup
     }
 
     [Fact]
-    public async Task QueryAsync_multiple_handlers_exists_in_serviceProvider_should_throw_error()
+    public async Task FetchAsync_multiple_handlers_exists_in_serviceProvider_should_throw_error()
     {
         var handler1 = A.Fake<IQueryHandler<MyQuery, MyQueryResponse>>();
         var handler2 = A.Fake<IQueryHandler<MyQuery, MyQueryResponse>>();
@@ -67,7 +67,7 @@ public class InMemoryQueryBusTests : TestSetup
         ServiceCollection.AddScoped<IQueryHandler<MyQuery, MyQueryResponse>>(_ => handler2);
 
         var sut = new InMemoryQueryBus(GetServiceProvider(), Logger);
-        await sut.Invoking(y => y.QueryAsync(new MyQuery()))
+        await sut.Invoking(y => y.FetchAsync(new MyQuery()))
             .Should().ThrowAsync<InvalidOperationException>()
             .Where(x =>
                 x.Message.StartsWith("Only one service for type") &&

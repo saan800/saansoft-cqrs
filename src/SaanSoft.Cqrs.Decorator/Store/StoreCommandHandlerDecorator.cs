@@ -9,7 +9,7 @@ public class StoreCommandHandlerDecorator(ICommandHandlerRepository<Guid> reposi
 
 public abstract class StoreCommandHandlerDecorator<TMessageId>(ICommandHandlerRepository<TMessageId> repository, ICommandSubscriptionBus<TMessageId> next)
     : BaseStoreMessageHandlerDecorator<TMessageId, ICommand<TMessageId>>(repository),
-      ICommandSubscriptionBus<TMessageId>
+      ICommandSubscriptionBusDecorator<TMessageId>
     where TMessageId : struct
 {
     public async Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
