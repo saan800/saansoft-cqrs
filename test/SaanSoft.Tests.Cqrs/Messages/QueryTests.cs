@@ -7,10 +7,9 @@ public class QueryTests
     {
         var startTime = DateTime.UtcNow;
         var result = new MyQuery();
-        result.Id.Should().NotBeEmpty();
-        result.Id.Should().NotBe(default(Guid));
+        result.Id.Should().Be(default(Guid));
         result.CorrelationId.Should().BeNull();
-        result.AuthenticationId.Should().BeNull();
+        result.TriggeredByUser.Should().BeNull();
         result.MessageOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
         result.TypeFullName.Should().Be(typeof(MyQuery).FullName);
         result.TriggeredById.Should().BeNull();
@@ -18,15 +17,15 @@ public class QueryTests
 
     [Theory]
     [AutoFakeData]
-    public void Init_populates_properties_from_constructor(string correlationId, string authId)
+    public void Init_populates_properties_from_constructor(Guid id, string correlationId, string authId)
     {
         var startTime = DateTime.UtcNow;
-        var result = new MyQuery(correlationId, authId);
+        var result = new MyQuery(id, correlationId, authId);
 
-        result.Id.Should().NotBeEmpty();
+        result.Id.Should().Be(id);
         result.Id.Should().NotBe(default(Guid));
         result.CorrelationId.Should().Be(correlationId);
-        result.AuthenticationId.Should().Be(authId);
+        result.TriggeredByUser.Should().Be(authId);
         result.MessageOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
         result.TriggeredById.Should().BeNull();
         result.TypeFullName.Should().Be(typeof(MyQuery).FullName);
@@ -34,20 +33,19 @@ public class QueryTests
 
     [Theory]
     [AutoFakeData]
-    public void Init_populates_properties_from_triggerMessage(string correlationId, string authId)
+    public void Init_populates_properties_from_triggerMessage(Guid id, string correlationId, string authId)
     {
-        var triggeredBy = new MyCommand(correlationId, authId);
+        var triggeredBy = new MyCommand(id, correlationId, authId);
 
         Thread.Sleep(50);
 
         var startTime = DateTime.UtcNow;
 
         var result = new MyQuery(triggeredBy);
-        result.Id.Should().NotBeEmpty();
-        result.Id.Should().NotBe(default(Guid));
+        result.Id.Should().Be(default(Guid));
         result.Id.Should().NotBe(triggeredBy.Id);
         result.CorrelationId.Should().Be(triggeredBy.CorrelationId);
-        result.AuthenticationId.Should().Be(triggeredBy.AuthenticationId);
+        result.TriggeredByUser.Should().Be(triggeredBy.TriggeredByUser);
         result.MessageOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
         result.MessageOnUtc.Should().NotBe(triggeredBy.MessageOnUtc);
         result.TriggeredById.Should().Be(triggeredBy.Id);

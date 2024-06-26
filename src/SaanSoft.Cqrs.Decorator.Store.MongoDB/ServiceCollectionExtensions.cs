@@ -38,22 +38,22 @@ public static class ServiceCollectionExtensions
 
     public static void AddCommandStore(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddScoped<ICommandStore<Guid>, CommandStore>();
+        serviceCollection.AddScoped<ICommandRepository<Guid>, CommandRepository>();
     }
 
     public static void AddEventStore(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddScoped<IEventStore<Guid, Guid>, EventStore>();
+        serviceCollection.AddScoped<IEventRepository<Guid, Guid>, EventRepository>();
     }
 
     public static void AddEventStore<TEntityKey>(this IServiceCollection serviceCollection)
         where TEntityKey : struct
     {
-        serviceCollection.AddScoped<IEventStore<Guid, TEntityKey>, EventStore<TEntityKey>>();
+        serviceCollection.AddScoped<IEventRepository<Guid, TEntityKey>, EventRepository<TEntityKey>>();
     }
 
     public static void AddQueryStore(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddScoped<IQueryStore<Guid>, QueryStore>();
+        serviceCollection.AddScoped<IQueryRepository<Guid>, QueryRepository>();
     }
 }

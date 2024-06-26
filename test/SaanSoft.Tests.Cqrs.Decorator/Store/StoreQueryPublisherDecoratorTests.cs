@@ -1,41 +1,44 @@
-using SaanSoft.Cqrs.Decorator.Store;
-
 namespace SaanSoft.Tests.Cqrs.Decorator.Store;
 
-public class StoreQueryPublisherDecoratorTests : TestSetup
+public class StoreQueryPublisherDecoratorTests : QueryBusDecoratorTestSetup
 {
-    [Fact]
-    public async Task QueryAsync_should_store_publisher_details()
+    protected StoreQueryPublisherDecoratorTests()
     {
-        var queryPublisher = A.Fake<IQueryPublisher<Guid>>();
-        var store = A.Fake<IQueryPublisherStore<Guid>>();
-
-        var sut = new StoreQueryPublisherDecorator(store, queryPublisher);
-        await sut.QueryAsync(new MyQuery());
-
-        A.CallTo(() => store.UpsertPublisherAsync(A<MyQuery>._, this.GetType(), A<CancellationToken>._)).MustHaveHappened();
+        _repository = A.Fake<IQueryPublisherRepository<Guid>>();
     }
 
-    [Fact]
-    public async Task QueryAsync_multiple_decorators_should_store_publisher_details()
+    private readonly IQueryPublisherRepository<Guid> _repository;
+    protected override IQueryBusDecorator<Guid> SutPublisherDecorator =>
+        new StoreQueryPublisherDecorator(_repository, InMemoryQueryBus);
+
+    public class FetchAsyncTests : StoreQueryPublisherDecoratorTests
     {
-        var queryPublisher = A.Fake<IQueryPublisher<Guid>>();
-        var store = A.Fake<IQueryPublisherStore<Guid>>();
+        private static readonly Type ExpectedType = typeof(FetchAsyncTests);
 
-        var sut = new StoreQueryPublisherDecorator(store, queryPublisher);
-        var wrappedInDecorator = new WrapperQueryPublisher(sut);
+        [Fact]
+        public async Task FetchAsync_should_store_publisher_details()
+        {
+            await SutPublisherDecorator.FetchAsync(new MyQuery());
 
-        await wrappedInDecorator.QueryAsync(new MyQuery());
+            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyQuery>._, ExpectedType, A<CancellationToken>._)).MustHaveHappened();
+        }
 
-        A.CallTo(() => store.UpsertPublisherAsync(A<MyQuery>._, this.GetType(), A<CancellationToken>._)).MustHaveHappened();
+        [Fact]
+        public async Task FetchAsync_multiple_decorators_should_store_publisher_details()
+        {
+            var wrappedInDecorator = new WrapperQueryBusDecorator(SutPublisherDecorator);
+
+            await wrappedInDecorator.FetchAsync(new MyQuery());
+
+            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyQuery>._, ExpectedType, A<CancellationToken>._)).MustHaveHappened();
+        }
     }
 
-    private class WrapperQueryPublisher(IQueryPublisher<Guid> next) : IQueryPublisher<Guid>
+    private class WrapperQueryBusDecorator(IQueryBus<Guid> next) : IQueryBus<Guid>
     {
-        public Task<TResponse> QueryAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
+        public Task<TResponse> FetchAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
             CancellationToken cancellationToken = default)
             where TQuery : IQuery<TQuery, TResponse>, IQuery<Guid>, IMessage<Guid>
-            where TResponse : IQueryResponse
-            => next.QueryAsync(query, cancellationToken);
+            => next.FetchAsync(query, cancellationToken);
     }
 }

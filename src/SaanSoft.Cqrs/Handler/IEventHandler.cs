@@ -1,5 +1,3 @@
-using SaanSoft.Cqrs.Messages;
-
 namespace SaanSoft.Cqrs.Handler;
 
 public interface IEventHandler<in TEvent> where TEvent : IEvent

@@ -1,4 +1,4 @@
-# saansoft-cqrs
+# SaanSoft.Cqrs
 
 CQRS and Event Sourcing implementation for C#
 
@@ -16,23 +16,45 @@ Todo...
 
 ## TODO
 
-event handlers - have attribute on handler that indicates running order priority
-signal r example
-AWS Gateway example for web sockets
+Decorator - generate Id
 
-## Features
+IInMemory***Bus for publishers
+- tryExecute / queue / fetch
+
+no base interface for repositories, use types for messages
+
+split mongo store into 3
+
+all messages - attribute to have queue group name (for aws/azure/etc)
+
+event handlers - have attribute on handler that indicates running order priority
+
+## Feature ideas
 
 ### Other
 
-* Event sourcing
-* Replay
+* Replay events
+* new scheduled command message type
+  * runs in memory only
 
 ### Decorators
 
-* :eyes: Store - Store messages, publishers and subscribers
+* Generate Id - publishers
+* :eyes: Store - Store messages, publishers and handlers
 * ILogger Scope
-* CorrelationId
+* CorrelationId provider
+  * Guid
+  * http header
+  * OpenTelemetry?
+  * SubscriptionBus read from message, then auto populate on publisher bus?
+  * can we do same for auth id?
 * Encryption / Decryption
+* retry with polly
+* Metrics
+  * Track: number of messages, time to process, success/failure
+  * on both message bus and subscription bus
+  * OpenTelemetry
+  * Azure AppInsight (think this might be able to work from open telemetry)
 
 ### Message Stores
 
@@ -49,6 +71,7 @@ AWS Gateway example for web sockets
 ### DI frameworks
 
 * :eyes: c# IServiceCollection
+* SimpleInjection
 
 ## Examples
 
@@ -56,19 +79,20 @@ AWS Gateway example for web sockets
 
 Users
 
-* User - {Key, Name, Username}
+* User - {Key, Name}
 * CRUD
 
 TodoList
 
-* TodoItem - {Id, Title, Order, AssignedTo?: User, DueDate?, Status=New|InProgress|Done}
+* TodoItem - {Key, Title, Order, AssignedTo?=User, Status=New|InProgress|Done}
   * Add/edit/delete
   * AssignToUser
   * UpdateStatus
+  * UpdateOrder
 * TodoList - {Key, Title}
   * Add/edit/delete
   * Get all lists
-  * Get all lists assigned to user
+  * Get all lists with items assigned to user
   * Get by list Key
 * Maybe in future
   * Add an image to the TodoItem, see how its dealt with in upload and message processing
@@ -78,6 +102,7 @@ TodoList
 * in memory messaging
 * no decorators
 * no store
+* MongoDB for read model for queries 
 
 ### Api endpoint tests
 
@@ -91,12 +116,14 @@ TodoList
 
 * in memory messaging
 * all the decorators
-* mongodb store
+* mongodb repositories 
+* use event messages to build read model in queries
 * Use [docker compose](https://www.mongodb.com/resources/products/compatibilities/docker) local dev and GitHub CI infrastructure
 
 ### Aws Lambda Api and SNS/SQS handlers
 
 * Aws SNS/SQS messaging
 * all the decorators except stores
+* queries read model from ??
 * Use [LocalStack](https://www.localstack.cloud/) for local dev and GitHub CI infrastructure
   * [Docker compose](https://docs.localstack.cloud/getting-started/installation/#docker-compose)

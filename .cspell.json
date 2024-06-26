@@ -8,11 +8,13 @@
   ],
   "ignorePaths": [
     "LICENSE",
+    ".editorconfig",
     "./.githooks/**",
     "./.github/dependabot.yml",
     "./.github/workflows/**",
     "./dictionary.dic",
     "./Directory.*.props",
+    "./Directory.*.targets",
     "**/*.csproj",
   ],
   "dictionaryDefinitions": [

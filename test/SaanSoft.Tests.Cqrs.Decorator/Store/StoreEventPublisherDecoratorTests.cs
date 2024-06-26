@@ -1,50 +1,65 @@
-using SaanSoft.Cqrs.Decorator.Store;
-
 namespace SaanSoft.Tests.Cqrs.Decorator.Store;
 
-public class StoreEventPublisherDecoratorTests : TestSetup
+public class StoreEventPublisherDecoratorTests : EventBusDecoratorTestSetup
 {
-    [Fact]
-    public async Task QueueAsync_should_store_publisher_details()
+    protected StoreEventPublisherDecoratorTests()
     {
-        var eventPublisher = A.Fake<IEventPublisher<Guid>>();
-        var store = A.Fake<IEventPublisherStore<Guid>>();
-
-        var sut = new StoreEventPublisherDecorator(store, eventPublisher);
-        await sut.QueueAsync(new MyEvent(Guid.NewGuid()));
-
-        A.CallTo(() => store.UpsertPublisherAsync(A<MyEvent>._, this.GetType(), A<CancellationToken>._)).MustHaveHappened();
+        _repository = A.Fake<IEventPublisherRepository<Guid>>();
     }
 
-    [Fact]
-    public async Task QueueAsync_multiple_decorators_should_store_publisher_details()
+    private readonly IEventPublisherRepository<Guid> _repository;
+    protected override IEventBusDecorator<Guid> SutPublisherDecorator =>
+        new StoreEventPublisherDecorator(_repository, InMemoryEventBus);
+
+    public class QueueAsyncTests : StoreEventPublisherDecoratorTests
     {
-        var eventPublisher = A.Fake<IEventPublisher<Guid>>();
-        var store = A.Fake<IEventPublisherStore<Guid>>();
+        private static readonly Type ExpectedType = typeof(QueueAsyncTests);
 
-        var sut = new StoreEventPublisherDecorator(store, eventPublisher);
-        var wrappedInDecorator = new WrapperEventPublisher(sut);
+        [Fact]
+        public async Task Should_store_publisher_details()
+        {
+            await SutPublisherDecorator.QueueAsync(new MyEvent(Guid.NewGuid()));
 
-        await wrappedInDecorator.QueueAsync(new MyEvent(Guid.NewGuid()));
+            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyEvent>._, ExpectedType, A<CancellationToken>._)).MustHaveHappened();
+        }
 
-        A.CallTo(() => store.UpsertPublisherAsync(A<MyEvent>._, this.GetType(), A<CancellationToken>._)).MustHaveHappened();
+        [Fact]
+        public async Task Multiple_decorators_should_store_publisher_details()
+        {
+            var wrappedInDecorator = new WrapperEventBusDecorator(SutPublisherDecorator);
+
+            await wrappedInDecorator.QueueAsync(new MyEvent(Guid.NewGuid()));
+
+            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyEvent>._, ExpectedType, A<CancellationToken>._)).MustHaveHappened();
+        }
     }
 
-    [Fact]
-    public async Task QueueManyAsync_should_store_publisher_details()
+    public class QueueManyAsyncTests : StoreEventPublisherDecoratorTests
     {
-        var eventPublisher = A.Fake<IEventPublisher<Guid>>();
-        var store = A.Fake<IEventPublisherStore<Guid>>();
-        var event1 = new MyEvent(Guid.NewGuid());
-        var event2 = new MyEvent(Guid.NewGuid());
+        private static readonly Type ExpectedType = typeof(QueueManyAsyncTests);
 
-        var sut = new StoreEventPublisherDecorator(store, eventPublisher);
-        await sut.QueueManyAsync([event1, event2]);
+        [Fact]
+        public async Task Should_store_publisher_details()
+        {
+            var event1 = new MyEvent(Guid.NewGuid());
+            var event2 = new MyEvent(Guid.NewGuid());
 
-        A.CallTo(() => store.UpsertPublisherAsync(A<MyEvent>._, this.GetType(), A<CancellationToken>._)).MustHaveHappened(1, Times.Exactly);
+            await SutPublisherDecorator.QueueManyAsync([event1, event2]);
+
+            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyEvent>._, ExpectedType, A<CancellationToken>._)).MustHaveHappened(1, Times.Exactly);
+        }
+
+        [Fact]
+        public async Task No_events_in_list_Should_store_publisher_details()
+        {
+            await SutPublisherDecorator.QueueManyAsync(new List<MyEvent>());
+
+            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyEvent>._, ExpectedType, A<CancellationToken>._)).MustNotHaveHappened();
+        }
     }
 
-    private class WrapperEventPublisher(IEventPublisher<Guid> next) : IEventPublisher<Guid>
+
+    private class WrapperEventBusDecorator(IEventBus<Guid> next) : IEventBus<Guid>
     {
         public Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default) where TEvent : IEvent<Guid>
             => next.QueueAsync(evt, cancellationToken);

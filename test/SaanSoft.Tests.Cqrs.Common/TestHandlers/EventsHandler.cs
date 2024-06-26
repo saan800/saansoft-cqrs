@@ -1,6 +1,3 @@
-using SaanSoft.Cqrs.Handler;
-using SaanSoft.Tests.Cqrs.Common.TestModels;
-
 namespace SaanSoft.Tests.Cqrs.Common.TestHandlers;
 
 public class EventsHandler :

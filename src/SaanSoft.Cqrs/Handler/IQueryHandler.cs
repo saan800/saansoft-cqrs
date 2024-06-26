@@ -1,16 +1,13 @@
-using SaanSoft.Cqrs.Messages;
-
 namespace SaanSoft.Cqrs.Handler;
 
-public interface IQueryHandler<TQuery, TResponse>
+public interface IQueryHandler<in TQuery, TResponse>
     where TQuery : IQuery<TQuery, TResponse>
-    where TResponse : IQueryResponse
 {
     /// <summary>
-    /// Handle the query and return the result, including any errors
+    /// Handle the query and return the result
     /// </summary>
     /// <param name="query"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<TResponse> HandleAsync(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default);
+    Task<TResponse> HandleAsync(TQuery query, CancellationToken cancellationToken = default);
 }

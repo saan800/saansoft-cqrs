@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Decorator", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Tests.Cqrs.Decorator", "test\SaanSoft.Tests.Cqrs.Decorator\SaanSoft.Tests.Cqrs.Decorator.csproj", "{241D036D-F677-4F05-94F9-BCE8FBE671DE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Decorator.GuidIds", "src\SaanSoft.Cqrs.Decorator.GuidIds\SaanSoft.Cqrs.Decorator.GuidIds.csproj", "{AF159B96-B46C-4998-B748-EC86F1F45C8C}"
+EndProject
 Global
 				GlobalSection(SolutionConfigurationPlatforms) = preSolution
 								Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,10 @@ Global
 					{241D036D-F677-4F05-94F9-BCE8FBE671DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 					{241D036D-F677-4F05-94F9-BCE8FBE671DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 					{241D036D-F677-4F05-94F9-BCE8FBE671DE}.Release|Any CPU.Build.0 = Release|Any CPU
+					{AF159B96-B46C-4998-B748-EC86F1F45C8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+					{AF159B96-B46C-4998-B748-EC86F1F45C8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+					{AF159B96-B46C-4998-B748-EC86F1F45C8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+					{AF159B96-B46C-4998-B748-EC86F1F45C8C}.Release|Any CPU.Build.0 = Release|Any CPU
 				EndGlobalSection
 				GlobalSection(NestedProjects) = preSolution
 								{14FB4E51-D7DF-4045-BF3D-9635FFE3E309} = {446FC180-C478-471E-A0A4-DB7B76C0B674}

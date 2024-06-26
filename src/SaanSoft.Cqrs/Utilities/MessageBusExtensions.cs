@@ -1,6 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using SaanSoft.Cqrs.Handler;
-using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Utilities;
 

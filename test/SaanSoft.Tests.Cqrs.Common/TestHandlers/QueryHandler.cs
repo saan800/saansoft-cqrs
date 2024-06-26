@@ -1,17 +1,12 @@
-using SaanSoft.Cqrs.Handler;
-using SaanSoft.Cqrs.Messages;
-using SaanSoft.Tests.Cqrs.Common.TestModels;
-using QueryResponse = SaanSoft.Tests.Cqrs.Common.TestModels.QueryResponse;
-
 namespace SaanSoft.Tests.Cqrs.Common.TestHandlers;
 
 public class QueryHandler :
-    IQueryHandler<MyQuery, QueryResponse>,
-    IQueryHandler<AnotherQuery, QueryResponse>
+    IQueryHandler<MyQuery, MyQueryResponse>,
+    IQueryHandler<AnotherQuery, MyQueryResponse>
 {
-    public Task<QueryResponse> HandleAsync(IQuery<MyQuery, QueryResponse> query, CancellationToken cancellationToken = default)
-        => Task.FromResult(new QueryResponse());
+    public Task<MyQueryResponse> HandleAsync(MyQuery query, CancellationToken cancellationToken = default)
+        => Task.FromResult(new MyQueryResponse { Message = query.Message });
 
-    public Task<QueryResponse> HandleAsync(IQuery<AnotherQuery, QueryResponse> query, CancellationToken cancellationToken = default)
-        => Task.FromResult(new QueryResponse());
+    public Task<MyQueryResponse> HandleAsync(AnotherQuery query, CancellationToken cancellationToken = default)
+        => Task.FromResult(new MyQueryResponse { Message = query.Message });
 }

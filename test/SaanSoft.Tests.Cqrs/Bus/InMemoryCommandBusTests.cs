@@ -1,122 +1,171 @@
-using SaanSoft.Cqrs.Bus;
-using SaanSoft.Cqrs.Handler;
+using SaanSoft.Tests.Cqrs.Common.TestHandlers;
 
 namespace SaanSoft.Tests.Cqrs.Bus;
 
 public class InMemoryCommandBusTests : TestSetup
 {
-    [Fact]
-    public void Can_not_create_with_null_serviceProvider()
+    public class Constructor : InMemoryCommandBusTests
     {
-        Action act = () => new InMemoryCommandBus(null, Logger);
+        [Fact]
+        public void Can_not_create_with_null_serviceProvider()
+        {
+            Action act = () => new InMemoryCommandBus(null, IdGenerator, Logger);
 
-        act.Should()
-            .Throw<ArgumentNullException>()
-            .Where(x => x.ParamName == "serviceProvider");
+            act.Should()
+                .Throw<ArgumentNullException>()
+                .Where(x => x.ParamName == "serviceProvider");
+        }
+
+        [Fact]
+        public void Can_not_create_with_null_IdGenerator()
+        {
+            Action act = () => new InMemoryCommandBus(GetServiceProvider(), null, Logger);
+
+            act.Should()
+                .Throw<ArgumentNullException>()
+                .Where(x => x.ParamName == "idGenerator");
+        }
+
+        [Fact]
+        public void Can_not_create_with_null_logger()
+        {
+            Action act = () => new InMemoryCommandBus(GetServiceProvider(), IdGenerator, null);
+
+            act.Should()
+                .Throw<ArgumentNullException>()
+                .Where(x => x.ParamName == "logger");
+        }
     }
 
-    [Fact]
-    public void Can_not_create_with_null_logger()
+    public class ExecuteAsync : InMemoryCommandBusTests
     {
-        Action act = () => new InMemoryCommandBus(GetServiceProvider(), null);
+        [Fact]
+        public async Task ExecuteAsync_handler_exists_in_serviceProvider()
+        {
+            var handler = A.Fake<ICommandHandler<MyCommand>>();
 
-        act.Should()
-            .Throw<ArgumentNullException>()
-            .Where(x => x.ParamName == "logger");
+            ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler);
+
+            await InMemoryCommandBus.ExecuteAsync(new MyCommand());
+
+            A.CallTo(() => handler.HandleAsync(A<MyCommand>.Ignored, A<CancellationToken>._)).MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task ExecuteAsync_no_handler_in_serviceProvider_should_throw_error()
+        {
+            await InMemoryCommandBus.Invoking(y => y.ExecuteAsync(new MyCommand()))
+                .Should().ThrowAsync<InvalidOperationException>()
+                .Where(x =>
+                    x.Message.StartsWith("No handler for type") &&
+                    x.Message.EndsWith("has been registered.")
+                );
+        }
+
+        [Fact]
+        public async Task ExecuteAsync_multiple_handlers_exists_in_serviceProvider_should_throw_error()
+        {
+            var handler1 = A.Fake<ICommandHandler<MyCommand>>();
+            var handler2 = A.Fake<ICommandHandler<MyCommand>>();
+
+            ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler1);
+            ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler2);
+
+            await InMemoryCommandBus.Invoking(y => y.ExecuteAsync(new MyCommand()))
+                .Should().ThrowAsync<InvalidOperationException>()
+                .Where(x =>
+                    x.Message.StartsWith("Only one handler for type") &&
+                    x.Message.Contains("can be registered")
+                );
+
+            A.CallTo(() => handler1.HandleAsync(A<MyCommand>.Ignored, A<CancellationToken>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => handler2.HandleAsync(A<MyCommand>.Ignored, A<CancellationToken>.Ignored)).MustNotHaveHappened();
+        }
     }
 
-    [Fact]
-    public async Task ExecuteAsync_handler_exists_in_serviceProvider()
+    public class ExecuteAsyncWithResponse : InMemoryCommandBusTests
     {
-        var handler = A.Fake<ICommandHandler<MyCommand>>();
-        // TODO: A.CallTo(() => handler.HandleAsync(A<MyCommand>.Ignored, A<CancellationToken>.Ignored));
+        [Theory]
+        [InlineAutoData]
+        public async Task ExecuteAsync_handler_exists_in_serviceProvider(string response)
+        {
+            ServiceCollection.AddScoped<ICommandHandler<MyCommandWithResponse, string>, CommandHandler>();
 
-        ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler);
+            var result = await InMemoryCommandBus.ExecuteAsync(new MyCommandWithResponse { Message = response });
+            result.Should().Be(response);
+        }
 
-        var sut = new InMemoryCommandBus(GetServiceProvider(), Logger);
-        await sut.ExecuteAsync(new MyCommand());
+        [Theory]
+        [InlineAutoData]
+        public async Task ExecuteAsync_no_handler_in_serviceProvider_should_throw_error(string response)
+        {
+            await InMemoryCommandBus.Invoking(y => y.ExecuteAsync(new MyCommandWithResponse { Message = response }))
+                .Should().ThrowAsync<InvalidOperationException>()
+                .Where(x =>
+                    x.Message.StartsWith("No handler for type") &&
+                    x.Message.EndsWith("has been registered.")
+                );
+        }
 
-        A.CallTo(() => handler.HandleAsync(A<MyCommand>.Ignored, A<CancellationToken>._)).MustHaveHappened();
+        [Theory]
+        [InlineAutoData]
+        public async Task ExecuteAsync_multiple_handlers_exists_in_serviceProvider_should_throw_error(string response)
+        {
+            var handler1 = A.Fake<ICommandHandler<MyCommandWithResponse, string>>();
+            var handler2 = A.Fake<ICommandHandler<MyCommandWithResponse, string>>();
+
+            ServiceCollection.AddScoped<ICommandHandler<MyCommandWithResponse, string>>(_ => handler1);
+            ServiceCollection.AddScoped<ICommandHandler<MyCommandWithResponse, string>>(_ => handler2);
+
+            await InMemoryCommandBus.Invoking(y => y.ExecuteAsync(new MyCommandWithResponse { Message = response }))
+                .Should().ThrowAsync<InvalidOperationException>()
+                .Where(x =>
+                    x.Message.StartsWith("Only one handler for type") &&
+                    x.Message.Contains("can be registered")
+                );
+
+            A.CallTo(() => handler1.HandleAsync(A<MyCommandWithResponse>.Ignored, A<CancellationToken>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => handler2.HandleAsync(A<MyCommandWithResponse>.Ignored, A<CancellationToken>.Ignored)).MustNotHaveHappened();
+        }
     }
 
-    [Fact]
-    public async Task ExecuteAsync_no_handler_in_serviceProvider_should_throw_error()
+    public class QueueAsync : InMemoryCommandBusTests
     {
-        var sut = new InMemoryCommandBus(GetServiceProvider(), Logger);
+        [Fact]
+        public async Task QueueAsync_handler_exists_in_serviceProvider()
+        {
+            var handler = A.Fake<ICommandHandler<MyCommand>>();
 
-        await sut.Invoking(y => y.ExecuteAsync(new MyCommand()))
-            .Should().ThrowAsync<InvalidOperationException>()
-            .Where(x =>
-                x.Message.StartsWith("No handler for type") &&
-                x.Message.EndsWith("has been registered.")
-            );
-    }
+            ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler);
 
-    [Fact]
-    public async Task ExecuteAsync_multiple_handlers_exists_in_serviceProvider_should_throw_error()
-    {
-        var handler1 = A.Fake<ICommandHandler<MyCommand>>();
-        var handler2 = A.Fake<ICommandHandler<MyCommand>>();
+            await InMemoryCommandBus.QueueAsync(new MyCommand());
 
-        ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler1);
-        ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler2);
+            A.CallTo(() => handler.HandleAsync(A<MyCommand>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappened();
+        }
 
-        var sut = new InMemoryCommandBus(GetServiceProvider(), Logger);
-        await sut.Invoking(y => y.ExecuteAsync(new MyCommand()))
-            .Should().ThrowAsync<InvalidOperationException>()
-            .Where(x =>
-                x.Message.StartsWith("Only one handler for type") &&
-                x.Message.Contains("can be registered")
-            );
+        [Fact]
+        public async Task QueueAsync_no_handler_in_serviceProvider_should_throw_error()
+        {
+            await InMemoryCommandBus.Invoking(y => y.RunAsync(new NoHandlerCommand()))
+                .Should().ThrowAsync<InvalidOperationException>()
+                .Where(x => x.Message.Contains("No handler for type"));
+        }
 
-        A.CallTo(() => handler1.HandleAsync(A<MyCommand>.Ignored, A<CancellationToken>.Ignored)).MustNotHaveHappened();
-        A.CallTo(() => handler2.HandleAsync(A<MyCommand>.Ignored, A<CancellationToken>.Ignored)).MustNotHaveHappened();
-    }
+        [Fact]
+        public async Task QueueAsync_multiple_handlers_in_serviceProvider_should_throw_error()
+        {
+            var handler1 = A.Fake<ICommandHandler<MyCommand>>();
+            var handler2 = A.Fake<ICommandHandler<MyCommand>>();
 
-    [Fact]
-    public async Task QueueAsync_handler_exists_in_serviceProvider()
-    {
-        var handler = A.Fake<ICommandHandler<MyCommand>>();
+            ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler1);
+            ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler2);
 
-        ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler);
+            await InMemoryCommandBus.Invoking(y => y.QueueAsync(new MyCommand()))
+                .Should().ThrowAsync<InvalidOperationException>()
+                .Where(x => x.Message.StartsWith("Only one handler for type"));
 
-        var sut = new InMemoryCommandBus(GetServiceProvider(), Logger);
-        await sut.QueueAsync(new MyCommand());
-
-        A.CallTo(() => handler.HandleAsync(A<MyCommand>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappened();
-    }
-
-    [Fact]
-    public async Task QueueAsync_no_handler_in_serviceProvider_should_throw_error()
-    {
-        var sut = new InMemoryCommandBus(GetServiceProvider(), Logger);
-
-        await sut.Invoking(y => y.ExecuteAsync(new MyCommand()))
-            .Should().ThrowAsync<InvalidOperationException>()
-            .Where(x =>
-                x.Message.StartsWith("No handler for type") &&
-                x.Message.EndsWith("has been registered.")
-            );
-    }
-
-    [Fact]
-    public async Task QueueAsync_multiple_handlers_in_serviceProvider_should_throw_error()
-    {
-        var handler1 = A.Fake<ICommandHandler<MyCommand>>();
-        var handler2 = A.Fake<ICommandHandler<MyCommand>>();
-
-        ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler1);
-        ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler2);
-
-        var sut = new InMemoryCommandBus(GetServiceProvider(), Logger);
-        await sut.Invoking(y => y.QueueAsync(new MyCommand()))
-            .Should().ThrowAsync<InvalidOperationException>()
-            .Where(x =>
-                x.Message.StartsWith("Only one handler for type") &&
-                x.Message.Contains("can be registered")
-            );
-
-        A.CallTo(() => handler1.HandleAsync(A<MyCommand>.Ignored, A<CancellationToken>.Ignored)).MustNotHaveHappened();
-        A.CallTo(() => handler2.HandleAsync(A<MyCommand>.Ignored, A<CancellationToken>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => handler1.HandleAsync(A<MyCommand>.Ignored, A<CancellationToken>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => handler2.HandleAsync(A<MyCommand>.Ignored, A<CancellationToken>.Ignored)).MustNotHaveHappened();
+        }
     }
 }

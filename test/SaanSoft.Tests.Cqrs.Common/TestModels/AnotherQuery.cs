@@ -1,12 +1,12 @@
-using SaanSoft.Cqrs.Messages;
-
 namespace SaanSoft.Tests.Cqrs.Common.TestModels;
 
-public class AnotherQuery : Query<AnotherQuery, QueryResponse>
+public class AnotherQuery : Query<AnotherQuery, MyQueryResponse>
 {
-    public AnotherQuery(string? correlationId = null, string? authenticatedId = null)
-        : base(correlationId, authenticatedId) { }
+    public AnotherQuery(Guid? id = null, string? correlationId = null, string? authenticatedId = null)
+        : base(id, correlationId, authenticatedId) { }
 
     public AnotherQuery(IMessage<Guid> triggeredByMessage)
         : base(triggeredByMessage) { }
+
+    public string? Message { get; set; }
 }

@@ -1,43 +1,40 @@
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using SaanSoft.Cqrs.Handler;
-using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Bus;
 
-public class InMemoryQueryBus(IServiceProvider serviceProvider, ILogger logger)
-    : InMemoryQueryBus<Guid>(serviceProvider, logger);
-
-public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvider, ILogger logger) :
-    IQueryPublisher<TMessageId>,
-    IQuerySubscriber<TMessageId>
+public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvider, IIdGenerator<TMessageId> idGenerator, ILogger logger) :
+    IQueryBus<TMessageId>,
+    IQuerySubscriptionBus<TMessageId>
     where TMessageId : struct
 {
     // ReSharper disable MemberCanBePrivate.Global
     protected readonly IServiceProvider ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+    protected readonly IIdGenerator<TMessageId> IdGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
     protected readonly ILogger Logger = logger ?? throw new ArgumentNullException(nameof(logger));
     // ReSharper restore MemberCanBePrivate.Global
 
-    public async Task<TResponse> QueryAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
+    public async Task<TResponse> FetchAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
         CancellationToken cancellationToken = default)
         where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
-        where TResponse : IQueryResponse
     {
-        // get subscriber via ServiceProvider so it runs through any decorators
-        var subscriber = ServiceProvider.GetRequiredService<IQuerySubscriber<TMessageId>>();
-        return await subscriber.RunAsync(query, cancellationToken);
+        var typedQuery = (TQuery)query;
+        if (GenericUtils.IsNullOrDefault(typedQuery.Id)) typedQuery.Id = IdGenerator.NewId();
+
+        // get subscription bus via ServiceProvider so it runs through any decorators
+        var subscriptionBus = ServiceProvider.GetRequiredService<IQuerySubscriptionBus<TMessageId>>();
+        return await subscriptionBus.RunAsync(typedQuery, cancellationToken);
     }
 
     public async Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
         where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
-        where TResponse : IQueryResponse
     {
         var handler = GetHandler<TQuery, TResponse>();
-        Logger.LogInformation("Running query handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, typeof(TQuery).FullName);
-        return await handler.HandleAsync(query, cancellationToken);
+        Logger.LogInformation("Running query handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, query.TypeFullName);
+        return await handler.HandleAsync((TQuery)query, cancellationToken);
     }
 
-    public IQueryHandler<TQuery, TResponse> GetHandler<TQuery, TResponse>() where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId> where TResponse : IQueryResponse
+    public IQueryHandler<TQuery, TResponse> GetHandler<TQuery, TResponse>()
+        where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
     {
         var handlers = ServiceProvider.GetServices<IQueryHandler<TQuery, TResponse>>().ToList();
         switch (handlers.Count)
@@ -45,11 +42,11 @@ public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvi
             case 1:
                 return handlers.Single();
             case 0:
-                throw new InvalidOperationException($"No service for type '{typeof(IQueryHandler<TQuery, TResponse>)}' has been registered.");
+                throw new InvalidOperationException($"No handler for type '{typeof(IQueryHandler<TQuery, TResponse>)}' has been registered.");
             default:
                 {
-                    var typeNames = handlers.Select(x => x.GetType().FullName).ToList();
-                    throw new InvalidOperationException($"Only one service for type '{typeof(IQueryHandler<TQuery, TResponse>)}' can be registered. Currently have {typeNames.Count} registered: {string.Join("; ", typeNames)}");
+                    var typeNames = handlers.Select(handler => handler.GetType().FullName ?? handler.GetType().Name).ToList();
+                    throw new InvalidOperationException($"Only one handler for type '{typeof(IQueryHandler<TQuery, TResponse>)}' can be registered. Currently have {typeNames.Count} registered: {string.Join("; ", typeNames)}");
                 }
         }
     }
