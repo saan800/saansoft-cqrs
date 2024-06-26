@@ -16,15 +16,11 @@ Todo...
 
 ## TODO
 
-IInMemery***Bus for publishers
+IInMemory***Bus for publishers
 - tryExecute / queue / fetch
 
 split guid to own project
 add IIdGenerator interface
-
-decorator project readme
-- no new packages
-- add doc for each decorator
 
 no base interface for repositories, use types for messages
 

@@ -1,5 +1,3 @@
-using SaanSoft.Cqrs.Messages;
-
 namespace SaanSoft.Tests.Cqrs.Common.TestModels;
 
 public class MyQuery : Query<MyQuery, MyQueryResponse>
@@ -9,4 +7,6 @@ public class MyQuery : Query<MyQuery, MyQueryResponse>
 
     public MyQuery(IMessage<Guid> triggeredByMessage)
         : base(triggeredByMessage) { }
+
+    public string? SomeData { get; set; }
 }

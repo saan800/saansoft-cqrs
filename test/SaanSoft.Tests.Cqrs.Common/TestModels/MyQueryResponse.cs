@@ -11,5 +11,5 @@ public class MyQueryResponse
         SomeData = data;
     }
 
-    public string SomeData { get; set; } = string.Empty;
+    public string? SomeData { get; set; }
 }

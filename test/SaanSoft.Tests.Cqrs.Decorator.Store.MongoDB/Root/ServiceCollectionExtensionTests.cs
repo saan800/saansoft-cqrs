@@ -1,6 +1,5 @@
 using MongoDB.Bson;
 using SaanSoft.Cqrs.Decorator.Store;
-using SaanSoft.Cqrs.Decorator.Store.MongoDB;
 
 namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.Root;
 

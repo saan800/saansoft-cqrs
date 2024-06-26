@@ -1,12 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using SaanSoft.Cqrs.Handler;
-using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Bus;
-
-public class InMemoryCommandBus(IServiceProvider serviceProvider, ILogger logger)
-    : InMemoryCommandBus<Guid>(serviceProvider, logger);
 
 public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider serviceProvider, ILogger logger)
     : ICommandBus<TMessageId>,
@@ -55,7 +49,7 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
     {
         var handler = GetHandler<TCommand, TResponse>();
         Logger.LogInformation("Running command handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, command.TypeFullName);
-        return await handler.HandleAsync(command, cancellationToken);
+        return await handler.HandleAsync((TCommand)command, cancellationToken);
     }
 
     public virtual ICommandHandler<TCommand> GetHandler<TCommand>()

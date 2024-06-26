@@ -1,6 +1,4 @@
-using AutoFixture.Xunit2;
-using SaanSoft.Cqrs.Bus;
-using SaanSoft.Cqrs.Handler;
+using SaanSoft.Tests.Cqrs.Common.TestHandlers;
 
 namespace SaanSoft.Tests.Cqrs.Bus;
 
@@ -43,17 +41,17 @@ public class InMemoryCommandBusTests : TestSetup
     [InlineAutoData]
     public async Task ExecuteAsync_handler_with_response_exists_in_serviceProvider(string response)
     {
-        var handler = A.Fake<ICommandHandler<MyCommandWithResponse, string>>();
-        A.CallTo(() => handler.HandleAsync(A<MyCommandWithResponse>.Ignored, A<CancellationToken>.Ignored))
-            .Returns(response);
+        // var handler = A.Fake<ICommandHandler<MyCommandWithResponse, string>>();
+        // A.CallTo(() => handler.HandleAsync(A<MyCommandWithResponse>.Ignored, A<CancellationToken>.Ignored))
+        //     .Returns(response);
 
-        ServiceCollection.AddScoped<ICommandHandler<MyCommandWithResponse, string>>(_ => handler);
+        ServiceCollection.AddScoped<ICommandHandler<MyCommandWithResponse, string>, CommandHandler>();
 
         var sut = new InMemoryCommandBus(GetServiceProvider(), Logger);
-        var result = await sut.ExecuteAsync(new MyCommandWithResponse());
+        var result = await sut.ExecuteAsync(new MyCommandWithResponse { Message = response });
         result.Should().Be(response);
 
-        A.CallTo(() => handler.HandleAsync(A<MyCommandWithResponse>.Ignored, A<CancellationToken>.Ignored)).MustHaveHappened();
+        //A.CallTo(() => handler.HandleAsync(A<MyCommandWithResponse>.Ignored, A<CancellationToken>.Ignored)).MustHaveHappened();
     }
 
     [Fact]

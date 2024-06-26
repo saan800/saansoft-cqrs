@@ -1,12 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using SaanSoft.Cqrs.Handler;
-using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Bus;
-
-public class InMemoryQueryBus(IServiceProvider serviceProvider, ILogger logger)
-    : InMemoryQueryBus<Guid>(serviceProvider, logger);
 
 public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvider, ILogger logger) :
     IQueryBus<TMessageId>,
@@ -32,7 +26,7 @@ public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvi
     {
         var handler = GetHandler<TQuery, TResponse>();
         Logger.LogInformation("Running query handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, query.TypeFullName);
-        return await handler.HandleAsync(query, cancellationToken);
+        return await handler.HandleAsync((TQuery)query, cancellationToken);
     }
 
     public IQueryHandler<TQuery, TResponse> GetHandler<TQuery, TResponse>()

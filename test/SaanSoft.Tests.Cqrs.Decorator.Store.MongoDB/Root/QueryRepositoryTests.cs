@@ -1,8 +1,3 @@
-using AutoFixture.Xunit2;
-using SaanSoft.Cqrs.Decorator.Store.Models;
-using SaanSoft.Cqrs.Decorator.Store.MongoDB;
-using SaanSoft.Cqrs.Messages;
-
 namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.Root;
 
 public class QueryRepositoryTests : TestSetup

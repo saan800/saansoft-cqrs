@@ -1,5 +1,3 @@
-using SaanSoft.Cqrs.Messages;
-
 namespace SaanSoft.Tests.Cqrs.Common.TestModels;
 
 public class AnotherEvent : Event

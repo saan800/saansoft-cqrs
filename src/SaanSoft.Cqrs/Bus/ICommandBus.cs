@@ -1,5 +1,3 @@
-using SaanSoft.Cqrs.Messages;
-
 namespace SaanSoft.Cqrs.Bus;
 
 public interface ICommandBus<TMessageId> where TMessageId : struct

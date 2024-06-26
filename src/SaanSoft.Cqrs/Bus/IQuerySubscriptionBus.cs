@@ -1,6 +1,3 @@
-using SaanSoft.Cqrs.Handler;
-using SaanSoft.Cqrs.Messages;
-
 namespace SaanSoft.Cqrs.Bus;
 
 public interface IQuerySubscriptionBus<TMessageId> where TMessageId : struct

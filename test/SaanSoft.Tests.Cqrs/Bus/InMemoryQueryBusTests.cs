@@ -1,7 +1,3 @@
-using AutoFixture.Xunit2;
-using SaanSoft.Cqrs.Bus;
-using SaanSoft.Cqrs.Handler;
-
 namespace SaanSoft.Tests.Cqrs.Bus;
 
 public class InMemoryQueryBusTests : TestSetup

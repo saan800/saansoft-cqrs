@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SaanSoft.Cqrs.Decorator.GuidIds\SaanSoft.Cqrs.Decorator.GuidIds.csproj" />
     <ProjectReference Include="..\SaanSoft.Cqrs.Decorator\SaanSoft.Cqrs.Decorator.csproj" />
     <ProjectReference Include="..\SaanSoft.Cqrs\SaanSoft.Cqrs.csproj" />
   </ItemGroup>

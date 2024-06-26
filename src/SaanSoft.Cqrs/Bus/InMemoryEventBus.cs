@@ -1,13 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using SaanSoft.Cqrs.Handler;
-using SaanSoft.Cqrs.Messages;
-using SaanSoft.Cqrs.Utilities;
 
 namespace SaanSoft.Cqrs.Bus;
-
-public class InMemoryEventBus(IServiceProvider serviceProvider, ILogger logger)
-    : InMemoryEventBus<Guid>(serviceProvider, logger);
 
 public abstract class InMemoryEventBus<TMessageId>(IServiceProvider serviceProvider, ILogger logger)
     : IEventBus<TMessageId>,

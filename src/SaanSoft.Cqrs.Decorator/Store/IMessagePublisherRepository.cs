@@ -1,5 +1,3 @@
-using SaanSoft.Cqrs.Messages;
-
 namespace SaanSoft.Cqrs.Decorator.Store;
 
 public interface IMessagePublisherRepository<TMessageId, in TMessage>

@@ -1,5 +1,3 @@
-using SaanSoft.Cqrs.Messages;
-
 namespace SaanSoft.Cqrs.Handler;
 
 public interface ICommandHandler<in TCommand> where TCommand : ICommand
@@ -14,7 +12,7 @@ public interface ICommandHandler<in TCommand> where TCommand : ICommand
     Task HandleAsync(TCommand command, CancellationToken cancellationToken = default);
 }
 
-public interface ICommandHandler<TCommand, TResponse>
+public interface ICommandHandler<in TCommand, TResponse>
     where TCommand : ICommand<TCommand, TResponse>
 {
     /// <summary>
@@ -23,5 +21,5 @@ public interface ICommandHandler<TCommand, TResponse>
     /// <param name="command"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<TResponse> HandleAsync(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default);
+    Task<TResponse> HandleAsync(TCommand command, CancellationToken cancellationToken = default);
 }

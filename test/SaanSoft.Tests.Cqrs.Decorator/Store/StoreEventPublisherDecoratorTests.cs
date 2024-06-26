@@ -1,4 +1,4 @@
-using SaanSoft.Cqrs.Decorator.Store;
+using SaanSoft.Cqrs.Bus;
 
 namespace SaanSoft.Tests.Cqrs.Decorator.Store;
 
@@ -7,7 +7,7 @@ public class StoreEventPublisherDecoratorTests : TestSetup
     [Fact]
     public async Task QueueAsync_should_store_publisher_details()
     {
-        var eventPublisher = A.Fake<IEventBus<Guid>>();
+        var eventPublisher = new InMemoryEventBus(GetServiceProvider(), Logger);
         var store = A.Fake<IEventPublisherRepository<Guid>>();
 
         var sut = new StoreEventPublisherDecorator(store, eventPublisher);
@@ -19,7 +19,7 @@ public class StoreEventPublisherDecoratorTests : TestSetup
     [Fact]
     public async Task QueueAsync_multiple_decorators_should_store_publisher_details()
     {
-        var eventPublisher = A.Fake<IEventBus<Guid>>();
+        var eventPublisher = new InMemoryEventBus(GetServiceProvider(), Logger);
         var store = A.Fake<IEventPublisherRepository<Guid>>();
 
         var sut = new StoreEventPublisherDecorator(store, eventPublisher);
@@ -33,7 +33,7 @@ public class StoreEventPublisherDecoratorTests : TestSetup
     [Fact]
     public async Task QueueManyAsync_should_store_publisher_details()
     {
-        var eventPublisher = A.Fake<IEventBus<Guid>>();
+        var eventPublisher = new InMemoryEventBus(GetServiceProvider(), Logger);
         var store = A.Fake<IEventPublisherRepository<Guid>>();
         var event1 = new MyEvent(Guid.NewGuid());
         var event2 = new MyEvent(Guid.NewGuid());

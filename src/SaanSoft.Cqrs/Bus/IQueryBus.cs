@@ -1,5 +1,3 @@
-using SaanSoft.Cqrs.Messages;
-
 namespace SaanSoft.Cqrs.Bus;
 
 public interface IQueryBus<TMessageId> where TMessageId : struct

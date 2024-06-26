@@ -1,4 +1,4 @@
-using SaanSoft.Cqrs.Decorator.Store;
+using SaanSoft.Cqrs.Bus;
 
 namespace SaanSoft.Tests.Cqrs.Decorator.Store;
 
@@ -7,7 +7,8 @@ public class StoreQueryPublisherDecoratorTests : TestSetup
     [Fact]
     public async Task FetchAsync_should_store_publisher_details()
     {
-        var queryPublisher = A.Fake<IQueryBus<Guid>>();
+        ServiceCollection.AddScoped<IQueryHandler<MyQuery, MyQueryResponse>, QueryHandler>();
+        var queryPublisher = new InMemoryQueryBus(GetServiceProvider(), Logger);
         var store = A.Fake<IQueryPublisherRepository<Guid>>();
 
         var sut = new StoreQueryPublisherDecorator(store, queryPublisher);
@@ -19,7 +20,8 @@ public class StoreQueryPublisherDecoratorTests : TestSetup
     [Fact]
     public async Task FetchAsync_multiple_decorators_should_store_publisher_details()
     {
-        var queryPublisher = A.Fake<IQueryBus<Guid>>();
+        ServiceCollection.AddScoped<IQueryHandler<MyQuery, MyQueryResponse>, QueryHandler>();
+        var queryPublisher = new InMemoryQueryBus(GetServiceProvider(), Logger);
         var store = A.Fake<IQueryPublisherRepository<Guid>>();
 
         var sut = new StoreQueryPublisherDecorator(store, queryPublisher);
