@@ -2,13 +2,14 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace SaanSoft.Cqrs.Bus;
 
-public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvider, ILogger logger) :
+public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvider, IIdGenerator<TMessageId> idGenerator, ILogger logger) :
     IQueryBus<TMessageId>,
     IQuerySubscriptionBus<TMessageId>
     where TMessageId : struct
 {
     // ReSharper disable MemberCanBePrivate.Global
     protected readonly IServiceProvider ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+    protected readonly IIdGenerator<TMessageId> IdGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
     protected readonly ILogger Logger = logger ?? throw new ArgumentNullException(nameof(logger));
     // ReSharper restore MemberCanBePrivate.Global
 
@@ -16,9 +17,12 @@ public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvi
         CancellationToken cancellationToken = default)
         where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
     {
+        var typedQuery = (TQuery)query;
+        if (GenericUtils.IsNullOrDefault(typedQuery.Id)) typedQuery.Id = IdGenerator.NewId();
+
         // get subscription bus via ServiceProvider so it runs through any decorators
         var subscriptionBus = ServiceProvider.GetRequiredService<IQuerySubscriptionBus<TMessageId>>();
-        return await subscriptionBus.RunAsync(query, cancellationToken);
+        return await subscriptionBus.RunAsync(typedQuery, cancellationToken);
     }
 
     public async Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)

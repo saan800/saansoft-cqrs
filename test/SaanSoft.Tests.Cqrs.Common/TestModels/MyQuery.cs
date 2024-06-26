@@ -2,8 +2,8 @@ namespace SaanSoft.Tests.Cqrs.Common.TestModels;
 
 public class MyQuery : Query<MyQuery, MyQueryResponse>
 {
-    public MyQuery(string? correlationId = null, string? authenticatedId = null)
-        : base(correlationId, authenticatedId) { }
+    public MyQuery(Guid? id = null, string? correlationId = null, string? authenticatedId = null)
+        : base(id, correlationId, authenticatedId) { }
 
     public MyQuery(IMessage<Guid> triggeredByMessage)
         : base(triggeredByMessage) { }

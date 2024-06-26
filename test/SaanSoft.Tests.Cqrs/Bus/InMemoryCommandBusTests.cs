@@ -7,7 +7,7 @@ public class InMemoryCommandBusTests : TestSetup
     [Fact]
     public void Can_not_create_with_null_serviceProvider()
     {
-        Action act = () => new InMemoryCommandBus(null, Logger);
+        Action act = () => new InMemoryCommandBus(null, IdGenerator, Logger);
 
         act.Should()
             .Throw<ArgumentNullException>()
@@ -15,9 +15,19 @@ public class InMemoryCommandBusTests : TestSetup
     }
 
     [Fact]
+    public void Can_not_create_with_null_IdGenerator()
+    {
+        Action act = () => new InMemoryCommandBus(GetServiceProvider(), null, Logger);
+
+        act.Should()
+            .Throw<ArgumentNullException>()
+            .Where(x => x.ParamName == "idGenerator");
+    }
+
+    [Fact]
     public void Can_not_create_with_null_logger()
     {
-        Action act = () => new InMemoryCommandBus(GetServiceProvider(), null);
+        Action act = () => new InMemoryCommandBus(GetServiceProvider(), IdGenerator, null);
 
         act.Should()
             .Throw<ArgumentNullException>()
@@ -31,8 +41,7 @@ public class InMemoryCommandBusTests : TestSetup
 
         ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler);
 
-        var sut = new InMemoryCommandBus(GetServiceProvider(), Logger);
-        await sut.ExecuteAsync(new MyCommand());
+        await InMemoryCommandBus.ExecuteAsync(new MyCommand());
 
         A.CallTo(() => handler.HandleAsync(A<MyCommand>.Ignored, A<CancellationToken>._)).MustHaveHappened();
     }
@@ -41,25 +50,16 @@ public class InMemoryCommandBusTests : TestSetup
     [InlineAutoData]
     public async Task ExecuteAsync_handler_with_response_exists_in_serviceProvider(string response)
     {
-        // var handler = A.Fake<ICommandHandler<MyCommandWithResponse, string>>();
-        // A.CallTo(() => handler.HandleAsync(A<MyCommandWithResponse>.Ignored, A<CancellationToken>.Ignored))
-        //     .Returns(response);
-
         ServiceCollection.AddScoped<ICommandHandler<MyCommandWithResponse, string>, CommandHandler>();
 
-        var sut = new InMemoryCommandBus(GetServiceProvider(), Logger);
-        var result = await sut.ExecuteAsync(new MyCommandWithResponse { Message = response });
+        var result = await InMemoryCommandBus.ExecuteAsync(new MyCommandWithResponse { Message = response });
         result.Should().Be(response);
-
-        //A.CallTo(() => handler.HandleAsync(A<MyCommandWithResponse>.Ignored, A<CancellationToken>.Ignored)).MustHaveHappened();
     }
 
     [Fact]
     public async Task ExecuteAsync_no_handler_in_serviceProvider_should_throw_error()
     {
-        var sut = new InMemoryCommandBus(GetServiceProvider(), Logger);
-
-        await sut.Invoking(y => y.ExecuteAsync(new MyCommand()))
+        await InMemoryCommandBus.Invoking(y => y.ExecuteAsync(new MyCommand()))
             .Should().ThrowAsync<InvalidOperationException>()
             .Where(x =>
                 x.Message.StartsWith("No handler for type") &&
@@ -76,8 +76,7 @@ public class InMemoryCommandBusTests : TestSetup
         ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler1);
         ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler2);
 
-        var sut = new InMemoryCommandBus(GetServiceProvider(), Logger);
-        await sut.Invoking(y => y.ExecuteAsync(new MyCommand()))
+        await InMemoryCommandBus.Invoking(y => y.ExecuteAsync(new MyCommand()))
             .Should().ThrowAsync<InvalidOperationException>()
             .Where(x =>
                 x.Message.StartsWith("Only one handler for type") &&
@@ -95,8 +94,7 @@ public class InMemoryCommandBusTests : TestSetup
 
         ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler);
 
-        var sut = new InMemoryCommandBus(GetServiceProvider(), Logger);
-        await sut.QueueAsync(new MyCommand());
+        await InMemoryCommandBus.QueueAsync(new MyCommand());
 
         A.CallTo(() => handler.HandleAsync(A<MyCommand>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappened();
     }
@@ -104,9 +102,7 @@ public class InMemoryCommandBusTests : TestSetup
     [Fact]
     public async Task QueueAsync_no_handler_in_serviceProvider_should_throw_error()
     {
-        var sut = new InMemoryCommandBus(GetServiceProvider(), Logger);
-
-        await sut.Invoking(y => y.ExecuteAsync(new MyCommand()))
+        await InMemoryCommandBus.Invoking(y => y.ExecuteAsync(new MyCommand()))
             .Should().ThrowAsync<InvalidOperationException>()
             .Where(x => x.Message.StartsWith("No handler for type"));
     }
@@ -120,8 +116,7 @@ public class InMemoryCommandBusTests : TestSetup
         ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler1);
         ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler2);
 
-        var sut = new InMemoryCommandBus(GetServiceProvider(), Logger);
-        await sut.Invoking(y => y.QueueAsync(new MyCommand()))
+        await InMemoryCommandBus.Invoking(y => y.QueueAsync(new MyCommand()))
             .Should().ThrowAsync<InvalidOperationException>()
             .Where(x => x.Message.StartsWith("Only one handler for type"));
 

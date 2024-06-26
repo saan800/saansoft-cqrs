@@ -5,7 +5,7 @@ public class InMemoryQueryBusTests : TestSetup
     [Fact]
     public void Cant_create_with_null_serviceProvider()
     {
-        Action act = () => new InMemoryQueryBus(null, Logger);
+        Action act = () => new InMemoryQueryBus(null, IdGenerator, Logger);
 
         act.Should()
             .Throw<ArgumentNullException>()
@@ -13,9 +13,19 @@ public class InMemoryQueryBusTests : TestSetup
     }
 
     [Fact]
+    public void Can_not_create_with_null_IdGenerator()
+    {
+        Action act = () => new InMemoryQueryBus(GetServiceProvider(), null, Logger);
+
+        act.Should()
+            .Throw<ArgumentNullException>()
+            .Where(x => x.ParamName == "idGenerator");
+    }
+
+    [Fact]
     public void Cant_create_with_null_logger()
     {
-        Action act = () => new InMemoryQueryBus(GetServiceProvider(), null);
+        Action act = () => new InMemoryQueryBus(GetServiceProvider(), IdGenerator, null);
 
         act.Should()
             .Throw<ArgumentNullException>()
@@ -32,8 +42,7 @@ public class InMemoryQueryBusTests : TestSetup
 
         ServiceCollection.AddScoped<IQueryHandler<MyQuery, MyQueryResponse>>(_ => handler);
 
-        var sut = new InMemoryQueryBus(GetServiceProvider(), Logger);
-        var result = await sut.FetchAsync(new MyQuery());
+        var result = await InMemoryQueryBus.FetchAsync(new MyQuery());
         result.Should().NotBeNull();
         result.SomeData.Should().Be(data);
 
@@ -43,9 +52,7 @@ public class InMemoryQueryBusTests : TestSetup
     [Fact]
     public async Task FetchAsync_no_handler_in_serviceProvider_should_throw_error()
     {
-        var sut = new InMemoryQueryBus(GetServiceProvider(), Logger);
-
-        await sut.Invoking(y => y.FetchAsync(new MyQuery()))
+        await InMemoryQueryBus.Invoking(y => y.FetchAsync(new MyQuery()))
             .Should().ThrowAsync<InvalidOperationException>()
             .Where(x =>
                 x.Message.StartsWith("No service for type") &&
@@ -62,8 +69,7 @@ public class InMemoryQueryBusTests : TestSetup
         ServiceCollection.AddScoped<IQueryHandler<MyQuery, MyQueryResponse>>(_ => handler1);
         ServiceCollection.AddScoped<IQueryHandler<MyQuery, MyQueryResponse>>(_ => handler2);
 
-        var sut = new InMemoryQueryBus(GetServiceProvider(), Logger);
-        await sut.Invoking(y => y.FetchAsync(new MyQuery()))
+        await InMemoryQueryBus.Invoking(y => y.FetchAsync(new MyQuery()))
             .Should().ThrowAsync<InvalidOperationException>()
             .Where(x =>
                 x.Message.StartsWith("Only one service for type") &&

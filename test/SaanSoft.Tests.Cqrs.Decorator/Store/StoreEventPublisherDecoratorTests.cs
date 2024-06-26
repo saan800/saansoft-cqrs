@@ -7,10 +7,9 @@ public class StoreEventPublisherDecoratorTests : TestSetup
     [Fact]
     public async Task QueueAsync_should_store_publisher_details()
     {
-        var eventPublisher = new InMemoryEventBus(GetServiceProvider(), Logger);
         var store = A.Fake<IEventPublisherRepository<Guid>>();
 
-        var sut = new StoreEventPublisherDecorator(store, eventPublisher);
+        var sut = new StoreEventPublisherDecorator(store, InMemoryEventBus);
         await sut.QueueAsync(new MyEvent(Guid.NewGuid()));
 
         A.CallTo(() => store.UpsertPublisherAsync(A<MyEvent>._, this.GetType(), A<CancellationToken>._)).MustHaveHappened();
@@ -19,10 +18,9 @@ public class StoreEventPublisherDecoratorTests : TestSetup
     [Fact]
     public async Task QueueAsync_multiple_decorators_should_store_publisher_details()
     {
-        var eventPublisher = new InMemoryEventBus(GetServiceProvider(), Logger);
         var store = A.Fake<IEventPublisherRepository<Guid>>();
 
-        var sut = new StoreEventPublisherDecorator(store, eventPublisher);
+        var sut = new StoreEventPublisherDecorator(store, InMemoryEventBus);
         var wrappedInDecorator = new WrapperEventBusDecorator(sut);
 
         await wrappedInDecorator.QueueAsync(new MyEvent(Guid.NewGuid()));
@@ -33,12 +31,11 @@ public class StoreEventPublisherDecoratorTests : TestSetup
     [Fact]
     public async Task QueueManyAsync_should_store_publisher_details()
     {
-        var eventPublisher = new InMemoryEventBus(GetServiceProvider(), Logger);
         var store = A.Fake<IEventPublisherRepository<Guid>>();
         var event1 = new MyEvent(Guid.NewGuid());
         var event2 = new MyEvent(Guid.NewGuid());
 
-        var sut = new StoreEventPublisherDecorator(store, eventPublisher);
+        var sut = new StoreEventPublisherDecorator(store, InMemoryEventBus);
         await sut.QueueManyAsync([event1, event2]);
 
         A.CallTo(() => store.UpsertPublisherAsync(A<MyEvent>._, this.GetType(), A<CancellationToken>._)).MustHaveHappened(1, Times.Exactly);

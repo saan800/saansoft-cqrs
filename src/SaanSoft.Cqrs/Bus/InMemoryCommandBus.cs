@@ -2,19 +2,22 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace SaanSoft.Cqrs.Bus;
 
-public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider serviceProvider, ILogger logger)
+public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider serviceProvider, IIdGenerator<TMessageId> idGenerator, ILogger logger)
     : ICommandBus<TMessageId>,
       ICommandSubscriptionBus<TMessageId>
     where TMessageId : struct
 {
     // ReSharper disable MemberCanBePrivate.Global
     protected readonly IServiceProvider ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+    protected readonly IIdGenerator<TMessageId> IdGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
     protected readonly ILogger Logger = logger ?? throw new ArgumentNullException(nameof(logger));
     // ReSharper restore MemberCanBePrivate.Global
 
     public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : ICommand<TMessageId>
     {
+        if (GenericUtils.IsNullOrDefault(command.Id)) command.Id = IdGenerator.NewId();
+
         // get subscription bus via ServiceProvider so it runs through any decorators
         var subscriptionBus = ServiceProvider.GetRequiredService<ICommandSubscriptionBus<TMessageId>>();
         await subscriptionBus.RunAsync(command, cancellationToken);
@@ -23,14 +26,19 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
     public async Task<TResponse> ExecuteAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
         where TCommand : ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
     {
+        var typedCommand = (TCommand)command;
+        if (GenericUtils.IsNullOrDefault(typedCommand.Id)) typedCommand.Id = IdGenerator.NewId();
+
         // get subscription bus via ServiceProvider so it runs through any decorators
         var subscriptionBus = ServiceProvider.GetRequiredService<ICommandSubscriptionBus<TMessageId>>();
-        return await subscriptionBus.RunAsync(command, cancellationToken);
+        return await subscriptionBus.RunAsync(typedCommand, cancellationToken);
     }
 
     public async Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : ICommand<TMessageId>
     {
+        if (GenericUtils.IsNullOrDefault(command.Id)) command.Id = IdGenerator.NewId();
+
         // get subscription bus via ServiceProvider so it runs through any decorators
         var subscriptionBus = ServiceProvider.GetRequiredService<ICommandSubscriptionBus<TMessageId>>();
         await subscriptionBus.RunAsync(command, cancellationToken);

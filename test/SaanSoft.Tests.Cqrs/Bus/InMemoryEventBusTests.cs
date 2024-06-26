@@ -1,6 +1,3 @@
-using SaanSoft.Cqrs.Bus;
-using SaanSoft.Cqrs.Handler;
-
 namespace SaanSoft.Tests.Cqrs.Bus;
 
 public class InMemoryEventBusTests : TestSetup
@@ -8,7 +5,7 @@ public class InMemoryEventBusTests : TestSetup
     [Fact]
     public void Cant_create_with_null_serviceProvider()
     {
-        Action act = () => new InMemoryEventBus(null, Logger);
+        Action act = () => new InMemoryEventBus(null, IdGenerator, Logger);
 
         act.Should()
             .Throw<ArgumentNullException>()
@@ -16,9 +13,19 @@ public class InMemoryEventBusTests : TestSetup
     }
 
     [Fact]
+    public void Can_not_create_with_null_IdGenerator()
+    {
+        Action act = () => new InMemoryEventBus(GetServiceProvider(), null, Logger);
+
+        act.Should()
+            .Throw<ArgumentNullException>()
+            .Where(x => x.ParamName == "idGenerator");
+    }
+
+    [Fact]
     public void Cant_create_with_null_logger()
     {
-        Action act = () => new InMemoryEventBus(GetServiceProvider(), null);
+        Action act = () => new InMemoryEventBus(GetServiceProvider(), IdGenerator, null);
 
         act.Should()
             .Throw<ArgumentNullException>()
@@ -32,8 +39,7 @@ public class InMemoryEventBusTests : TestSetup
 
         ServiceCollection.AddScoped<IEventHandler<MyEvent>>(_ => eventHandler);
 
-        var sut = new InMemoryEventBus(GetServiceProvider(), Logger);
-        await sut.QueueAsync(new MyEvent(Guid.NewGuid()));
+        await InMemoryEventBus.QueueAsync(new MyEvent(Guid.NewGuid()));
 
         A.CallTo(() => eventHandler.HandleAsync(A<MyEvent>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappened();
     }
@@ -51,8 +57,7 @@ public class InMemoryEventBusTests : TestSetup
         ServiceCollection.AddScoped<IEventHandler<MyEvent>>(_ => eventHandler);
         ServiceCollection.AddScoped<IEventHandler<MyEvent>>(_ => anotherEventHandler);
 
-        var sut = new InMemoryEventBus(GetServiceProvider(), Logger);
-        await sut.QueueAsync(new MyEvent(Guid.NewGuid()));
+        await InMemoryEventBus.QueueAsync(new MyEvent(Guid.NewGuid()));
 
         A.CallTo(() => eventHandler.HandleAsync(A<MyEvent>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappened();
         A.CallTo(() => anotherEventHandler.HandleAsync(A<MyEvent>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappened();
@@ -64,8 +69,7 @@ public class InMemoryEventBusTests : TestSetup
     [Fact]
     public async Task QueueAsync_no_handler_in_serviceProvider_should_do_nothing()
     {
-        var sut = new InMemoryEventBus(GetServiceProvider(), Logger);
-        await sut.QueueAsync(new MyEvent(Guid.NewGuid()));
+        await InMemoryEventBus.QueueAsync(new MyEvent(Guid.NewGuid()));
 
         Assert.True(true);
     }
@@ -78,8 +82,7 @@ public class InMemoryEventBusTests : TestSetup
         var event1 = new MyEvent(Guid.NewGuid());
         var event2 = new MyEvent(Guid.NewGuid());
 
-        var sut = new InMemoryEventBus(GetServiceProvider(), Logger);
-        await sut.QueueManyAsync([event1, event2]);
+        await InMemoryEventBus.QueueManyAsync([event1, event2]);
 
         A.CallTo(() => eventHandler.HandleAsync(A<MyEvent>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappened(2, Times.Exactly);
     }

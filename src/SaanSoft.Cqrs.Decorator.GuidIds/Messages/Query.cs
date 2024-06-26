@@ -3,10 +3,8 @@ namespace SaanSoft.Cqrs.Decorator.GuidIds.Messages;
 public abstract class Query<TQuery, TResponse> : Query<Guid, TQuery, TResponse>
     where TQuery : IQuery<Guid, TQuery, TResponse>
 {
-    protected override Guid NewMessageId() => GuidIdGenerator.New;
-
-    protected Query(string? correlationId = null, string? authenticatedId = null)
-        : base(correlationId, authenticatedId)
+    protected Query(Guid? id = null, string? correlationId = null, string? authenticatedId = null)
+        : base(id, correlationId, authenticatedId)
     {
     }
 

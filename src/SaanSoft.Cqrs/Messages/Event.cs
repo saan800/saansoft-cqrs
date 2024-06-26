@@ -1,15 +1,13 @@
 namespace SaanSoft.Cqrs.Messages;
 
-
-
 public abstract class Event<TMessageId, TEntityKey> : BaseMessage<TMessageId>, IEvent<TMessageId, TEntityKey>
     where TMessageId : struct
     where TEntityKey : struct
 {
     public TEntityKey Key { get; set; }
 
-    protected Event(TEntityKey key, string? correlationId = null, string? authenticatedId = null)
-        : base(correlationId, authenticatedId)
+    protected Event(TEntityKey key, TMessageId? id = null, string? correlationId = null, string? authenticatedId = null)
+        : base(id, correlationId, authenticatedId)
     {
         Key = key;
     }

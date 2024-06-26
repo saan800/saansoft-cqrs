@@ -4,8 +4,8 @@ public abstract class Query<TMessageId, TQuery, TResponse> : BaseMessage<TMessag
     where TMessageId : struct
     where TQuery : IQuery<TMessageId, TQuery, TResponse>
 {
-    protected Query(string? correlationId = null, string? authenticatedId = null)
-        : base(correlationId, authenticatedId)
+    protected Query(TMessageId? id = null, string? correlationId = null, string? authenticatedId = null)
+        : base(id, correlationId, authenticatedId)
     {
     }
 

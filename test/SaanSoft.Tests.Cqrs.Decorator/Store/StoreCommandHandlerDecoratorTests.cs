@@ -7,10 +7,9 @@ public class StoreCommandHandlerDecoratorTests : TestSetup
     {
         ServiceCollection.AddScoped<ICommandHandler<MyCommand>, CommandHandler>();
 
-        var commandSubscriptionBus = new InMemoryCommandBus(GetServiceProvider(), Logger);
         var store = A.Fake<ICommandHandlerRepository<Guid>>();
+        var sut = new StoreCommandHandlerDecorator(store, InMemoryCommandBus);
 
-        var sut = new StoreCommandHandlerDecorator(store, commandSubscriptionBus);
         await sut.RunAsync(new MyCommand());
 
         A.CallTo(() => store.UpsertHandlerAsync(A<MyCommand>._, typeof(CommandHandler), null, A<CancellationToken>._)).MustHaveHappenedOnceExactly();
@@ -20,10 +19,9 @@ public class StoreCommandHandlerDecoratorTests : TestSetup
     [Fact]
     public async Task RunAsync_should_not_store_zero_handler_details()
     {
-        var commandSubscriptionBus = new InMemoryCommandBus(GetServiceProvider(), Logger);
         var store = A.Fake<ICommandHandlerRepository<Guid>>();
+        var sut = new StoreCommandHandlerDecorator(store, InMemoryCommandBus);
 
-        var sut = new StoreCommandHandlerDecorator(store, commandSubscriptionBus);
         await sut.Invoking(y => y.RunAsync(new MyCommand()))
             .Should().ThrowAsync<InvalidOperationException>()
             .Where(x => x.Message.StartsWith("No handler for type"));
@@ -39,10 +37,8 @@ public class StoreCommandHandlerDecoratorTests : TestSetup
         ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler1);
         ServiceCollection.AddScoped<ICommandHandler<MyCommand>, CommandHandler>();
 
-        var commandSubscriptionBus = new InMemoryCommandBus(GetServiceProvider(), Logger);
         var store = A.Fake<ICommandHandlerRepository<Guid>>();
-
-        var sut = new StoreCommandHandlerDecorator(store, commandSubscriptionBus);
+        var sut = new StoreCommandHandlerDecorator(store, InMemoryCommandBus);
 
         await sut.Invoking(y => y.RunAsync(new MyCommand()))
             .Should().ThrowAsync<InvalidOperationException>()
@@ -60,10 +56,8 @@ public class StoreCommandHandlerDecoratorTests : TestSetup
             .ThrowsAsync(new Exception("it went wrong"));
         ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler);
 
-        var commandSubscriptionBus = new InMemoryCommandBus(GetServiceProvider(), Logger);
         var store = A.Fake<ICommandHandlerRepository<Guid>>();
-
-        var sut = new StoreCommandHandlerDecorator(store, commandSubscriptionBus);
+        var sut = new StoreCommandHandlerDecorator(store, InMemoryCommandBus);
 
         await sut.Invoking(y => y.RunAsync(new MyCommand()))
             .Should().ThrowAsync<Exception>()

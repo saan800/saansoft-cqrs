@@ -9,9 +9,7 @@ namespace SaanSoft.Cqrs.Messages;
 public abstract class BaseMessage<TMessageId> : IMessage<TMessageId>
     where TMessageId : struct
 {
-    protected abstract TMessageId NewMessageId();
-
-    public TMessageId Id { get; set; }
+    public TMessageId Id { get; set; } = default;
 
     public TMessageId? TriggeredById { get; set; }
 
@@ -25,10 +23,10 @@ public abstract class BaseMessage<TMessageId> : IMessage<TMessageId>
 
     public bool IsReplay { get; set; } = false;
 
-    protected BaseMessage(string? correlationId = null, string? triggeredByUser = null)
+    protected BaseMessage(TMessageId? id = null, string? correlationId = null, string? triggeredByUser = null)
     {
         // ReSharper disable once VirtualMemberCallInConstructor
-        if (GenericUtils.IsNullOrDefault(Id)) Id = NewMessageId();
+        if (id.HasValue && !GenericUtils.IsNullOrDefault(id)) Id = id.Value;
         if (!string.IsNullOrWhiteSpace(correlationId)) CorrelationId = correlationId;
         if (!string.IsNullOrWhiteSpace(triggeredByUser)) TriggeredByUser = triggeredByUser;
         if (string.IsNullOrWhiteSpace(TypeFullName))
@@ -39,7 +37,7 @@ public abstract class BaseMessage<TMessageId> : IMessage<TMessageId>
     }
 
     protected BaseMessage(IMessage<TMessageId> triggeredByMessage)
-        : this(triggeredByMessage.CorrelationId, triggeredByMessage.TriggeredByUser)
+        : this(null, triggeredByMessage.CorrelationId, triggeredByMessage.TriggeredByUser)
     {
         TriggeredById = triggeredByMessage.Id;
         IsReplay = triggeredByMessage.IsReplay;

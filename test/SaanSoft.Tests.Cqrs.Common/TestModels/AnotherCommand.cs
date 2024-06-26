@@ -2,8 +2,8 @@ namespace SaanSoft.Tests.Cqrs.Common.TestModels;
 
 public class AnotherCommand : Command
 {
-    public AnotherCommand(string? correlationId = null, string? authenticatedId = null)
-        : base(correlationId, authenticatedId) { }
+    public AnotherCommand(Guid? id = null, string? correlationId = null, string? authenticatedId = null)
+        : base(id, correlationId, authenticatedId) { }
 
     public AnotherCommand(IMessage<Guid> triggeredByMessage)
         : base(triggeredByMessage) { }

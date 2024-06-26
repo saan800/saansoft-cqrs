@@ -2,17 +2,14 @@ namespace SaanSoft.Tests.Cqrs.Decorator.Store;
 
 public class StoreEventHandlerDecoratorTests : TestSetup
 {
-    #region RunAsync
-
     [Fact]
     public async Task RunAsync_should_store_single_handler_details()
     {
         ServiceCollection.AddScoped<IEventHandler<MyEvent>, EventsHandler>();
 
-        var eventSubscriptionBus = new InMemoryEventBus(GetServiceProvider(), Logger);
         var store = A.Fake<IEventHandlerRepository<Guid>>();
 
-        var sut = new StoreEventHandlerDecorator(store, eventSubscriptionBus);
+        var sut = new StoreEventHandlerDecorator(store, InMemoryEventBus);
         await sut.RunAsync(new MyEvent(Guid.NewGuid()));
 
         A.CallTo(() => store.UpsertHandlerAsync(A<MyEvent>._, typeof(EventsHandler), null, A<CancellationToken>._)).MustHaveHappenedOnceExactly();
@@ -22,10 +19,9 @@ public class StoreEventHandlerDecoratorTests : TestSetup
     [Fact]
     public async Task RunAsync_should_not_store_zero_handler_details()
     {
-        var eventSubscriptionBus = new InMemoryEventBus(GetServiceProvider(), Logger);
         var store = A.Fake<IEventHandlerRepository<Guid>>();
 
-        var sut = new StoreEventHandlerDecorator(store, eventSubscriptionBus);
+        var sut = new StoreEventHandlerDecorator(store, InMemoryEventBus);
         await sut.RunAsync(new MyEvent(Guid.NewGuid()));
 
         A.CallTo(() => store.UpsertHandlerAsync(A<MyEvent>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
@@ -39,10 +35,9 @@ public class StoreEventHandlerDecoratorTests : TestSetup
         ServiceCollection.AddScoped<IEventHandler<MyEvent>>(_ => handler1);
         ServiceCollection.AddScoped<IEventHandler<MyEvent>, EventsHandler>();
 
-        var eventSubscriptionBus = new InMemoryEventBus(GetServiceProvider(), Logger);
         var store = A.Fake<IEventHandlerRepository<Guid>>();
 
-        var sut = new StoreEventHandlerDecorator(store, eventSubscriptionBus);
+        var sut = new StoreEventHandlerDecorator(store, InMemoryEventBus);
         await sut.RunAsync(new MyEvent(Guid.NewGuid()));
 
         A.CallTo(() => store.UpsertHandlerAsync(A<MyEvent>._, A<Type>._, null, A<CancellationToken>._)).MustHaveHappenedTwiceExactly();
@@ -57,10 +52,9 @@ public class StoreEventHandlerDecoratorTests : TestSetup
             .ThrowsAsync(new Exception("it went wrong"));
         ServiceCollection.AddScoped<IEventHandler<MyEvent>>(_ => handler);
 
-        var eventSubscriptionBus = new InMemoryEventBus(GetServiceProvider(), Logger);
         var store = A.Fake<IEventHandlerRepository<Guid>>();
 
-        var sut = new StoreEventHandlerDecorator(store, eventSubscriptionBus);
+        var sut = new StoreEventHandlerDecorator(store, InMemoryEventBus);
 
         await sut.Invoking(y => y.RunAsync(new MyEvent(Guid.NewGuid())))
             .Should().ThrowAsync<Exception>()
@@ -69,8 +63,5 @@ public class StoreEventHandlerDecoratorTests : TestSetup
         A.CallTo(() => store.UpsertHandlerAsync(A<MyEvent>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
         A.CallTo(() => store.UpsertHandlerAsync(A<MyEvent>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappenedOnceExactly();
     }
-
-    #endregion
-
 }
 

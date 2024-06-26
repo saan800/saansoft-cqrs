@@ -8,10 +8,9 @@ public class StoreCommandPublisherDecoratorTests : TestSetup
     public async Task ExecuteAsync_should_store_publisher_details()
     {
         ServiceCollection.AddScoped<ICommandHandler<MyCommand>, CommandHandler>();
-        var commandBus = new InMemoryCommandBus(GetServiceProvider(), Logger);
         var store = A.Fake<ICommandPublisherRepository<Guid>>();
 
-        var sut = new StoreCommandPublisherDecorator(store, commandBus);
+        var sut = new StoreCommandPublisherDecorator(store, InMemoryCommandBus);
         await sut.ExecuteAsync(new MyCommand());
 
         A.CallTo(() => store.UpsertPublisherAsync(A<MyCommand>._, this.GetType(), A<CancellationToken>._)).MustHaveHappened();
@@ -21,10 +20,9 @@ public class StoreCommandPublisherDecoratorTests : TestSetup
     public async Task ExecuteAsync_for_IsReplay_command_should_store_publisher_details()
     {
         ServiceCollection.AddScoped<ICommandHandler<MyCommand>, CommandHandler>();
-        var commandBus = new InMemoryCommandBus(GetServiceProvider(), Logger);
         var store = A.Fake<ICommandPublisherRepository<Guid>>();
 
-        var sut = new StoreCommandPublisherDecorator(store, commandBus);
+        var sut = new StoreCommandPublisherDecorator(store, InMemoryCommandBus);
         await sut.ExecuteAsync(new MyCommand { IsReplay = true });
 
         A.CallTo(() => store.UpsertPublisherAsync(A<MyCommand>._, this.GetType(), A<CancellationToken>._)).MustHaveHappened();
@@ -34,10 +32,9 @@ public class StoreCommandPublisherDecoratorTests : TestSetup
     public async Task ExecuteAsync_multiple_decorators_should_store_publisher_details()
     {
         ServiceCollection.AddScoped<ICommandHandler<MyCommand>, CommandHandler>();
-        var commandBus = new InMemoryCommandBus(GetServiceProvider(), Logger);
         var store = A.Fake<ICommandPublisherRepository<Guid>>();
 
-        var sut = new StoreCommandPublisherDecorator(store, commandBus);
+        var sut = new StoreCommandPublisherDecorator(store, InMemoryCommandBus);
         var wrappedInDecorator = new WrapperCommandBusDecorator(sut);
 
         await wrappedInDecorator.ExecuteAsync(new MyCommand());
@@ -49,10 +46,9 @@ public class StoreCommandPublisherDecoratorTests : TestSetup
     public async Task QueueAsync_should_store_publisher_details()
     {
         ServiceCollection.AddScoped<ICommandHandler<MyCommand>, CommandHandler>();
-        var commandBus = new InMemoryCommandBus(GetServiceProvider(), Logger);
         var store = A.Fake<ICommandPublisherRepository<Guid>>();
 
-        var sut = new StoreCommandPublisherDecorator(store, commandBus);
+        var sut = new StoreCommandPublisherDecorator(store, InMemoryCommandBus);
         await sut.QueueAsync(new MyCommand());
 
         A.CallTo(() => store.UpsertPublisherAsync(A<MyCommand>._, this.GetType(), A<CancellationToken>._)).MustHaveHappened();
@@ -62,10 +58,9 @@ public class StoreCommandPublisherDecoratorTests : TestSetup
     public async Task QueueAsync_for_IsReplay_command_should_store_publisher_details()
     {
         ServiceCollection.AddScoped<ICommandHandler<MyCommand>, CommandHandler>();
-        var commandBus = new InMemoryCommandBus(GetServiceProvider(), Logger);
         var store = A.Fake<ICommandPublisherRepository<Guid>>();
 
-        var sut = new StoreCommandPublisherDecorator(store, commandBus);
+        var sut = new StoreCommandPublisherDecorator(store, InMemoryCommandBus);
         await sut.QueueAsync(new MyCommand { IsReplay = true });
 
         A.CallTo(() => store.UpsertPublisherAsync(A<MyCommand>._, this.GetType(), A<CancellationToken>._)).MustHaveHappened();
@@ -75,10 +70,9 @@ public class StoreCommandPublisherDecoratorTests : TestSetup
     public async Task QueueAsync_multiple_decorators_should_store_publisher_details()
     {
         ServiceCollection.AddScoped<ICommandHandler<MyCommand>, CommandHandler>();
-        var commandBus = new InMemoryCommandBus(GetServiceProvider(), Logger);
         var store = A.Fake<ICommandPublisherRepository<Guid>>();
 
-        var sut = new StoreCommandPublisherDecorator(store, commandBus);
+        var sut = new StoreCommandPublisherDecorator(store, InMemoryCommandBus);
         var wrappedInDecorator = new WrapperCommandBusDecorator(sut);
 
         await wrappedInDecorator.QueueAsync(new MyCommand());
