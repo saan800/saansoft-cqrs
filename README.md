@@ -1,4 +1,4 @@
-# saansoft-cqrs
+# SaanSoft.Cqrs
 
 CQRS and Event Sourcing implementation for C#
 
@@ -15,6 +15,8 @@ CQRS and Event Sourcing implementation for C#
 Todo...
 
 ## TODO
+
+Decorator - generate Id
 
 IInMemory***Bus for publishers
 - tryExecute / queue / fetch
@@ -40,6 +42,7 @@ event handlers - have attribute on handler that indicates running order priority
 
 ### Decorators
 
+* Generate Id - publishers
 * :eyes: Store - Store messages, publishers and handlers
 * ILogger Scope
 * CorrelationId provider
