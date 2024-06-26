@@ -9,6 +9,7 @@ namespace SaanSoft.Cqrs.Decorator;
 /// </remarks>
 public interface ICommandBusDecorator<TMessageId> :
     IMessageBusDecorator,
-    ICommandBus<TMessageId> where TMessageId : struct
+    ICommandBus<TMessageId>
+    where TMessageId : struct
 {
 }

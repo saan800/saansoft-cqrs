@@ -6,10 +6,10 @@ public class MyQueryResponse
     {
     }
 
-    public MyQueryResponse(string data)
+    public MyQueryResponse(string message)
     {
-        SomeData = data;
+        Message = message;
     }
 
-    public string? SomeData { get; set; }
+    public string? Message { get; set; }
 }

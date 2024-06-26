@@ -8,5 +8,5 @@ public class MyQuery : Query<MyQuery, MyQueryResponse>
     public MyQuery(IMessage<Guid> triggeredByMessage)
         : base(triggeredByMessage) { }
 
-    public string? SomeData { get; set; }
+    public string? Message { get; set; }
 }

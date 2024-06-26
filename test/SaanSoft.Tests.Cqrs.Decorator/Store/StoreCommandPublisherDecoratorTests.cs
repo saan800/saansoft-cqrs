@@ -1,83 +1,110 @@
-using SaanSoft.Cqrs.Bus;
-
 namespace SaanSoft.Tests.Cqrs.Decorator.Store;
 
-public class StoreCommandPublisherDecoratorTests : TestSetup
+public class StoreCommandPublisherDecoratorTests : CommandBusDecoratorTestSetup
 {
-    [Fact]
-    public async Task ExecuteAsync_should_store_publisher_details()
+    protected StoreCommandPublisherDecoratorTests()
     {
-        ServiceCollection.AddScoped<ICommandHandler<MyCommand>, CommandHandler>();
-        var store = A.Fake<ICommandPublisherRepository<Guid>>();
-
-        var sut = new StoreCommandPublisherDecorator(store, InMemoryCommandBus);
-        await sut.ExecuteAsync(new MyCommand());
-
-        A.CallTo(() => store.UpsertPublisherAsync(A<MyCommand>._, this.GetType(), A<CancellationToken>._)).MustHaveHappened();
+        _repository = A.Fake<ICommandPublisherRepository<Guid>>();
     }
 
-    [Fact]
-    public async Task ExecuteAsync_for_IsReplay_command_should_store_publisher_details()
+    private readonly ICommandPublisherRepository<Guid> _repository;
+    protected override ICommandBusDecorator<Guid> SutPublisherDecorator =>
+        new StoreCommandPublisherDecorator(_repository, InMemoryCommandBus);
+
+    public class ExecuteAsyncTests : StoreCommandPublisherDecoratorTests
     {
-        ServiceCollection.AddScoped<ICommandHandler<MyCommand>, CommandHandler>();
-        var store = A.Fake<ICommandPublisherRepository<Guid>>();
+        private static readonly Type ExpectedType = typeof(ExecuteAsyncTests);
 
-        var sut = new StoreCommandPublisherDecorator(store, InMemoryCommandBus);
-        await sut.ExecuteAsync(new MyCommand { IsReplay = true });
+        [Fact]
+        public async Task Should_store_publisher_details()
+        {
+            await SutPublisherDecorator.ExecuteAsync(new MyCommand());
 
-        A.CallTo(() => store.UpsertPublisherAsync(A<MyCommand>._, this.GetType(), A<CancellationToken>._)).MustHaveHappened();
+            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyCommand>._, ExpectedType, A<CancellationToken>._)).MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task IsReplay_command_should_store_publisher_details()
+        {
+            await SutPublisherDecorator.ExecuteAsync(new MyCommand { IsReplay = true });
+
+            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyCommand>._, ExpectedType, A<CancellationToken>._)).MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task Multiple_decorators_should_store_publisher_details()
+        {
+            var wrappedInDecorator = new WrapperCommandBusDecorator(SutPublisherDecorator);
+            await wrappedInDecorator.ExecuteAsync(new MyCommand());
+
+            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyCommand>._, ExpectedType, A<CancellationToken>._)).MustHaveHappened();
+        }
     }
 
-    [Fact]
-    public async Task ExecuteAsync_multiple_decorators_should_store_publisher_details()
+    public class ExecuteAsyncWithResponseTests : StoreCommandPublisherDecoratorTests
     {
-        ServiceCollection.AddScoped<ICommandHandler<MyCommand>, CommandHandler>();
-        var store = A.Fake<ICommandPublisherRepository<Guid>>();
+        private static readonly Type ExpectedType = typeof(ExecuteAsyncWithResponseTests);
 
-        var sut = new StoreCommandPublisherDecorator(store, InMemoryCommandBus);
-        var wrappedInDecorator = new WrapperCommandBusDecorator(sut);
+        [Theory]
+        [AutoFakeData]
+        public async Task Should_store_publisher_details(string message)
+        {
+            await SutPublisherDecorator.ExecuteAsync(new MyCommandWithResponse { Message = message });
 
-        await wrappedInDecorator.ExecuteAsync(new MyCommand());
+            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyCommandWithResponse>._, ExpectedType, A<CancellationToken>._)).MustHaveHappened();
+        }
 
-        A.CallTo(() => store.UpsertPublisherAsync(A<MyCommand>._, this.GetType(), A<CancellationToken>._)).MustHaveHappened();
+        [Theory]
+        [AutoFakeData]
+        public async Task IsReplay_command_should_store_publisher_details(string message)
+        {
+            await SutPublisherDecorator.ExecuteAsync(new MyCommandWithResponse { Message = message, IsReplay = true });
+
+            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyCommandWithResponse>._, ExpectedType, A<CancellationToken>._)).MustHaveHappened();
+        }
+
+        [Theory]
+        [AutoFakeData]
+        public async Task Multiple_decorators_should_store_publisher_details(string message)
+        {
+            var wrappedInDecorator = new WrapperCommandBusDecorator(SutPublisherDecorator);
+            await wrappedInDecorator.ExecuteAsync(new MyCommandWithResponse { Message = message });
+
+            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyCommandWithResponse>._, ExpectedType, A<CancellationToken>._)).MustHaveHappened();
+        }
     }
 
-    [Fact]
-    public async Task QueueAsync_should_store_publisher_details()
+    public class QueueAsyncTests : StoreCommandPublisherDecoratorTests
     {
-        ServiceCollection.AddScoped<ICommandHandler<MyCommand>, CommandHandler>();
-        var store = A.Fake<ICommandPublisherRepository<Guid>>();
+        private static readonly Type ExpectedType = typeof(QueueAsyncTests);
 
-        var sut = new StoreCommandPublisherDecorator(store, InMemoryCommandBus);
-        await sut.QueueAsync(new MyCommand());
+        [Fact]
+        public async Task Should_store_publisher_details()
+        {
+            await SutPublisherDecorator.QueueAsync(new MyCommand());
 
-        A.CallTo(() => store.UpsertPublisherAsync(A<MyCommand>._, this.GetType(), A<CancellationToken>._)).MustHaveHappened();
-    }
+            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyCommand>._, ExpectedType, A<CancellationToken>._))
+                .MustHaveHappened();
+        }
 
-    [Fact]
-    public async Task QueueAsync_for_IsReplay_command_should_store_publisher_details()
-    {
-        ServiceCollection.AddScoped<ICommandHandler<MyCommand>, CommandHandler>();
-        var store = A.Fake<ICommandPublisherRepository<Guid>>();
+        [Fact]
+        public async Task IsReplay_command_should_store_publisher_details()
+        {
+            await SutPublisherDecorator.QueueAsync(new MyCommand { IsReplay = true });
 
-        var sut = new StoreCommandPublisherDecorator(store, InMemoryCommandBus);
-        await sut.QueueAsync(new MyCommand { IsReplay = true });
+            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyCommand>._, ExpectedType, A<CancellationToken>._))
+                .MustHaveHappened();
+        }
 
-        A.CallTo(() => store.UpsertPublisherAsync(A<MyCommand>._, this.GetType(), A<CancellationToken>._)).MustHaveHappened();
-    }
+        [Fact]
+        public async Task QueueAsync_multiple_decorators_should_store_publisher_details()
+        {
+            var wrappedInDecorator = new WrapperCommandBusDecorator(SutPublisherDecorator);
+            await wrappedInDecorator.QueueAsync(new MyCommand());
 
-    [Fact]
-    public async Task QueueAsync_multiple_decorators_should_store_publisher_details()
-    {
-        ServiceCollection.AddScoped<ICommandHandler<MyCommand>, CommandHandler>();
-        var store = A.Fake<ICommandPublisherRepository<Guid>>();
-
-        var sut = new StoreCommandPublisherDecorator(store, InMemoryCommandBus);
-        var wrappedInDecorator = new WrapperCommandBusDecorator(sut);
-
-        await wrappedInDecorator.QueueAsync(new MyCommand());
-
-        A.CallTo(() => store.UpsertPublisherAsync(A<MyCommand>._, this.GetType(), A<CancellationToken>._)).MustHaveHappened();
+            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyCommand>._, ExpectedType, A<CancellationToken>._))
+                .MustHaveHappened();
+        }
     }
 
     private class WrapperCommandBusDecorator(ICommandBus<Guid> next) : ICommandBus<Guid>

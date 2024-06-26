@@ -1,69 +1,63 @@
 namespace SaanSoft.Tests.Cqrs.Decorator.Store;
 
-public class StoreQueryHandlerDecoratorTests : TestSetup
+public class StoreQueryHandlerDecoratorTests : QuerySubscriptionBusDecoratorTestSetup
 {
-    [Fact]
-    public async Task RunAsync_should_store_single_handler_details()
+    protected StoreQueryHandlerDecoratorTests()
     {
-        ServiceCollection.AddScoped<IQueryHandler<MyQuery, MyQueryResponse>, QueryHandler>();
-
-        var store = A.Fake<IQueryHandlerRepository<Guid>>();
-        var sut = new StoreQueryHandlerDecorator(store, InMemoryQueryBus);
-
-        await sut.RunAsync(new MyQuery());
-
-        A.CallTo(() => store.UpsertHandlerAsync(A<MyQuery>._, typeof(QueryHandler), null, A<CancellationToken>._)).MustHaveHappenedOnceExactly();
-        A.CallTo(() => store.UpsertHandlerAsync(A<MyQuery>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
+        _repository = A.Fake<IQueryHandlerRepository<Guid>>();
     }
 
-    [Fact]
-    public async Task RunAsync_should_not_store_zero_handler_details()
+    private readonly IQueryHandlerRepository<Guid> _repository;
+    protected override IQuerySubscriptionBusDecorator<Guid> SutSubscriptionBusDecorator =>
+        new StoreQueryHandlerDecorator(_repository, InMemoryQueryBus);
+
+    public class RunAsync : StoreQueryHandlerDecoratorTests
     {
-        var store = A.Fake<IQueryHandlerRepository<Guid>>();
-        var sut = new StoreQueryHandlerDecorator(store, InMemoryQueryBus);
+        [Fact]
+        public async Task Should_store_single_handler_details()
+        {
+            await SutSubscriptionBusDecorator.RunAsync(new MyQuery());
 
-        await sut.Invoking(y => y.RunAsync(new MyQuery()))
-            .Should().ThrowAsync<InvalidOperationException>()
-            .Where(x => x.Message.StartsWith("No service for typ"));
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<MyQuery>._, typeof(QueryHandler), null, A<CancellationToken>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<MyQuery>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
+        }
 
-        A.CallTo(() => store.UpsertHandlerAsync(A<MyQuery>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
-        A.CallTo(() => store.UpsertHandlerAsync(A<MyQuery>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
-    }
+        [Fact]
+        public async Task Should_not_store_zero_handler_details()
+        {
+            await SutSubscriptionBusDecorator.Invoking(y => y.RunAsync(new NoHandlerQuery()))
+                .Should().ThrowAsync<Exception>()
+                .Where(x => x.Message.Contains("No handler for type"));
 
-    [Fact]
-    public async Task RunAsync_should_not_store_multiple_handlers_details()
-    {
-        var handler1 = A.Fake<IQueryHandler<MyQuery, MyQueryResponse>>();
-        ServiceCollection.AddScoped<IQueryHandler<MyQuery, MyQueryResponse>>(_ => handler1);
-        ServiceCollection.AddScoped<IQueryHandler<MyQuery, MyQueryResponse>, QueryHandler>();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<NoHandlerQuery>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<NoHandlerQuery>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
+        }
 
-        var store = A.Fake<IQueryHandlerRepository<Guid>>();
-        var sut = new StoreQueryHandlerDecorator(store, InMemoryQueryBus);
+        [Fact]
+        public async Task Should_not_store_multiple_handlers_details()
+        {
+            var handler1 = A.Fake<IQueryHandler<MyQuery, MyQueryResponse>>();
+            ServiceCollection.AddScoped<IQueryHandler<MyQuery, MyQueryResponse>>(_ => handler1);
 
-        await sut.Invoking(y => y.RunAsync(new MyQuery()))
-            .Should().ThrowAsync<InvalidOperationException>()
-            .Where(x => x.Message.StartsWith("Only one service for type"));
+            await SutSubscriptionBusDecorator.Invoking(y => y.RunAsync(new MyQuery()))
+                .Should().ThrowAsync<Exception>()
+                .Where(x => x.Message.Contains("Only one handler for type"));
 
-        A.CallTo(() => store.UpsertHandlerAsync(A<MyQuery>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
-        A.CallTo(() => store.UpsertHandlerAsync(A<MyQuery>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
-    }
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<MyQuery>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<MyQuery>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
+        }
 
-    [Fact]
-    public async Task RunAsync_store_handlers_details_when_next_throws_exception()
-    {
-        var handler = A.Fake<IQueryHandler<MyQuery, MyQueryResponse>>();
-        A.CallTo(() => handler.HandleAsync(A<MyQuery>.Ignored, A<CancellationToken>.Ignored))
-            .ThrowsAsync(new Exception("it went wrong"));
-        ServiceCollection.AddScoped<IQueryHandler<MyQuery, MyQueryResponse>>(_ => handler);
+        [Fact]
+        public async Task Should_store_handlers_details_when_next_throws_exception()
+        {
+            AddQueryHandlerException<NoHandlerQuery, string>();
 
-        var store = A.Fake<IQueryHandlerRepository<Guid>>();
-        var sut = new StoreQueryHandlerDecorator(store, InMemoryQueryBus);
+            await SutSubscriptionBusDecorator.Invoking(y => y.RunAsync(new NoHandlerQuery()))
+                .Should().ThrowAsync<Exception>()
+                .Where(x => x.Message.Contains("it went wrong"));
 
-        await sut.Invoking(y => y.RunAsync(new MyQuery()))
-            .Should().ThrowAsync<Exception>()
-            .Where(x => x.Message.StartsWith("it went wrong"));
-
-        A.CallTo(() => store.UpsertHandlerAsync(A<MyQuery>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
-        A.CallTo(() => store.UpsertHandlerAsync(A<MyQuery>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<NoHandlerQuery>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<NoHandlerQuery>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappenedOnceExactly();
+        }
     }
 }

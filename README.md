@@ -21,9 +21,6 @@ Decorator - generate Id
 IInMemory***Bus for publishers
 - tryExecute / queue / fetch
 
-split guid to own project
-add IIdGenerator interface
-
 no base interface for repositories, use types for messages
 
 split mongo store into 3

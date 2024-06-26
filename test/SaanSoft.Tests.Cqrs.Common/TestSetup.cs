@@ -34,4 +34,40 @@ public abstract class TestSetup
     protected InMemoryEventBus InMemoryEventBus => new(GetServiceProvider(), IdGenerator, Logger);
 
     protected InMemoryQueryBus InMemoryQueryBus => new(GetServiceProvider(), IdGenerator, Logger);
+
+    protected void AddCommandHandlerException<TCommand>()
+        where TCommand : ICommand
+    {
+        var handler = A.Fake<ICommandHandler<TCommand>>();
+        A.CallTo(() => handler.HandleAsync(A<TCommand>.Ignored, A<CancellationToken>.Ignored))
+            .ThrowsAsync(new Exception("it went wrong"));
+        ServiceCollection.AddScoped<ICommandHandler<TCommand>>(_ => handler);
+    }
+
+    protected void AddCommandHandlerException<TCommand, TResponse>()
+        where TCommand : ICommand<TCommand, TResponse>
+    {
+        var handler = A.Fake<ICommandHandler<TCommand, TResponse>>();
+        A.CallTo(() => handler.HandleAsync(A<TCommand>.Ignored, A<CancellationToken>.Ignored))
+            .ThrowsAsync(new Exception("it went wrong"));
+        ServiceCollection.AddScoped<ICommandHandler<TCommand, TResponse>>(_ => handler);
+    }
+
+    protected void AddEventHandlerException<TEvent>()
+        where TEvent : IEvent
+    {
+        var handler = A.Fake<IEventHandler<TEvent>>();
+        A.CallTo(() => handler.HandleAsync(A<TEvent>.Ignored, A<CancellationToken>.Ignored))
+            .ThrowsAsync(new Exception("it went wrong"));
+        ServiceCollection.AddScoped<IEventHandler<TEvent>>(_ => handler);
+    }
+
+    protected void AddQueryHandlerException<TQuery, TResponse>()
+        where TQuery : IQuery<TQuery, TResponse>
+    {
+        var handler = A.Fake<IQueryHandler<TQuery, TResponse>>();
+        A.CallTo(() => handler.HandleAsync(A<TQuery>.Ignored, A<CancellationToken>.Ignored))
+            .ThrowsAsync(new Exception("it went wrong"));
+        ServiceCollection.AddScoped<IQueryHandler<TQuery, TResponse>>(_ => handler);
+    }
 }

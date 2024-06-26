@@ -4,7 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
-        <NoWarn>CS8625</NoWarn>
+        <NoWarn>CS1591;CS8625;CS8618</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>

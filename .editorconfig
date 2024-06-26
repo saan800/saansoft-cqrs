@@ -5,7 +5,7 @@ root = true
 charset = utf-8
 end_of_line = lf
 indent_style = space
-indent_size = 4
+indent_size = 2
 insert_final_newline = true
 trim_trailing_whitespace = true
 max_line_length = 120
@@ -15,31 +15,20 @@ spelling_exclusion_path = .\dictionary.dic
 
 [*.json]
 insert_final_newline = false
-indent_size = 2
 
 [*.md]
-indent_size = 2
 max_line_length = off
 trim_trailing_whitespace = false
 
 [*.{yml,yaml}]
-indent_size = 2
 max_line_length = off
 
-[*.{js,jsx,ts,tsx,svetle}]
-indent_size = 2
-
-[*.{css,scss}]
-indent_size = 2
-
-[*.{html,htm,liquid}]
-indent_size = 2
-
 [*.sln, *.csproj, *.ruleset, *.props, *.targets]
-indent_size = 2
 max_line_length = off
 
 [*.cs]
+indent_size = 4
+
 ################# .NET Coding Conventions #################
 # Organize usings
 dotnet_separate_import_directive_groups = false

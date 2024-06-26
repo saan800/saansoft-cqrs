@@ -42,11 +42,11 @@ public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvi
             case 1:
                 return handlers.Single();
             case 0:
-                throw new InvalidOperationException($"No service for type '{typeof(IQueryHandler<TQuery, TResponse>)}' has been registered.");
+                throw new InvalidOperationException($"No handler for type '{typeof(IQueryHandler<TQuery, TResponse>)}' has been registered.");
             default:
                 {
                     var typeNames = handlers.Select(handler => handler.GetType().FullName ?? handler.GetType().Name).ToList();
-                    throw new InvalidOperationException($"Only one service for type '{typeof(IQueryHandler<TQuery, TResponse>)}' can be registered. Currently have {typeNames.Count} registered: {string.Join("; ", typeNames)}");
+                    throw new InvalidOperationException($"Only one handler for type '{typeof(IQueryHandler<TQuery, TResponse>)}' can be registered. Currently have {typeNames.Count} registered: {string.Join("; ", typeNames)}");
                 }
         }
     }

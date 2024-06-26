@@ -1,34 +1,23 @@
-using SaanSoft.Cqrs.Utilities;
+using SaanSoft.Tests.Cqrs.Common.Utilities;
 
 namespace SaanSoft.Tests.Cqrs.Utilities;
 
 public class GenericUtilsTests
 {
-    [Fact]
-    public void IsNullOrDefault_Nullable_Guid_without_value_should_return_true()
+    public class IsNullOrDefault
     {
-        Guid? guidValue = null;
-        GenericUtils.IsNullOrDefault(guidValue).Should().Be(true);
-    }
+        public class GuidType : GenericUtilsBaseTests.IsNullOrDefault.MessageId<Guid>
+        {
+            protected override Guid NewId() => Guid.NewGuid();
+        }
 
-    [Theory]
-    [AutoFakeData]
-    public void IsNullOrDefault_Nullable_Guid_with_value_should_return_false(Guid? value)
-    {
-        GenericUtils.IsNullOrDefault(value).Should().Be(false);
-    }
-
-    [Fact]
-    public void IsNullOrDefault_Guid_with_default_value_should_return_true()
-    {
-        Guid guidValue = default;
-        GenericUtils.IsNullOrDefault(guidValue).Should().BeTrue();
-    }
-
-    [Theory]
-    [AutoFakeData]
-    public void IsNullOrDefault_Guid_with_value_should_return_false(Guid value)
-    {
-        GenericUtils.IsNullOrDefault(value).Should().BeFalse();
+        public class IntType : GenericUtilsBaseTests.IsNullOrDefault.MessageId<int>
+        {
+            protected override int NewId()
+            {
+                var random = new Random();
+                return random.Next(1, int.MaxValue);
+            }
+        }
     }
 }

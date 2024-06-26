@@ -8,5 +8,5 @@ public class AnotherQuery : Query<AnotherQuery, MyQueryResponse>
     public AnotherQuery(IMessage<Guid> triggeredByMessage)
         : base(triggeredByMessage) { }
 
-    public string? SomeData { get; set; }
+    public string? Message { get; set; }
 }
