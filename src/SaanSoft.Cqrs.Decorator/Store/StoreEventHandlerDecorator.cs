@@ -1,8 +1,5 @@
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public class StoreEventHandlerDecorator(IEventHandlerRepository<Guid> repository, IEventSubscriptionBus<Guid> next)
-    : StoreEventHandlerDecorator<Guid>(repository, next);
-
 public abstract class StoreEventHandlerDecorator<TMessageId>(IEventHandlerRepository<TMessageId> repository, IEventSubscriptionBus<TMessageId> next)
     : BaseStoreMessageHandlerDecorator<TMessageId, IEvent<TMessageId>>(repository),
       IEventSubscriptionBusDecorator<TMessageId>

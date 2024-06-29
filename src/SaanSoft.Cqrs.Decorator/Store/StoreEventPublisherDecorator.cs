@@ -1,9 +1,5 @@
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public class StoreEventPublisherDecorator(IEventPublisherRepository<Guid> repository, IEventBus<Guid> next)
-    : StoreEventPublisherDecorator<Guid>(repository, next);
-
-// ReSharper disable once SuggestBaseTypeForParameterInConstructor
 public abstract class StoreEventPublisherDecorator<TMessageId>(IEventPublisherRepository<TMessageId> repository, IEventBus<TMessageId> next) :
     BaseStoreMessagePublisherDecorator<TMessageId, IEvent<TMessageId>>(repository),
     IEventBusDecorator<TMessageId> where TMessageId : struct

@@ -35,7 +35,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Decorator", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Tests.Cqrs.Decorator", "test\SaanSoft.Tests.Cqrs.Decorator\SaanSoft.Tests.Cqrs.Decorator.csproj", "{241D036D-F677-4F05-94F9-BCE8FBE671DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Decorator.GuidIds", "src\SaanSoft.Cqrs.Decorator.GuidIds\SaanSoft.Cqrs.Decorator.GuidIds.csproj", "{AF159B96-B46C-4998-B748-EC86F1F45C8C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.GuidIds", "src\SaanSoft.Cqrs.GuidIds\SaanSoft.Cqrs.GuidIds.csproj", "{AF159B96-B46C-4998-B748-EC86F1F45C8C}"
 EndProject
 Global
 				GlobalSection(SolutionConfigurationPlatforms) = preSolution

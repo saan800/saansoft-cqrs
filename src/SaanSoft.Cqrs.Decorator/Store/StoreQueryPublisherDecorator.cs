@@ -1,8 +1,5 @@
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public class StoreQueryPublisherDecorator(IQueryPublisherRepository<Guid> repository, IQueryBus<Guid> next)
-    : StoreQueryPublisherDecorator<Guid>(repository, next);
-
 public abstract class StoreQueryPublisherDecorator<TMessageId>(IQueryPublisherRepository<TMessageId> repository, IQueryBus<TMessageId> next) :
     BaseStoreMessagePublisherDecorator<TMessageId, IQuery<TMessageId>>(repository),
     IQueryBusDecorator<TMessageId>

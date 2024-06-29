@@ -1,4 +1,4 @@
-namespace SaanSoft.Cqrs.Decorator.GuidIds.Messages;
+namespace SaanSoft.Cqrs.GuidIds.Messages;
 
 public abstract class Event : Event<Guid, Guid>
 {

@@ -1,8 +1,5 @@
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public class StoreCommandHandlerDecorator(ICommandHandlerRepository<Guid> repository, ICommandSubscriptionBus<Guid> next)
-    : StoreCommandHandlerDecorator<Guid>(repository, next);
-
 public abstract class StoreCommandHandlerDecorator<TMessageId>(ICommandHandlerRepository<TMessageId> repository, ICommandSubscriptionBus<TMessageId> next)
     : BaseStoreMessageHandlerDecorator<TMessageId, ICommand<TMessageId>>(repository),
       ICommandSubscriptionBusDecorator<TMessageId>
