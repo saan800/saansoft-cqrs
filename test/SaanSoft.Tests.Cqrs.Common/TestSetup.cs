@@ -1,4 +1,4 @@
-using SaanSoft.Cqrs.Decorator.GuidIds.Utilities;
+using SaanSoft.Cqrs.GuidIds.Utilities;
 using SaanSoft.Cqrs.Utilities;
 
 namespace SaanSoft.Tests.Cqrs.Common;

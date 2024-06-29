@@ -1,25 +1,24 @@
-using MongoDB.Driver;
-using SaanSoft.Cqrs.Messages;
-
 namespace SaanSoft.Cqrs.Decorator.Store.MongoDB;
 
-public interface IEventMongoDbRepository<TMessageId, TEntityKey> : IEventRepository<TMessageId, TEntityKey>, IMongoDbStore<TMessageId>
+public interface IEventMongoDbRepository<TMessageId, TEntityKey> :
+    IEventRepository<TMessageId, TEntityKey>,
+    IMongoDbRepository
     where TMessageId : struct
     where TEntityKey : struct
 {
-    IMongoCollection<IEvent<TMessageId, TEntityKey>> EventMessageCollection { get; }
+    IMongoCollection<IEvent<TMessageId, TEntityKey>> EventCollection { get; }
+    IMongoCollection<IMessage<TMessageId>> MessageCollection { get; }
 }
 
-public class EventRepository(IMongoDatabase database)
-    : EventRepository<Guid>(database)
+public class EventRepository(IMongoDatabase database, IIdGenerator<Guid> idGenerator, InsertManyOptions? insertManyOptions = null)
+    : EventRepository<Guid>(database, idGenerator, insertManyOptions)
 {
 }
 
-public class EventRepository<TEntityKey>(IMongoDatabase database)
-    : EventRepository<Guid, TEntityKey>(database)
+public class EventRepository<TEntityKey>(IMongoDatabase database, IIdGenerator<Guid> idGenerator, InsertManyOptions? insertManyOptions = null)
+    : EventRepository<Guid, TEntityKey>(database, idGenerator, insertManyOptions)
     where TEntityKey : struct
 {
-    protected override Guid NewMessageId() => Guid.NewGuid();
 }
 
 /// <summary>
@@ -30,23 +29,23 @@ public class EventRepository<TEntityKey>(IMongoDatabase database)
 /// <param name="database"></param>
 /// <typeparam name="TMessageId"></typeparam>
 /// <typeparam name="TEntityKey"></typeparam>
-public abstract class EventRepository<TMessageId, TEntityKey>(IMongoDatabase database) :
-    BaseMessageRepository<TMessageId, IEvent<TMessageId>>(database),
-    IEventMongoDbRepository<TMessageId, TEntityKey>,
-    IEventPublisherRepository<TMessageId>,
-    IEventHandlerRepository<TMessageId>
+public abstract class EventRepository<TMessageId, TEntityKey>(IMongoDatabase database, IIdGenerator<TMessageId> idGenerator, InsertManyOptions? insertManyOptions = null) :
+    BaseMessageRepository<TMessageId, IEvent<TMessageId>>(database, idGenerator, insertManyOptions),
+    IEventMongoDbRepository<TMessageId, TEntityKey>
     where TMessageId : struct
     where TEntityKey : struct
 {
-    public override string MessageCollectionName => "EventMessages";
-    public override string PublisherCollectionName => "EventPublishers";
-    public override string HandlerCollectionName => "EventHandlers";
+    public override string CollectionName => "EventMessages";
 
-    public IMongoCollection<IEvent<TMessageId, TEntityKey>> EventMessageCollection => Database.GetCollection<IEvent<TMessageId, TEntityKey>>(MessageCollectionName);
+    public IMongoCollection<IEvent<TMessageId, TEntityKey>> EventCollection
+        => Database.GetCollection<IEvent<TMessageId, TEntityKey>>(CollectionName);
+
+    public IMongoCollection<IMessage<TMessageId>> MessageCollection
+        => Database.GetCollection<IMessage<TMessageId>>(CollectionName);
 
     public async Task<List<IEvent<TMessageId, TEntityKey>>> GetEntityMessagesAsync(TEntityKey key,
         CancellationToken cancellationToken = default)
-        => (await EventMessageCollection
+        => (await EventCollection
             .Find(x => x.Key.Equals(key))
             .ToListAsync(cancellationToken))
             .OrderBy(x => x.MessageOnUtc)
@@ -55,9 +54,9 @@ public abstract class EventRepository<TMessageId, TEntityKey>(IMongoDatabase dat
     /// <summary>
     /// Call this on your app startup to ensure that the necessary indexes are created
     /// </summary>
-    public override async Task EnsureMessageCollectionIndexes(CancellationToken cancellationToken = default)
+    public override async Task EnsureCollectionIndexes(CancellationToken cancellationToken = default)
     {
-        var indexes = EventMessageCollection.Indexes;
+        var indexes = EventCollection.Indexes;
 
         var keyIndex = Builders<IEvent<TMessageId, TEntityKey>>.IndexKeys
             .Ascending(x => x.Key)

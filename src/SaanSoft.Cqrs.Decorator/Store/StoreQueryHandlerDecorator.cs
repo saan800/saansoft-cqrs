@@ -1,8 +1,5 @@
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public class StoreQueryHandlerDecorator(IQueryHandlerRepository<Guid> repository, IQuerySubscriptionBus<Guid> next)
-    : StoreQueryHandlerDecorator<Guid>(repository, next);
-
 public abstract class StoreQueryHandlerDecorator<TMessageId>(IQueryHandlerRepository<TMessageId> repository, IQuerySubscriptionBus<TMessageId> next) :
     BaseStoreMessageHandlerDecorator<TMessageId, IQuery<TMessageId>>(repository),
     IQuerySubscriptionBusDecorator<TMessageId> where TMessageId : struct

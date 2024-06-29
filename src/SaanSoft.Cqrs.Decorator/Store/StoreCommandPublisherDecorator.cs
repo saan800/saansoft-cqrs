@@ -1,8 +1,5 @@
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public class StoreCommandPublisherDecorator(ICommandPublisherRepository<Guid> repository, ICommandBus<Guid> next)
-    : StoreCommandPublisherDecorator<Guid>(repository, next);
-
 // ReSharper disable once SuggestBaseTypeForParameterInConstructor
 public abstract class StoreCommandPublisherDecorator<TMessageId>(ICommandPublisherRepository<TMessageId> repository, ICommandBus<TMessageId> next) :
       BaseStoreMessagePublisherDecorator<TMessageId, ICommand<TMessageId>>(repository),

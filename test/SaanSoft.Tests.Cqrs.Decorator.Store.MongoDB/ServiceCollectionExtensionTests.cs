@@ -1,7 +1,8 @@
 using MongoDB.Bson;
 using SaanSoft.Cqrs.Decorator.Store;
+using SaanSoft.Cqrs.Utilities;
 
-namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.Root;
+namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB;
 
 public class ServiceCollectionExtensionTests : TestSetup
 {
@@ -11,6 +12,7 @@ public class ServiceCollectionExtensionTests : TestSetup
     {
         _serviceCollection = new ServiceCollection();
         _serviceCollection.AddScoped<IMongoDatabase>(_ => Database);
+        _serviceCollection.AddScoped<IIdGenerator<Guid>>(_ => IdGenerator);
     }
 
     [Fact]

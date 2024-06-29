@@ -1,6 +1,6 @@
 using SaanSoft.Cqrs.Utilities;
 
-namespace SaanSoft.Cqrs.Decorator.GuidIds.Utilities;
+namespace SaanSoft.Cqrs.GuidIds.Utilities;
 
 public class GuidIdGenerator : IIdGenerator<Guid>
 {

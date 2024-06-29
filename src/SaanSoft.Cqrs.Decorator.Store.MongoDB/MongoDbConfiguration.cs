@@ -3,7 +3,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
-using SaanSoft.Cqrs.Decorator.GuidIds.Messages;
+using SaanSoft.Cqrs.GuidIds.Messages;
 using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Decorator.Store.MongoDB;

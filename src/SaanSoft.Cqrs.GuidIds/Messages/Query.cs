@@ -1,4 +1,4 @@
-namespace SaanSoft.Cqrs.Decorator.GuidIds.Messages;
+namespace SaanSoft.Cqrs.GuidIds.Messages;
 
 public abstract class Query<TQuery, TResponse> : Query<Guid, TQuery, TResponse>
     where TQuery : IQuery<Guid, TQuery, TResponse>
