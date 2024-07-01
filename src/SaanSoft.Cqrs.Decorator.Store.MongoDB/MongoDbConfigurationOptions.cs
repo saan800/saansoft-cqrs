@@ -14,6 +14,8 @@ public class MongoDbConfigurationOptions
 
     public bool IgnoreExtraElements { get; set; } = true;
 
+    public bool CamelCaseElementName { get; set; } = false;
+
     /// <summary>
     /// RegisterClassMap for all Commands / Events / Queries in these assemblies.
     /// Automatically adds typeof(Command).Assembly to the list

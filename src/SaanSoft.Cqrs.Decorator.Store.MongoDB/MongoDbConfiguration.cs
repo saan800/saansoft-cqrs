@@ -3,8 +3,6 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
-using SaanSoft.Cqrs.GuidIds.Messages;
-using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Decorator.Store.MongoDB;
 
@@ -32,10 +30,11 @@ public static class MongoDbConfiguration
             BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
         }
 
-        if (options.IgnoreNulls) ConventionRegistry.Register("IgnoreNull", new ConventionPack { new IgnoreIfNullConvention(true) }, _ => true);
-        if (options.IgnoreExtraElements) ConventionRegistry.Register("IgnoreExtraElements", new ConventionPack { new IgnoreExtraElementsConvention(true) }, _ => true);
         if (options.ConfigureGuidId) ConventionRegistry.Register("GuidIdConvention", new ConventionPack { new GuidIdConvention() }, _ => true);
         if (options.ConfigureObjectId) ConventionRegistry.Register("ObjectIdIdConvention", new ConventionPack { new StringObjectIdIdGeneratorConvention() }, _ => true);
+        if (options.IgnoreNulls) ConventionRegistry.Register("IgnoreNull", new ConventionPack { new IgnoreIfNullConvention(true) }, _ => true);
+        if (options.IgnoreExtraElements) ConventionRegistry.Register("IgnoreExtraElements", new ConventionPack { new IgnoreExtraElementsConvention(true) }, _ => true);
+        if (options.CamelCaseElementName) ConventionRegistry.Register("CamelCaseElementNameConvention", new ConventionPack { new CamelCaseElementNameConvention() }, _ => true);
 
         var objectSerializer = new ObjectSerializer(type => ObjectSerializer.DefaultAllowedTypes(type) || type.IsAssignableTo(typeof(IMessage)));
         BsonSerializer.RegisterSerializer(objectSerializer);
