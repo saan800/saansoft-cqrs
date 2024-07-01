@@ -1,6 +1,24 @@
 namespace SaanSoft.Cqrs.Messages;
 
-public abstract class Command<TMessageId> : BaseMessage<TMessageId>, ICommand<TMessageId>
+/// <summary>
+/// Because we have both Command{TMessageId} and Command{TMessageId, TCommand, TResponse} that
+/// sometimes can be handled the same way, but other times need to differentiate them.
+///
+/// You should never directly inherit from this interface
+/// use <see cref="Command{TMessageId}"/> and <see cref="Command{TMessageId, TCommand, TResponse}"/> instead.
+/// </summary>
+/// <typeparam name="TMessageId"></typeparam>
+public abstract class CommandRoot<TMessageId> : BaseMessage<TMessageId>, ICommandRoot<TMessageId>
+    where TMessageId : struct
+{
+    protected CommandRoot(TMessageId? id = null, string? correlationId = null, string? authenticatedId = null)
+        : base(id, correlationId, authenticatedId) { }
+
+    protected CommandRoot(IMessage<TMessageId> triggeredByMessage)
+        : base(triggeredByMessage) { }
+}
+
+public abstract class Command<TMessageId> : CommandRoot<TMessageId>, ICommand<TMessageId>
     where TMessageId : struct
 {
     protected Command(TMessageId? id = null, string? correlationId = null, string? authenticatedId = null)
@@ -11,7 +29,7 @@ public abstract class Command<TMessageId> : BaseMessage<TMessageId>, ICommand<TM
 }
 
 public abstract class Command<TMessageId, TCommand, TResponse> :
-    BaseMessage<TMessageId>,
+    CommandRoot<TMessageId>,
     ICommand<TMessageId, TCommand, TResponse>
     where TCommand : ICommand<TMessageId, TCommand, TResponse>
     where TMessageId : struct

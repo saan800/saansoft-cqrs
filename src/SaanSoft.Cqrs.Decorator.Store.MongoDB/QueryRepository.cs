@@ -5,7 +5,7 @@ public interface IQueryMongoDbRepository<TMessageId> :
     IMongoDbRepository
     where TMessageId : struct
 {
-    IMongoCollection<IMessage<TMessageId>> MessageCollection { get; }
+    IMongoCollection<Query<TMessageId>> MessageCollection { get; }
 }
 
 public class QueryRepository(IMongoDatabase database, IIdGenerator<Guid> idGenerator, InsertManyOptions? insertManyOptions = null) :
@@ -20,6 +20,6 @@ public abstract class QueryRepository<TMessageId>(IMongoDatabase database, IIdGe
 {
     public override string CollectionName => "QueryMessages";
 
-    public IMongoCollection<IMessage<TMessageId>> MessageCollection
-        => Database.GetCollection<IMessage<TMessageId>>(CollectionName);
+    public IMongoCollection<Query<TMessageId>> MessageCollection
+        => Database.GetCollection<Query<TMessageId>>(CollectionName);
 }

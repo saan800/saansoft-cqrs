@@ -23,6 +23,7 @@ public static class MongoDbConfiguration
         _hasAlreadyRun = true;
 
         options ??= new MongoDbConfigurationOptions();
+
         if (options.ConfigureGuidSerialisation)
         {
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -39,28 +40,21 @@ public static class MongoDbConfiguration
         var objectSerializer = new ObjectSerializer(type => ObjectSerializer.DefaultAllowedTypes(type) || type.IsAssignableTo(typeof(IMessage)));
         BsonSerializer.RegisterSerializer(objectSerializer);
 
-        RegisterClassMaps(options.RegisterClassMapForAssemblies);
+        RegisterMessageClassMaps(options.RegisterMessageClassMapForAssemblies);
     }
 
     /// <summary>
     /// Register all ClassMaps for classes that extend IMessage in the list of provided assemblies
-    /// Automatically adds typeof(Command).Assembly to list
     /// </summary>
     /// <param name="assemblies"></param>
-    public static void RegisterClassMaps(IEnumerable<Assembly>? assemblies)
+    public static void RegisterMessageClassMaps(IList<Assembly>? assemblies)
     {
-        var baseMessageAssembly = typeof(Command).Assembly;
-        var assemblyList = assemblies?.ToList() ?? [];
+        assemblies ??= [];
 
-        if (!assemblyList.Contains(baseMessageAssembly))
-        {
-            assemblyList.Add(baseMessageAssembly);
-        }
-
-        foreach (var t in assemblyList
+        foreach (var t in assemblies
                      .SelectMany(assembly => assembly.GetExportedTypes())
                      .Where(t => t is { IsAbstract: false, IsClass: true }
-                                 && (typeof(IMessage).IsAssignableFrom(t))
+                                 && (typeof(IMessage<>).IsAssignableFrom(t))
                      ))
         {
             if (!BsonClassMap.IsClassMapRegistered(t))
