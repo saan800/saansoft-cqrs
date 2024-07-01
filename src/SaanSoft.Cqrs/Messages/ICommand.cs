@@ -2,13 +2,26 @@ namespace SaanSoft.Cqrs.Messages;
 
 /// <summary>
 /// You should never directly inherit from this interface
-/// use <see cref="ICommand{TMessageId}"/> instead
+/// use <see cref="ICommand{TMessageId}"/> and <see cref="ICommand{TMessageId, TCommand, TResponse}"/> instead.
 /// </summary>
 public interface ICommand : IMessage
 {
 }
 
-public interface ICommand<TMessageId> : ICommand, IMessage<TMessageId>
+/// <summary>
+/// Because we have both ICommand{TMessageId} and ICommand{TMessageId, TCommand, TResponse} that
+/// sometimes can be handled the same way, but other times need to differentiate them.
+///
+/// You should never directly inherit from this interface
+/// use <see cref="ICommand{TMessageId}"/> and <see cref="ICommand{TMessageId, TCommand, TResponse}"/> instead.
+/// </summary>
+/// <typeparam name="TMessageId"></typeparam>
+public interface ICommandRoot<TMessageId> : ICommand, IMessage<TMessageId>
+    where TMessageId : struct
+{
+}
+
+public interface ICommand<TMessageId> : ICommandRoot<TMessageId>
     where TMessageId : struct
 {
 }
@@ -22,7 +35,7 @@ public interface ICommand<TCommand, TResponse> : ICommand
 {
 }
 
-public interface ICommand<TMessageId, TCommand, TResponse> : ICommand<TCommand, TResponse>, IMessage<TMessageId>
+public interface ICommand<TMessageId, TCommand, TResponse> : ICommand<TCommand, TResponse>, ICommandRoot<TMessageId>
     where TMessageId : struct
     where TCommand : ICommand<TMessageId, TCommand, TResponse>
 {

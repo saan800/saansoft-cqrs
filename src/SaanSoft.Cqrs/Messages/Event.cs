@@ -1,6 +1,8 @@
 namespace SaanSoft.Cqrs.Messages;
 
-public abstract class Event<TMessageId, TEntityKey> : BaseMessage<TMessageId>, IEvent<TMessageId, TEntityKey>
+public abstract class Event<TMessageId, TEntityKey> :
+    BaseMessage<TMessageId>,
+    IEvent<TMessageId, TEntityKey>
     where TMessageId : struct
     where TEntityKey : struct
 {

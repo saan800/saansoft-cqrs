@@ -6,8 +6,7 @@ public interface IEventMongoDbRepository<TMessageId, TEntityKey> :
     where TMessageId : struct
     where TEntityKey : struct
 {
-    IMongoCollection<IEvent<TMessageId, TEntityKey>> EventCollection { get; }
-    IMongoCollection<IMessage<TMessageId>> MessageCollection { get; }
+    IMongoCollection<Event<TMessageId, TEntityKey>> MessageCollection { get; }
 }
 
 public class EventRepository(IMongoDatabase database, IIdGenerator<Guid> idGenerator, InsertManyOptions? insertManyOptions = null)
@@ -37,18 +36,16 @@ public abstract class EventRepository<TMessageId, TEntityKey>(IMongoDatabase dat
 {
     public override string CollectionName => "EventMessages";
 
-    public IMongoCollection<IEvent<TMessageId, TEntityKey>> EventCollection
-        => Database.GetCollection<IEvent<TMessageId, TEntityKey>>(CollectionName);
-
-    public IMongoCollection<IMessage<TMessageId>> MessageCollection
-        => Database.GetCollection<IMessage<TMessageId>>(CollectionName);
+    public IMongoCollection<Event<TMessageId, TEntityKey>> MessageCollection
+        => Database.GetCollection<Event<TMessageId, TEntityKey>>(CollectionName);
 
     public async Task<List<IEvent<TMessageId, TEntityKey>>> GetEntityMessagesAsync(TEntityKey key,
         CancellationToken cancellationToken = default)
-        => (await EventCollection
+        => (await MessageCollection
             .Find(x => x.Key.Equals(key))
             .ToListAsync(cancellationToken))
             .OrderBy(x => x.MessageOnUtc)
+            .Select(x => (IEvent<TMessageId, TEntityKey>)x)
             .ToList();
 
     /// <summary>
@@ -56,9 +53,9 @@ public abstract class EventRepository<TMessageId, TEntityKey>(IMongoDatabase dat
     /// </summary>
     public override async Task EnsureCollectionIndexes(CancellationToken cancellationToken = default)
     {
-        var indexes = EventCollection.Indexes;
+        var indexes = MessageCollection.Indexes;
 
-        var keyIndex = Builders<IEvent<TMessageId, TEntityKey>>.IndexKeys
+        var keyIndex = Builders<Event<TMessageId, TEntityKey>>.IndexKeys
             .Ascending(x => x.Key)
             .Ascending(x => x.TypeFullName)
             .Ascending(x => x.TriggeredById)
@@ -66,7 +63,7 @@ public abstract class EventRepository<TMessageId, TEntityKey>(IMongoDatabase dat
             .Ascending(x => x.MessageOnUtc);
 
         await indexes.CreateOneAsync(
-            new CreateIndexModel<IEvent<TMessageId, TEntityKey>>(keyIndex, new CreateIndexOptions { Unique = false }),
+            new CreateIndexModel<Event<TMessageId, TEntityKey>>(keyIndex, new CreateIndexOptions { Unique = false }),
             null,
             cancellationToken
         );

@@ -2,7 +2,7 @@ namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.Repositories;
 
 public class CommandRepositoryTests : TestSetup
 {
-    private readonly IMongoCollection<IMessage<Guid>> _messageCollection;
+    private readonly IMongoCollection<CommandRoot<Guid>> _messageCollection;
     private readonly CommandRepository _commandRepository;
 
     public CommandRepositoryTests()
@@ -31,12 +31,15 @@ public class CommandRepositoryTests : TestSetup
     {
         var message1 = new MyCommand();
         var message2 = new AnotherCommand();
+        var message3 = new MyCommandWithResponse { Message = "greetings" };
+        var message4 = new AnotherCommandWithResponse { Message = "greetings" };
         await _commandRepository.InsertAsync(message1);
         await _commandRepository.InsertAsync(message2);
+        await _commandRepository.InsertAsync(message3);
+        await _commandRepository.InsertAsync(message4);
 
         // check the collection that the command exists
         var record1 = await _messageCollection.Find(x => x.Id == message1.Id).FirstOrDefaultAsync();
-
         record1.Should().NotBeNull();
         record1.Id.Should().Be(message1.Id);
         record1.TypeFullName.Should().Be(typeof(MyCommand).FullName);
@@ -44,11 +47,26 @@ public class CommandRepositoryTests : TestSetup
         record1.GetType().Should().NotBe<AnotherCommand>();
 
         var record2 = await _messageCollection.Find(x => x.Id == message2.Id).FirstOrDefaultAsync();
-
         record2.Should().NotBeNull();
         record2.Id.Should().Be(message2.Id);
         record2.TypeFullName.Should().Be(typeof(AnotherCommand).FullName);
         record2.GetType().Should().Be<AnotherCommand>();
         record2.GetType().Should().NotBe<MyCommand>();
+
+        var record3 = await _messageCollection.Find(x => x.Id == message3.Id).FirstOrDefaultAsync();
+        record3.Should().NotBeNull();
+        record3.Id.Should().Be(message3.Id);
+        record3.TypeFullName.Should().Be(typeof(MyCommandWithResponse).FullName);
+        record3.GetType().Should().Be<MyCommandWithResponse>();
+        record3.GetType().Should().NotBe<MyCommand>();
+        record3.GetType().Should().NotBe<AnotherCommandWithResponse>();
+
+        var record4 = await _messageCollection.Find(x => x.Id == message4.Id).FirstOrDefaultAsync();
+        record4.Should().NotBeNull();
+        record4.Id.Should().Be(message4.Id);
+        record4.TypeFullName.Should().Be(typeof(AnotherCommandWithResponse).FullName);
+        record4.GetType().Should().Be<AnotherCommandWithResponse>();
+        record4.GetType().Should().NotBe<MyCommand>();
+        record4.GetType().Should().NotBe<MyCommandWithResponse>();
     }
 }

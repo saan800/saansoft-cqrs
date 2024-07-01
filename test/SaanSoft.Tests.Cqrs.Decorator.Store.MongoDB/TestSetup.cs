@@ -1,3 +1,4 @@
+using System.Reflection;
 using EphemeralMongo;
 using SaanSoft.Cqrs.Decorator.Store.MongoDB;
 
@@ -7,10 +8,20 @@ public class TestSetup : SaanSoft.Tests.Cqrs.Common.TestSetup
 {
     protected TestSetup() : base()
     {
-        string name = Guid.NewGuid().ToString("N");
+        var assembly = typeof(TestSetup).Assembly;
+        var name = assembly.GetName().Name?.Replace(".", "");
         Lazy<IMongoClient> mongoClient = new(() => new MongoClient(_temporaryMongoDb.Value.ConnectionString));
         _database = new Lazy<IMongoDatabase>(() => mongoClient.Value.GetDatabase(name));
-        MongoDbConfiguration.Setup();
+        MongoDbConfiguration.Setup(new MongoDbConfigurationOptions
+        {
+            ConfigureGuidId = true,
+            CamelCaseElementName = true,
+            RegisterMessageClassMapForAssemblies =
+            [
+                assembly,
+                typeof(MyCommand).Assembly
+            ]
+        });
     }
 
     private readonly Lazy<IMongoRunner> _temporaryMongoDb = new Lazy<IMongoRunner>((Func<IMongoRunner>)(() => MongoRunner.Run(new MongoRunnerOptions
