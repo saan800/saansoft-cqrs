@@ -53,10 +53,8 @@ public abstract class BaseMessageRepository<TMessageId, TMessage> :
     public virtual async Task EnsureCollectionIndexes(CancellationToken cancellationToken = default)
     {
         var keyIndex = Builders<IMessage<TMessageId>>.IndexKeys
-            .Ascending(x => x.TypeFullName)
             .Ascending(x => x.MessageOnUtc)
-            .Ascending(x => x.TriggeredById)
-            .Ascending(x => x.TriggeredByUser);
+            .Ascending(x => x.Metadata.TypeFullName);
 
         var indexModel =
             new CreateIndexModel<IMessage<TMessageId>>(keyIndex, new CreateIndexOptions { Unique = false, Background = false });

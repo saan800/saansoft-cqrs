@@ -13,15 +13,9 @@ public abstract class BaseMessage<TMessageId> : IMessage<TMessageId>
 {
     public TMessageId Id { get; set; } = default;
 
-    public TMessageId? TriggeredById { get; set; }
-
-    public string? TriggeredByUser { get; set; }
-
-    public string? CorrelationId { get; set; }
+    public MessageMetadata Metadata { get; set; } = new();
 
     public DateTime MessageOnUtc { get; set; } = DateTime.UtcNow;
-
-    public string TypeFullName { get; set; }
 
     public bool IsReplay { get; set; } = false;
 
@@ -29,19 +23,20 @@ public abstract class BaseMessage<TMessageId> : IMessage<TMessageId>
     {
         // ReSharper disable once VirtualMemberCallInConstructor
         if (id.HasValue && !GenericUtils.IsNullOrDefault(id)) Id = id.Value;
-        if (!string.IsNullOrWhiteSpace(correlationId)) CorrelationId = correlationId;
-        if (!string.IsNullOrWhiteSpace(triggeredByUser)) TriggeredByUser = triggeredByUser;
-        if (string.IsNullOrWhiteSpace(TypeFullName))
+
+        if (string.IsNullOrWhiteSpace(Metadata.TypeFullName))
         {
             var type = GetType();
-            TypeFullName ??= type.FullName ?? type.Name;
+            Metadata.TypeFullName = type.FullName ?? type.Name;
         }
+        if (!string.IsNullOrWhiteSpace(correlationId)) Metadata.CorrelationId = correlationId;
+        if (!string.IsNullOrWhiteSpace(triggeredByUser)) Metadata.TriggeredByUser = triggeredByUser;
     }
 
     protected BaseMessage(IMessage<TMessageId> triggeredByMessage)
-        : this(null, triggeredByMessage.CorrelationId, triggeredByMessage.TriggeredByUser)
+        : this(null, triggeredByMessage.Metadata.CorrelationId, triggeredByMessage.Metadata.TriggeredByUser)
     {
-        TriggeredById = triggeredByMessage.Id;
         IsReplay = triggeredByMessage.IsReplay;
+        Metadata.TriggeredById = triggeredByMessage.Id.ToString();
     }
 }

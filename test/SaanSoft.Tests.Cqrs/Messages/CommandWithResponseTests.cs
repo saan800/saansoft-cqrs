@@ -10,12 +10,12 @@ public class CommandWithResponseTests
 
         var result = new MyCommandWithResponse { Message = message };
         result.Id.Should().Be(default(Guid));
-        result.CorrelationId.Should().BeNull();
-        result.TriggeredByUser.Should().BeNull();
         result.MessageOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
-        result.TriggeredById.Should().BeNull();
-        result.TypeFullName.Should().Be(typeof(MyCommandWithResponse).FullName);
         result.Message.Should().Be(message);
+        result.Metadata.TypeFullName.Should().Be(typeof(MyCommandWithResponse).FullName);
+        result.Metadata.TriggeredById.Should().BeNull();
+        result.Metadata.CorrelationId.Should().BeNull();
+        result.Metadata.TriggeredByUser.Should().BeNull();
     }
 
     [Theory]
@@ -27,12 +27,12 @@ public class CommandWithResponseTests
         var result = new MyCommandWithResponse(id, correlationId, authId) { Message = message };
         result.Id.Should().Be(id);
         result.Id.Should().NotBe(default(Guid));
-        result.CorrelationId.Should().Be(correlationId);
-        result.TriggeredByUser.Should().Be(authId);
         result.MessageOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
-        result.TriggeredById.Should().BeNull();
-        result.TypeFullName.Should().Be(typeof(MyCommandWithResponse).FullName);
         result.Message.Should().Be(message);
+        result.Metadata.TypeFullName.Should().Be(typeof(MyCommandWithResponse).FullName);
+        result.Metadata.TriggeredById.Should().BeNull();
+        result.Metadata.CorrelationId.Should().Be(correlationId);
+        result.Metadata.TriggeredByUser.Should().Be(authId);
     }
 
     [Theory]
@@ -48,12 +48,12 @@ public class CommandWithResponseTests
         var result = new MyCommandWithResponse(triggeredBy) { Message = message };
         result.Id.Should().Be(default(Guid));
         result.Id.Should().NotBe(triggeredBy.Id);
-        result.CorrelationId.Should().Be(triggeredBy.CorrelationId);
-        result.TriggeredByUser.Should().Be(triggeredBy.TriggeredByUser);
         result.MessageOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
         result.MessageOnUtc.Should().NotBe(triggeredBy.MessageOnUtc);
-        result.TriggeredById.Should().Be(triggeredBy.Id);
-        result.TypeFullName.Should().Be(typeof(MyCommandWithResponse).FullName);
         result.Message.Should().Be(message);
+        result.Metadata.TypeFullName.Should().Be(typeof(MyCommandWithResponse).FullName);
+        result.Metadata.TriggeredById.Should().Be(triggeredBy.Id.ToString());
+        result.Metadata.CorrelationId.Should().Be(triggeredBy.Metadata.CorrelationId);
+        result.Metadata.TriggeredByUser.Should().Be(triggeredBy.Metadata.TriggeredByUser);
     }
 }

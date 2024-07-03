@@ -58,14 +58,16 @@ public abstract class InMemoryEventBus<TMessageId>(IServiceProvider serviceProvi
 
     public async Task RunOneAsync<TEvent>(TEvent evt, IEventHandler<TEvent> handler, CancellationToken cancellationToken = default) where TEvent : IEvent<TMessageId>
     {
-        using (Logger.BeginScope(new Dictionary<string, object>
+        var scopeData = new Dictionary<string, object>
         {
             ["MessageId"] = !GenericUtils.IsNullOrDefault(evt.Id) ? evt.Id!.ToString() : string.Empty,
-            ["MessageType"] = evt.TypeFullName,
-            ["CorrelationId"] = evt.CorrelationId ?? string.Empty,
-            ["IsReplay"] = evt.IsReplay,
+            ["MessageType"] = evt.Metadata.TypeFullName,
+            ["CorrelationId"] = evt.Metadata.CorrelationId ?? string.Empty,
             ["HandlerType"] = handler.GetType().FullName ?? handler.GetType().Name
-        }))
+        };
+        if (evt.IsReplay) scopeData.Add("IsReplay", true);
+
+        using (Logger.BeginScope(scopeData))
         {
             Logger.LogInformation("Running event handler");
             await handler.HandleAsync(evt, cancellationToken);
