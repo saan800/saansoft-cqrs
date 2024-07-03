@@ -16,14 +16,14 @@ Todo...
 
 ## TODO
 
-Decorator - generate Id
+change message, publisher and subscriber to use message meta dictionary 
+
+bus Decorator - generate Id
 
 IInMemory***Bus for publishers
 - tryExecute / queue / fetch
 
 all messages - attribute to have queue group name (for aws/azure/etc)
-
-event handlers - have attribute on handler that indicates running order priority
 
 ## Feature ideas
 
@@ -97,7 +97,7 @@ TodoList
 
 * in memory messaging
 * no decorators
-* no store
+* no message store
 * MongoDB for read model for queries 
 
 ### Api endpoint tests
@@ -113,7 +113,16 @@ TodoList
 * in memory messaging
 * all the decorators
 * mongodb repositories 
-* use event messages to build read model in queries
+* use messages to build read model in queries
+* diagnostic/info flowchart of messages
+  * filter by
+    * to from date
+    * message full type name
+    * correlation id
+    * assembly for publisher/handler??
+    * has error 
+  * return [mermaid](https://mermaid.js.org/syntax/flowchart.html) text from api
+  * maybe [svelvet](https://svelvet.mintlify.app/components/node) for ui
 * Use [docker compose](https://www.mongodb.com/resources/products/compatibilities/docker) local dev and GitHub CI infrastructure
 
 ### Aws Lambda Api and SNS/SQS handlers
