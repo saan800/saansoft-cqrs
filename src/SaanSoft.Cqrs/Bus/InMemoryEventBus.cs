@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using SaanSoft.Cqrs.Utilities;
 
 namespace SaanSoft.Cqrs.Bus;
 
@@ -17,8 +18,8 @@ public abstract class InMemoryEventBus<TMessageId>(IServiceProvider serviceProvi
         where TEvent : IEvent<TMessageId>
     {
         if (GenericUtils.IsNullOrDefault(evt.Id)) evt.Id = IdGenerator.NewId();
-        // get subscription bus via ServiceProvider so it runs through any decorators
-        var subscriptionBus = ServiceProvider.GetRequiredService<IEventSubscriptionBus<TMessageId>>();
+
+        var subscriptionBus = GetSubscriptionBus();
         await subscriptionBus.RunAsync(evt, cancellationToken);
     }
 
@@ -31,11 +32,17 @@ public abstract class InMemoryEventBus<TMessageId>(IServiceProvider serviceProvi
             evt.Id = IdGenerator.NewId();
         }
 
-        // get subscription bus via ServiceProvider so it runs through any decorators
-        var subscriptionBus = ServiceProvider.GetRequiredService<IEventSubscriptionBus<TMessageId>>();
+        var subscriptionBus = GetSubscriptionBus();
         var tasks = eventList.Select(evt => subscriptionBus.RunAsync(evt, cancellationToken));
         await Task.WhenAll(tasks);
     }
+
+    /// <summary>
+    /// Get subscription bus via ServiceProvider so it runs through any decorators
+    /// </summary>
+    /// <returns></returns>
+    protected virtual IEventSubscriptionBus<TMessageId> GetSubscriptionBus()
+        => ServiceProvider.GetRequiredService<IEventSubscriptionBus<TMessageId>>();
 
     public async Task RunAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
         where TEvent : IEvent<TMessageId>
@@ -51,8 +58,18 @@ public abstract class InMemoryEventBus<TMessageId>(IServiceProvider serviceProvi
 
     public async Task RunOneAsync<TEvent>(TEvent evt, IEventHandler<TEvent> handler, CancellationToken cancellationToken = default) where TEvent : IEvent<TMessageId>
     {
-        Logger.LogInformation("Running event handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, evt.TypeFullName);
-        await handler.HandleAsync(evt, cancellationToken);
+        using (Logger.BeginScope(new Dictionary<string, object>
+        {
+            ["MessageId"] = !GenericUtils.IsNullOrDefault(evt.Id) ? evt.Id!.ToString() : string.Empty,
+            ["MessageType"] = evt.TypeFullName,
+            ["CorrelationId"] = evt.CorrelationId ?? string.Empty,
+            ["IsReplay"] = evt.IsReplay,
+            ["HandlerType"] = handler.GetType().FullName ?? handler.GetType().Name
+        }))
+        {
+            Logger.LogInformation("Running event handler");
+            await handler.HandleAsync(evt, cancellationToken);
+        }
     }
 
     public List<IGrouping<int, IEventHandler<TEvent>>> GetHandlers<TEvent>() where TEvent : IEvent<TMessageId>

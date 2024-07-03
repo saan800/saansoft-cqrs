@@ -1,5 +1,3 @@
-using SaanSoft.Tests.Cqrs.Common.Utilities;
-
 namespace SaanSoft.Tests.Cqrs.Utilities;
 
 public class GenericUtilsTests

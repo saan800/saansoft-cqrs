@@ -8,7 +8,7 @@ public abstract class StoreCommandPublisherDecorator<TMessageId>(ICommandPublish
     public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : ICommand<TMessageId>
     {
-        await StorePublisher<ICommandBus<TMessageId>>(command, cancellationToken);
+        await StorePublisherAsync<ICommandBus<TMessageId>>(command, cancellationToken);
         await next.ExecuteAsync(command, cancellationToken);
     }
 
@@ -16,14 +16,14 @@ public abstract class StoreCommandPublisherDecorator<TMessageId>(ICommandPublish
         where TCommand : ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
     {
         var typedCommand = (TCommand)command;
-        await StorePublisher<ICommandBus<TMessageId>>(typedCommand, cancellationToken);
+        await StorePublisherAsync<ICommandBus<TMessageId>>(typedCommand, cancellationToken);
         return await next.ExecuteAsync(command, cancellationToken);
     }
 
     public async Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : ICommand<TMessageId>
     {
-        await StorePublisher<ICommandBus<TMessageId>>(command, cancellationToken);
+        await StorePublisherAsync<ICommandBus<TMessageId>>(command, cancellationToken);
         await next.QueueAsync(command, cancellationToken);
     }
 }

@@ -5,7 +5,7 @@ public interface ICommandMongoDbRepository<TMessageId> :
     IMongoDbRepository
     where TMessageId : struct
 {
-    IMongoCollection<CommandRoot<TMessageId>> MessageCollection { get; }
+    IMongoCollection<BaseCommand<TMessageId>> MessageCollection { get; }
 }
 
 public class CommandRepository(IMongoDatabase database, IIdGenerator<Guid> idGenerator)
@@ -14,12 +14,12 @@ public class CommandRepository(IMongoDatabase database, IIdGenerator<Guid> idGen
 }
 
 public abstract class CommandRepository<TMessageId>(IMongoDatabase database, IIdGenerator<TMessageId> idGenerator) :
-    BaseMessageRepository<TMessageId, ICommandRoot<TMessageId>>(database, idGenerator),
+    BaseMessageRepository<TMessageId, IBaseCommand<TMessageId>>(database, idGenerator),
     ICommandMongoDbRepository<TMessageId>
     where TMessageId : struct
 {
     public override string CollectionName => "CommandMessages";
 
-    public IMongoCollection<CommandRoot<TMessageId>> MessageCollection
-        => Database.GetCollection<CommandRoot<TMessageId>>(CollectionName);
+    public IMongoCollection<BaseCommand<TMessageId>> MessageCollection
+        => Database.GetCollection<BaseCommand<TMessageId>>(CollectionName);
 }

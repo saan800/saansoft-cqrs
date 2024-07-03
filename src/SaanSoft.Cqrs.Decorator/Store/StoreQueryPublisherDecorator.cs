@@ -9,7 +9,7 @@ public abstract class StoreQueryPublisherDecorator<TMessageId>(IQueryPublisherRe
         where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
     {
         var typedQuery = (TQuery)query;
-        await StorePublisher<IQueryBus<TMessageId>>(typedQuery, cancellationToken);
+        await StorePublisherAsync<IQueryBus<TMessageId>>(typedQuery, cancellationToken);
         return await next.FetchAsync(query, cancellationToken);
     }
 }

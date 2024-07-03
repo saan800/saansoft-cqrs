@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using SaanSoft.Cqrs.Utilities;
 
 namespace SaanSoft.Cqrs.Bus;
 
@@ -20,17 +21,34 @@ public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvi
         var typedQuery = (TQuery)query;
         if (GenericUtils.IsNullOrDefault(typedQuery.Id)) typedQuery.Id = IdGenerator.NewId();
 
-        // get subscription bus via ServiceProvider so it runs through any decorators
-        var subscriptionBus = ServiceProvider.GetRequiredService<IQuerySubscriptionBus<TMessageId>>();
+        var subscriptionBus = GetSubscriptionBus();
         return await subscriptionBus.RunAsync(typedQuery, cancellationToken);
     }
+
+    /// <summary>
+    /// Get subscription bus via ServiceProvider so it runs through any decorators
+    /// </summary>
+    /// <returns></returns>
+    protected virtual IQuerySubscriptionBus<TMessageId> GetSubscriptionBus()
+        => ServiceProvider.GetRequiredService<IQuerySubscriptionBus<TMessageId>>();
 
     public async Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
         where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
     {
         var handler = GetHandler<TQuery, TResponse>();
-        Logger.LogInformation("Running query handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, query.TypeFullName);
-        return await handler.HandleAsync((TQuery)query, cancellationToken);
+        var typedQuery = (TQuery)query;
+        using (Logger.BeginScope(new Dictionary<string, object>
+        {
+            ["MessageId"] = !GenericUtils.IsNullOrDefault(typedQuery.Id) ? typedQuery.Id!.ToString() : string.Empty,
+            ["MessageType"] = typedQuery.TypeFullName,
+            ["CorrelationId"] = typedQuery.CorrelationId ?? string.Empty,
+            ["IsReplay"] = typedQuery.IsReplay,
+            ["HandlerType"] = handler.GetType().FullName ?? handler.GetType().Name
+        }))
+        {
+            Logger.LogInformation("Running query handler");
+            return await handler.HandleAsync(typedQuery, cancellationToken);
+        }
     }
 
     public IQueryHandler<TQuery, TResponse> GetHandler<TQuery, TResponse>()

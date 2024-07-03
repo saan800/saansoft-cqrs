@@ -8,7 +8,8 @@ public class StoreQueryPublisherDecoratorTests : QueryBusDecoratorTestSetup
     }
 
     private readonly IQueryPublisherRepository<Guid> _repository;
-    protected override IQueryBusDecorator<Guid> SutPublisherDecorator =>
+
+    protected override IQueryBusDecorator SutPublisherDecorator =>
         new StoreQueryPublisherDecorator(_repository, InMemoryQueryBus);
 
     public class FetchAsyncTests : StoreQueryPublisherDecoratorTests
@@ -34,7 +35,7 @@ public class StoreQueryPublisherDecoratorTests : QueryBusDecoratorTestSetup
         }
     }
 
-    private class WrapperQueryBusDecorator(IQueryBus<Guid> next) : IQueryBus<Guid>
+    private class WrapperQueryBusDecorator(IQueryBus next) : IQueryBus
     {
         public Task<TResponse> FetchAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
             CancellationToken cancellationToken = default)

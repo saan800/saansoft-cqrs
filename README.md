@@ -23,8 +23,6 @@ bus Decorator - generate Id
 IInMemory***Bus for publishers
 - tryExecute / queue / fetch
 
-no base interface for repositories, use types for messages
-
 all messages - attribute to have queue group name (for aws/azure/etc)
 
 ## Feature ideas

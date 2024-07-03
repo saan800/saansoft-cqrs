@@ -51,5 +51,4 @@ public class QueryRepositoryTests : TestSetup
         record2.GetType().Should().Be<AnotherQuery>();
         record2.GetType().Should().NotBe<MyQuery>();
     }
-
 }

@@ -8,7 +8,8 @@ public class StoreEventPublisherDecoratorTests : EventBusDecoratorTestSetup
     }
 
     private readonly IEventPublisherRepository<Guid> _repository;
-    protected override IEventBusDecorator<Guid> SutPublisherDecorator =>
+
+    protected override IEventBusDecorator SutPublisherDecorator =>
         new StoreEventPublisherDecorator(_repository, InMemoryEventBus);
 
     public class QueueAsyncTests : StoreEventPublisherDecoratorTests
@@ -59,7 +60,7 @@ public class StoreEventPublisherDecoratorTests : EventBusDecoratorTestSetup
     }
 
 
-    private class WrapperEventBusDecorator(IEventBus<Guid> next) : IEventBus<Guid>
+    private class WrapperEventBusDecorator(IEventBus next) : IEventBus
     {
         public Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default) where TEvent : IEvent<Guid>
             => next.QueueAsync(evt, cancellationToken);

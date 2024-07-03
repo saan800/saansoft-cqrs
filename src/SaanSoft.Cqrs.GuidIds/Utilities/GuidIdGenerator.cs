@@ -1,8 +1,6 @@
-using SaanSoft.Cqrs.Utilities;
-
 namespace SaanSoft.Cqrs.GuidIds.Utilities;
 
-public class GuidIdGenerator : IIdGenerator<Guid>
+public class GuidIdGenerator : IIdGenerator
 {
     public Guid NewId() => New;
 

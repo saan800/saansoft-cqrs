@@ -1,3 +1,5 @@
+using SaanSoft.Cqrs.Messages;
+
 namespace SaanSoft.Cqrs.GuidIds.Messages;
 
 public abstract class Command : Command<Guid>
