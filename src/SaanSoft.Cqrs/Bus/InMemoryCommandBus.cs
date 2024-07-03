@@ -19,8 +19,7 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
     {
         if (GenericUtils.IsNullOrDefault(command.Id)) command.Id = IdGenerator.NewId();
 
-        // get subscription bus via ServiceProvider so it runs through any decorators
-        var subscriptionBus = ServiceProvider.GetRequiredService<ICommandSubscriptionBus<TMessageId>>();
+        var subscriptionBus = GetSubscriptionBus();
         await subscriptionBus.RunAsync(command, cancellationToken);
     }
 
@@ -30,8 +29,7 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
         var typedCommand = (TCommand)command;
         if (GenericUtils.IsNullOrDefault(typedCommand.Id)) typedCommand.Id = IdGenerator.NewId();
 
-        // get subscription bus via ServiceProvider so it runs through any decorators
-        var subscriptionBus = ServiceProvider.GetRequiredService<ICommandSubscriptionBus<TMessageId>>();
+        var subscriptionBus = GetSubscriptionBus();
         return await subscriptionBus.RunAsync(typedCommand, cancellationToken);
     }
 
@@ -40,10 +38,16 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
     {
         if (GenericUtils.IsNullOrDefault(command.Id)) command.Id = IdGenerator.NewId();
 
-        // get subscription bus via ServiceProvider so it runs through any decorators
-        var subscriptionBus = ServiceProvider.GetRequiredService<ICommandSubscriptionBus<TMessageId>>();
+        var subscriptionBus = GetSubscriptionBus();
         await subscriptionBus.RunAsync(command, cancellationToken);
     }
+
+    /// <summary>
+    /// Get subscription bus via ServiceProvider so it runs through any decorators
+    /// </summary>
+    /// <returns></returns>
+    protected virtual ICommandSubscriptionBus<TMessageId> GetSubscriptionBus()
+        => ServiceProvider.GetRequiredService<ICommandSubscriptionBus<TMessageId>>();
 
     public async Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : ICommand<TMessageId>

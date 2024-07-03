@@ -21,10 +21,16 @@ public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvi
         var typedQuery = (TQuery)query;
         if (GenericUtils.IsNullOrDefault(typedQuery.Id)) typedQuery.Id = IdGenerator.NewId();
 
-        // get subscription bus via ServiceProvider so it runs through any decorators
-        var subscriptionBus = ServiceProvider.GetRequiredService<IQuerySubscriptionBus<TMessageId>>();
+        var subscriptionBus = GetSubscriptionBus();
         return await subscriptionBus.RunAsync(typedQuery, cancellationToken);
     }
+
+    /// <summary>
+    /// Get subscription bus via ServiceProvider so it runs through any decorators
+    /// </summary>
+    /// <returns></returns>
+    protected virtual IQuerySubscriptionBus<TMessageId> GetSubscriptionBus()
+        => ServiceProvider.GetRequiredService<IQuerySubscriptionBus<TMessageId>>();
 
     public async Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
         where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>

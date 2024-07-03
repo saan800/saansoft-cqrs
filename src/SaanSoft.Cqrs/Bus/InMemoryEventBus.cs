@@ -18,8 +18,8 @@ public abstract class InMemoryEventBus<TMessageId>(IServiceProvider serviceProvi
         where TEvent : IEvent<TMessageId>
     {
         if (GenericUtils.IsNullOrDefault(evt.Id)) evt.Id = IdGenerator.NewId();
-        // get subscription bus via ServiceProvider so it runs through any decorators
-        var subscriptionBus = ServiceProvider.GetRequiredService<IEventSubscriptionBus<TMessageId>>();
+
+        var subscriptionBus = GetSubscriptionBus();
         await subscriptionBus.RunAsync(evt, cancellationToken);
     }
 
@@ -32,11 +32,17 @@ public abstract class InMemoryEventBus<TMessageId>(IServiceProvider serviceProvi
             evt.Id = IdGenerator.NewId();
         }
 
-        // get subscription bus via ServiceProvider so it runs through any decorators
-        var subscriptionBus = ServiceProvider.GetRequiredService<IEventSubscriptionBus<TMessageId>>();
+        var subscriptionBus = GetSubscriptionBus();
         var tasks = eventList.Select(evt => subscriptionBus.RunAsync(evt, cancellationToken));
         await Task.WhenAll(tasks);
     }
+
+    /// <summary>
+    /// Get subscription bus via ServiceProvider so it runs through any decorators
+    /// </summary>
+    /// <returns></returns>
+    protected virtual IEventSubscriptionBus<TMessageId> GetSubscriptionBus()
+        => ServiceProvider.GetRequiredService<IEventSubscriptionBus<TMessageId>>();
 
     public async Task RunAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
         where TEvent : IEvent<TMessageId>

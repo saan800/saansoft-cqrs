@@ -16,13 +16,13 @@ public abstract class TestSetup
 
         ServiceCollection = new ServiceCollection();
         ServiceCollection.AddScoped<ILogger>(_ => Logger);
-        ServiceCollection.AddScoped<IIdGenerator<Guid>>(_ => IdGenerator);
+        ServiceCollection.AddScoped<IIdGenerator>(_ => IdGenerator);
 
-        ServiceCollection.AddScoped<ICommandSubscriptionBus<Guid>, InMemoryCommandBus>();
-        ServiceCollection.AddScoped<IEventSubscriptionBus<Guid>, InMemoryEventBus>();
-        ServiceCollection.AddScoped<IQuerySubscriptionBus<Guid>, InMemoryQueryBus>();
+        ServiceCollection.AddScoped<ICommandSubscriptionBus, InMemoryCommandBus>();
+        ServiceCollection.AddScoped<IEventSubscriptionBus, InMemoryEventBus>();
+        ServiceCollection.AddScoped<IQuerySubscriptionBus, InMemoryQueryBus>();
 
-        ServiceCollection.AddScoped<IIdGenerator<Guid>, GuidIdGenerator>();
+        ServiceCollection.AddScoped<IIdGenerator, GuidIdGenerator>();
     }
 
     private IServiceProvider? _serviceProvider = null;
