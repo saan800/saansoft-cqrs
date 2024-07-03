@@ -21,10 +21,6 @@ Decorator - generate Id
 IInMemory***Bus for publishers
 - tryExecute / queue / fetch
 
-no base interface for repositories, use types for messages
-
-split mongo store into 3
-
 all messages - attribute to have queue group name (for aws/azure/etc)
 
 event handlers - have attribute on handler that indicates running order priority

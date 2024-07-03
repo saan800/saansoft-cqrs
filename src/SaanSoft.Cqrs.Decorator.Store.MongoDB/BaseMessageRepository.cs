@@ -18,18 +18,18 @@ public abstract class BaseMessageRepository<TMessageId, TMessage> :
 {
     protected readonly IMongoDatabase Database;
     protected readonly IIdGenerator<TMessageId> IdGenerator;
-    protected readonly InsertManyOptions InsertManyOptions;
+    protected readonly InsertOneOptions InsertOneOptions;
 
     /// <summary>
     /// </summary>
     /// <param name="database"></param>
     /// <param name="idGenerator"></param>
-    /// <param name="insertManyOptions"></param>
-    protected BaseMessageRepository(IMongoDatabase database, IIdGenerator<TMessageId> idGenerator, InsertManyOptions? insertManyOptions = null)
+    /// <param name="insertOneOptions"></param>
+    protected BaseMessageRepository(IMongoDatabase database, IIdGenerator<TMessageId> idGenerator, InsertOneOptions? insertOneOptions = null)
     {
         Database = database;
         IdGenerator = idGenerator;
-        InsertManyOptions = insertManyOptions ?? new InsertManyOptions();
+        InsertOneOptions = insertOneOptions ?? new InsertOneOptions();
     }
 
     public abstract string CollectionName { get; }
@@ -38,22 +38,13 @@ public abstract class BaseMessageRepository<TMessageId, TMessage> :
         => Database.GetCollection<IMessage<TMessageId>>(CollectionName);
 
     public virtual async Task InsertAsync(TMessage message, CancellationToken cancellationToken = default)
-        => await InsertManyAsync([message], cancellationToken);
-
-    public virtual async Task InsertManyAsync(IEnumerable<TMessage> message, CancellationToken cancellationToken = default)
     {
-        var localMessages = message.Where(x => !x.IsReplay).ToList();
-        if (localMessages.Count == 0) return;
+        if (message.IsReplay) return;
 
-        localMessages = localMessages
-            .Select(msg =>
-            {
-                if (GenericUtils.IsNullOrDefault(msg.Id)) msg.Id = IdGenerator.NewId();
-                return msg;
-            })
-            .ToList();
+        if (GenericUtils.IsNullOrDefault(message.Id)) message.Id = IdGenerator.NewId();
 
-        await BaseMessageCollection.InsertManyAsync(localMessages, InsertManyOptions, cancellationToken);
+
+        await BaseMessageCollection.InsertOneAsync(message, InsertOneOptions, cancellationToken);
     }
 
     /// <summary>

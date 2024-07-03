@@ -9,13 +9,13 @@ public interface IEventMongoDbRepository<TMessageId, TEntityKey> :
     IMongoCollection<Event<TMessageId, TEntityKey>> MessageCollection { get; }
 }
 
-public class EventRepository(IMongoDatabase database, IIdGenerator<Guid> idGenerator, InsertManyOptions? insertManyOptions = null)
-    : EventRepository<Guid>(database, idGenerator, insertManyOptions)
+public class EventRepository(IMongoDatabase database, IIdGenerator<Guid> idGenerator, InsertOneOptions? insertOneOptions = null)
+    : EventRepository<Guid>(database, idGenerator, insertOneOptions)
 {
 }
 
-public class EventRepository<TEntityKey>(IMongoDatabase database, IIdGenerator<Guid> idGenerator, InsertManyOptions? insertManyOptions = null)
-    : EventRepository<Guid, TEntityKey>(database, idGenerator, insertManyOptions)
+public class EventRepository<TEntityKey>(IMongoDatabase database, IIdGenerator<Guid> idGenerator, InsertOneOptions? insertOneOptions = null)
+    : EventRepository<Guid, TEntityKey>(database, idGenerator, insertOneOptions)
     where TEntityKey : struct
 {
 }
@@ -28,8 +28,8 @@ public class EventRepository<TEntityKey>(IMongoDatabase database, IIdGenerator<G
 /// <param name="database"></param>
 /// <typeparam name="TMessageId"></typeparam>
 /// <typeparam name="TEntityKey"></typeparam>
-public abstract class EventRepository<TMessageId, TEntityKey>(IMongoDatabase database, IIdGenerator<TMessageId> idGenerator, InsertManyOptions? insertManyOptions = null) :
-    BaseMessageRepository<TMessageId, IEvent<TMessageId>>(database, idGenerator, insertManyOptions),
+public abstract class EventRepository<TMessageId, TEntityKey>(IMongoDatabase database, IIdGenerator<TMessageId> idGenerator, InsertOneOptions? insertOneOptions = null) :
+    BaseMessageRepository<TMessageId, IEvent<TMessageId>>(database, idGenerator, insertOneOptions),
     IEventMongoDbRepository<TMessageId, TEntityKey>
     where TMessageId : struct
     where TEntityKey : struct

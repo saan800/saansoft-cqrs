@@ -21,16 +21,4 @@ public interface IMessageRepository<TMessageId, in TMessage>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task InsertAsync(TMessage message, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// TODO: do we need this still? or is singular insert ok???
-    /// Add messages to the Store
-    /// </summary>
-    /// <remarks>
-    /// It will not store messages in replay mode
-    /// </remarks>
-    /// <param name="message"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    Task InsertManyAsync(IEnumerable<TMessage> message, CancellationToken cancellationToken = default);
 }

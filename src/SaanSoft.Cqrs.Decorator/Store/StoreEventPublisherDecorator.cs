@@ -6,7 +6,7 @@ public abstract class StoreEventPublisherDecorator<TMessageId>(IEventPublisherRe
 {
     public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default) where TEvent : IEvent<TMessageId>
     {
-        await StorePublisher<IEventBus<TMessageId>>(evt, cancellationToken);
+        await StorePublisherAsync<IEventBus<TMessageId>>(evt, cancellationToken);
         await next.QueueAsync(evt, cancellationToken);
     }
 
@@ -15,7 +15,7 @@ public abstract class StoreEventPublisherDecorator<TMessageId>(IEventPublisherRe
         var eventList = events.ToList();
         if (eventList.Any())
         {
-            await StorePublisher<IEventBus<TMessageId>>(eventList.Last(), cancellationToken);
+            await StorePublisherAsync<IEventBus<TMessageId>>(eventList.Last(), cancellationToken);
         }
         await next.QueueManyAsync(eventList, cancellationToken);
     }

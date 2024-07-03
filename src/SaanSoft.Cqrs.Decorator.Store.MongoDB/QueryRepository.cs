@@ -8,13 +8,13 @@ public interface IQueryMongoDbRepository<TMessageId> :
     IMongoCollection<Query<TMessageId>> MessageCollection { get; }
 }
 
-public class QueryRepository(IMongoDatabase database, IIdGenerator<Guid> idGenerator, InsertManyOptions? insertManyOptions = null) :
-    QueryRepository<Guid>(database, idGenerator, insertManyOptions)
+public class QueryRepository(IMongoDatabase database, IIdGenerator<Guid> idGenerator, InsertOneOptions? insertOneOptions = null) :
+    QueryRepository<Guid>(database, idGenerator, insertOneOptions)
 {
 }
 
-public abstract class QueryRepository<TMessageId>(IMongoDatabase database, IIdGenerator<TMessageId> idGenerator, InsertManyOptions? insertManyOptions = null) :
-    BaseMessageRepository<TMessageId, IQuery<TMessageId>>(database, idGenerator, insertManyOptions),
+public abstract class QueryRepository<TMessageId>(IMongoDatabase database, IIdGenerator<TMessageId> idGenerator, InsertOneOptions? insertOneOptions = null) :
+    BaseMessageRepository<TMessageId, IQuery<TMessageId>>(database, idGenerator, insertOneOptions),
     IQueryMongoDbRepository<TMessageId>
     where TMessageId : struct
 {

@@ -29,8 +29,19 @@ public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvi
         where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
     {
         var handler = GetHandler<TQuery, TResponse>();
-        Logger.LogInformation("Running query handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, query.TypeFullName);
-        return await handler.HandleAsync((TQuery)query, cancellationToken);
+        var typedQuery = (TQuery)query;
+        using (Logger.BeginScope(new Dictionary<string, object>
+        {
+            ["MessageId"] = !GenericUtils.IsNullOrDefault(typedQuery.Id) ? typedQuery.Id!.ToString() : string.Empty,
+            ["MessageType"] = typedQuery.TypeFullName,
+            ["CorrelationId"] = typedQuery.CorrelationId ?? string.Empty,
+            ["IsReplay"] = typedQuery.IsReplay,
+            ["HandlerType"] = handler.GetType().FullName ?? handler.GetType().Name
+        }))
+        {
+            Logger.LogInformation("Running query handler");
+            return await handler.HandleAsync(typedQuery, cancellationToken);
+        }
     }
 
     public IQueryHandler<TQuery, TResponse> GetHandler<TQuery, TResponse>()

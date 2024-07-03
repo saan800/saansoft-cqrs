@@ -48,16 +48,37 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
         where TCommand : ICommand<TMessageId>
     {
         var handler = GetHandler<TCommand>();
-        Logger.LogInformation("Running command handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, command.TypeFullName);
-        await handler.HandleAsync(command, cancellationToken);
+        using (Logger.BeginScope(new Dictionary<string, object>
+        {
+            ["MessageId"] = !GenericUtils.IsNullOrDefault(command.Id) ? command.Id!.ToString() : string.Empty,
+            ["MessageType"] = command.TypeFullName,
+            ["CorrelationId"] = command.CorrelationId ?? string.Empty,
+            ["IsReplay"] = command.IsReplay,
+            ["HandlerType"] = handler.GetType().FullName ?? handler.GetType().Name,
+        }))
+        {
+            Logger.LogInformation("Running command handler");
+            await handler.HandleAsync(command, cancellationToken);
+        }
     }
 
     public async Task<TResponse> RunAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
         where TCommand : ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
     {
         var handler = GetHandler<TCommand, TResponse>();
-        Logger.LogInformation("Running command handler '{HandlerType}' for '{MessageType}'", handler.GetType().FullName, command.TypeFullName);
-        return await handler.HandleAsync((TCommand)command, cancellationToken);
+        var typedCommand = (TCommand)command;
+        using (Logger.BeginScope(new Dictionary<string, object>
+        {
+            ["MessageId"] = !GenericUtils.IsNullOrDefault(typedCommand.Id) ? typedCommand.Id!.ToString() : string.Empty,
+            ["MessageType"] = typedCommand.TypeFullName,
+            ["CorrelationId"] = typedCommand.CorrelationId ?? string.Empty,
+            ["IsReplay"] = typedCommand.IsReplay,
+            ["HandlerType"] = handler.GetType().FullName ?? handler.GetType().Name
+        }))
+        {
+            Logger.LogInformation("Running command handler");
+            return await handler.HandleAsync(typedCommand, cancellationToken);
+        }
     }
 
     public virtual ICommandHandler<TCommand> GetHandler<TCommand>()
