@@ -6,7 +6,7 @@ namespace SaanSoft.Tests.Cqrs.Common;
 public abstract class TestSetup
 {
     protected readonly ILogger Logger;
-    protected readonly IIdGenerator<Guid> IdGenerator;
+    protected readonly IIdGenerator IdGenerator;
     protected readonly ServiceCollection ServiceCollection;
 
     protected TestSetup()

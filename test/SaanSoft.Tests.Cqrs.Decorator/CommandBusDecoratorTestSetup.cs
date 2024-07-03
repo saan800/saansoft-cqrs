@@ -1,3 +1,4 @@
+
 namespace SaanSoft.Tests.Cqrs.Decorator;
 
 public abstract class CommandBusDecoratorTestSetup : TestSetup
@@ -10,5 +11,5 @@ public abstract class CommandBusDecoratorTestSetup : TestSetup
         ServiceCollection.AddScoped<ICommandHandler<AnotherCommandWithResponse, string>, CommandHandler>();
     }
 
-    protected abstract ICommandBusDecorator<Guid> SutPublisherDecorator { get; }
+    protected abstract ICommandBusDecorator SutPublisherDecorator { get; }
 }

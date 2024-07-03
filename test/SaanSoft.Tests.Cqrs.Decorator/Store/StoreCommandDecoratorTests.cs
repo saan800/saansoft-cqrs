@@ -4,12 +4,12 @@ public class StoreCommandDecoratorTests : CommandBusDecoratorTestSetup
 {
     protected StoreCommandDecoratorTests()
     {
-        _repository = A.Fake<ICommandRepository<Guid>>();
+        _repository = A.Fake<ICommandRepository>();
     }
 
-    private readonly ICommandRepository<Guid> _repository;
+    private readonly ICommandRepository _repository;
 
-    protected override ICommandBusDecorator<Guid> SutPublisherDecorator =>
+    protected override ICommandBusDecorator SutPublisherDecorator =>
         new StoreCommandDecorator(_repository, InMemoryCommandBus);
 
     public class ExecuteAsyncTests : StoreCommandDecoratorTests

@@ -8,6 +8,6 @@ public abstract class EventBusDecoratorTestSetup : TestSetup
         ServiceCollection.AddScoped<IEventHandler<AnotherEvent>, EventsHandler>();
     }
 
-    protected abstract IEventBusDecorator<Guid> SutPublisherDecorator { get; }
+    protected abstract IEventBusDecorator SutPublisherDecorator { get; }
 }
 

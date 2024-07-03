@@ -3,7 +3,6 @@ global using FakeItEasy;
 global using FluentAssertions;
 global using Microsoft.Extensions.DependencyInjection;
 global using SaanSoft.Cqrs.GuidIds.Bus;
-global using SaanSoft.Cqrs.Handler;
 global using SaanSoft.Tests.Cqrs.Common;
 global using SaanSoft.Tests.Cqrs.Common.AutoFixture;
 global using SaanSoft.Tests.Cqrs.Common.TestModels;

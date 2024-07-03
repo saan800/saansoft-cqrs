@@ -8,7 +8,8 @@ public class StoreCommandPublisherDecoratorTests : CommandBusDecoratorTestSetup
     }
 
     private readonly ICommandPublisherRepository<Guid> _repository;
-    protected override ICommandBusDecorator<Guid> SutPublisherDecorator =>
+
+    protected override ICommandBusDecorator SutPublisherDecorator =>
         new StoreCommandPublisherDecorator(_repository, InMemoryCommandBus);
 
     public class ExecuteAsyncTests : StoreCommandPublisherDecoratorTests
@@ -107,7 +108,7 @@ public class StoreCommandPublisherDecoratorTests : CommandBusDecoratorTestSetup
         }
     }
 
-    private class WrapperCommandBusDecorator(ICommandBus<Guid> next) : ICommandBus<Guid>
+    private class WrapperCommandBusDecorator(ICommandBus next) : ICommandBus
     {
         public Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
             where TCommand : ICommand<Guid>

@@ -4,12 +4,12 @@ public class StoreEventDecoratorTests : EventBusDecoratorTestSetup
 {
     protected StoreEventDecoratorTests()
     {
-        _repository = A.Fake<IEventRepository<Guid, Guid>>();
+        _repository = A.Fake<IEventRepository>();
     }
 
-    private readonly IEventRepository<Guid, Guid> _repository;
+    private readonly IEventRepository _repository;
 
-    protected override IEventBusDecorator<Guid> SutPublisherDecorator =>
+    protected override IEventBusDecorator SutPublisherDecorator =>
         new StoreEventDecorator(_repository, InMemoryEventBus);
 
     public class QueueAsyncTests : StoreEventDecoratorTests

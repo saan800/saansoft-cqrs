@@ -4,14 +4,13 @@ public class StoreQueryDecoratorTests : QueryBusDecoratorTestSetup
 {
     protected StoreQueryDecoratorTests()
     {
-        _repository = A.Fake<IQueryRepository<Guid>>();
+        _repository = A.Fake<IQueryRepository>();
     }
 
-    private readonly IQueryRepository<Guid> _repository;
+    private readonly IQueryRepository _repository;
 
-    protected override IQueryBusDecorator<Guid> SutPublisherDecorator =>
+    protected override IQueryBusDecorator SutPublisherDecorator =>
         new StoreQueryDecorator(_repository, InMemoryQueryBus);
-
 
     public class FetchAsyncTests : StoreQueryDecoratorTests
     {

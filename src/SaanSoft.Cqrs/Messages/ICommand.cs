@@ -16,12 +16,12 @@ public interface ICommand : IMessage
 /// use <see cref="ICommand{TMessageId}"/> and <see cref="ICommand{TMessageId, TCommand, TResponse}"/> instead.
 /// </summary>
 /// <typeparam name="TMessageId"></typeparam>
-public interface ICommandRoot<TMessageId> : ICommand, IMessage<TMessageId>
+public interface IBaseCommand<TMessageId> : ICommand, IMessage<TMessageId>
     where TMessageId : struct
 {
 }
 
-public interface ICommand<TMessageId> : ICommandRoot<TMessageId>
+public interface ICommand<TMessageId> : IBaseCommand<TMessageId>
     where TMessageId : struct
 {
 }
@@ -35,7 +35,7 @@ public interface ICommand<TCommand, TResponse> : ICommand
 {
 }
 
-public interface ICommand<TMessageId, TCommand, TResponse> : ICommand<TCommand, TResponse>, ICommandRoot<TMessageId>
+public interface ICommand<TMessageId, TCommand, TResponse> : ICommand<TCommand, TResponse>, IBaseCommand<TMessageId>
     where TMessageId : struct
     where TCommand : ICommand<TMessageId, TCommand, TResponse>
 {

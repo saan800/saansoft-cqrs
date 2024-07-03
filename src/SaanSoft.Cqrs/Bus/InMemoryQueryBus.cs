@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using SaanSoft.Cqrs.Utilities;
 
 namespace SaanSoft.Cqrs.Bus;
 

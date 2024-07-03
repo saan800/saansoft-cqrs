@@ -1,7 +1,7 @@
 namespace SaanSoft.Cqrs.Decorator.Store;
 
 public abstract class StoreCommandDecorator<TMessageId>(ICommandRepository<TMessageId> repository, ICommandBus<TMessageId> next)
-    : BaseStoreMessageDecorator<TMessageId, ICommandRoot<TMessageId>>(repository),
+    : BaseStoreMessageDecorator<TMessageId, IBaseCommand<TMessageId>>(repository),
       ICommandBusDecorator<TMessageId>
     where TMessageId : struct
 {
