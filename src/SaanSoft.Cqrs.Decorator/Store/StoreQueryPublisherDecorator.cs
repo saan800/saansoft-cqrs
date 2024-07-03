@@ -1,7 +1,13 @@
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public abstract class StoreQueryPublisherDecorator<TMessageId>(IQueryPublisherRepository<TMessageId> repository, IQueryBus<TMessageId> next) :
-    BaseStoreMessagePublisherDecorator<TMessageId, IQuery<TMessageId>>(repository),
+/// <summary>
+/// Add the publisher to the query's metadata.
+///
+/// Should be used in conjunction with <see cref="StoreQueryDecorator{TMessageId}"/>
+/// </summary>
+/// <param name="next"></param>
+public abstract class StoreQueryPublisherDecorator<TMessageId>(IQueryBus<TMessageId> next) :
+    BaseStoreMessagePublisherDecorator<TMessageId>,
     IQueryBusDecorator<TMessageId>
     where TMessageId : struct
 {

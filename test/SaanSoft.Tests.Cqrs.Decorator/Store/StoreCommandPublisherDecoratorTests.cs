@@ -2,15 +2,8 @@ namespace SaanSoft.Tests.Cqrs.Decorator.Store;
 
 public class StoreCommandPublisherDecoratorTests : CommandBusDecoratorTestSetup
 {
-    protected StoreCommandPublisherDecoratorTests()
-    {
-        _repository = A.Fake<ICommandPublisherRepository<Guid>>();
-    }
-
-    private readonly ICommandPublisherRepository<Guid> _repository;
-
     protected override ICommandBusDecorator SutPublisherDecorator =>
-        new StoreCommandPublisherDecorator(_repository, InMemoryCommandBus);
+        new StoreCommandPublisherDecorator(InMemoryCommandBus);
 
     public class ExecuteAsyncTests : StoreCommandPublisherDecoratorTests
     {
@@ -19,26 +12,22 @@ public class StoreCommandPublisherDecoratorTests : CommandBusDecoratorTestSetup
         [Fact]
         public async Task Should_store_publisher_details()
         {
-            await SutPublisherDecorator.ExecuteAsync(new MyCommand());
+            var command = new MyCommand();
+            await SutPublisherDecorator.ExecuteAsync(command);
 
-            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyCommand>._, ExpectedType, A<CancellationToken>._)).MustHaveHappened();
-        }
-
-        [Fact]
-        public async Task IsReplay_command_should_store_publisher_details()
-        {
-            await SutPublisherDecorator.ExecuteAsync(new MyCommand { IsReplay = true });
-
-            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyCommand>._, ExpectedType, A<CancellationToken>._)).MustHaveHappened();
+            var publisher = command.Metadata.GetValueOrDefaultAs<string>(StoreConstants.PublisherKey);
+            publisher.Should().Be(ExpectedType.FullName);
         }
 
         [Fact]
         public async Task Multiple_decorators_should_store_publisher_details()
         {
+            var command = new MyCommand();
             var wrappedInDecorator = new WrapperCommandBusDecorator(SutPublisherDecorator);
-            await wrappedInDecorator.ExecuteAsync(new MyCommand());
+            await wrappedInDecorator.ExecuteAsync(command);
 
-            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyCommand>._, ExpectedType, A<CancellationToken>._)).MustHaveHappened();
+            var publisher = command.Metadata.GetValueOrDefaultAs<string>(StoreConstants.PublisherKey);
+            publisher.Should().Be(ExpectedType.FullName);
         }
     }
 
@@ -50,28 +39,23 @@ public class StoreCommandPublisherDecoratorTests : CommandBusDecoratorTestSetup
         [AutoFakeData]
         public async Task Should_store_publisher_details(string message)
         {
-            await SutPublisherDecorator.ExecuteAsync(new MyCommandWithResponse { Message = message });
+            var command = new MyCommandWithResponse { Message = message };
+            await SutPublisherDecorator.ExecuteAsync(command);
 
-            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyCommandWithResponse>._, ExpectedType, A<CancellationToken>._)).MustHaveHappened();
-        }
-
-        [Theory]
-        [AutoFakeData]
-        public async Task IsReplay_command_should_store_publisher_details(string message)
-        {
-            await SutPublisherDecorator.ExecuteAsync(new MyCommandWithResponse { Message = message, IsReplay = true });
-
-            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyCommandWithResponse>._, ExpectedType, A<CancellationToken>._)).MustHaveHappened();
+            var publisher = command.Metadata.GetValueOrDefaultAs<string>(StoreConstants.PublisherKey);
+            publisher.Should().Be(ExpectedType.FullName);
         }
 
         [Theory]
         [AutoFakeData]
         public async Task Multiple_decorators_should_store_publisher_details(string message)
         {
+            var command = new MyCommandWithResponse { Message = message };
             var wrappedInDecorator = new WrapperCommandBusDecorator(SutPublisherDecorator);
-            await wrappedInDecorator.ExecuteAsync(new MyCommandWithResponse { Message = message });
+            await wrappedInDecorator.ExecuteAsync(command);
 
-            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyCommandWithResponse>._, ExpectedType, A<CancellationToken>._)).MustHaveHappened();
+            var publisher = command.Metadata.GetValueOrDefaultAs<string>(StoreConstants.PublisherKey);
+            publisher.Should().Be(ExpectedType.FullName);
         }
     }
 
@@ -82,29 +66,22 @@ public class StoreCommandPublisherDecoratorTests : CommandBusDecoratorTestSetup
         [Fact]
         public async Task Should_store_publisher_details()
         {
-            await SutPublisherDecorator.QueueAsync(new MyCommand());
+            var command = new MyCommand();
+            await SutPublisherDecorator.QueueAsync(command);
 
-            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyCommand>._, ExpectedType, A<CancellationToken>._))
-                .MustHaveHappened();
-        }
-
-        [Fact]
-        public async Task IsReplay_command_should_store_publisher_details()
-        {
-            await SutPublisherDecorator.QueueAsync(new MyCommand { IsReplay = true });
-
-            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyCommand>._, ExpectedType, A<CancellationToken>._))
-                .MustHaveHappened();
+            var publisher = command.Metadata.GetValueOrDefaultAs<string>(StoreConstants.PublisherKey);
+            publisher.Should().Be(ExpectedType.FullName);
         }
 
         [Fact]
         public async Task QueueAsync_multiple_decorators_should_store_publisher_details()
         {
+            var command = new MyCommand();
             var wrappedInDecorator = new WrapperCommandBusDecorator(SutPublisherDecorator);
-            await wrappedInDecorator.QueueAsync(new MyCommand());
+            await wrappedInDecorator.QueueAsync(command);
 
-            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyCommand>._, ExpectedType, A<CancellationToken>._))
-                .MustHaveHappened();
+            var publisher = command.Metadata.GetValueOrDefaultAs<string>(StoreConstants.PublisherKey);
+            publisher.Should().Be(ExpectedType.FullName);
         }
     }
 

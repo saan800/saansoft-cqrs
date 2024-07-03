@@ -42,9 +42,9 @@ public class MessageMetadata : Dictionary<string, object?>
     /// <summary>
     /// FullName for the type of the message
     /// </summary>
-    public string TypeFullName
+    public string? TypeFullName
     {
-        get => TryGetValueAs<string>(nameof(TypeFullName), out var val) ? val! : "";
+        get => TryGetValueAs<string>(nameof(TypeFullName), out var val) ? val! : null;
         set => Add(nameof(TypeFullName), value);
     }
 
@@ -54,5 +54,12 @@ public class MessageMetadata : Dictionary<string, object?>
         var found = TryGetValue(key, out object? obj);
         value = (T?)obj;
         return found;
+    }
+
+    public T? GetValueOrDefaultAs<T>(string key)
+    {
+        return TryGetValueAs(key, out T? value)
+            ? value
+            : default;
     }
 }
