@@ -1,8 +1,15 @@
 namespace SaanSoft.Cqrs.Decorator.Store;
 
+/// <summary>
+/// Add the publisher to the command's metadata.
+///
+/// Should be used in conjunction with <see cref="StoreCommandDecorator{TMessageId}"/>
+/// </summary>
+/// <param name="next"></param>
+/// <typeparam name="TMessageId"></typeparam>
 // ReSharper disable once SuggestBaseTypeForParameterInConstructor
-public abstract class StoreCommandPublisherDecorator<TMessageId>(ICommandPublisherRepository<TMessageId> repository, ICommandBus<TMessageId> next) :
-      BaseStoreMessagePublisherDecorator<TMessageId, ICommand<TMessageId>>(repository),
+public abstract class StoreCommandPublisherDecorator<TMessageId>(ICommandBus<TMessageId> next) :
+      BaseStoreMessagePublisherDecorator<TMessageId>,
       ICommandBusDecorator<TMessageId> where TMessageId : struct
 {
     public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)

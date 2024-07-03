@@ -53,14 +53,7 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
         where TCommand : ICommand<TMessageId>
     {
         var handler = GetHandler<TCommand>();
-        using (Logger.BeginScope(new Dictionary<string, object>
-        {
-            ["MessageId"] = !GenericUtils.IsNullOrDefault(command.Id) ? command.Id!.ToString() : string.Empty,
-            ["MessageType"] = command.TypeFullName,
-            ["CorrelationId"] = command.CorrelationId ?? string.Empty,
-            ["IsReplay"] = command.IsReplay,
-            ["HandlerType"] = handler.GetType().FullName ?? handler.GetType().Name,
-        }))
+        using (Logger.BeginScope(command.BuildLoggingScopeData(handler.GetType())))
         {
             Logger.LogInformation("Running command handler");
             await handler.HandleAsync(command, cancellationToken);
@@ -71,15 +64,9 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
         where TCommand : ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
     {
         var handler = GetHandler<TCommand, TResponse>();
+
         var typedCommand = (TCommand)command;
-        using (Logger.BeginScope(new Dictionary<string, object>
-        {
-            ["MessageId"] = !GenericUtils.IsNullOrDefault(typedCommand.Id) ? typedCommand.Id!.ToString() : string.Empty,
-            ["MessageType"] = typedCommand.TypeFullName,
-            ["CorrelationId"] = typedCommand.CorrelationId ?? string.Empty,
-            ["IsReplay"] = typedCommand.IsReplay,
-            ["HandlerType"] = handler.GetType().FullName ?? handler.GetType().Name
-        }))
+        using (Logger.BeginScope(typedCommand.BuildLoggingScopeData(handler.GetType())))
         {
             Logger.LogInformation("Running command handler");
             return await handler.HandleAsync(typedCommand, cancellationToken);

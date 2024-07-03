@@ -2,15 +2,8 @@ namespace SaanSoft.Tests.Cqrs.Decorator.Store;
 
 public class StoreQueryPublisherDecoratorTests : QueryBusDecoratorTestSetup
 {
-    protected StoreQueryPublisherDecoratorTests()
-    {
-        _repository = A.Fake<IQueryPublisherRepository<Guid>>();
-    }
-
-    private readonly IQueryPublisherRepository<Guid> _repository;
-
     protected override IQueryBusDecorator SutPublisherDecorator =>
-        new StoreQueryPublisherDecorator(_repository, InMemoryQueryBus);
+        new StoreQueryPublisherDecorator(InMemoryQueryBus);
 
     public class FetchAsyncTests : StoreQueryPublisherDecoratorTests
     {
@@ -19,19 +12,23 @@ public class StoreQueryPublisherDecoratorTests : QueryBusDecoratorTestSetup
         [Fact]
         public async Task FetchAsync_should_store_publisher_details()
         {
-            await SutPublisherDecorator.FetchAsync(new MyQuery());
+            var query = new MyQuery();
+            await SutPublisherDecorator.FetchAsync(query);
 
-            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyQuery>._, ExpectedType, A<CancellationToken>._)).MustHaveHappened();
+            var publisher = query.Metadata.GetValueOrDefaultAs<string>(StoreConstants.PublisherKey);
+            publisher.Should().Be(ExpectedType.FullName);
         }
 
         [Fact]
         public async Task FetchAsync_multiple_decorators_should_store_publisher_details()
         {
+            var query = new MyQuery();
             var wrappedInDecorator = new WrapperQueryBusDecorator(SutPublisherDecorator);
 
-            await wrappedInDecorator.FetchAsync(new MyQuery());
+            await wrappedInDecorator.FetchAsync(query);
 
-            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyQuery>._, ExpectedType, A<CancellationToken>._)).MustHaveHappened();
+            var publisher = query.Metadata.GetValueOrDefaultAs<string>(StoreConstants.PublisherKey);
+            publisher.Should().Be(ExpectedType.FullName);
         }
     }
 

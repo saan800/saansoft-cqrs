@@ -62,6 +62,12 @@ public static class MongoDbConfiguration
                 var classMapType = classMapDefinition.MakeGenericType(t);
                 var classMap = (BsonClassMap)Activator.CreateInstance(classMapType)!;
                 classMap.AutoMap();
+                classMap.MapField(nameof(IMessage.IsReplay)).SetIgnoreIfDefault(true);
+                classMap.UnmapProperty(nameof(IMessage.IsReplay));
+                classMap.UnmapProperty($"{nameof(IMessage.Metadata)}.{nameof(IMessage.Metadata.CorrelationId)}");
+                classMap.UnmapProperty($"{nameof(IMessage.Metadata)}.{nameof(IMessage.Metadata.TriggeredById)}");
+                classMap.UnmapProperty($"{nameof(IMessage.Metadata)}.{nameof(IMessage.Metadata.TriggeredByUser)}");
+                classMap.UnmapProperty($"{nameof(IMessage.Metadata)}.{nameof(IMessage.Metadata.TypeFullName)}");
                 BsonClassMap.RegisterClassMap(classMap);
             }
         }

@@ -57,10 +57,8 @@ public abstract class EventRepository<TMessageId, TEntityKey>(IMongoDatabase dat
 
         var keyIndex = Builders<Event<TMessageId, TEntityKey>>.IndexKeys
             .Ascending(x => x.Key)
-            .Ascending(x => x.TypeFullName)
-            .Ascending(x => x.TriggeredById)
-            .Ascending(x => x.TriggeredByUser)
-            .Ascending(x => x.MessageOnUtc);
+            .Ascending(x => x.MessageOnUtc)
+            .Ascending(x => x.Metadata.TypeFullName);
 
         await indexes.CreateOneAsync(
             new CreateIndexModel<Event<TMessageId, TEntityKey>>(keyIndex, new CreateIndexOptions { Unique = false }),

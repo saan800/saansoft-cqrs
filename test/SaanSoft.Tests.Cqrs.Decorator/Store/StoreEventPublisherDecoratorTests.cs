@@ -2,15 +2,8 @@ namespace SaanSoft.Tests.Cqrs.Decorator.Store;
 
 public class StoreEventPublisherDecoratorTests : EventBusDecoratorTestSetup
 {
-    protected StoreEventPublisherDecoratorTests()
-    {
-        _repository = A.Fake<IEventPublisherRepository<Guid>>();
-    }
-
-    private readonly IEventPublisherRepository<Guid> _repository;
-
     protected override IEventBusDecorator SutPublisherDecorator =>
-        new StoreEventPublisherDecorator(_repository, InMemoryEventBus);
+        new StoreEventPublisherDecorator(InMemoryEventBus);
 
     public class QueueAsyncTests : StoreEventPublisherDecoratorTests
     {
@@ -19,19 +12,23 @@ public class StoreEventPublisherDecoratorTests : EventBusDecoratorTestSetup
         [Fact]
         public async Task Should_store_publisher_details()
         {
-            await SutPublisherDecorator.QueueAsync(new MyEvent(Guid.NewGuid()));
+            var evt = new MyEvent(Guid.NewGuid());
+            await SutPublisherDecorator.QueueAsync(evt);
 
-            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyEvent>._, ExpectedType, A<CancellationToken>._)).MustHaveHappened();
+            var publisher = evt.Metadata.GetValueOrDefaultAs<string>(StoreConstants.PublisherKey);
+            publisher.Should().Be(ExpectedType.FullName);
         }
 
         [Fact]
         public async Task Multiple_decorators_should_store_publisher_details()
         {
+            var evt = new MyEvent(Guid.NewGuid());
             var wrappedInDecorator = new WrapperEventBusDecorator(SutPublisherDecorator);
 
-            await wrappedInDecorator.QueueAsync(new MyEvent(Guid.NewGuid()));
+            await wrappedInDecorator.QueueAsync(evt);
 
-            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyEvent>._, ExpectedType, A<CancellationToken>._)).MustHaveHappened();
+            var publisher = evt.Metadata.GetValueOrDefaultAs<string>(StoreConstants.PublisherKey);
+            publisher.Should().Be(ExpectedType.FullName);
         }
     }
 
@@ -47,18 +44,13 @@ public class StoreEventPublisherDecoratorTests : EventBusDecoratorTestSetup
 
             await SutPublisherDecorator.QueueManyAsync([event1, event2]);
 
-            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyEvent>._, ExpectedType, A<CancellationToken>._)).MustHaveHappened(1, Times.Exactly);
-        }
+            var publisher1 = event1.Metadata.GetValueOrDefaultAs<string>(StoreConstants.PublisherKey);
+            publisher1.Should().Be(ExpectedType.FullName);
 
-        [Fact]
-        public async Task No_events_in_list_Should_store_publisher_details()
-        {
-            await SutPublisherDecorator.QueueManyAsync(new List<MyEvent>());
-
-            A.CallTo(() => _repository.UpsertPublisherAsync(A<MyEvent>._, ExpectedType, A<CancellationToken>._)).MustNotHaveHappened();
+            var publisher2 = event2.Metadata.GetValueOrDefaultAs<string>(StoreConstants.PublisherKey);
+            publisher2.Should().Be(ExpectedType.FullName);
         }
     }
-
 
     private class WrapperEventBusDecorator(IEventBus next) : IEventBus
     {

@@ -36,7 +36,7 @@ all messages - attribute to have queue group name (for aws/azure/etc)
 ### Decorators
 
 * Generate Id - publishers
-* :eyes: Store - Store messages, publishers and handlers
+* :eyes: Store - Store messages
 * ILogger Scope
 * CorrelationId provider
   * Guid

@@ -4,12 +4,11 @@ using System.Diagnostics;
 
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public abstract class BaseStoreMessagePublisherDecorator<TMessageId, TMessage>(IMessagePublisherRepository<TMessageId, TMessage> repository) :
+public abstract class BaseStoreMessagePublisherDecorator<TMessageId> :
     IMessageBusDecorator
-    where TMessage : IMessage<TMessageId>
     where TMessageId : struct
 {
-    protected async Task StorePublisherAsync<TPublisher>(IMessage<TMessageId> message, CancellationToken cancellationToken)
+    protected async Task StorePublisherAsync<TMessageBus>(IMessage<TMessageId> message, CancellationToken cancellationToken)
     {
         var callerClassType = new StackTrace().GetFrames()
             .Where(f => !string.IsNullOrWhiteSpace(f.GetMethod()?.DeclaringType?.Namespace))
@@ -23,13 +22,13 @@ public abstract class BaseStoreMessagePublisherDecorator<TMessageId, TMessage>(I
             .Where(f => !f.GetMethod().DeclaringType.IsAssignableTo(typeof(IEventSubscriptionBus<>)))
             .Where(f => !f.GetMethod().DeclaringType.IsAssignableTo(typeof(IQueryBus<>)))
             .Where(f => !f.GetMethod().DeclaringType.IsAssignableTo(typeof(IQuerySubscriptionBus<>)))
-            .FirstOrDefault(f => !f.GetMethod()!.DeclaringType.IsAssignableTo(typeof(TPublisher)))
+            .FirstOrDefault(f => !f.GetMethod()!.DeclaringType.IsAssignableTo(typeof(TMessageBus)))
             ?.GetMethod()
             ?.DeclaringType;
 
         if (callerClassType != null)
         {
-            await repository.UpsertPublisherAsync(message, callerClassType, cancellationToken);
+            message.Metadata.Add(StoreConstants.PublisherKey, callerClassType.FullName ?? callerClassType.Name);
         }
     }
 }
