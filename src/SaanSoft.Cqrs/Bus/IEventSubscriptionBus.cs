@@ -13,7 +13,7 @@ public interface IEventSubscriptionBus<TMessageId> where TMessageId : struct
     /// <typeparam name="TEvent"></typeparam>
     /// <returns></returns>
     Task RunAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
-        where TEvent : IEvent<TMessageId>;
+        where TEvent : class, IEvent<TMessageId>;
 
     /// <summary>
     /// Run an event from the queue against a particular handler
@@ -24,7 +24,7 @@ public interface IEventSubscriptionBus<TMessageId> where TMessageId : struct
     /// <typeparam name="TEvent"></typeparam>
     /// <returns></returns>
     Task RunOneAsync<TEvent>(TEvent evt, IEventHandler<TEvent> handler, CancellationToken cancellationToken = default)
-        where TEvent : IEvent<TMessageId>;
+        where TEvent : class, IEvent<TMessageId>;
 
     /// <summary>
     /// Get handlers for an event, grouped and ordered by handler priority
@@ -34,5 +34,5 @@ public interface IEventSubscriptionBus<TMessageId> where TMessageId : struct
     /// <typeparam name="TEvent"></typeparam>
     /// <returns></returns>
     List<IGrouping<int, IEventHandler<TEvent>>> GetHandlers<TEvent>()
-        where TEvent : IEvent<TMessageId>;
+        where TEvent : class, IEvent<TMessageId>;
 }

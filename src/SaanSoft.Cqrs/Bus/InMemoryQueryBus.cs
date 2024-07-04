@@ -16,7 +16,7 @@ public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvi
 
     public async Task<TResponse> FetchAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
         CancellationToken cancellationToken = default)
-        where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
+        where TQuery : class, IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
     {
         var typedQuery = (TQuery)query;
         if (GenericUtils.IsNullOrDefault(typedQuery.Id)) typedQuery.Id = IdGenerator.NewId();
@@ -33,7 +33,7 @@ public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvi
         => ServiceProvider.GetRequiredService<IQuerySubscriptionBus<TMessageId>>();
 
     public async Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
-        where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
+        where TQuery : class, IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
     {
         var handler = GetHandler<TQuery, TResponse>();
         var typedQuery = (TQuery)query;
@@ -46,7 +46,7 @@ public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvi
     }
 
     public IQueryHandler<TQuery, TResponse> GetHandler<TQuery, TResponse>()
-        where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
+        where TQuery : class, IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
     {
         var handlers = ServiceProvider.GetServices<IQueryHandler<TQuery, TResponse>>().ToList();
         switch (handlers.Count)

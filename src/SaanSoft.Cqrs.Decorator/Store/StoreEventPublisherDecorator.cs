@@ -10,13 +10,15 @@ public abstract class StoreEventPublisherDecorator<TMessageId>(IEventBus<TMessag
     BaseStoreMessagePublisherDecorator<TMessageId>,
     IEventBusDecorator<TMessageId> where TMessageId : struct
 {
-    public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default) where TEvent : IEvent<TMessageId>
+    public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
+        where TEvent : class, IEvent<TMessageId>
     {
         await StorePublisherAsync<IEventBus<TMessageId>>(evt, cancellationToken);
         await next.QueueAsync(evt, cancellationToken);
     }
 
-    public async Task QueueManyAsync<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default) where TEvent : IEvent<TMessageId>
+    public async Task QueueManyAsync<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default)
+        where TEvent : class, IEvent<TMessageId>
     {
         var eventList = events.ToList();
         foreach (var evt in eventList)

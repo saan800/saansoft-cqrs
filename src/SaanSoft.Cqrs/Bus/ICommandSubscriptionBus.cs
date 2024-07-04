@@ -13,7 +13,7 @@ public interface ICommandSubscriptionBus<TMessageId> where TMessageId : struct
     /// <param name="cancellationToken"></param>
     /// <typeparam name="TCommand"></typeparam>
     Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : ICommand<TMessageId>;
+        where TCommand : class, ICommand<TMessageId>;
 
     /// <summary>
     /// Runs a command and return the response.
@@ -28,7 +28,7 @@ public interface ICommandSubscriptionBus<TMessageId> where TMessageId : struct
     /// <typeparam name="TResponse"></typeparam>
     /// <returns></returns>
     Task<TResponse> RunAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
-        where TCommand : ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>;
+        where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>;
 
     /// <summary>
     /// Get the handler for the command.
@@ -38,7 +38,7 @@ public interface ICommandSubscriptionBus<TMessageId> where TMessageId : struct
     /// <typeparam name="TCommand"></typeparam>
     /// <returns></returns>
     ICommandHandler<TCommand> GetHandler<TCommand>()
-        where TCommand : ICommand<TMessageId>;
+        where TCommand : class, ICommand<TMessageId>;
 
     /// <summary>
     /// Get the handler for the command.
@@ -49,5 +49,5 @@ public interface ICommandSubscriptionBus<TMessageId> where TMessageId : struct
     /// <typeparam name="TResponse"></typeparam>
     /// <returns></returns>
     ICommandHandler<TCommand, TResponse> GetHandler<TCommand, TResponse>()
-        where TCommand : ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>;
+        where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>;
 }

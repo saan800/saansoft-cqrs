@@ -7,14 +7,14 @@ public abstract class StoreEventDecorator<TMessageId, TEntityKey>(IEventReposito
     where TEntityKey : struct
 {
     public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
-        where TEvent : IEvent<TMessageId>
+        where TEvent : class, IEvent<TMessageId>
     {
         await StoreMessageAsync(evt, cancellationToken);
         await next.QueueAsync(evt, cancellationToken);
     }
 
     public async Task QueueManyAsync<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default)
-        where TEvent : IEvent<TMessageId>
+        where TEvent : class, IEvent<TMessageId>
     {
         var eventsList = events.ToList();
         foreach (var evt in eventsList)

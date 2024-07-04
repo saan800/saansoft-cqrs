@@ -13,7 +13,7 @@ public interface IQuerySubscriptionBus<TMessageId> where TMessageId : struct
     /// <returns></returns>
     Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
         CancellationToken cancellationToken = default)
-        where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>;
+        where TQuery : class, IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>;
 
     /// <summary>
     /// Get the handler for the query.
@@ -24,5 +24,5 @@ public interface IQuerySubscriptionBus<TMessageId> where TMessageId : struct
     /// <typeparam name="TResponse"></typeparam>
     /// <returns></returns>
     IQueryHandler<TQuery, TResponse> GetHandler<TQuery, TResponse>()
-        where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>;
+        where TQuery : class, IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>;
 }

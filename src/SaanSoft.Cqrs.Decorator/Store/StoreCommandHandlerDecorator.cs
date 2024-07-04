@@ -6,7 +6,7 @@ public abstract class StoreCommandHandlerDecorator<TMessageId>(ICommandHandlerRe
     where TMessageId : struct
 {
     public async Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : ICommand<TMessageId>
+        where TCommand : class, ICommand<TMessageId>
     {
         var handler = GetHandler<TCommand>();
         try
@@ -22,7 +22,7 @@ public abstract class StoreCommandHandlerDecorator<TMessageId>(ICommandHandlerRe
     }
 
     public async Task<TResponse> RunAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
-        where TCommand : ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+        where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
     {
         var handler = GetHandler<TCommand, TResponse>();
         var typedCommand = (TCommand)command;
@@ -39,10 +39,11 @@ public abstract class StoreCommandHandlerDecorator<TMessageId>(ICommandHandlerRe
         }
     }
 
-    public ICommandHandler<TCommand> GetHandler<TCommand>() where TCommand : ICommand<TMessageId>
+    public ICommandHandler<TCommand> GetHandler<TCommand>()
+        where TCommand : class, ICommand<TMessageId>
         => next.GetHandler<TCommand>();
 
     public ICommandHandler<TCommand, TResponse> GetHandler<TCommand, TResponse>()
-        where TCommand : ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+        where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
         => next.GetHandler<TCommand, TResponse>();
 }

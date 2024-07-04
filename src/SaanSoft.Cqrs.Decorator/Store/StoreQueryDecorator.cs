@@ -5,7 +5,8 @@ public abstract class StoreQueryDecorator<TMessageId>(IQueryRepository<TMessageI
       IQueryBusDecorator<TMessageId>
     where TMessageId : struct
 {
-    public async Task<TResponse> FetchAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default) where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
+    public async Task<TResponse> FetchAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
+        where TQuery : class, IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
     {
         await StoreMessageAsync((TQuery)query, cancellationToken);
         return await next.FetchAsync(query, cancellationToken);

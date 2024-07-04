@@ -13,14 +13,14 @@ public abstract class StoreCommandPublisherDecorator<TMessageId>(ICommandBus<TMe
       ICommandBusDecorator<TMessageId> where TMessageId : struct
 {
     public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : ICommand<TMessageId>
+        where TCommand : class, ICommand<TMessageId>
     {
         await StorePublisherAsync<ICommandBus<TMessageId>>(command, cancellationToken);
         await next.ExecuteAsync(command, cancellationToken);
     }
 
     public async Task<TResponse> ExecuteAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
-        where TCommand : ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+        where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
     {
         var typedCommand = (TCommand)command;
         await StorePublisherAsync<ICommandBus<TMessageId>>(typedCommand, cancellationToken);
@@ -28,7 +28,7 @@ public abstract class StoreCommandPublisherDecorator<TMessageId>(ICommandBus<TMe
     }
 
     public async Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : ICommand<TMessageId>
+        where TCommand : class, ICommand<TMessageId>
     {
         await StorePublisherAsync<ICommandBus<TMessageId>>(command, cancellationToken);
         await next.QueueAsync(command, cancellationToken);

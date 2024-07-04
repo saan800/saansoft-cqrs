@@ -16,8 +16,6 @@ Todo...
 
 ## TODO
 
-bus Decorator - generate Id
-
 IInMemory***Bus for publishers
 - tryExecute / queue / fetch
 
@@ -33,8 +31,8 @@ all messages - attribute to have 3rd party queue group name (for aws/azure/etc)
 
 ### Decorators
 
-* Generate Id - publishers
-* :white_check_mark: Store - Store messages, and optionally their publisher and handlers
+* :white_check_mark: [Ensure Message Id](https://github.com/saan800/saansoft-cqrs/tree/main/src/SaanSoft.Cqrs.Decorator/EnsureMessageId)
+* :white_check_mark: [Store](https://github.com/saan800/saansoft-cqrs/tree/main/src/SaanSoft.Cqrs.Decorator/Store) - Store messages, and optionally their publisher and handlers
 * ILogger Scope
 * CorrelationId provider
   * Guid
@@ -52,13 +50,14 @@ all messages - attribute to have 3rd party queue group name (for aws/azure/etc)
 
 ### Message Repository
 
-* :white_check_mark: MongoDB
+* :white_check_mark: [MongoDB](https://github.com/saan800/saansoft-cqrs/tree/main/src/SaanSoft.Cqrs.Decorator.Store.MongoDB) 
+  and the [MongoDB.GuidIds](https://github.com/saan800/saansoft-cqrs/tree/main/src/SaanSoft.Cqrs.Decorator.Store.MongoDB.GuidIds) implementation.
 * AWS DynamoDB (maybe, plus example app if doing)
 * Azure Cosmos DB (maybe, plus example app if doing)
 
 ### Message Buses
 
-* :white_check_mark: In Memory
+* :white_check_mark: [In Memory](https://github.com/saan800/saansoft-cqrs/tree/main/src/SaanSoft.Cqrs/Bus)
 * AWS SNS/SQS
 * Azure Topics and Queues (maybe, plus example app if doing)
 
