@@ -7,7 +7,9 @@ public static class MessageExtensions
     {
         var scopeData = new Dictionary<string, object>
         {
+#pragma warning disable CS8601 // Possible null reference assignment.
             ["MessageId"] = !GenericUtils.IsNullOrDefault(message.Id) ? message.Id!.ToString() : string.Empty,
+#pragma warning restore CS8601 // Possible null reference assignment.
             ["MessageType"] = message.Metadata.TypeFullName ?? string.Empty,
             ["CorrelationId"] = message.Metadata.CorrelationId ?? string.Empty,
             ["HandlerType"] = handlerType.GetTypeFullName()

@@ -1,7 +1,7 @@
 using MongoDB.Bson;
 using SaanSoft.Tests.Cqrs.Common.Utilities;
 
-namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.Utilities;
+namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.GuidIds.Utilities;
 
 public class GenericUtilsTestsMongoDb
 {

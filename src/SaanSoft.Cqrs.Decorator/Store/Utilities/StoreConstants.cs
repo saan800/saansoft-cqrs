@@ -1,4 +1,4 @@
-namespace SaanSoft.Cqrs.Decorator.Store;
+namespace SaanSoft.Cqrs.Decorator.Store.Utilities;
 
 public static class StoreConstants
 {

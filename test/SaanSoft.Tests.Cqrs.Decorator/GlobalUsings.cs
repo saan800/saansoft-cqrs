@@ -1,8 +1,7 @@
 global using FakeItEasy;
 global using FluentAssertions;
 global using Microsoft.Extensions.DependencyInjection;
-global using SaanSoft.Cqrs.Decorator;
-global using SaanSoft.Cqrs.Decorator.Store;
+global using SaanSoft.Cqrs.Decorator.Store.Utilities;
 global using SaanSoft.Cqrs.GuidIds.Bus;
 global using SaanSoft.Cqrs.GuidIds.Decorator;
 global using SaanSoft.Cqrs.GuidIds.Decorator.Store;
@@ -12,5 +11,3 @@ global using SaanSoft.Tests.Cqrs.Common;
 global using SaanSoft.Tests.Cqrs.Common.AutoFixture;
 global using SaanSoft.Tests.Cqrs.Common.TestHandlers;
 global using SaanSoft.Tests.Cqrs.Common.TestModels;
-
-

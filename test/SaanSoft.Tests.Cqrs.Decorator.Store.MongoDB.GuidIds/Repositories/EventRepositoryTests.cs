@@ -1,4 +1,4 @@
-namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.Repositories;
+namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.GuidIds.Repositories;
 
 public class EventRepositoryTests : TestSetup
 {

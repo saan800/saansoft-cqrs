@@ -1,6 +1,6 @@
 using SaanSoft.Cqrs.Decorator.Store;
 
-namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.Repositories;
+namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.GuidIds.Repositories;
 
 public abstract class BaseHandlerRepositoryTests<TMessage, TRepository, TCollectionEntity> : TestSetup
      where TMessage : class, IMessage<Guid>

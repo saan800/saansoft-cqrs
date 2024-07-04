@@ -1,8 +1,9 @@
+using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using SaanSoft.Cqrs.Decorator.Store;
 using SaanSoft.Cqrs.Utilities;
 
-namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB;
+namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.GuidIds;
 
 public class ServiceCollectionExtensionTests : TestSetup
 {
@@ -11,6 +12,7 @@ public class ServiceCollectionExtensionTests : TestSetup
     public ServiceCollectionExtensionTests()
     {
         _serviceCollection = new ServiceCollection();
+        _serviceCollection.AddScoped<ILogger>(_ => Logger);
         _serviceCollection.AddScoped<IMongoDatabase>(_ => Database);
         _serviceCollection.AddScoped<IIdGenerator<Guid>>(_ => IdGenerator);
     }
