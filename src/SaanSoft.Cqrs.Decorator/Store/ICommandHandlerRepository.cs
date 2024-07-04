@@ -1,6 +1,6 @@
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public interface ICommandHandlerRepository<TMessageId> : IMessageHandlerRepository<TMessageId, ICommand<TMessageId>>
+public interface ICommandHandlerRepository<in TMessageId> : IMessageHandlerRepository<TMessageId>
     where TMessageId : struct
 {
 }

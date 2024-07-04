@@ -12,23 +12,30 @@ namespace SaanSoft.Cqrs.Decorator.Store.MongoDB;
 /// <typeparam name="TMessage"></typeparam>
 public abstract class BaseMessageRepository<TMessageId, TMessage> :
     IMessageRepository<TMessageId, TMessage>,
+    IMessageHandlerRepository<TMessageId>,
     IMongoDbRepository
     where TMessageId : struct
     where TMessage : class, IMessage<TMessageId>
 {
     protected readonly IMongoDatabase Database;
     protected readonly IIdGenerator<TMessageId> IdGenerator;
+    protected readonly ILogger Logger;
     protected readonly InsertOneOptions InsertOneOptions;
 
     /// <summary>
     /// </summary>
     /// <param name="database"></param>
     /// <param name="idGenerator"></param>
+    /// <param name="logger"></param>
     /// <param name="insertOneOptions"></param>
-    protected BaseMessageRepository(IMongoDatabase database, IIdGenerator<TMessageId> idGenerator, InsertOneOptions? insertOneOptions = null)
+    protected BaseMessageRepository(
+        IMongoDatabase database, IIdGenerator<TMessageId> idGenerator,
+        ILogger logger, InsertOneOptions? insertOneOptions = null
+        )
     {
         Database = database;
         IdGenerator = idGenerator;
+        Logger = logger;
         InsertOneOptions = insertOneOptions ?? new InsertOneOptions();
     }
 
@@ -42,23 +49,10 @@ public abstract class BaseMessageRepository<TMessageId, TMessage> :
         if (message.IsReplay) return;
 
         if (GenericUtils.IsNullOrDefault(message.Id)) message.Id = IdGenerator.NewId();
-
-
         await BaseMessageCollection.InsertOneAsync(message, InsertOneOptions, cancellationToken);
     }
 
-    /// <summary>
-    /// Call in the app startup to ensure that the necessary indexes are created for the MessageCollection
-    /// </summary>
-    public virtual async Task EnsureCollectionIndexes(CancellationToken cancellationToken = default)
-    {
-        var keyIndex = Builders<IMessage<TMessageId>>.IndexKeys
-            .Ascending(x => x.MessageOnUtc)
-            .Ascending(x => x.Metadata.TypeFullName);
+    public abstract Task UpsertHandlerAsync(TMessageId id, Type handlerType, Exception? exception = null, CancellationToken cancellationToken = default);
 
-        var indexModel =
-            new CreateIndexModel<IMessage<TMessageId>>(keyIndex, new CreateIndexOptions { Unique = false, Background = false });
-
-        await BaseMessageCollection.Indexes.CreateOneAsync(indexModel, new CreateOneIndexOptions(), cancellationToken);
-    }
+    public abstract Task EnsureCollectionIndexesAsync(CancellationToken cancellationToken = default);
 }

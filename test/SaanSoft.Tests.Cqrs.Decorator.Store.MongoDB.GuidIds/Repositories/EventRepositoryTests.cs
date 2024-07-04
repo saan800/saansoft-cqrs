@@ -1,4 +1,4 @@
-namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.Repositories;
+namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.GuidIds.Repositories;
 
 public class EventRepositoryTests : TestSetup
 {
@@ -7,7 +7,7 @@ public class EventRepositoryTests : TestSetup
 
     public EventRepositoryTests()
     {
-        _eventRepository = new EventRepository(Database, IdGenerator);
+        _eventRepository = new EventRepository(Database, IdGenerator, Logger);
         _messageCollection = _eventRepository.MessageCollection;
     }
 
@@ -62,5 +62,24 @@ public class EventRepositoryTests : TestSetup
         record2.Metadata.TypeFullName.Should().Be(typeof(AnotherEvent).FullName);
         record2.Should().BeOfType<AnotherEvent>();
         record2.Should().NotBeOfType<MyEvent>();
+    }
+
+    [Fact]
+    public async Task EnsureCollectionIndexesAsync()
+    {
+        await _eventRepository.EnsureCollectionIndexesAsync();
+
+        var indexDocuments = await (await _messageCollection.Indexes.ListAsync()).ToListAsync();
+        indexDocuments.Count.Should().Be(2); // one for Id, and one for our index
+    }
+
+    [Fact]
+    public async Task EnsureCollectionIndexesAsync_can_call_multiple_times()
+    {
+        await _eventRepository.EnsureCollectionIndexesAsync();
+        await _eventRepository.EnsureCollectionIndexesAsync();
+
+        var indexDocuments = await (await _messageCollection.Indexes.ListAsync()).ToListAsync();
+        indexDocuments.Count.Should().Be(2); // one for Id, and one for our index
     }
 }

@@ -1,4 +1,4 @@
-namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.Repositories;
+namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.GuidIds.Repositories;
 
 public class CommandRepositoryTests : TestSetup
 {
@@ -7,7 +7,7 @@ public class CommandRepositoryTests : TestSetup
 
     public CommandRepositoryTests()
     {
-        _commandRepository = new CommandRepository(Database, IdGenerator);
+        _commandRepository = new CommandRepository(Database, IdGenerator, Logger);
         _messageCollection = _commandRepository.MessageCollection;
     }
 
@@ -68,5 +68,24 @@ public class CommandRepositoryTests : TestSetup
         record4.GetType().Should().Be<AnotherCommandWithResponse>();
         record4.GetType().Should().NotBe<MyCommand>();
         record4.GetType().Should().NotBe<MyCommandWithResponse>();
+    }
+
+    [Fact]
+    public async Task EnsureCollectionIndexesAsync()
+    {
+        await _commandRepository.EnsureCollectionIndexesAsync();
+
+        var indexDocuments = await (await _messageCollection.Indexes.ListAsync()).ToListAsync();
+        indexDocuments.Count.Should().Be(2); // one for Id, and one for our index
+    }
+
+    [Fact]
+    public async Task EnsureCollectionIndexesAsync_can_call_multiple_times()
+    {
+        await _commandRepository.EnsureCollectionIndexesAsync();
+        await _commandRepository.EnsureCollectionIndexesAsync();
+
+        var indexDocuments = await (await _messageCollection.Indexes.ListAsync()).ToListAsync();
+        indexDocuments.Count.Should().Be(2); // one for Id, and one for our index
     }
 }

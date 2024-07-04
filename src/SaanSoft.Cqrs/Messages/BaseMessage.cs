@@ -11,13 +11,13 @@ namespace SaanSoft.Cqrs.Messages;
 public abstract class BaseMessage<TMessageId> : IMessage<TMessageId>
     where TMessageId : struct
 {
-    public TMessageId Id { get; set; } = default;
+    public TMessageId Id { get; set; }
 
     public MessageMetadata Metadata { get; set; } = new();
 
     public DateTime MessageOnUtc { get; set; } = DateTime.UtcNow;
 
-    public bool IsReplay { get; set; } = false;
+    public bool IsReplay { get; set; }
 
     protected BaseMessage(TMessageId? id = null, string? correlationId = null, string? triggeredByUser = null)
     {
@@ -27,7 +27,7 @@ public abstract class BaseMessage<TMessageId> : IMessage<TMessageId>
         if (string.IsNullOrWhiteSpace(Metadata.TypeFullName))
         {
             var type = GetType();
-            Metadata.TypeFullName = type.FullName ?? type.Name;
+            Metadata.TypeFullName = type.GetTypeFullName();
         }
         if (!string.IsNullOrWhiteSpace(correlationId)) Metadata.CorrelationId = correlationId;
         if (!string.IsNullOrWhiteSpace(triggeredByUser)) Metadata.TriggeredByUser = triggeredByUser;

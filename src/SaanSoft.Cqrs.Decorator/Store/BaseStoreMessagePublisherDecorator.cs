@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using SaanSoft.Cqrs.Decorator.Store.Utilities;
 
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 
@@ -8,7 +9,7 @@ public abstract class BaseStoreMessagePublisherDecorator<TMessageId> :
     IMessageBusDecorator
     where TMessageId : struct
 {
-    protected async Task StorePublisherAsync<TMessageBus>(IMessage<TMessageId> message, CancellationToken cancellationToken)
+    protected Task StorePublisherAsync<TMessageBus>(IMessage<TMessageId> message, CancellationToken cancellationToken)
     {
         var callerClassType = new StackTrace().GetFrames()
             .Where(f => !string.IsNullOrWhiteSpace(f.GetMethod()?.DeclaringType?.Namespace))
@@ -26,9 +27,7 @@ public abstract class BaseStoreMessagePublisherDecorator<TMessageId> :
             ?.GetMethod()
             ?.DeclaringType;
 
-        if (callerClassType != null)
-        {
-            message.Metadata.Add(StoreConstants.PublisherKey, callerClassType.FullName ?? callerClassType.Name);
-        }
+        message.Metadata.AddPublisher(callerClassType);
+        return Task.CompletedTask;
     }
 }

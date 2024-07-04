@@ -4,11 +4,11 @@ public class StoreQueryHandlerDecoratorTests : QuerySubscriptionBusDecoratorTest
 {
     protected StoreQueryHandlerDecoratorTests()
     {
-        _repository = A.Fake<IQueryHandlerRepository<Guid>>();
+        _repository = A.Fake<IQueryHandlerRepository>();
     }
 
-    private readonly IQueryHandlerRepository<Guid> _repository;
-    protected override IQuerySubscriptionBusDecorator<Guid> SutSubscriptionBusDecorator =>
+    private readonly IQueryHandlerRepository _repository;
+    protected override IQuerySubscriptionBusDecorator SutSubscriptionBusDecorator =>
         new StoreQueryHandlerDecorator(_repository, InMemoryQueryBus);
 
     public class RunAsync : StoreQueryHandlerDecoratorTests
@@ -18,8 +18,8 @@ public class StoreQueryHandlerDecoratorTests : QuerySubscriptionBusDecoratorTest
         {
             await SutSubscriptionBusDecorator.RunAsync(new MyQuery());
 
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<MyQuery>._, typeof(QueryHandler), null, A<CancellationToken>._)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<MyQuery>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, typeof(QueryHandler), null, A<CancellationToken>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -29,8 +29,8 @@ public class StoreQueryHandlerDecoratorTests : QuerySubscriptionBusDecoratorTest
                 .Should().ThrowAsync<Exception>()
                 .Where(x => x.Message.Contains("No handler for type"));
 
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<NoHandlerQuery>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<NoHandlerQuery>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -43,8 +43,8 @@ public class StoreQueryHandlerDecoratorTests : QuerySubscriptionBusDecoratorTest
                 .Should().ThrowAsync<Exception>()
                 .Where(x => x.Message.Contains("Only one handler for type"));
 
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<MyQuery>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<MyQuery>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -56,8 +56,8 @@ public class StoreQueryHandlerDecoratorTests : QuerySubscriptionBusDecoratorTest
                 .Should().ThrowAsync<Exception>()
                 .Where(x => x.Message.Contains("it went wrong"));
 
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<NoHandlerQuery>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<NoHandlerQuery>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappenedOnceExactly();
         }
     }
 }

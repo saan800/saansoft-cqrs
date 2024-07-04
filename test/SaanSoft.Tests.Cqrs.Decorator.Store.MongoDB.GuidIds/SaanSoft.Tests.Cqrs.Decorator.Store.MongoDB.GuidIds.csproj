@@ -4,7 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
-        <NoWarn>CS1591;CS8625;CS8618;NETSDK1206</NoWarn>
+        <NoWarn>CS1591;CS8602;CS8625;CS8618;NETSDK1206</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
@@ -15,7 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\SaanSoft.Cqrs.Decorator.Store.MongoDB\SaanSoft.Cqrs.Decorator.Store.MongoDB.csproj" />
+      <ProjectReference Include="..\..\src\SaanSoft.Cqrs.Decorator.Store.MongoDB.GuidIds\SaanSoft.Cqrs.Decorator.Store.MongoDB.GuidIds.csproj" />
       <ProjectReference Include="..\SaanSoft.Tests.Cqrs.Common\SaanSoft.Tests.Cqrs.Common.csproj" />
     </ItemGroup>
 

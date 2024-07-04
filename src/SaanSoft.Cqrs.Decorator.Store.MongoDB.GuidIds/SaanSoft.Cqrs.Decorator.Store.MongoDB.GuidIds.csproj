@@ -9,8 +9,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SaanSoft.Cqrs.Decorator\SaanSoft.Cqrs.Decorator.csproj" />
-    <ProjectReference Include="..\SaanSoft.Cqrs\SaanSoft.Cqrs.csproj" />
+    <ProjectReference Include="..\SaanSoft.Cqrs.Decorator.Store.MongoDB\SaanSoft.Cqrs.Decorator.Store.MongoDB.csproj" />
+    <ProjectReference Include="..\SaanSoft.Cqrs.GuidIds\SaanSoft.Cqrs.GuidIds.csproj" />
   </ItemGroup>
 
 </Project>

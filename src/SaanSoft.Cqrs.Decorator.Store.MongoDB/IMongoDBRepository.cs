@@ -4,5 +4,5 @@ public interface IMongoDbRepository
 {
     string CollectionName { get; }
 
-    Task EnsureCollectionIndexes(CancellationToken cancellationToken = default);
+    Task EnsureCollectionIndexesAsync(CancellationToken cancellationToken = default);
 }

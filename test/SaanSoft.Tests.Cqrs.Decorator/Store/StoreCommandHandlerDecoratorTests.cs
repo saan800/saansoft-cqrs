@@ -4,11 +4,11 @@ public class StoreCommandHandlerDecoratorTests : CommandSubscriptionBusDecorator
 {
     protected StoreCommandHandlerDecoratorTests()
     {
-        _repository = A.Fake<ICommandHandlerRepository<Guid>>();
+        _repository = A.Fake<ICommandHandlerRepository>();
     }
 
-    private readonly ICommandHandlerRepository<Guid> _repository;
-    protected override ICommandSubscriptionBusDecorator<Guid> SutSubscriptionBusDecorator =>
+    private readonly ICommandHandlerRepository _repository;
+    protected override ICommandSubscriptionBusDecorator SutSubscriptionBusDecorator =>
         new StoreCommandHandlerDecorator(_repository, InMemoryCommandBus);
 
     public class RunAsync : StoreCommandHandlerDecoratorTests
@@ -18,8 +18,8 @@ public class StoreCommandHandlerDecoratorTests : CommandSubscriptionBusDecorator
         {
             await SutSubscriptionBusDecorator.RunAsync(new MyCommand());
 
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<MyCommand>._, typeof(CommandHandler), null, A<CancellationToken>._)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<MyCommand>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, typeof(CommandHandler), null, A<CancellationToken>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -29,8 +29,8 @@ public class StoreCommandHandlerDecoratorTests : CommandSubscriptionBusDecorator
                 .Should().ThrowAsync<InvalidOperationException>()
                 .Where(x => x.Message.Contains("No handler for type"));
 
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<NoHandlerCommand>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<NoHandlerCommand>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -43,8 +43,8 @@ public class StoreCommandHandlerDecoratorTests : CommandSubscriptionBusDecorator
                 .Should().ThrowAsync<InvalidOperationException>()
                 .Where(x => x.Message.Contains("Only one handler for type"));
 
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<MyCommand>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<MyCommand>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -56,8 +56,8 @@ public class StoreCommandHandlerDecoratorTests : CommandSubscriptionBusDecorator
                 .Should().ThrowAsync<Exception>()
                 .Where(x => x.Message.Contains("it went wrong"));
 
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<NoHandlerCommand>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<NoHandlerCommand>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappenedOnceExactly();
         }
     }
 
@@ -68,8 +68,8 @@ public class StoreCommandHandlerDecoratorTests : CommandSubscriptionBusDecorator
         {
             await SutSubscriptionBusDecorator.RunAsync(new MyCommandWithResponse { Message = "hello" });
 
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<MyCommandWithResponse>._, typeof(CommandHandler), null, A<CancellationToken>._)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<MyCommandWithResponse>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, typeof(CommandHandler), null, A<CancellationToken>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -79,8 +79,8 @@ public class StoreCommandHandlerDecoratorTests : CommandSubscriptionBusDecorator
                 .Should().ThrowAsync<InvalidOperationException>()
                 .Where(x => x.Message.Contains("No handler for type"));
 
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<NoHandlerCommandWithResponse>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<NoHandlerCommandWithResponse>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -93,8 +93,8 @@ public class StoreCommandHandlerDecoratorTests : CommandSubscriptionBusDecorator
                 .Should().ThrowAsync<InvalidOperationException>()
                 .Where(x => x.Message.Contains("Only one handler for type"));
 
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<MyCommandWithResponse>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<MyCommandWithResponse>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -106,8 +106,8 @@ public class StoreCommandHandlerDecoratorTests : CommandSubscriptionBusDecorator
                 .Should().ThrowAsync<Exception>()
                 .Where(x => x.Message.Contains("it went wrong"));
 
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<NoHandlerCommandWithResponse>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<NoHandlerCommandWithResponse>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappenedOnceExactly();
         }
     }
 }

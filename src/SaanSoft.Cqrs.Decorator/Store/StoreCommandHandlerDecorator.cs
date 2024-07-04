@@ -1,7 +1,7 @@
 namespace SaanSoft.Cqrs.Decorator.Store;
 
 public abstract class StoreCommandHandlerDecorator<TMessageId>(ICommandHandlerRepository<TMessageId> repository, ICommandSubscriptionBus<TMessageId> next)
-    : BaseStoreMessageHandlerDecorator<TMessageId, ICommand<TMessageId>>(repository),
+    : BaseStoreMessageHandlerDecorator<TMessageId>(repository),
       ICommandSubscriptionBusDecorator<TMessageId>
     where TMessageId : struct
 {
@@ -12,11 +12,11 @@ public abstract class StoreCommandHandlerDecorator<TMessageId>(ICommandHandlerRe
         try
         {
             await next.RunAsync(command, cancellationToken);
-            await Repository.UpsertHandlerAsync(command, handler.GetType(), null, cancellationToken);
+            await Repository.UpsertHandlerAsync(command.Id, handler.GetType(), null, cancellationToken);
         }
         catch (Exception exception)
         {
-            await Repository.UpsertHandlerAsync(command, handler.GetType(), exception, cancellationToken);
+            await Repository.UpsertHandlerAsync(command.Id, handler.GetType(), exception, cancellationToken);
             throw;
         }
     }
@@ -29,12 +29,12 @@ public abstract class StoreCommandHandlerDecorator<TMessageId>(ICommandHandlerRe
         try
         {
             var response = await next.RunAsync(command, cancellationToken);
-            await Repository.UpsertHandlerAsync(typedCommand, handler.GetType(), null, cancellationToken);
+            await Repository.UpsertHandlerAsync(typedCommand.Id, handler.GetType(), null, cancellationToken);
             return response;
         }
         catch (Exception exception)
         {
-            await Repository.UpsertHandlerAsync(typedCommand, handler.GetType(), exception, cancellationToken);
+            await Repository.UpsertHandlerAsync(typedCommand.Id, handler.GetType(), exception, cancellationToken);
             throw;
         }
     }

@@ -36,7 +36,13 @@ public static class MongoDbConfiguration
         if (options.IgnoreExtraElements) ConventionRegistry.Register("IgnoreExtraElements", new ConventionPack { new IgnoreExtraElementsConvention(true) }, _ => true);
         if (options.CamelCaseElementName) ConventionRegistry.Register("CamelCaseElementNameConvention", new ConventionPack { new CamelCaseElementNameConvention() }, _ => true);
 
-        var objectSerializer = new ObjectSerializer(type => ObjectSerializer.DefaultAllowedTypes(type) || type.IsAssignableTo(typeof(IMessage)));
+        var objectSerializer = new ObjectSerializer(type =>
+        {
+            var result = ObjectSerializer.DefaultAllowedTypes(type) ||
+                   (type.FullName?.StartsWith(typeof(List<MessageHandler>).FullName ?? typeof(List<MessageHandler>).Name) ?? false) ||
+                   type.IsAssignableTo(typeof(IMessage));
+            return result;
+        });
         BsonSerializer.RegisterSerializer(objectSerializer);
 
         RegisterMessageClassMaps(options.RegisterMessageClassMapForAssemblies);

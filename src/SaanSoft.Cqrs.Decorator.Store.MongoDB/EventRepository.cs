@@ -2,6 +2,7 @@ namespace SaanSoft.Cqrs.Decorator.Store.MongoDB;
 
 public interface IEventMongoDbRepository<TMessageId, TEntityKey> :
     IEventRepository<TMessageId, TEntityKey>,
+    IEventHandlerRepository<TMessageId>,
     IMongoDbRepository
     where TMessageId : struct
     where TEntityKey : struct
@@ -9,27 +10,18 @@ public interface IEventMongoDbRepository<TMessageId, TEntityKey> :
     IMongoCollection<Event<TMessageId, TEntityKey>> MessageCollection { get; }
 }
 
-public class EventRepository(IMongoDatabase database, IIdGenerator<Guid> idGenerator, InsertOneOptions? insertOneOptions = null)
-    : EventRepository<Guid>(database, idGenerator, insertOneOptions)
-{
-}
-
-public class EventRepository<TEntityKey>(IMongoDatabase database, IIdGenerator<Guid> idGenerator, InsertOneOptions? insertOneOptions = null)
-    : EventRepository<Guid, TEntityKey>(database, idGenerator, insertOneOptions)
-    where TEntityKey : struct
-{
-}
-
 /// <summary>
 /// </summary>
 /// <remarks>
 /// Ensure you add an index on the mongo collection's Key property
 /// </remarks>
-/// <param name="database"></param>
 /// <typeparam name="TMessageId"></typeparam>
 /// <typeparam name="TEntityKey"></typeparam>
-public abstract class EventRepository<TMessageId, TEntityKey>(IMongoDatabase database, IIdGenerator<TMessageId> idGenerator, InsertOneOptions? insertOneOptions = null) :
-    BaseMessageRepository<TMessageId, IEvent<TMessageId>>(database, idGenerator, insertOneOptions),
+public abstract class EventRepository<TMessageId, TEntityKey>(
+        IMongoDatabase database, IIdGenerator<TMessageId> idGenerator,
+        ILogger logger, InsertOneOptions? insertOneOptions = null
+    ) :
+    BaseMessageRepository<TMessageId, IEvent<TMessageId>>(database, idGenerator, logger, insertOneOptions),
     IEventMongoDbRepository<TMessageId, TEntityKey>
     where TMessageId : struct
     where TEntityKey : struct
@@ -48,17 +40,45 @@ public abstract class EventRepository<TMessageId, TEntityKey>(IMongoDatabase dat
             .Select(x => (IEvent<TMessageId, TEntityKey>)x)
             .ToList();
 
+    public override async Task UpsertHandlerAsync(TMessageId id, Type handlerType, Exception? exception = null,
+        CancellationToken cancellationToken = default)
+    {
+        var messageHandler = handlerType.BuildMessageHandler(exception);
+
+        var filter = Builders<Event<TMessageId, TEntityKey>>.Filter.Eq(x => x.Id, id);
+        var metadata = (await MessageCollection
+            .Find(filter)
+            .Project(x => x.Metadata)
+            .SingleOrDefaultAsync(cancellationToken));
+
+        if (metadata == null)
+        {
+            Logger.LogError(
+                "The event {Id} could not be found when attempting to add handler metadata for {HandlerType}",
+                id.ToString(),
+                messageHandler.TypeFullName
+            );
+            return;
+        }
+
+        metadata.AddHandlerMetadata(messageHandler);
+
+        await MessageCollection.FindOneAndUpdateAsync(
+            filter,
+            Builders<Event<TMessageId, TEntityKey>>.Update.Set(x => x.Metadata, metadata),
+            cancellationToken: cancellationToken);
+    }
+
     /// <summary>
     /// Call this on your app startup to ensure that the necessary indexes are created
     /// </summary>
-    public override async Task EnsureCollectionIndexes(CancellationToken cancellationToken = default)
+    public override async Task EnsureCollectionIndexesAsync(CancellationToken cancellationToken = default)
     {
         var indexes = MessageCollection.Indexes;
 
         var keyIndex = Builders<Event<TMessageId, TEntityKey>>.IndexKeys
             .Ascending(x => x.Key)
-            .Ascending(x => x.MessageOnUtc)
-            .Ascending(x => x.Metadata.TypeFullName);
+            .Ascending(x => x.MessageOnUtc);
 
         await indexes.CreateOneAsync(
             new CreateIndexModel<Event<TMessageId, TEntityKey>>(keyIndex, new CreateIndexOptions { Unique = false }),

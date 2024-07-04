@@ -10,7 +10,7 @@ public class GuidIdConvention : ConventionBase, IPostProcessingConvention
     {
         // Look for the property named "Id" and map it to "_id"
         var idMemberMap = classMap.IdMemberMap;
-        if (idMemberMap != null && idMemberMap.MemberName == "Id" && idMemberMap.MemberType == typeof(Guid))
+        if (idMemberMap is { MemberName: "Id" } && idMemberMap.MemberType == typeof(Guid))
         {
             classMap.MapIdProperty("Id").SetIdGenerator(new GuidGenerator());
         }
