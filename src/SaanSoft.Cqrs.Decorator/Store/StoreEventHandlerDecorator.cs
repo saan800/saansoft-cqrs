@@ -5,7 +5,8 @@ public abstract class StoreEventHandlerDecorator<TMessageId>(IEventHandlerReposi
       IEventSubscriptionBusDecorator<TMessageId>
     where TMessageId : struct
 {
-    public async Task RunAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default) where TEvent : IEvent<TMessageId>
+    public async Task RunAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
+        where TEvent : class, IEvent<TMessageId>
     {
         // run each group of handlers in the given priority order
         foreach (var tasks in GetHandlers<TEvent>()
@@ -16,7 +17,8 @@ public abstract class StoreEventHandlerDecorator<TMessageId>(IEventHandlerReposi
         }
     }
 
-    public async Task RunOneAsync<TEvent>(TEvent evt, IEventHandler<TEvent> handler, CancellationToken cancellationToken = default) where TEvent : IEvent<TMessageId>
+    public async Task RunOneAsync<TEvent>(TEvent evt, IEventHandler<TEvent> handler, CancellationToken cancellationToken = default)
+        where TEvent : class, IEvent<TMessageId>
     {
         try
         {
@@ -30,6 +32,7 @@ public abstract class StoreEventHandlerDecorator<TMessageId>(IEventHandlerReposi
         }
     }
 
-    public List<IGrouping<int, IEventHandler<TEvent>>> GetHandlers<TEvent>() where TEvent : IEvent<TMessageId>
+    public List<IGrouping<int, IEventHandler<TEvent>>> GetHandlers<TEvent>()
+        where TEvent : class, IEvent<TMessageId>
         => next.GetHandlers<TEvent>();
 }

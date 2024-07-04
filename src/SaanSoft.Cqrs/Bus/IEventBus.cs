@@ -11,7 +11,7 @@ public interface IEventBus<TMessageId> where TMessageId : struct
     /// <typeparam name="TEvent"></typeparam>
     /// <returns></returns>
     Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
-        where TEvent : IEvent<TMessageId>;
+        where TEvent : class, IEvent<TMessageId>;
 
     /// <summary>
     /// Put the events onto the queue
@@ -23,5 +23,5 @@ public interface IEventBus<TMessageId> where TMessageId : struct
     /// <typeparam name="TEvent"></typeparam>
     /// <returns></returns>
     Task QueueManyAsync<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default)
-        where TEvent : IEvent<TMessageId>;
+        where TEvent : class, IEvent<TMessageId>;
 }

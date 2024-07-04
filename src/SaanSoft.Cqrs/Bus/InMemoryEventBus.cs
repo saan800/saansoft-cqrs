@@ -15,7 +15,7 @@ public abstract class InMemoryEventBus<TMessageId>(IServiceProvider serviceProvi
     // ReSharper restore MemberCanBePrivate.Global
 
     public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
-        where TEvent : IEvent<TMessageId>
+        where TEvent : class, IEvent<TMessageId>
     {
         if (GenericUtils.IsNullOrDefault(evt.Id)) evt.Id = IdGenerator.NewId();
 
@@ -24,7 +24,7 @@ public abstract class InMemoryEventBus<TMessageId>(IServiceProvider serviceProvi
     }
 
     public async Task QueueManyAsync<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default)
-        where TEvent : IEvent<TMessageId>
+        where TEvent : class, IEvent<TMessageId>
     {
         var eventList = events.ToList();
         foreach (var evt in eventList.Where(evt => GenericUtils.IsNullOrDefault(evt.Id)))
@@ -45,7 +45,7 @@ public abstract class InMemoryEventBus<TMessageId>(IServiceProvider serviceProvi
         => ServiceProvider.GetRequiredService<IEventSubscriptionBus<TMessageId>>();
 
     public async Task RunAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
-        where TEvent : IEvent<TMessageId>
+        where TEvent : class, IEvent<TMessageId>
     {
         // run each group of handlers in the given priority order
         foreach (var tasks in GetHandlers<TEvent>()
@@ -56,7 +56,8 @@ public abstract class InMemoryEventBus<TMessageId>(IServiceProvider serviceProvi
         }
     }
 
-    public async Task RunOneAsync<TEvent>(TEvent evt, IEventHandler<TEvent> handler, CancellationToken cancellationToken = default) where TEvent : IEvent<TMessageId>
+    public async Task RunOneAsync<TEvent>(TEvent evt, IEventHandler<TEvent> handler, CancellationToken cancellationToken = default)
+        where TEvent : class, IEvent<TMessageId>
     {
         using (Logger.BeginScope(evt.BuildLoggingScopeData(handler.GetType())))
         {
@@ -65,6 +66,7 @@ public abstract class InMemoryEventBus<TMessageId>(IServiceProvider serviceProvi
         }
     }
 
-    public List<IGrouping<int, IEventHandler<TEvent>>> GetHandlers<TEvent>() where TEvent : IEvent<TMessageId>
+    public List<IGrouping<int, IEventHandler<TEvent>>> GetHandlers<TEvent>()
+        where TEvent : class, IEvent<TMessageId>
         => ServiceProvider.GetPrioritisedEventHandlers<TEvent, TMessageId>();
 }

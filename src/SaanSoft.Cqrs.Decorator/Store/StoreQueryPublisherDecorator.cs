@@ -12,7 +12,7 @@ public abstract class StoreQueryPublisherDecorator<TMessageId>(IQueryBus<TMessag
     where TMessageId : struct
 {
     public async Task<TResponse> FetchAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
-        where TQuery : IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
+        where TQuery : class, IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
     {
         var typedQuery = (TQuery)query;
         await StorePublisherAsync<IQueryBus<TMessageId>>(typedQuery, cancellationToken);

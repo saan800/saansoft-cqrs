@@ -15,7 +15,7 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
     // ReSharper restore MemberCanBePrivate.Global
 
     public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : ICommand<TMessageId>
+        where TCommand : class, ICommand<TMessageId>
     {
         if (GenericUtils.IsNullOrDefault(command.Id)) command.Id = IdGenerator.NewId();
 
@@ -24,7 +24,7 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
     }
 
     public async Task<TResponse> ExecuteAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
-        where TCommand : ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+        where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
     {
         var typedCommand = (TCommand)command;
         if (GenericUtils.IsNullOrDefault(typedCommand.Id)) typedCommand.Id = IdGenerator.NewId();
@@ -34,7 +34,7 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
     }
 
     public async Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : ICommand<TMessageId>
+        where TCommand : class, ICommand<TMessageId>
     {
         if (GenericUtils.IsNullOrDefault(command.Id)) command.Id = IdGenerator.NewId();
 
@@ -50,7 +50,7 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
         => ServiceProvider.GetRequiredService<ICommandSubscriptionBus<TMessageId>>();
 
     public async Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : ICommand<TMessageId>
+        where TCommand : class, ICommand<TMessageId>
     {
         var handler = GetHandler<TCommand>();
         using (Logger.BeginScope(command.BuildLoggingScopeData(handler.GetType())))
@@ -61,7 +61,7 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
     }
 
     public async Task<TResponse> RunAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
-        where TCommand : ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+        where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
     {
         var handler = GetHandler<TCommand, TResponse>();
 
@@ -74,11 +74,11 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
     }
 
     public virtual ICommandHandler<TCommand> GetHandler<TCommand>()
-        where TCommand : ICommand<TMessageId>
+        where TCommand : class, ICommand<TMessageId>
         => GetCommandHandler<ICommandHandler<TCommand>>();
 
     public ICommandHandler<TCommand, TResponse> GetHandler<TCommand, TResponse>()
-        where TCommand : ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+        where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
         => GetCommandHandler<ICommandHandler<TCommand, TResponse>>();
 
     private TCommandHandler GetCommandHandler<TCommandHandler>()
