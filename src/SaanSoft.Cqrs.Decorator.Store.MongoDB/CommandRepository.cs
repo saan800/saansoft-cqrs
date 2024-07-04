@@ -50,4 +50,18 @@ public abstract class CommandRepository<TMessageId>(
             Builders<BaseCommand<TMessageId>>.Update.Set(x => x.Metadata, metadata),
             cancellationToken: cancellationToken);
     }
+
+    /// <summary>
+    /// Call in the app startup to ensure that the necessary indexes are created for the MessageCollection
+    /// </summary>
+    public override async Task EnsureCollectionIndexesAsync(CancellationToken cancellationToken = default)
+    {
+        var keyIndex = Builders<BaseCommand<TMessageId>>.IndexKeys
+            .Ascending(x => x.MessageOnUtc);
+
+        var indexModel =
+            new CreateIndexModel<BaseCommand<TMessageId>>(keyIndex, new CreateIndexOptions { Unique = false, Background = true });
+
+        await MessageCollection.Indexes.CreateOneAsync(indexModel, new CreateOneIndexOptions(), cancellationToken);
+    }
 }

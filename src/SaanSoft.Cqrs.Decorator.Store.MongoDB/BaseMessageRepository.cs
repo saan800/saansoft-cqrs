@@ -1,8 +1,6 @@
 // ReSharper disable MemberCanBeProtected.Global
 // ReSharper disable MemberCanBePrivate.Global
 
-using SaanSoft.Cqrs.Decorator.Store.Utilities;
-
 namespace SaanSoft.Cqrs.Decorator.Store.MongoDB;
 
 /// <summary>
@@ -56,18 +54,5 @@ public abstract class BaseMessageRepository<TMessageId, TMessage> :
 
     public abstract Task UpsertHandlerAsync(TMessageId id, Type handlerType, Exception? exception = null, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Call in the app startup to ensure that the necessary indexes are created for the MessageCollection
-    /// </summary>
-    public virtual async Task EnsureCollectionIndexes(CancellationToken cancellationToken = default)
-    {
-        var keyIndex = Builders<IMessage<TMessageId>>.IndexKeys
-            .Ascending(x => x.MessageOnUtc)
-            .Ascending(x => x.Metadata.TypeFullName);
-
-        var indexModel =
-            new CreateIndexModel<IMessage<TMessageId>>(keyIndex, new CreateIndexOptions { Unique = false, Background = false });
-
-        await BaseMessageCollection.Indexes.CreateOneAsync(indexModel, new CreateOneIndexOptions(), cancellationToken);
-    }
+    public abstract Task EnsureCollectionIndexesAsync(CancellationToken cancellationToken = default);
 }

@@ -69,4 +69,23 @@ public class CommandRepositoryTests : TestSetup
         record4.GetType().Should().NotBe<MyCommand>();
         record4.GetType().Should().NotBe<MyCommandWithResponse>();
     }
+
+    [Fact]
+    public async Task EnsureCollectionIndexesAsync()
+    {
+        await _commandRepository.EnsureCollectionIndexesAsync();
+
+        var indexDocuments = await (await _messageCollection.Indexes.ListAsync()).ToListAsync();
+        indexDocuments.Count.Should().Be(2); // one for Id, and one for our index
+    }
+
+    [Fact]
+    public async Task EnsureCollectionIndexesAsync_can_call_multiple_times()
+    {
+        await _commandRepository.EnsureCollectionIndexesAsync();
+        await _commandRepository.EnsureCollectionIndexesAsync();
+
+        var indexDocuments = await (await _messageCollection.Indexes.ListAsync()).ToListAsync();
+        indexDocuments.Count.Should().Be(2); // one for Id, and one for our index
+    }
 }

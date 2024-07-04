@@ -50,4 +50,18 @@ public abstract class QueryRepository<TMessageId>(
             Builders<Query<TMessageId>>.Update.Set(x => x.Metadata, metadata),
             cancellationToken: cancellationToken);
     }
+
+    /// <summary>
+    /// Call in the app startup to ensure that the necessary indexes are created for the MessageCollection
+    /// </summary>
+    public override async Task EnsureCollectionIndexesAsync(CancellationToken cancellationToken = default)
+    {
+        var keyIndex = Builders<Query<TMessageId>>.IndexKeys
+            .Ascending(x => x.MessageOnUtc);
+
+        var indexModel =
+            new CreateIndexModel<Query<TMessageId>>(keyIndex, new CreateIndexOptions { Unique = false, Background = false });
+
+        await MessageCollection.Indexes.CreateOneAsync(indexModel, new CreateOneIndexOptions(), cancellationToken);
+    }
 }

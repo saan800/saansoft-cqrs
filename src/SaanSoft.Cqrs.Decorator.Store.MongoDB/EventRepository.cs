@@ -72,14 +72,13 @@ public abstract class EventRepository<TMessageId, TEntityKey>(
     /// <summary>
     /// Call this on your app startup to ensure that the necessary indexes are created
     /// </summary>
-    public override async Task EnsureCollectionIndexes(CancellationToken cancellationToken = default)
+    public override async Task EnsureCollectionIndexesAsync(CancellationToken cancellationToken = default)
     {
         var indexes = MessageCollection.Indexes;
 
         var keyIndex = Builders<Event<TMessageId, TEntityKey>>.IndexKeys
             .Ascending(x => x.Key)
-            .Ascending(x => x.MessageOnUtc)
-            .Ascending(x => x.Metadata.TypeFullName);
+            .Ascending(x => x.MessageOnUtc);
 
         await indexes.CreateOneAsync(
             new CreateIndexModel<Event<TMessageId, TEntityKey>>(keyIndex, new CreateIndexOptions { Unique = false }),

@@ -63,4 +63,23 @@ public class EventRepositoryTests : TestSetup
         record2.Should().BeOfType<AnotherEvent>();
         record2.Should().NotBeOfType<MyEvent>();
     }
+
+    [Fact]
+    public async Task EnsureCollectionIndexesAsync()
+    {
+        await _eventRepository.EnsureCollectionIndexesAsync();
+
+        var indexDocuments = await (await _messageCollection.Indexes.ListAsync()).ToListAsync();
+        indexDocuments.Count.Should().Be(2); // one for Id, and one for our index
+    }
+
+    [Fact]
+    public async Task EnsureCollectionIndexesAsync_can_call_multiple_times()
+    {
+        await _eventRepository.EnsureCollectionIndexesAsync();
+        await _eventRepository.EnsureCollectionIndexesAsync();
+
+        var indexDocuments = await (await _messageCollection.Indexes.ListAsync()).ToListAsync();
+        indexDocuments.Count.Should().Be(2); // one for Id, and one for our index
+    }
 }
