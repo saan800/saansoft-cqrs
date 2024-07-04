@@ -16,14 +16,12 @@ Todo...
 
 ## TODO
 
-change message, publisher and subscriber to use message meta dictionary 
-
 bus Decorator - generate Id
 
 IInMemory***Bus for publishers
 - tryExecute / queue / fetch
 
-all messages - attribute to have queue group name (for aws/azure/etc)
+all messages - attribute to have 3rd party queue group name (for aws/azure/etc)
 
 ## Feature ideas
 
@@ -36,7 +34,7 @@ all messages - attribute to have queue group name (for aws/azure/etc)
 ### Decorators
 
 * Generate Id - publishers
-* :eyes: Store - Store messages
+* :white_check_mark: Store - Store messages, and optionally their publisher and handlers
 * ILogger Scope
 * CorrelationId provider
   * Guid
@@ -52,9 +50,9 @@ all messages - attribute to have queue group name (for aws/azure/etc)
   * OpenTelemetry
   * Azure AppInsight (think this might be able to work from open telemetry)
 
-### Message Stores
+### Message Repository
 
-* :eyes: MongoDB
+* :white_check_mark: MongoDB
 * AWS DynamoDB (maybe, plus example app if doing)
 * Azure Cosmos DB (maybe, plus example app if doing)
 
