@@ -1,9 +1,5 @@
 namespace SaanSoft.Cqrs.Decorator.Store.MongoDB;
 
-public interface IQueryMongoDbRepository : IQueryMongoDbRepository<Guid>
-{
-}
-
 public interface IQueryMongoDbRepository<TMessageId> :
     IQueryRepository<TMessageId>,
     IQueryHandlerRepository<TMessageId>,
@@ -11,15 +7,6 @@ public interface IQueryMongoDbRepository<TMessageId> :
     where TMessageId : struct
 {
     IMongoCollection<Query<TMessageId>> MessageCollection { get; }
-}
-
-public class QueryRepository(
-        IMongoDatabase database, IIdGenerator<Guid> idGenerator,
-        ILogger logger, InsertOneOptions? insertOneOptions = null
-    ) :
-    QueryRepository<Guid>(database, idGenerator, logger, insertOneOptions),
-    IQueryMongoDbRepository
-{
 }
 
 public abstract class QueryRepository<TMessageId>(

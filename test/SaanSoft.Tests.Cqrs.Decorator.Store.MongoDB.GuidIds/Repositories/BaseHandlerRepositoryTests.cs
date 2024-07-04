@@ -1,4 +1,6 @@
 using SaanSoft.Cqrs.Decorator.Store;
+using SaanSoft.Cqrs.Decorator.Store.Models;
+using SaanSoft.Cqrs.Decorator.Store.Utilities;
 
 namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.GuidIds.Repositories;
 

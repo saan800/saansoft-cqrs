@@ -1,14 +1,5 @@
 namespace SaanSoft.Cqrs.Decorator.Store.MongoDB;
 
-public interface IEventMongoDbRepository : IEventMongoDbRepository<Guid>
-{
-}
-
-public interface IEventMongoDbRepository<TEntityKey> : IEventMongoDbRepository<Guid, TEntityKey>
-    where TEntityKey : struct
-{
-}
-
 public interface IEventMongoDbRepository<TMessageId, TEntityKey> :
     IEventRepository<TMessageId, TEntityKey>,
     IEventHandlerRepository<TMessageId>,
@@ -17,19 +8,6 @@ public interface IEventMongoDbRepository<TMessageId, TEntityKey> :
     where TEntityKey : struct
 {
     IMongoCollection<Event<TMessageId, TEntityKey>> MessageCollection { get; }
-}
-
-public class EventRepository(IMongoDatabase database, IIdGenerator<Guid> idGenerator, ILogger logger, InsertOneOptions? insertOneOptions = null)
-    : EventRepository<Guid>(database, idGenerator, logger, insertOneOptions),
-      IEventMongoDbRepository
-{
-}
-
-public class EventRepository<TEntityKey>(IMongoDatabase database, IIdGenerator<Guid> idGenerator, ILogger logger, InsertOneOptions? insertOneOptions = null)
-    : EventRepository<Guid, TEntityKey>(database, idGenerator, logger, insertOneOptions),
-      IEventMongoDbRepository<TEntityKey>
-    where TEntityKey : struct
-{
 }
 
 /// <summary>

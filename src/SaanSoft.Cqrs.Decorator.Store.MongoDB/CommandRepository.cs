@@ -1,9 +1,5 @@
 namespace SaanSoft.Cqrs.Decorator.Store.MongoDB;
 
-public interface ICommandMongoDbRepository : ICommandMongoDbRepository<Guid>
-{
-}
-
 public interface ICommandMongoDbRepository<TMessageId> :
     ICommandRepository<TMessageId>,
     ICommandHandlerRepository<TMessageId>,
@@ -11,15 +7,6 @@ public interface ICommandMongoDbRepository<TMessageId> :
     where TMessageId : struct
 {
     IMongoCollection<BaseCommand<TMessageId>> MessageCollection { get; }
-}
-
-public class CommandRepository(
-        IMongoDatabase database, IIdGenerator<Guid> idGenerator,
-        ILogger logger, InsertOneOptions? insertOneOptions = null
-    )
-    : CommandRepository<Guid>(database, idGenerator, logger, insertOneOptions),
-      ICommandMongoDbRepository
-{
 }
 
 public abstract class CommandRepository<TMessageId>(
