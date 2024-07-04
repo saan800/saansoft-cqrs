@@ -14,7 +14,7 @@ Store messages, and optionally their publisher and handlers.
 It is common in the CQRS patterns to use the event messages as the source of truth
 for all data in the system.
 
-SaanSoft.CQRS has decorators that you can apply to the message busses to store:
+SaanSoft.CQRS has decorators that you can apply to the message buses to store:
 * Commands, Events, Queries
 * Which class published the message
 * What class(es) handled the message

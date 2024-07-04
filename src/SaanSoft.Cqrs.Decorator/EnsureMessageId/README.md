@@ -11,11 +11,11 @@ Also the message's Id can be applied to other triggered messages metadata when u
 the message constructor with `triggeredByMessage` argument (or apply it yourself of course).
 
 This can help with traceability and debugging your app as you can see the
-exact change of messages that occured.
+exact change of messages that occurred.
 
 ## Dependencies
 
-* `IIdGenerator<TMesageId>`
+* `IIdGenerator<TMessageId>`
 
 ## Recommended Order
 
