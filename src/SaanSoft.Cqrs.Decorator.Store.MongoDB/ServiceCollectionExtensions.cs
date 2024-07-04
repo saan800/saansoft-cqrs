@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using SaanSoft.Cqrs.GuidIds.Decorator.Store;
 
 namespace SaanSoft.Cqrs.Decorator.Store.MongoDB;
 

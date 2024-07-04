@@ -1,14 +1,13 @@
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public interface IMessageHandlerRepository<TMessageId, in TMessage>
+public interface IMessageHandlerRepository<in TMessageId>
     where TMessageId : struct
-    where TMessage : IMessage<TMessageId>
 {
     /// <summary>
     /// Store the class of the handler of a message, and whether the message succeeded or failed.
     /// Used with <see ref="Store[Command|Event|Query]HandlerDecorator"/>
     /// </summary>
-    /// <param name="message">Message being handled</param>
+    /// <param name="id">Message Id being handled</param>
     /// <param name="handlerType">Class that handles the message</param>>
     /// <param name="exception">
     /// Exception thrown when the message was handled by the handler..
@@ -17,5 +16,5 @@ public interface IMessageHandlerRepository<TMessageId, in TMessage>
     /// </param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task UpsertHandlerAsync(IMessage<TMessageId> message, Type handlerType, Exception? exception = null, CancellationToken cancellationToken = default);
+    Task UpsertHandlerAsync(TMessageId id, Type handlerType, Exception? exception = null, CancellationToken cancellationToken = default);
 }

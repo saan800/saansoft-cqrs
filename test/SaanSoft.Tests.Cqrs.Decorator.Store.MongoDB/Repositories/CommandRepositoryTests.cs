@@ -7,7 +7,7 @@ public class CommandRepositoryTests : TestSetup
 
     public CommandRepositoryTests()
     {
-        _commandRepository = new CommandRepository(Database, IdGenerator);
+        _commandRepository = new CommandRepository(Database, IdGenerator, Logger);
         _messageCollection = _commandRepository.MessageCollection;
     }
 

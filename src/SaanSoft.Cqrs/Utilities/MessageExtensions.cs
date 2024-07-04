@@ -10,7 +10,7 @@ public static class MessageExtensions
             ["MessageId"] = !GenericUtils.IsNullOrDefault(message.Id) ? message.Id!.ToString() : string.Empty,
             ["MessageType"] = message.Metadata.TypeFullName ?? string.Empty,
             ["CorrelationId"] = message.Metadata.CorrelationId ?? string.Empty,
-            ["HandlerType"] = handlerType.FullName ?? handlerType.Name
+            ["HandlerType"] = handlerType.GetTypeFullName()
         };
         if (message.IsReplay) scopeData.Add("IsReplay", true);
         return scopeData;

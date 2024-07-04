@@ -92,7 +92,7 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
                 throw new InvalidOperationException($"No handler for type '{typeof(TCommandHandler)}' has been registered.");
             default:
                 {
-                    var typeNames = handlers.Select(handler => handler!.GetType().FullName ?? handler!.GetType().Name).ToList();
+                    var typeNames = handlers.Select(handler => handler!.GetType().GetTypeFullName()).ToList();
                     throw new InvalidOperationException($"Only one handler for type '{typeof(TCommandHandler)}' can be registered. Currently have {typeNames.Count} registered: {string.Join("; ", typeNames)}");
                 }
         }

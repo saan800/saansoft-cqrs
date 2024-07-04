@@ -4,11 +4,11 @@ public class StoreEventHandlerDecoratorTests : EventSubscriptionBusDecoratorTest
 {
     protected StoreEventHandlerDecoratorTests()
     {
-        _repository = A.Fake<IEventHandlerRepository<Guid>>();
+        _repository = A.Fake<IEventHandlerRepository>();
     }
 
-    private readonly IEventHandlerRepository<Guid> _repository;
-    protected override IEventSubscriptionBusDecorator<Guid> SutSubscriptionBusDecorator =>
+    private readonly IEventHandlerRepository _repository;
+    protected override IEventSubscriptionBusDecorator SutSubscriptionBusDecorator =>
         new StoreEventHandlerDecorator(_repository, InMemoryEventBus);
 
     public class RunAsync : StoreEventHandlerDecoratorTests
@@ -18,8 +18,8 @@ public class StoreEventHandlerDecoratorTests : EventSubscriptionBusDecoratorTest
         {
             await SutSubscriptionBusDecorator.RunAsync(new MyEvent(Guid.NewGuid()));
 
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<MyEvent>._, typeof(EventsHandler), null, A<CancellationToken>._)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<MyEvent>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, typeof(EventsHandler), null, A<CancellationToken>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -27,8 +27,8 @@ public class StoreEventHandlerDecoratorTests : EventSubscriptionBusDecoratorTest
         {
             await SutSubscriptionBusDecorator.RunAsync(new NoHandlerEvent(Guid.NewGuid()));
 
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<NoHandlerEvent>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<NoHandlerEvent>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -39,8 +39,8 @@ public class StoreEventHandlerDecoratorTests : EventSubscriptionBusDecoratorTest
 
             await SutSubscriptionBusDecorator.RunAsync(new MyEvent(Guid.NewGuid()));
 
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<MyEvent>._, A<Type>._, null, A<CancellationToken>._)).MustHaveHappenedTwiceExactly();
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<MyEvent>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, null, A<CancellationToken>._)).MustHaveHappenedTwiceExactly();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -52,8 +52,8 @@ public class StoreEventHandlerDecoratorTests : EventSubscriptionBusDecoratorTest
                 .Should().ThrowAsync<Exception>()
                 .Where(x => x.Message.Contains("it went wrong"));
 
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<NoHandlerEvent>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
-            A.CallTo(() => _repository.UpsertHandlerAsync(A<NoHandlerEvent>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, null, A<CancellationToken>._)).MustNotHaveHappened();
+            A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustHaveHappenedOnceExactly();
         }
     }
 }

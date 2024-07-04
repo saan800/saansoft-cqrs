@@ -7,7 +7,7 @@ public class QueryRepositoryTests : TestSetup
 
     public QueryRepositoryTests()
     {
-        _queryRepository = new QueryRepository(Database, IdGenerator);
+        _queryRepository = new QueryRepository(Database, IdGenerator, Logger);
         _collection = _queryRepository.MessageCollection;
     }
 

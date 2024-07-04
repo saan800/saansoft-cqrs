@@ -7,7 +7,7 @@ public class EventRepositoryTests : TestSetup
 
     public EventRepositoryTests()
     {
-        _eventRepository = new EventRepository(Database, IdGenerator);
+        _eventRepository = new EventRepository(Database, IdGenerator, Logger);
         _messageCollection = _eventRepository.MessageCollection;
     }
 

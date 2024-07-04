@@ -1,6 +1,8 @@
 // ReSharper disable MemberCanBeProtected.Global
 // ReSharper disable MemberCanBePrivate.Global
 
+using SaanSoft.Cqrs.Decorator.Store.Utilities;
+
 namespace SaanSoft.Cqrs.Decorator.Store.MongoDB;
 
 /// <summary>
@@ -12,23 +14,30 @@ namespace SaanSoft.Cqrs.Decorator.Store.MongoDB;
 /// <typeparam name="TMessage"></typeparam>
 public abstract class BaseMessageRepository<TMessageId, TMessage> :
     IMessageRepository<TMessageId, TMessage>,
+    IMessageHandlerRepository<TMessageId>,
     IMongoDbRepository
     where TMessageId : struct
     where TMessage : class, IMessage<TMessageId>
 {
     protected readonly IMongoDatabase Database;
     protected readonly IIdGenerator<TMessageId> IdGenerator;
+    protected readonly ILogger Logger;
     protected readonly InsertOneOptions InsertOneOptions;
 
     /// <summary>
     /// </summary>
     /// <param name="database"></param>
     /// <param name="idGenerator"></param>
+    /// <param name="logger"></param>
     /// <param name="insertOneOptions"></param>
-    protected BaseMessageRepository(IMongoDatabase database, IIdGenerator<TMessageId> idGenerator, InsertOneOptions? insertOneOptions = null)
+    protected BaseMessageRepository(
+        IMongoDatabase database, IIdGenerator<TMessageId> idGenerator,
+        ILogger logger, InsertOneOptions? insertOneOptions = null
+        )
     {
         Database = database;
         IdGenerator = idGenerator;
+        Logger = logger;
         InsertOneOptions = insertOneOptions ?? new InsertOneOptions();
     }
 
@@ -42,10 +51,10 @@ public abstract class BaseMessageRepository<TMessageId, TMessage> :
         if (message.IsReplay) return;
 
         if (GenericUtils.IsNullOrDefault(message.Id)) message.Id = IdGenerator.NewId();
-
-
         await BaseMessageCollection.InsertOneAsync(message, InsertOneOptions, cancellationToken);
     }
+
+    public abstract Task UpsertHandlerAsync(TMessageId id, Type handlerType, Exception? exception = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Call in the app startup to ensure that the necessary indexes are created for the MessageCollection

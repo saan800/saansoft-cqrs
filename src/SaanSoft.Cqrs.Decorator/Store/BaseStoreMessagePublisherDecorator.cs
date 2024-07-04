@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using SaanSoft.Cqrs.Decorator.Store.Utilities;
 
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 
@@ -26,9 +27,6 @@ public abstract class BaseStoreMessagePublisherDecorator<TMessageId> :
             ?.GetMethod()
             ?.DeclaringType;
 
-        if (callerClassType != null)
-        {
-            message.Metadata.Add(StoreConstants.PublisherKey, callerClassType.FullName ?? callerClassType.Name);
-        }
+        message.Metadata.AddPublisher(callerClassType);
     }
 }
