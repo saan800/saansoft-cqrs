@@ -1,5 +1,3 @@
-using SaanSoft.Cqrs.Utilities;
-
 namespace SaanSoft.Cqrs.Decorator.EnsureMessageId;
 
 /// <summary>
@@ -8,11 +6,9 @@ namespace SaanSoft.Cqrs.Decorator.EnsureMessageId;
 /// <param name="idGenerator"></param>
 /// <param name="next"></param>
 /// <typeparam name="TMessageId"></typeparam>
-/// <typeparam name="TEntityKey"></typeparam>
-public abstract class EnsureEventHasIdDecorator<TMessageId, TEntityKey>(IIdGenerator<TMessageId> idGenerator, IEventBus<TMessageId> next)
+public abstract class EnsureEventHasIdDecorator<TMessageId>(IIdGenerator<TMessageId> idGenerator, IEventBus<TMessageId> next)
     : IEventBusDecorator<TMessageId>
     where TMessageId : struct
-    where TEntityKey : struct
 {
     public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
         where TEvent : class, IEvent<TMessageId>

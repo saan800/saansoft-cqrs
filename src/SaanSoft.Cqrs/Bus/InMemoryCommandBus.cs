@@ -3,7 +3,7 @@ using SaanSoft.Cqrs.Utilities;
 
 namespace SaanSoft.Cqrs.Bus;
 
-public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider serviceProvider, IIdGenerator<TMessageId> idGenerator, ILogger logger)
+public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider serviceProvider, IIdGenerator<TMessageId> idGenerator)
     : ICommandBus<TMessageId>,
       ICommandSubscriptionBus<TMessageId>
     where TMessageId : struct
@@ -11,7 +11,6 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
     // ReSharper disable MemberCanBePrivate.Global
     protected readonly IServiceProvider ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
     protected readonly IIdGenerator<TMessageId> IdGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
-    protected readonly ILogger Logger = logger ?? throw new ArgumentNullException(nameof(logger));
     // ReSharper restore MemberCanBePrivate.Global
 
     public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
@@ -53,24 +52,15 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
         where TCommand : class, ICommand<TMessageId>
     {
         var handler = GetHandler<TCommand>();
-        using (Logger.BeginScope(command.BuildLoggingScopeData(handler.GetType())))
-        {
-            Logger.LogInformation("Running command handler");
-            await handler.HandleAsync(command, cancellationToken);
-        }
+        await handler.HandleAsync(command, cancellationToken);
     }
 
     public async Task<TResponse> RunAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
         where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
     {
         var handler = GetHandler<TCommand, TResponse>();
-
         var typedCommand = (TCommand)command;
-        using (Logger.BeginScope(typedCommand.BuildLoggingScopeData(handler.GetType())))
-        {
-            Logger.LogInformation("Running command handler");
-            return await handler.HandleAsync(typedCommand, cancellationToken);
-        }
+        return await handler.HandleAsync(typedCommand, cancellationToken);
     }
 
     public virtual ICommandHandler<TCommand> GetHandler<TCommand>()

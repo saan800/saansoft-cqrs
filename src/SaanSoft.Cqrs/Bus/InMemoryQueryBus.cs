@@ -3,7 +3,7 @@ using SaanSoft.Cqrs.Utilities;
 
 namespace SaanSoft.Cqrs.Bus;
 
-public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvider, IIdGenerator<TMessageId> idGenerator, ILogger logger) :
+public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvider, IIdGenerator<TMessageId> idGenerator) :
     IQueryBus<TMessageId>,
     IQuerySubscriptionBus<TMessageId>
     where TMessageId : struct
@@ -11,7 +11,6 @@ public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvi
     // ReSharper disable MemberCanBePrivate.Global
     protected readonly IServiceProvider ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
     protected readonly IIdGenerator<TMessageId> IdGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
-    protected readonly ILogger Logger = logger ?? throw new ArgumentNullException(nameof(logger));
     // ReSharper restore MemberCanBePrivate.Global
 
     public async Task<TResponse> FetchAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
@@ -37,12 +36,7 @@ public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvi
     {
         var handler = GetHandler<TQuery, TResponse>();
         var typedQuery = (TQuery)query;
-
-        using (Logger.BeginScope(typedQuery.BuildLoggingScopeData(handler.GetType())))
-        {
-            Logger.LogInformation("Running query handler");
-            return await handler.HandleAsync(typedQuery, cancellationToken);
-        }
+        return await handler.HandleAsync(typedQuery, cancellationToken);
     }
 
     public IQueryHandler<TQuery, TResponse> GetHandler<TQuery, TResponse>()

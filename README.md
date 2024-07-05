@@ -21,19 +21,15 @@ IInMemory***Bus for publishers
 
 all messages - attribute to have 3rd party queue group name (for aws/azure/etc)
 
-## Feature ideas
-
-### Other
+## Features
 
 * Replay events
-* new scheduled command message type
-  * runs in memory only
 
 ### Decorators
 
 * :white_check_mark: [Ensure Message Id](https://github.com/saan800/saansoft-cqrs/tree/main/src/SaanSoft.Cqrs.Decorator/EnsureMessageId)
 * :white_check_mark: [Store](https://github.com/saan800/saansoft-cqrs/tree/main/src/SaanSoft.Cqrs.Decorator/Store) - Store messages, and optionally their publisher and handlers
-* ILogger Scope
+* :eyes: ILogger Scope
 * CorrelationId provider
   * Guid
   * http header
@@ -42,11 +38,6 @@ all messages - attribute to have 3rd party queue group name (for aws/azure/etc)
   * can we do same for auth id?
 * Encryption / Decryption
 * retry with polly
-* Metrics
-  * Track: number of messages, time to process, success/failure
-  * on both message bus and subscription bus
-  * OpenTelemetry
-  * Azure AppInsight (think this might be able to work from open telemetry)
 
 ### Message Repository
 

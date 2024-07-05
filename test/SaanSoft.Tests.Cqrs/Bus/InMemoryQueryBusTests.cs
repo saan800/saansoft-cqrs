@@ -9,7 +9,7 @@ public class InMemoryQueryBusTests : TestSetup
         [Fact]
         public void Cant_create_with_null_serviceProvider()
         {
-            Action act = () => new InMemoryQueryBus(null, IdGenerator, Logger);
+            Action act = () => new InMemoryQueryBus(null, IdGenerator);
 
             act.Should()
                 .Throw<ArgumentNullException>()
@@ -19,24 +19,13 @@ public class InMemoryQueryBusTests : TestSetup
         [Fact]
         public void Can_not_create_with_null_IdGenerator()
         {
-            Action act = () => new InMemoryQueryBus(GetServiceProvider(), null, Logger);
+            Action act = () => new InMemoryQueryBus(GetServiceProvider(), null);
 
             act.Should()
                 .Throw<ArgumentNullException>()
                 .Where(x => x.ParamName == "idGenerator");
         }
-
-        [Fact]
-        public void Cant_create_with_null_logger()
-        {
-            Action act = () => new InMemoryQueryBus(GetServiceProvider(), IdGenerator, null);
-
-            act.Should()
-                .Throw<ArgumentNullException>()
-                .Where(x => x.ParamName == "logger");
-        }
     }
-
 
     public class FetchAsync : InMemoryQueryBusTests
     {

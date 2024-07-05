@@ -29,11 +29,11 @@ public abstract class TestSetup
     protected IServiceProvider GetServiceProvider()
         => _serviceProvider ??= ServiceCollection.BuildServiceProvider();
 
-    protected InMemoryCommandBus InMemoryCommandBus => new(GetServiceProvider(), IdGenerator, Logger);
+    protected InMemoryCommandBus InMemoryCommandBus => new(GetServiceProvider(), IdGenerator);
 
-    protected InMemoryEventBus InMemoryEventBus => new(GetServiceProvider(), IdGenerator, Logger);
+    protected InMemoryEventBus InMemoryEventBus => new(GetServiceProvider(), IdGenerator);
 
-    protected InMemoryQueryBus InMemoryQueryBus => new(GetServiceProvider(), IdGenerator, Logger);
+    protected InMemoryQueryBus InMemoryQueryBus => new(GetServiceProvider(), IdGenerator);
 
     protected void AddCommandHandlerException<TCommand>()
         where TCommand : ICommand

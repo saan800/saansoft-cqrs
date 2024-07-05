@@ -9,7 +9,7 @@ public class InMemoryEventBusTests : TestSetup
         [Fact]
         public void Cant_create_with_null_serviceProvider()
         {
-            Action act = () => new InMemoryEventBus(null, IdGenerator, Logger);
+            Action act = () => new InMemoryEventBus(null, IdGenerator);
 
             act.Should()
                 .Throw<ArgumentNullException>()
@@ -19,21 +19,11 @@ public class InMemoryEventBusTests : TestSetup
         [Fact]
         public void Can_not_create_with_null_IdGenerator()
         {
-            Action act = () => new InMemoryEventBus(GetServiceProvider(), null, Logger);
+            Action act = () => new InMemoryEventBus(GetServiceProvider(), null);
 
             act.Should()
                 .Throw<ArgumentNullException>()
                 .Where(x => x.ParamName == "idGenerator");
-        }
-
-        [Fact]
-        public void Cant_create_with_null_logger()
-        {
-            Action act = () => new InMemoryEventBus(GetServiceProvider(), IdGenerator, null);
-
-            act.Should()
-                .Throw<ArgumentNullException>()
-                .Where(x => x.ParamName == "logger");
         }
     }
 
