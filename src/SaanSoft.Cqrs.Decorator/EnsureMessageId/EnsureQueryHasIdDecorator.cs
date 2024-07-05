@@ -1,5 +1,3 @@
-using SaanSoft.Cqrs.Utilities;
-
 namespace SaanSoft.Cqrs.Decorator.EnsureMessageId;
 
 /// <summary>

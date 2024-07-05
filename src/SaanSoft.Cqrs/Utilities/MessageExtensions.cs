@@ -2,7 +2,7 @@ namespace SaanSoft.Cqrs.Utilities;
 
 public static class MessageExtensions
 {
-    public static Dictionary<string, object> BuildLoggingScopeData<TMessageId>(this IMessage<TMessageId> message, Type handlerType)
+    public static Dictionary<string, object> BuildLoggingScopeData<TMessageId>(this IMessage<TMessageId> message, Type? handlerType = null)
         where TMessageId : struct
     {
         var scopeData = new Dictionary<string, object>
@@ -12,8 +12,8 @@ public static class MessageExtensions
 #pragma warning restore CS8601 // Possible null reference assignment.
             ["MessageType"] = message.Metadata.TypeFullName ?? string.Empty,
             ["CorrelationId"] = message.Metadata.CorrelationId ?? string.Empty,
-            ["HandlerType"] = handlerType.GetTypeFullName()
         };
+        if (handlerType != null) scopeData.Add("HandlerType", handlerType.GetTypeFullName());
         if (message.IsReplay) scopeData.Add("IsReplay", true);
         return scopeData;
     }

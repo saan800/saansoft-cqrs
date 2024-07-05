@@ -1,6 +1,6 @@
 # Store Decorators
 
-## :fire: :fire: WARNING: :fire: :fire:
+## :fire: :fire: WARNING :fire: :fire:
 
 If you are storing messages, ensure you are taking appropriate security measures for 
 sensitive data such as PPI, usernames, passwords, etc.

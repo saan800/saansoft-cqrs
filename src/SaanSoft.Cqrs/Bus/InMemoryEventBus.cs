@@ -3,7 +3,7 @@ using SaanSoft.Cqrs.Utilities;
 
 namespace SaanSoft.Cqrs.Bus;
 
-public abstract class InMemoryEventBus<TMessageId>(IServiceProvider serviceProvider, IIdGenerator<TMessageId> idGenerator, ILogger logger)
+public abstract class InMemoryEventBus<TMessageId>(IServiceProvider serviceProvider, IIdGenerator<TMessageId> idGenerator)
     : IEventBus<TMessageId>,
       IEventSubscriptionBus<TMessageId>
     where TMessageId : struct
@@ -11,7 +11,6 @@ public abstract class InMemoryEventBus<TMessageId>(IServiceProvider serviceProvi
     // ReSharper disable MemberCanBePrivate.Global
     protected readonly IServiceProvider ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
     protected readonly IIdGenerator<TMessageId> IdGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
-    protected readonly ILogger Logger = logger ?? throw new ArgumentNullException(nameof(logger));
     // ReSharper restore MemberCanBePrivate.Global
 
     public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
@@ -58,13 +57,7 @@ public abstract class InMemoryEventBus<TMessageId>(IServiceProvider serviceProvi
 
     public async Task RunOneAsync<TEvent>(TEvent evt, IEventHandler<TEvent> handler, CancellationToken cancellationToken = default)
         where TEvent : class, IEvent<TMessageId>
-    {
-        using (Logger.BeginScope(evt.BuildLoggingScopeData(handler.GetType())))
-        {
-            Logger.LogInformation("Running event handler");
-            await handler.HandleAsync(evt, cancellationToken);
-        }
-    }
+        => await handler.HandleAsync(evt, cancellationToken);
 
     public List<IGrouping<int, IEventHandler<TEvent>>> GetHandlers<TEvent>()
         where TEvent : class, IEvent<TMessageId>

@@ -35,7 +35,9 @@ Each decorator and framework specific implementations should be tested.
 
 ## Documentation
 
-When adding a decorator, please ensure appropriate documentation is added to the [docs](../../docs) folder.
+When adding a decorator, please ensure an appropriate `README.md` file is added to the decorator folder.
+
+Use [TEMPLATE.md](https://github.com/saan800/saansoft-cqrs/blob/main/src/SaanSoft.Cqrs.Decorator/TEMPLATE.md) as a starting point.
 
 Include information such as:
 * What is the purpose of your decorator

@@ -3,8 +3,8 @@ using SaanSoft.Cqrs.Bus;
 
 namespace SaanSoft.Cqrs.GuidIds.Bus;
 
-public class InMemoryQueryBus(IServiceProvider serviceProvider, IIdGenerator idGenerator, ILogger logger) :
-    InMemoryQueryBus<Guid>(serviceProvider, idGenerator, logger),
+public class InMemoryQueryBus(IServiceProvider serviceProvider, IIdGenerator idGenerator) :
+    InMemoryQueryBus<Guid>(serviceProvider, idGenerator),
     IQueryBus,
     IQuerySubscriptionBus
 {
