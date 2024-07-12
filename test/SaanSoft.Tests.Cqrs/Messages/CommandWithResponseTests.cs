@@ -20,13 +20,12 @@ public class CommandWithResponseTests
 
     [Theory]
     [AutoFakeData]
-    public void Init_populates_properties_from_constructor(Guid id, string correlationId, string authId, string message)
+    public void Init_populates_properties_from_constructor(string correlationId, string authId, string message)
     {
         var startTime = DateTime.UtcNow;
 
-        var result = new MyCommandWithResponse(id, correlationId, authId) { Message = message };
-        result.Id.Should().Be(id);
-        result.Id.Should().NotBe(default(Guid));
+        var result = new MyCommandWithResponse(correlationId, authId) { Message = message };
+        result.Id.Should().Be(default(Guid));
         result.MessageOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
         result.Message.Should().Be(message);
         result.Metadata.TypeFullName.Should().Be(typeof(MyCommandWithResponse).FullName);
@@ -39,7 +38,7 @@ public class CommandWithResponseTests
     [AutoFakeData]
     public void Init_populates_properties_from_triggerMessage(Guid id, string correlationId, string authId, string message)
     {
-        var triggeredBy = new MyCommand(id, correlationId, authId);
+        var triggeredBy = new MyCommand(correlationId, authId) { Id = id };
 
         Thread.Sleep(50);
 

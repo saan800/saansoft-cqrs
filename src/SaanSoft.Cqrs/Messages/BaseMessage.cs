@@ -19,11 +19,8 @@ public abstract class BaseMessage<TMessageId> : IMessage<TMessageId>
 
     public bool IsReplay { get; set; }
 
-    protected BaseMessage(TMessageId? id = null, string? correlationId = null, string? triggeredByUser = null)
+    protected BaseMessage(string? correlationId = null, string? triggeredByUser = null)
     {
-        // ReSharper disable once VirtualMemberCallInConstructor
-        if (id.HasValue && !GenericUtils.IsNullOrDefault(id)) Id = id.Value;
-
         if (string.IsNullOrWhiteSpace(Metadata.TypeFullName))
         {
             var type = GetType();
@@ -34,7 +31,7 @@ public abstract class BaseMessage<TMessageId> : IMessage<TMessageId>
     }
 
     protected BaseMessage(IMessage<TMessageId> triggeredByMessage)
-        : this(null, triggeredByMessage.Metadata.CorrelationId, triggeredByMessage.Metadata.TriggeredByUser)
+        : this(triggeredByMessage.Metadata.CorrelationId, triggeredByMessage.Metadata.TriggeredByUser)
     {
         IsReplay = triggeredByMessage.IsReplay;
         Metadata.TriggeredById = triggeredByMessage.Id.ToString();

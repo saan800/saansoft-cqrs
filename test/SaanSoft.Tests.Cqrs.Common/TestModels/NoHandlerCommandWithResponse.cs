@@ -7,10 +7,10 @@ namespace SaanSoft.Tests.Cqrs.Common.TestModels;
 /// </summary>
 public class NoHandlerCommandWithResponse : Command<NoHandlerCommandWithResponse, string>
 {
-    public NoHandlerCommandWithResponse(Guid? id = null, string? correlationId = null, string? authenticatedId = null)
-        : base(id, correlationId, authenticatedId) { }
+    public NoHandlerCommandWithResponse(string? correlationId = null, string? authenticatedId = null)
+        : base(correlationId, authenticatedId) { }
 
-    public NoHandlerCommandWithResponse(IMessage<Guid> triggeredByMessage)
+    public NoHandlerCommandWithResponse(IMessage triggeredByMessage)
         : base(triggeredByMessage) { }
 
     public required string Message { get; set; }

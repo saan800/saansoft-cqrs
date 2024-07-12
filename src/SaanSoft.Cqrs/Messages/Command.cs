@@ -11,8 +11,8 @@ namespace SaanSoft.Cqrs.Messages;
 public abstract class BaseCommand<TMessageId> : BaseMessage<TMessageId>, IBaseCommand<TMessageId>
     where TMessageId : struct
 {
-    protected BaseCommand(TMessageId? id = null, string? correlationId = null, string? authenticatedId = null)
-        : base(id, correlationId, authenticatedId) { }
+    protected BaseCommand(string? correlationId = null, string? authenticatedId = null)
+        : base(correlationId, authenticatedId) { }
 
     protected BaseCommand(IMessage<TMessageId> triggeredByMessage)
         : base(triggeredByMessage) { }
@@ -21,8 +21,8 @@ public abstract class BaseCommand<TMessageId> : BaseMessage<TMessageId>, IBaseCo
 public abstract class Command<TMessageId> : BaseCommand<TMessageId>, ICommand<TMessageId>
     where TMessageId : struct
 {
-    protected Command(TMessageId? id = null, string? correlationId = null, string? authenticatedId = null)
-        : base(id, correlationId, authenticatedId) { }
+    protected Command(string? correlationId = null, string? authenticatedId = null)
+        : base(correlationId, authenticatedId) { }
 
     protected Command(IMessage<TMessageId> triggeredByMessage)
         : base(triggeredByMessage) { }
@@ -34,8 +34,8 @@ public abstract class Command<TMessageId, TCommand, TResponse> :
     where TCommand : ICommand<TMessageId, TCommand, TResponse>
     where TMessageId : struct
 {
-    protected Command(TMessageId? id = null, string? correlationId = null, string? authenticatedId = null)
-        : base(id, correlationId, authenticatedId) { }
+    protected Command(string? correlationId = null, string? authenticatedId = null)
+        : base(correlationId, authenticatedId) { }
 
     protected Command(IMessage<TMessageId> triggeredByMessage)
         : base(triggeredByMessage) { }

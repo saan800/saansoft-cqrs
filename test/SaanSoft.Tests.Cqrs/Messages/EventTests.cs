@@ -20,14 +20,13 @@ public class EventTests
 
     [Theory]
     [AutoFakeData]
-    public void Init_populates_properties_from_constructor(Guid key, Guid id, string correlationId, string authId)
+    public void Init_populates_properties_from_constructor(Guid key, string correlationId, string authId)
     {
         var startTime = DateTime.UtcNow;
-        var result = new MyEvent(key, id, correlationId, authId);
+        var result = new MyEvent(key, correlationId, authId);
 
         result.Key.Should().Be(key);
-        result.Id.Should().Be(id);
-        result.Id.Should().NotBe(default(Guid));
+        result.Id.Should().Be(default(Guid));
         result.MessageOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
         result.Metadata.TypeFullName.Should().Be(typeof(MyEvent).FullName);
         result.Metadata.TriggeredById.Should().BeNull();
@@ -39,7 +38,7 @@ public class EventTests
     [AutoFakeData]
     public void Init_populates_properties_from_triggerMessage(Guid id, Guid key, string correlationId, string authId)
     {
-        var triggeredBy = new MyCommand(id, correlationId, authId);
+        var triggeredBy = new MyCommand(correlationId, authId) { Id = id };
 
         Thread.Sleep(50);
 

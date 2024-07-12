@@ -35,7 +35,9 @@ public interface ICommand<TCommand, TResponse> : ICommand
 {
 }
 
-public interface ICommand<TMessageId, TCommand, TResponse> : ICommand<TCommand, TResponse>, IBaseCommand<TMessageId>
+public interface ICommand<TMessageId, TCommand, TResponse> :
+    ICommand<TCommand, TResponse>,
+    IBaseCommand<TMessageId>
     where TMessageId : struct
     where TCommand : ICommand<TMessageId, TCommand, TResponse>
 {

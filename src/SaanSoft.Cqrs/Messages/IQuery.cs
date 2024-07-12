@@ -26,7 +26,9 @@ public interface IQuery<TQuery, TResponse> : IQuery
 {
 }
 
-public interface IQuery<TMessageId, TQuery, TResponse> : IQuery<TQuery, TResponse>, IQuery<TMessageId>
+public interface IQuery<TMessageId, TQuery, TResponse> :
+    IQuery<TQuery, TResponse>,
+    IQuery<TMessageId>
     where TMessageId : struct
     where TQuery : IQuery<TMessageId, TQuery, TResponse>
 {

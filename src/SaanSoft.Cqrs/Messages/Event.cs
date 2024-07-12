@@ -8,8 +8,8 @@ public abstract class Event<TMessageId, TEntityKey> :
 {
     public TEntityKey Key { get; set; }
 
-    protected Event(TEntityKey key, TMessageId? id = null, string? correlationId = null, string? authenticatedId = null)
-        : base(id, correlationId, authenticatedId)
+    protected Event(TEntityKey key, string? correlationId = null, string? authenticatedId = null)
+        : base(correlationId, authenticatedId)
     {
         Key = key;
     }

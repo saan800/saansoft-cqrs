@@ -64,6 +64,8 @@ all messages - attribute to have 3rd party queue group name (for aws/azure/etc)
 
 ### Shared api and messaging functionality
 
+:eyes:
+
 Users
 
 * User - {Key, Name}

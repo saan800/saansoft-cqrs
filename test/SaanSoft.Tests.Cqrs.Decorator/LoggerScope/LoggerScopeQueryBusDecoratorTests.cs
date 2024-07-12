@@ -13,7 +13,7 @@ public class LoggerScopeQueryBusDecoratorTests : QueryBusDecoratorTestSetup
     [Fact]
     public async Task FetchAsync_calls_BeginScope()
     {
-        await SutPublisherDecorator.FetchAsync(new MyQuery(Guid.NewGuid()));
+        await SutPublisherDecorator.FetchAsync(new MyQuery());
 
         A.CallTo(() => _logger.BeginScope(A<Dictionary<string, object>>._)).MustHaveHappened();
     }

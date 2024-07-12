@@ -2,15 +2,17 @@ using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.GuidIds.Messages;
 
-public abstract class Query<TQuery, TResponse> : Query<Guid, TQuery, TResponse>
+public abstract class Query<TQuery, TResponse> :
+    Query<Guid, TQuery, TResponse>,
+    IMessage
     where TQuery : IQuery<Guid, TQuery, TResponse>
 {
-    protected Query(Guid? id = null, string? correlationId = null, string? authenticatedId = null)
-        : base(id, correlationId, authenticatedId)
+    protected Query(string? correlationId = null, string? authenticatedId = null)
+        : base(correlationId, authenticatedId)
     {
     }
 
-    protected Query(IMessage<Guid> triggeredByMessage) : base(triggeredByMessage)
+    protected Query(IMessage triggeredByMessage) : base(triggeredByMessage)
     {
     }
 }
