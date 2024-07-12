@@ -33,8 +33,11 @@ all messages - attribute to have 3rd party queue group name (for aws/azure/etc)
   * Ensure useful structured logging by adding `ILogger.BeginScope` with message metadata
 * [Ensure CorrelationId](./src/SaanSoft.Cqrs.Decorator/EnsureCorrelationId/README.md) <!--  can we do similar for auth id? -->
   * :white_check_mark: Guid (default)
-  * http header
-  * OpenTelemetry (maybe?)
+  * TODO: move CorrelationId decorators:
+    * add SaanSoft.CorrelationIdProvider repo
+    * add implementations for:
+      * http header
+      * OpenTelemetry (maybe?)
   * SubscriptionBus read from message, then auto populate on publisher bus?
 * Encryption / Decryption
 * retry with polly

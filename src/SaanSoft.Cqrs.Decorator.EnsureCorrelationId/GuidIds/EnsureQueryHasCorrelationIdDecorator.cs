@@ -1,6 +1,4 @@
-using SaanSoft.Cqrs.Decorator.EnsureCorrelationId;
-
-namespace SaanSoft.Cqrs.GuidIds.Decorator.EnsureCorrelationId;
+namespace SaanSoft.Cqrs.Decorator.EnsureCorrelationId.GuidIds;
 
 public class EnsureQueryHasCorrelationIdDecorator(IEnumerable<ICorrelationIdProvider> providers, IQueryBus next) :
     EnsureQueryHasCorrelationIdDecorator<Guid>(providers, next),

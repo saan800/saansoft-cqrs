@@ -1,5 +1,3 @@
-using SaanSoft.Cqrs.GuidIds.Decorator.EnsureCorrelationId;
-
 namespace SaanSoft.Tests.Cqrs.Decorator.EnsureCorrelationId;
 
 public class EnsureCommandHasCorrelationIdDecoratorTests : CommandBusDecoratorTestSetup
