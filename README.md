@@ -27,28 +27,28 @@ all messages - attribute to have 3rd party queue group name (for aws/azure/etc)
 
 ### Decorators
 
-* :white_check_mark: [Ensure Message Id](https://github.com/saan800/saansoft-cqrs/tree/main/src/SaanSoft.Cqrs.Decorator/EnsureMessageId)
-* :white_check_mark: [Store](https://github.com/saan800/saansoft-cqrs/tree/main/src/SaanSoft.Cqrs.Decorator/Store) - Store messages, and optionally their publisher and handlers
-* :eyes: ILogger Scope
-* CorrelationId provider
-  * Guid
+* :white_check_mark: [Ensure Message Id](./src/SaanSoft.Cqrs.Decorator/EnsureMessageId/README.md)
+* :white_check_mark: [Store](./src/SaanSoft.Cqrs.Decorator/Store/README.md) - Store messages, and optionally their publisher and handlers
+* :white_check_mark: [ILogger Scope](./src/SaanSoft.Cqrs.Decorator/LoggerScope/README.md)
+  * Ensure useful structured logging by adding `ILogger.BeginScope` with message metadata
+* [Ensure CorrelationId](./src/SaanSoft.Cqrs.Decorator/EnsureCorrelationId/README.md) <!--  can we do similar for auth id? -->
+  * :white_check_mark: Guid (default)
   * http header
-  * OpenTelemetry?
+  * OpenTelemetry (maybe?)
   * SubscriptionBus read from message, then auto populate on publisher bus?
-  * can we do same for auth id?
 * Encryption / Decryption
 * retry with polly
 
 ### Message Repository
 
-* :white_check_mark: [MongoDB](https://github.com/saan800/saansoft-cqrs/tree/main/src/SaanSoft.Cqrs.Decorator.Store.MongoDB) 
-  and the [MongoDB.GuidIds](https://github.com/saan800/saansoft-cqrs/tree/main/src/SaanSoft.Cqrs.Decorator.Store.MongoDB.GuidIds) implementation.
+* :white_check_mark: [MongoDB](./src/SaanSoft.Cqrs.Decorator.Store.MongoDB) 
+  and the [MongoDB.GuidIds](./src/SaanSoft.Cqrs.Decorator.Store.MongoDB.GuidIds) implementation.
 * AWS DynamoDB (maybe, plus example app if doing)
 * Azure Cosmos DB (maybe, plus example app if doing)
 
 ### Message Buses
 
-* :white_check_mark: [In Memory](https://github.com/saan800/saansoft-cqrs/tree/main/src/SaanSoft.Cqrs/Bus)
+* :white_check_mark: [In Memory](./src/SaanSoft.Cqrs/Bus)
 * AWS SNS/SQS
 * Azure Topics and Queues (maybe, plus example app if doing)
 

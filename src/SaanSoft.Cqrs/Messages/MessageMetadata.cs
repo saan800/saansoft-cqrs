@@ -6,13 +6,13 @@ public class MessageMetadata : Dictionary<string, object?>
     /// Used to track related commands/events/queries.
     /// Should be propagated between related messages.
     ///
-    /// The initial message could be populated by services such as Azure AppInsights, OpenTelemetry,
+    /// The initial message could be populated by services such as OpenTelemetry,
     /// Http header (e.g. "X-Request-Id"), or a simple guid (as string)
     /// </summary>
     public string? CorrelationId
     {
         get => TryGetValueAs<string>(nameof(CorrelationId), out var val) ? val : null;
-        set => Add(nameof(CorrelationId), value);
+        set => AddOrUpdate(nameof(CorrelationId), value);
     }
 
     /// <summary>
@@ -23,7 +23,7 @@ public class MessageMetadata : Dictionary<string, object?>
     public string? TriggeredById
     {
         get => TryGetValueAs<string>(nameof(TriggeredById), out var val) ? val : null;
-        set => Add(nameof(TriggeredById), value);
+        set => AddOrUpdate(nameof(TriggeredById), value);
     }
 
     /// <summary>
@@ -36,7 +36,7 @@ public class MessageMetadata : Dictionary<string, object?>
     public string? TriggeredByUser
     {
         get => TryGetValueAs<string>(nameof(TriggeredByUser), out var val) ? val : null;
-        set => Add(nameof(TriggeredByUser), value);
+        set => AddOrUpdate(nameof(TriggeredByUser), value);
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ public class MessageMetadata : Dictionary<string, object?>
     public string? TypeFullName
     {
         get => TryGetValueAs<string>(nameof(TypeFullName), out var val) ? val! : null;
-        set => Add(nameof(TypeFullName), value);
+        set => AddOrUpdate(nameof(TypeFullName), value);
     }
 
     // ReSharper disable once MemberCanBePrivate.Global
@@ -61,5 +61,15 @@ public class MessageMetadata : Dictionary<string, object?>
         return TryGetValueAs(key, out T? value)
             ? value
             : default;
+    }
+
+    public void AddOrUpdate(string key, object? value)
+    {
+        if (value == null)
+        {
+            Remove(key);
+            return;
+        }
+        this[key] = value;
     }
 }

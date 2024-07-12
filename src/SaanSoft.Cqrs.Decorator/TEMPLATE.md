@@ -21,7 +21,7 @@ Is there a recommended order of adding the decorator to the message or subscript
 
 e.g:
 The `Store` decorator should be added near the bottom of the decorator stack near the actual implementation of the message or subscription bus.
-  - But if using the `RetryPolicy` decorator (TODO...) it should be above that in the decorator stack.
+  - But if using the `RetryPolicy` decorator it should be above that in the decorator stack.
 
 The `LoggerScope` decorator should be near the top of the decorator stack, so any logs have as much information as possible.
 -->
