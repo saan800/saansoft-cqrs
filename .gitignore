@@ -39,6 +39,7 @@ tmp
 
 # dependencies
 node_modules
+packages
 
 # .NET
 bin

@@ -39,6 +39,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.GuidIds", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Decorator.Store.MongoDB.GuidIds", "src\SaanSoft.Cqrs.Decorator.Store.MongoDB.GuidIds\SaanSoft.Cqrs.Decorator.Store.MongoDB.GuidIds.csproj", "{EAA2420F-0957-45D9-ADDD-E1DE2152AB60}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Decorator.EnsureCorrelationId", "src\SaanSoft.Cqrs.Decorator.EnsureCorrelationId\SaanSoft.Cqrs.Decorator.EnsureCorrelationId.csproj", "{1C63E23F-5A11-466D-BCCD-6B181E5218E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Tests.Cqrs.Decorator.EnsureCorrelationId", "test\SaanSoft.Tests.Cqrs.Decorator.EnsureCorrelationId\SaanSoft.Tests.Cqrs.Decorator.EnsureCorrelationId.csproj", "{62EE606B-51E9-443E-B365-A2B0F816210C}"
+EndProject
 Global
 				GlobalSection(SolutionConfigurationPlatforms) = preSolution
 								Debug|Any CPU = Debug|Any CPU
@@ -85,6 +89,14 @@ Global
 					{EAA2420F-0957-45D9-ADDD-E1DE2152AB60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 					{EAA2420F-0957-45D9-ADDD-E1DE2152AB60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 					{EAA2420F-0957-45D9-ADDD-E1DE2152AB60}.Release|Any CPU.Build.0 = Release|Any CPU
+					{1C63E23F-5A11-466D-BCCD-6B181E5218E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+					{1C63E23F-5A11-466D-BCCD-6B181E5218E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+					{1C63E23F-5A11-466D-BCCD-6B181E5218E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+					{1C63E23F-5A11-466D-BCCD-6B181E5218E9}.Release|Any CPU.Build.0 = Release|Any CPU
+					{62EE606B-51E9-443E-B365-A2B0F816210C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+					{62EE606B-51E9-443E-B365-A2B0F816210C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+					{62EE606B-51E9-443E-B365-A2B0F816210C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+					{62EE606B-51E9-443E-B365-A2B0F816210C}.Release|Any CPU.Build.0 = Release|Any CPU
 				EndGlobalSection
 				GlobalSection(NestedProjects) = preSolution
 								{14FB4E51-D7DF-4045-BF3D-9635FFE3E309} = {446FC180-C478-471E-A0A4-DB7B76C0B674}
@@ -92,5 +104,6 @@ Global
 					{1EB2016E-BF8F-4C47-9983-423E825D4B45} = {C22C944B-A9A4-4E23-B3D1-A6D7856304F3}
 					{2F2E1D89-634E-4CC4-AED6-179DAA952A93} = {C22C944B-A9A4-4E23-B3D1-A6D7856304F3}
 					{241D036D-F677-4F05-94F9-BCE8FBE671DE} = {C22C944B-A9A4-4E23-B3D1-A6D7856304F3}
+					{62EE606B-51E9-443E-B365-A2B0F816210C} = {C22C944B-A9A4-4E23-B3D1-A6D7856304F3}
 				EndGlobalSection
 EndGlobal

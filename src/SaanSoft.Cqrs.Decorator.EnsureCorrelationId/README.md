@@ -1,6 +1,5 @@
 # Ensure CorrelationId decorator
 
-
 ## Purpose
 
 In a distributed system it can be a challenge to trace HTTP requests and messages
@@ -27,12 +26,18 @@ set the message's `CorrelationId` to.
 If none of the `ICorrelationIdProvider` return a value, the `CorrelationId`
 will be defaulted to `Guid.NewGuid.ToString()`.
 
+TODO: 
+* Add `SaanSoft.CorrelationIdProviders` repository
+  * Move interface over (and update these decorators to use new package)
+  * add generic Guid provider
+  * add other (eg http header) correlation id providers in there
+
 ## Recommended Order
 
 The CorrelationId decorators should be at the top (or very near to) of
 the `IMessageBus` decorator stack.
 
-If your also using the [LoggerScope decorators](../LoggerScope/README.md), add
+If your also using the [LoggerScope decorators](../SaanSoft.Cqrs.Decorator/LoggerScope/README.md), add
 the CorrelationId decorators higher in the decorator stack.
 
 
