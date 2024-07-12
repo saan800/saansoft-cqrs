@@ -31,7 +31,7 @@ all messages - attribute to have 3rd party queue group name (for aws/azure/etc)
 * :white_check_mark: [Store](./src/SaanSoft.Cqrs.Decorator/Store/README.md) - Store messages, and optionally their publisher and handlers
 * :white_check_mark: [ILogger Scope](./src/SaanSoft.Cqrs.Decorator/LoggerScope/README.md)
   * Ensure useful structured logging by adding `ILogger.BeginScope` with message metadata
-* [Ensure CorrelationId](./src/SaanSoft.Cqrs.Decorator/EnsureCorrelationId/README.md) <!--  can we do similar for auth id? -->
+* [Ensure CorrelationId](./src/SaanSoft.Cqrs.Decorator.EnsureCorrelationId/README.md) <!--  can we do similar for auth id? -->
   * :white_check_mark: Guid (default)
   * TODO: move CorrelationId decorators:
     * add SaanSoft.CorrelationIdProvider repo
