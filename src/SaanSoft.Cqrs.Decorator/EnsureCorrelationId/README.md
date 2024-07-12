@@ -24,7 +24,7 @@ The decoration can optionally be provided a list of `ICorrelationIdProvider`.
 Providers will be run in order to attempt to find the most appropriate value to 
 set the message's `CorrelationId` to.
 
-If none of the `ICorrelationidProvider` return a value, the `CorrelationId`
+If none of the `ICorrelationIdProvider` return a value, the `CorrelationId`
 will be defaulted to `Guid.NewGuid.ToString()`.
 
 ## Recommended Order
