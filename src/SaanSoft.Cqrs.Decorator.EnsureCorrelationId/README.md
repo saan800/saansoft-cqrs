@@ -27,7 +27,7 @@ If none of the `ICorrelationIdProvider` return a value, the `CorrelationId`
 will be defaulted to `Guid.NewGuid.ToString()`.
 
 TODO: 
-* Add `SaanSoft.CorrelationIdProvers` repository
+* Add `SaanSoft.CorrelationIdProviders` repository
   * Move interface over (and update these decorators to use new package)
   * add generic Guid provider
   * add other (eg http header) correlation id providers in there
