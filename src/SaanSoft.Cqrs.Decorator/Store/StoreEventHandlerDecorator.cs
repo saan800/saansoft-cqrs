@@ -1,10 +1,11 @@
-using SaanSoft.Cqrs.Core.Handlers;
+using SaanSoft.Cqrs.Common.Handlers;
+using SaanSoft.Cqrs.Common.Messages;
 
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public abstract class StoreEventHandlerDecorator<TMessageId>(IEventHandlerRepository<TMessageId> repository, IEventSubscriptionBus<TMessageId> next)
+public abstract class StoreEventHandlerDecorator<TMessageId>(IEventHandlerRepository<TMessageId> repository, IBaseEventSubscriptionBus<TMessageId> next)
     : BaseStoreMessageHandlerDecorator<TMessageId>(repository),
-      IEventSubscriptionBusDecorator<TMessageId>
+      IBaseEventSubscriptionBus<TMessageId>
     where TMessageId : struct
 {
     public async Task RunAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
@@ -19,7 +20,7 @@ public abstract class StoreEventHandlerDecorator<TMessageId>(IEventHandlerReposi
         }
     }
 
-    public async Task RunOneAsync<TEvent>(TEvent evt, IEventHandler<TEvent> handler, CancellationToken cancellationToken = default)
+    public async Task RunOneAsync<TEvent>(TEvent evt, IBaseEventHandler<TEvent> handler, CancellationToken cancellationToken = default)
         where TEvent : class, IBaseEvent<TMessageId>
     {
         try
@@ -34,7 +35,7 @@ public abstract class StoreEventHandlerDecorator<TMessageId>(IEventHandlerReposi
         }
     }
 
-    public List<IGrouping<int, IEventHandler<TEvent>>> GetHandlers<TEvent>()
+    public List<IGrouping<int, IBaseEventHandler<TEvent>>> GetHandlers<TEvent>()
         where TEvent : class, IBaseEvent<TMessageId>
         => next.GetHandlers<TEvent>();
 }

@@ -1,10 +1,11 @@
-using SaanSoft.Cqrs.Core.Handlers;
+using SaanSoft.Cqrs.Common.Handlers;
+using SaanSoft.Cqrs.Common.Messages;
 
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public abstract class StoreCommandHandlerDecorator<TMessageId>(ICommandHandlerRepository<TMessageId> repository, ICommandSubscriptionBus<TMessageId> next)
+public abstract class StoreCommandHandlerDecorator<TMessageId>(ICommandHandlerRepository<TMessageId> repository, IBaseCommandSubscriptionBus<TMessageId> next)
     : BaseStoreMessageHandlerDecorator<TMessageId>(repository),
-      ICommandSubscriptionBusDecorator<TMessageId>
+      IBaseCommandSubscriptionBus<TMessageId>
     where TMessageId : struct
 {
     public async Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
@@ -41,11 +42,11 @@ public abstract class StoreCommandHandlerDecorator<TMessageId>(ICommandHandlerRe
         }
     }
 
-    public ICommandHandler<TCommand> GetHandler<TCommand>()
+    public IBaseCommandHandler<TCommand> GetHandler<TCommand>()
         where TCommand : class, IBaseCommand<TMessageId>
         => next.GetHandler<TCommand>();
 
-    public ICommandHandler<TCommand, TResponse> GetHandler<TCommand, TResponse>()
+    public IBaseCommandHandler<TCommand, TResponse> GetHandler<TCommand, TResponse>()
         where TCommand : class, IBaseCommand<TCommand, TResponse>, IBaseCommand<TMessageId, TCommand, TResponse>
         => next.GetHandler<TCommand, TResponse>();
 }

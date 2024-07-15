@@ -1,8 +1,10 @@
+using SaanSoft.Cqrs.Common.Messages;
+
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public abstract class StoreEventDecorator<TMessageId, TEntityKey>(IEventRepository<TMessageId, TEntityKey> repository, IEventBus<TMessageId> next)
+public abstract class StoreEventDecorator<TMessageId, TEntityKey>(IEventRepository<TMessageId, TEntityKey> repository, IBaseEventBus<TMessageId> next)
     : BaseStoreMessageDecorator<TMessageId, IBaseEvent<TMessageId>>(repository),
-      IEventBusDecorator<TMessageId>
+      IBaseEventBus<TMessageId>
     where TMessageId : struct
     where TEntityKey : struct
 {

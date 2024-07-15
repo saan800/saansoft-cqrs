@@ -1,4 +1,5 @@
-using SaanSoft.Cqrs.Core.Handlers;
+using SaanSoft.Cqrs.Common.Handlers;
+using SaanSoft.Cqrs.Common.Messages;
 
 namespace SaanSoft.Cqrs.Decorator.LoggerScope;
 
@@ -8,8 +9,8 @@ namespace SaanSoft.Cqrs.Decorator.LoggerScope;
 /// <param name="logger"></param>
 /// <param name="next"></param>
 /// <typeparam name="TMessageId"></typeparam>
-public abstract class LoggerScopeEventSubscriptionBusDecorator<TMessageId>(ILogger logger, IEventSubscriptionBus<TMessageId> next) :
-    IEventSubscriptionBusDecorator<TMessageId>
+public abstract class LoggerScopeEventSubscriptionBus<TMessageId>(ILogger logger, IBaseEventSubscriptionBus<TMessageId> next) :
+    IBaseEventSubscriptionBus<TMessageId>
     where TMessageId : struct
 {
     public async Task RunAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
@@ -23,7 +24,7 @@ public abstract class LoggerScopeEventSubscriptionBusDecorator<TMessageId>(ILogg
         }
     }
 
-    public async Task RunOneAsync<TEvent>(TEvent evt, IEventHandler<TEvent> handler, CancellationToken cancellationToken = default)
+    public async Task RunOneAsync<TEvent>(TEvent evt, IBaseEventHandler<TEvent> handler, CancellationToken cancellationToken = default)
         where TEvent : class, IBaseEvent<TMessageId>
     {
         using (logger.BeginScope(evt.BuildLoggingScopeData(handler.GetType())))
@@ -33,6 +34,6 @@ public abstract class LoggerScopeEventSubscriptionBusDecorator<TMessageId>(ILogg
         }
     }
 
-    public List<IGrouping<int, IEventHandler<TEvent>>> GetHandlers<TEvent>() where TEvent : class, IBaseEvent<TMessageId>
+    public List<IGrouping<int, IBaseEventHandler<TEvent>>> GetHandlers<TEvent>() where TEvent : class, IBaseEvent<TMessageId>
         => next.GetHandlers<TEvent>();
 }

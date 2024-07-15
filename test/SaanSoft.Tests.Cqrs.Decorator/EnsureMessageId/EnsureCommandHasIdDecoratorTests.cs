@@ -2,9 +2,9 @@ using SaanSoft.Cqrs.GuidIds.Decorator.EnsureMessageId;
 
 namespace SaanSoft.Tests.Cqrs.Decorator.EnsureMessageId;
 
-public class EnsureCommandHasIdDecoratorTests : CommandBusDecoratorTestSetup
+public class EnsureCommandHasIdDecoratorTests : CommandBusTestSetup
 {
-    protected override ICommandBusDecorator SutPublisherDecorator =>
+    protected override ICommandBus SutPublisherDecorator =>
         new EnsureCommandHasIdDecorator(IdGenerator, InMemoryCommandBus);
 
     public class ExecuteAsyncTests : EnsureCommandHasIdDecoratorTests

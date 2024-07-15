@@ -1,10 +1,12 @@
+using SaanSoft.Cqrs.Common.Handlers;
+
 namespace SaanSoft.Tests.Cqrs.Common.TestHandlers;
 
 public class CommandHandler :
-    ICommandHandler<MyCommand>,
-    ICommandHandler<AnotherCommand>,
-    ICommandHandler<MyCommandWithResponse, string>,
-    ICommandHandler<AnotherCommandWithResponse, string>
+    IBaseCommandHandler<MyCommand>,
+    IBaseCommandHandler<AnotherCommand>,
+    IBaseCommandHandler<MyCommandWithResponse, string>,
+    IBaseCommandHandler<AnotherCommandWithResponse, string>
 {
     public Task HandleAsync(MyCommand command, CancellationToken cancellationToken = default)
         => Task.CompletedTask;

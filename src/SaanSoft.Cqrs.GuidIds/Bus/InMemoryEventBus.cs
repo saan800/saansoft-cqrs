@@ -4,7 +4,7 @@ using SaanSoft.Cqrs.Core.Bus;
 namespace SaanSoft.Cqrs.GuidIds.Bus;
 
 public class InMemoryEventBus(IServiceProvider serviceProvider, IIdGenerator idGenerator) :
-    InMemoryEventBus<Guid>(serviceProvider, idGenerator),
+    BaseInMemoryEventBus<Guid>(serviceProvider, idGenerator),
     IEventBus,
     IEventSubscriptionBus
 {

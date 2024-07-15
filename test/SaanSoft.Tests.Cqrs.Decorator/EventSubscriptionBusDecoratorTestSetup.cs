@@ -1,12 +1,14 @@
+using SaanSoft.Cqrs.Common.Handlers;
+
 namespace SaanSoft.Tests.Cqrs.Decorator;
 
-public abstract class EventSubscriptionBusDecoratorTestSetup : TestSetup
+public abstract class EventSubscriptionBusTestSetup : TestSetup
 {
-    protected EventSubscriptionBusDecoratorTestSetup()
+    protected EventSubscriptionBusTestSetup()
     {
-        ServiceCollection.AddScoped<IEventHandler<MyEvent>, EventsHandler>();
-        ServiceCollection.AddScoped<IEventHandler<AnotherEvent>, EventsHandler>();
+        ServiceCollection.AddScoped<IBaseEventHandler<MyEvent>, EventsHandler>();
+        ServiceCollection.AddScoped<IBaseEventHandler<AnotherEvent>, EventsHandler>();
     }
 
-    protected abstract IEventSubscriptionBusDecorator SutSubscriptionBusDecorator { get; }
+    protected abstract IEventSubscriptionBus SutSubscriptionBus { get; }
 }

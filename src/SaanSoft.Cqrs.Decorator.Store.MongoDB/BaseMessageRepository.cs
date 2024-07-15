@@ -1,6 +1,8 @@
 // ReSharper disable MemberCanBeProtected.Global
 // ReSharper disable MemberCanBePrivate.Global
 
+using SaanSoft.Cqrs.Common.Messages;
+
 namespace SaanSoft.Cqrs.Decorator.Store.MongoDB;
 
 /// <summary>

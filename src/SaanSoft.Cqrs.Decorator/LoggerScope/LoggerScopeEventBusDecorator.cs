@@ -1,3 +1,5 @@
+using SaanSoft.Cqrs.Common.Messages;
+
 namespace SaanSoft.Cqrs.Decorator.LoggerScope;
 
 /// <summary>
@@ -6,8 +8,8 @@ namespace SaanSoft.Cqrs.Decorator.LoggerScope;
 /// <param name="logger"></param>
 /// <param name="next"></param>
 /// <typeparam name="TMessageId"></typeparam>
-public abstract class LoggerScopeEventBusDecorator<TMessageId>(ILogger logger, IEventBus<TMessageId> next) :
-    IEventBusDecorator<TMessageId>
+public abstract class LoggerScopeEventBus<TMessageId>(ILogger logger, IBaseEventBus<TMessageId> next) :
+    IBaseEventBus<TMessageId>
     where TMessageId : struct
 {
     public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)

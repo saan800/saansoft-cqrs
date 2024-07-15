@@ -1,6 +1,6 @@
 namespace SaanSoft.Tests.Cqrs.Decorator.Store;
 
-public class StoreQueryDecoratorTests : QueryBusDecoratorTestSetup
+public class StoreQueryDecoratorTests : QueryBusTestSetup
 {
     protected StoreQueryDecoratorTests()
     {
@@ -9,7 +9,7 @@ public class StoreQueryDecoratorTests : QueryBusDecoratorTestSetup
 
     private readonly IQueryRepository _repository;
 
-    protected override IQueryBusDecorator SutPublisherDecorator =>
+    protected override IQueryBus SutPublisherDecorator =>
         new StoreQueryDecorator(_repository, InMemoryQueryBus);
 
     public class FetchAsyncTests : StoreQueryDecoratorTests

@@ -2,6 +2,6 @@ using SaanSoft.Cqrs.Core.Bus;
 
 namespace SaanSoft.Cqrs.GuidIds.Bus;
 
-public interface IEventSubscriptionBus : IEventSubscriptionBus<Guid>
+public interface IEventSubscriptionBus : IBaseEventSubscriptionBus<Guid>
 {
 }

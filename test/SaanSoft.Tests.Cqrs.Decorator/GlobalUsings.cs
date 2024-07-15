@@ -1,7 +1,6 @@
 global using FakeItEasy;
 global using FluentAssertions;
 global using Microsoft.Extensions.DependencyInjection;
-global using SaanSoft.Cqrs.Core.Handlers;
 global using SaanSoft.Cqrs.Decorator.Store.Utilities;
 global using SaanSoft.Cqrs.GuidIds.Bus;
 global using SaanSoft.Cqrs.GuidIds.Decorator;

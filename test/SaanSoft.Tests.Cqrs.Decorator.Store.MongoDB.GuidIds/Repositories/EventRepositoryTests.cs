@@ -1,3 +1,5 @@
+using SaanSoft.Cqrs.Common.Messages;
+
 namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.GuidIds.Repositories;
 
 public class EventRepositoryTests : TestSetup

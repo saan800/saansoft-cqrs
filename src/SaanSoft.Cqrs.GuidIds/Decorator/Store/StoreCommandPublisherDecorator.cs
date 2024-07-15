@@ -10,4 +10,4 @@ namespace SaanSoft.Cqrs.GuidIds.Decorator.Store;
 /// <param name="next"></param>
 public class StoreCommandPublisherDecorator(ICommandBus next)
     : StoreCommandPublisherDecorator<Guid>(next),
-      ICommandBusDecorator;
+      ICommandBus;

@@ -1,12 +1,11 @@
 using Microsoft.Extensions.DependencyInjection;
-using SaanSoft.Cqrs.Core.Handlers;
 using SaanSoft.Cqrs.Core.Utilities;
 
 namespace SaanSoft.Cqrs.Core.Bus;
 
-public abstract class InMemoryEventBus<TMessageId>(IServiceProvider serviceProvider, IIdGenerator<TMessageId> idGenerator)
-    : IEventBus<TMessageId>,
-      IEventSubscriptionBus<TMessageId>
+public abstract class BaseInMemoryEventBus<TMessageId>(IServiceProvider serviceProvider, IIdGenerator<TMessageId> idGenerator)
+    : IBaseEventBus<TMessageId>,
+      IBaseEventSubscriptionBus<TMessageId>
     where TMessageId : struct
 {
     // ReSharper disable MemberCanBePrivate.Global
@@ -41,8 +40,8 @@ public abstract class InMemoryEventBus<TMessageId>(IServiceProvider serviceProvi
     /// Get subscription bus via ServiceProvider so it runs through any decorators
     /// </summary>
     /// <returns></returns>
-    protected virtual IEventSubscriptionBus<TMessageId> GetSubscriptionBus()
-        => ServiceProvider.GetRequiredService<IEventSubscriptionBus<TMessageId>>();
+    protected virtual IBaseEventSubscriptionBus<TMessageId> GetSubscriptionBus()
+        => ServiceProvider.GetRequiredService<IBaseEventSubscriptionBus<TMessageId>>();
 
     public async Task RunAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
         where TEvent : class, IBaseEvent<TMessageId>
@@ -56,11 +55,11 @@ public abstract class InMemoryEventBus<TMessageId>(IServiceProvider serviceProvi
         }
     }
 
-    public async Task RunOneAsync<TEvent>(TEvent evt, IEventHandler<TEvent> handler, CancellationToken cancellationToken = default)
+    public async Task RunOneAsync<TEvent>(TEvent evt, IBaseEventHandler<TEvent> handler, CancellationToken cancellationToken = default)
         where TEvent : class, IBaseEvent<TMessageId>
         => await handler.HandleAsync(evt, cancellationToken);
 
-    public List<IGrouping<int, IEventHandler<TEvent>>> GetHandlers<TEvent>()
+    public List<IGrouping<int, IBaseEventHandler<TEvent>>> GetHandlers<TEvent>()
         where TEvent : class, IBaseEvent<TMessageId>
         => ServiceProvider.GetPrioritisedEventHandlers<TEvent, TMessageId>();
 }

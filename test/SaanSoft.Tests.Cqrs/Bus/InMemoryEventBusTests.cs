@@ -1,3 +1,5 @@
+using SaanSoft.Cqrs.Common.Handlers;
+
 namespace SaanSoft.Tests.Cqrs.Bus;
 
 public class InMemoryEventBusTests : TestSetup
@@ -30,9 +32,9 @@ public class InMemoryEventBusTests : TestSetup
         [Fact]
         public async Task QueueAsync_single_handler_exists_in_serviceProvider()
         {
-            var eventHandler = A.Fake<IEventHandler<MyEvent>>();
+            var eventHandler = A.Fake<IBaseEventHandler<MyEvent>>();
 
-            ServiceCollection.AddScoped<IEventHandler<MyEvent>>(_ => eventHandler);
+            ServiceCollection.AddScoped<IBaseEventHandler<MyEvent>>(_ => eventHandler);
 
             await InMemoryEventBus.QueueAsync(new MyEvent(Guid.NewGuid()));
 
@@ -46,11 +48,11 @@ public class InMemoryEventBusTests : TestSetup
         [Fact]
         public async Task QueueAsync_multiple_handlers_exists_in_serviceProvider()
         {
-            var eventHandler = A.Fake<IEventHandler<MyEvent>>();
-            var anotherEventHandler = A.Fake<IEventHandler<MyEvent>>();
+            var eventHandler = A.Fake<IBaseEventHandler<MyEvent>>();
+            var anotherEventHandler = A.Fake<IBaseEventHandler<MyEvent>>();
 
-            ServiceCollection.AddScoped<IEventHandler<MyEvent>>(_ => eventHandler);
-            ServiceCollection.AddScoped<IEventHandler<MyEvent>>(_ => anotherEventHandler);
+            ServiceCollection.AddScoped<IBaseEventHandler<MyEvent>>(_ => eventHandler);
+            ServiceCollection.AddScoped<IBaseEventHandler<MyEvent>>(_ => anotherEventHandler);
 
             await InMemoryEventBus.QueueAsync(new MyEvent(Guid.NewGuid()));
 
@@ -75,8 +77,8 @@ public class InMemoryEventBusTests : TestSetup
         [Fact]
         public async Task QueueManyAsync_executes_multiple_events_of_same_type()
         {
-            var eventHandler = A.Fake<IEventHandler<MyEvent>>();
-            ServiceCollection.AddScoped<IEventHandler<MyEvent>>(_ => eventHandler);
+            var eventHandler = A.Fake<IBaseEventHandler<MyEvent>>();
+            ServiceCollection.AddScoped<IBaseEventHandler<MyEvent>>(_ => eventHandler);
 
             var event1 = new MyEvent(Guid.NewGuid());
             var event2 = new MyEvent(Guid.NewGuid());

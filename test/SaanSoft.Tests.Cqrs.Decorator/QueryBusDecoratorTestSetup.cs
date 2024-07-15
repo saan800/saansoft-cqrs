@@ -1,13 +1,15 @@
+using SaanSoft.Cqrs.Common.Handlers;
+
 namespace SaanSoft.Tests.Cqrs.Decorator;
 
-public abstract class QueryBusDecoratorTestSetup : TestSetup
+public abstract class QueryBusTestSetup : TestSetup
 {
-    protected QueryBusDecoratorTestSetup()
+    protected QueryBusTestSetup()
     {
-        ServiceCollection.AddScoped<IQueryHandler<MyQuery, MyQueryResponse>, QueryHandler>();
-        ServiceCollection.AddScoped<IQueryHandler<AnotherQuery, MyQueryResponse>, QueryHandler>();
+        ServiceCollection.AddScoped<IBaseQueryHandler<MyQuery, MyQueryResponse>, QueryHandler>();
+        ServiceCollection.AddScoped<IBaseQueryHandler<AnotherQuery, MyQueryResponse>, QueryHandler>();
     }
 
-    protected abstract IQueryBusDecorator SutPublisherDecorator { get; }
+    protected abstract IQueryBus SutPublisherDecorator { get; }
 }
 

@@ -1,6 +1,8 @@
 namespace SaanSoft.Cqrs.Core.Bus;
 
-public interface IEventBus<TMessageId> where TMessageId : struct
+public interface IBaseEventBus<TMessageId> :
+    IBaseBus
+    where TMessageId : struct
 {
     /// <summary>
     /// Put the event onto the queue.

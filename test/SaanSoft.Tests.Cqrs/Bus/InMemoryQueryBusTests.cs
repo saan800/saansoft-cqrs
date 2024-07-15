@@ -1,3 +1,5 @@
+using SaanSoft.Cqrs.Common.Handlers;
+
 namespace SaanSoft.Tests.Cqrs.Bus;
 
 public class InMemoryQueryBusTests : TestSetup
@@ -31,11 +33,11 @@ public class InMemoryQueryBusTests : TestSetup
         [InlineAutoData]
         public async Task FetchAsync_handler_exists_in_serviceProvider(string data)
         {
-            var handler = A.Fake<IQueryHandler<MyQuery, MyQueryResponse>>();
+            var handler = A.Fake<IBaseQueryHandler<MyQuery, MyQueryResponse>>();
             A.CallTo(() => handler.HandleAsync(A<MyQuery>.Ignored, A<CancellationToken>.Ignored))
                 .Returns(new MyQueryResponse(data));
 
-            ServiceCollection.AddScoped<IQueryHandler<MyQuery, MyQueryResponse>>(_ => handler);
+            ServiceCollection.AddScoped<IBaseQueryHandler<MyQuery, MyQueryResponse>>(_ => handler);
 
             var result = await InMemoryQueryBus.FetchAsync(new MyQuery());
             result.Should().NotBeNull();
@@ -58,11 +60,11 @@ public class InMemoryQueryBusTests : TestSetup
         [Fact]
         public async Task FetchAsync_multiple_handlers_exists_in_serviceProvider_should_throw_error()
         {
-            var handler1 = A.Fake<IQueryHandler<MyQuery, MyQueryResponse>>();
-            var handler2 = A.Fake<IQueryHandler<MyQuery, MyQueryResponse>>();
+            var handler1 = A.Fake<IBaseQueryHandler<MyQuery, MyQueryResponse>>();
+            var handler2 = A.Fake<IBaseQueryHandler<MyQuery, MyQueryResponse>>();
 
-            ServiceCollection.AddScoped<IQueryHandler<MyQuery, MyQueryResponse>>(_ => handler1);
-            ServiceCollection.AddScoped<IQueryHandler<MyQuery, MyQueryResponse>>(_ => handler2);
+            ServiceCollection.AddScoped<IBaseQueryHandler<MyQuery, MyQueryResponse>>(_ => handler1);
+            ServiceCollection.AddScoped<IBaseQueryHandler<MyQuery, MyQueryResponse>>(_ => handler2);
 
             await InMemoryQueryBus.Invoking(y => y.FetchAsync(new MyQuery()))
                 .Should().ThrowAsync<InvalidOperationException>()

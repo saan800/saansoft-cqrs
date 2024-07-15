@@ -20,7 +20,7 @@ exact change of messages that occurred.
 ## Recommended Order
 
 The Ensure Message Id decorators should be at the top (or very near to) of
-the `IMessageBus` decorator stack.
+the message bus decorator stack.
 
 This ensures that things like logging will have as much useful data as it
 can get.

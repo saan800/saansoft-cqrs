@@ -1,3 +1,5 @@
+using SaanSoft.Cqrs.Common.Handlers;
+using SaanSoft.Cqrs.Common.Messages;
 using SaanSoft.Cqrs.Core.Messages;
 using SaanSoft.Cqrs.GuidIds.Utilities;
 
@@ -38,36 +40,36 @@ public abstract class TestSetup
     protected void AddCommandHandlerException<TCommand>()
         where TCommand : IBaseCommand
     {
-        var handler = A.Fake<ICommandHandler<TCommand>>();
+        var handler = A.Fake<IBaseCommandHandler<TCommand>>();
         A.CallTo(() => handler.HandleAsync(A<TCommand>.Ignored, A<CancellationToken>.Ignored))
             .ThrowsAsync(new Exception("it went wrong"));
-        ServiceCollection.AddScoped<ICommandHandler<TCommand>>(_ => handler);
+        ServiceCollection.AddScoped<IBaseCommandHandler<TCommand>>(_ => handler);
     }
 
     protected void AddCommandHandlerException<TCommand, TResponse>()
         where TCommand : IBaseCommand<TCommand, TResponse>
     {
-        var handler = A.Fake<ICommandHandler<TCommand, TResponse>>();
+        var handler = A.Fake<IBaseCommandHandler<TCommand, TResponse>>();
         A.CallTo(() => handler.HandleAsync(A<TCommand>.Ignored, A<CancellationToken>.Ignored))
             .ThrowsAsync(new Exception("it went wrong"));
-        ServiceCollection.AddScoped<ICommandHandler<TCommand, TResponse>>(_ => handler);
+        ServiceCollection.AddScoped<IBaseCommandHandler<TCommand, TResponse>>(_ => handler);
     }
 
     protected void AddEventHandlerException<TEvent>()
         where TEvent : IBaseEvent
     {
-        var handler = A.Fake<IEventHandler<TEvent>>();
+        var handler = A.Fake<IBaseEventHandler<TEvent>>();
         A.CallTo(() => handler.HandleAsync(A<TEvent>.Ignored, A<CancellationToken>.Ignored))
             .ThrowsAsync(new Exception("it went wrong"));
-        ServiceCollection.AddScoped<IEventHandler<TEvent>>(_ => handler);
+        ServiceCollection.AddScoped<IBaseEventHandler<TEvent>>(_ => handler);
     }
 
     protected void AddQueryHandlerException<TQuery, TResponse>()
         where TQuery : IBaseQuery<TQuery, TResponse>
     {
-        var handler = A.Fake<IQueryHandler<TQuery, TResponse>>();
+        var handler = A.Fake<IBaseQueryHandler<TQuery, TResponse>>();
         A.CallTo(() => handler.HandleAsync(A<TQuery>.Ignored, A<CancellationToken>.Ignored))
             .ThrowsAsync(new Exception("it went wrong"));
-        ServiceCollection.AddScoped<IQueryHandler<TQuery, TResponse>>(_ => handler);
+        ServiceCollection.AddScoped<IBaseQueryHandler<TQuery, TResponse>>(_ => handler);
     }
 }

@@ -1,6 +1,8 @@
-namespace SaanSoft.Cqrs.Core.Handlers;
+using SaanSoft.Cqrs.Common.Messages;
 
-public interface IQueryHandler<in TQuery, TResponse>
+namespace SaanSoft.Cqrs.Common.Handlers;
+
+public interface IBaseQueryHandler<in TQuery, TResponse>
     where TQuery : IBaseQuery<TQuery, TResponse>
 {
     /// <summary>

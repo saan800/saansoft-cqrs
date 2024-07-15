@@ -3,12 +3,12 @@ using SaanSoft.Cqrs.GuidIds.Decorator.LoggerScope;
 
 namespace SaanSoft.Tests.Cqrs.Decorator.LoggerScope;
 
-public class LoggerScopeEventBusDecoratorTests : EventBusDecoratorTestSetup
+public class LoggerScopeEventBusTests : EventBusTestSetup
 {
     private readonly ILogger _logger = A.Fake<ILogger>();
 
-    protected override IEventBusDecorator SutPublisherDecorator =>
-        new LoggerScopeEventBusDecorator(_logger, InMemoryEventBus);
+    protected override IEventBus SutPublisherDecorator =>
+        new LoggerScopeEventBus(_logger, InMemoryEventBus);
 
     [Fact]
     public async Task QueueAsync_calls_BeginScope()

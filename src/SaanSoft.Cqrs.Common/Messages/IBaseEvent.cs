@@ -1,4 +1,4 @@
-namespace SaanSoft.Cqrs.Core.Messages;
+namespace SaanSoft.Cqrs.Common.Messages;
 
 /// <summary>
 /// You should never directly inherit from this interface

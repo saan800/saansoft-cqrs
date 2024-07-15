@@ -1,14 +1,16 @@
+using SaanSoft.Cqrs.Common.Handlers;
+
 namespace SaanSoft.Tests.Cqrs.Decorator;
 
-public abstract class CommandSubscriptionBusDecoratorTestSetup : TestSetup
+public abstract class CommandSubscriptionBusTestSetup : TestSetup
 {
-    protected CommandSubscriptionBusDecoratorTestSetup()
+    protected CommandSubscriptionBusTestSetup()
     {
-        ServiceCollection.AddScoped<ICommandHandler<MyCommand>, CommandHandler>();
-        ServiceCollection.AddScoped<ICommandHandler<AnotherCommand>, CommandHandler>();
-        ServiceCollection.AddScoped<ICommandHandler<MyCommandWithResponse, string>, CommandHandler>();
-        ServiceCollection.AddScoped<ICommandHandler<AnotherCommandWithResponse, string>, CommandHandler>();
+        ServiceCollection.AddScoped<IBaseCommandHandler<MyCommand>, CommandHandler>();
+        ServiceCollection.AddScoped<IBaseCommandHandler<AnotherCommand>, CommandHandler>();
+        ServiceCollection.AddScoped<IBaseCommandHandler<MyCommandWithResponse, string>, CommandHandler>();
+        ServiceCollection.AddScoped<IBaseCommandHandler<AnotherCommandWithResponse, string>, CommandHandler>();
     }
 
-    protected abstract ICommandSubscriptionBusDecorator SutSubscriptionBusDecorator { get; }
+    protected abstract ICommandSubscriptionBus SutSubscriptionBus { get; }
 }

@@ -2,9 +2,9 @@ using SaanSoft.Cqrs.GuidIds.Decorator.EnsureMessageId;
 
 namespace SaanSoft.Tests.Cqrs.Decorator.EnsureMessageId;
 
-public class EnsureEventHasIdDecoratorTests : EventBusDecoratorTestSetup
+public class EnsureEventHasIdDecoratorTests : EventBusTestSetup
 {
-    protected override IEventBusDecorator SutPublisherDecorator =>
+    protected override IEventBus SutPublisherDecorator =>
         new EnsureEventHasIdDecorator(IdGenerator, InMemoryEventBus);
 
     public class QueueAsyncTests : EnsureEventHasIdDecoratorTests

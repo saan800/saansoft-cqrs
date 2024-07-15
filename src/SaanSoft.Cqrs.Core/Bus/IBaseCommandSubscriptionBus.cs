@@ -1,8 +1,8 @@
-using SaanSoft.Cqrs.Core.Handlers;
-
 namespace SaanSoft.Cqrs.Core.Bus;
 
-public interface ICommandSubscriptionBus<TMessageId> where TMessageId : struct
+public interface IBaseCommandSubscriptionBus<TMessageId> :
+    IBaseBus
+    where TMessageId : struct
 {
     /// <summary>
     /// Runs a command and wait for it to finish running.
@@ -39,7 +39,7 @@ public interface ICommandSubscriptionBus<TMessageId> where TMessageId : struct
     /// </summary>
     /// <typeparam name="TCommand"></typeparam>
     /// <returns></returns>
-    ICommandHandler<TCommand> GetHandler<TCommand>()
+    IBaseCommandHandler<TCommand> GetHandler<TCommand>()
         where TCommand : class, IBaseCommand<TMessageId>;
 
     /// <summary>
@@ -50,6 +50,6 @@ public interface ICommandSubscriptionBus<TMessageId> where TMessageId : struct
     /// <typeparam name="TCommand"></typeparam>
     /// <typeparam name="TResponse"></typeparam>
     /// <returns></returns>
-    ICommandHandler<TCommand, TResponse> GetHandler<TCommand, TResponse>()
+    IBaseCommandHandler<TCommand, TResponse> GetHandler<TCommand, TResponse>()
         where TCommand : class, IBaseCommand<TCommand, TResponse>, IBaseCommand<TMessageId, TCommand, TResponse>;
 }

@@ -1,3 +1,5 @@
+using SaanSoft.Cqrs.Common.Messages;
+
 namespace SaanSoft.Cqrs.Decorator.LoggerScope;
 
 public static class MessageExtensions

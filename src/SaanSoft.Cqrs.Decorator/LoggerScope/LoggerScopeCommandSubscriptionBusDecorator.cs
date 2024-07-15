@@ -1,4 +1,5 @@
-using SaanSoft.Cqrs.Core.Handlers;
+using SaanSoft.Cqrs.Common.Handlers;
+using SaanSoft.Cqrs.Common.Messages;
 
 namespace SaanSoft.Cqrs.Decorator.LoggerScope;
 
@@ -8,8 +9,8 @@ namespace SaanSoft.Cqrs.Decorator.LoggerScope;
 /// <param name="logger"></param>
 /// <param name="next"></param>
 /// <typeparam name="TMessageId"></typeparam>
-public abstract class LoggerScopeCommandSubscriptionBusDecorator<TMessageId>(ILogger logger, ICommandSubscriptionBus<TMessageId> next) :
-    ICommandSubscriptionBusDecorator<TMessageId>
+public abstract class LoggerScopeCommandSubscriptionBus<TMessageId>(ILogger logger, IBaseCommandSubscriptionBus<TMessageId> next) :
+    IBaseCommandSubscriptionBus<TMessageId>
     where TMessageId : struct
 {
     public async Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : class, IBaseCommand<TMessageId>
@@ -33,11 +34,11 @@ public abstract class LoggerScopeCommandSubscriptionBusDecorator<TMessageId>(ILo
         }
     }
 
-    public ICommandHandler<TCommand> GetHandler<TCommand>()
+    public IBaseCommandHandler<TCommand> GetHandler<TCommand>()
         where TCommand : class, IBaseCommand<TMessageId>
         => next.GetHandler<TCommand>();
 
-    public ICommandHandler<TCommand, TResponse> GetHandler<TCommand, TResponse>()
+    public IBaseCommandHandler<TCommand, TResponse> GetHandler<TCommand, TResponse>()
         where TCommand : class, IBaseCommand<TCommand, TResponse>, IBaseCommand<TMessageId, TCommand, TResponse>
         => next.GetHandler<TCommand, TResponse>();
 }

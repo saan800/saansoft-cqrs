@@ -1,8 +1,10 @@
+using SaanSoft.Cqrs.Common.Handlers;
+
 namespace SaanSoft.Tests.Cqrs.Common.TestHandlers;
 
 public class QueryHandler :
-    IQueryHandler<MyQuery, MyQueryResponse>,
-    IQueryHandler<AnotherQuery, MyQueryResponse>
+    IBaseQueryHandler<MyQuery, MyQueryResponse>,
+    IBaseQueryHandler<AnotherQuery, MyQueryResponse>
 {
     public Task<MyQueryResponse> HandleAsync(MyQuery query, CancellationToken cancellationToken = default)
         => Task.FromResult(new MyQueryResponse { Message = query.Message });

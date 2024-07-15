@@ -1,4 +1,4 @@
-namespace SaanSoft.Cqrs.Core.Messages;
+namespace SaanSoft.Cqrs.Common.Messages;
 
 /// <summary>
 /// You should never directly inherit from this interface
@@ -39,7 +39,7 @@ public interface IBaseMessage
 /// <summary>
 /// Base interface with common properties for all messages
 /// You should never directly inherit from IMessage
-/// Use <see cref="IBaseCommand{TMessageId}"/>, <see cref="IBaseEvent{TMessageId,TEntityKey}"/> or <see cref="IBaseQuery{TMessageId,TQuery,TResponse}"/> instead
+/// Use <see cref="IBaseEvent{TMessageId,TEntityKey}"/>, <see cref="IBaseQuery{TMessageId,TQuery,TResponse}"/> or <see cref="IBaseCommand{TMessageId}"/> instead
 /// </summary>
 public interface IBaseMessage<TMessageId> : IBaseMessage where TMessageId : struct
 {

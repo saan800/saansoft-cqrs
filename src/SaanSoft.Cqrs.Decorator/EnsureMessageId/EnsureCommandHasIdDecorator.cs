@@ -1,3 +1,5 @@
+using SaanSoft.Cqrs.Common.Messages;
+
 namespace SaanSoft.Cqrs.Decorator.EnsureMessageId;
 
 /// <summary>
@@ -6,8 +8,8 @@ namespace SaanSoft.Cqrs.Decorator.EnsureMessageId;
 /// <param name="idGenerator"></param>
 /// <param name="next"></param>
 /// <typeparam name="TMessageId"></typeparam>
-public abstract class EnsureCommandHasIdDecorator<TMessageId>(IIdGenerator<TMessageId> idGenerator, ICommandBus<TMessageId> next) :
-    ICommandBusDecorator<TMessageId>
+public abstract class EnsureCommandHasIdDecorator<TMessageId>(IIdGenerator<TMessageId> idGenerator, IBaseCommandBus<TMessageId> next) :
+    IBaseCommandBus<TMessageId>
     where TMessageId : struct
 {
     public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)

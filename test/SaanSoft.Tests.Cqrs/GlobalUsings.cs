@@ -2,7 +2,6 @@ global using AutoFixture.Xunit2;
 global using FakeItEasy;
 global using FluentAssertions;
 global using Microsoft.Extensions.DependencyInjection;
-global using SaanSoft.Cqrs.Core.Handlers;
 global using SaanSoft.Cqrs.GuidIds.Bus;
 global using SaanSoft.Tests.Cqrs.Common;
 global using SaanSoft.Tests.Cqrs.Common.AutoFixture;

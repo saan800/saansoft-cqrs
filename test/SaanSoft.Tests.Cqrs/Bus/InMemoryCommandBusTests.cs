@@ -1,3 +1,4 @@
+using SaanSoft.Cqrs.Common.Handlers;
 using SaanSoft.Tests.Cqrs.Common.TestHandlers;
 
 namespace SaanSoft.Tests.Cqrs.Bus;
@@ -32,9 +33,9 @@ public class InMemoryCommandBusTests : TestSetup
         [Fact]
         public async Task ExecuteAsync_handler_exists_in_serviceProvider()
         {
-            var handler = A.Fake<ICommandHandler<MyCommand>>();
+            var handler = A.Fake<IBaseCommandHandler<MyCommand>>();
 
-            ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler);
+            ServiceCollection.AddScoped<IBaseCommandHandler<MyCommand>>(_ => handler);
 
             await InMemoryCommandBus.ExecuteAsync(new MyCommand());
 
@@ -55,11 +56,11 @@ public class InMemoryCommandBusTests : TestSetup
         [Fact]
         public async Task ExecuteAsync_multiple_handlers_exists_in_serviceProvider_should_throw_error()
         {
-            var handler1 = A.Fake<ICommandHandler<MyCommand>>();
-            var handler2 = A.Fake<ICommandHandler<MyCommand>>();
+            var handler1 = A.Fake<IBaseCommandHandler<MyCommand>>();
+            var handler2 = A.Fake<IBaseCommandHandler<MyCommand>>();
 
-            ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler1);
-            ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler2);
+            ServiceCollection.AddScoped<IBaseCommandHandler<MyCommand>>(_ => handler1);
+            ServiceCollection.AddScoped<IBaseCommandHandler<MyCommand>>(_ => handler2);
 
             await InMemoryCommandBus.Invoking(y => y.ExecuteAsync(new MyCommand()))
                 .Should().ThrowAsync<InvalidOperationException>()
@@ -79,7 +80,7 @@ public class InMemoryCommandBusTests : TestSetup
         [InlineAutoData]
         public async Task ExecuteAsync_handler_exists_in_serviceProvider(string response)
         {
-            ServiceCollection.AddScoped<ICommandHandler<MyCommandWithResponse, string>, CommandHandler>();
+            ServiceCollection.AddScoped<IBaseCommandHandler<MyCommandWithResponse, string>, CommandHandler>();
 
             var result = await InMemoryCommandBus.ExecuteAsync(new MyCommandWithResponse { Message = response });
             result.Should().Be(response);
@@ -101,11 +102,11 @@ public class InMemoryCommandBusTests : TestSetup
         [InlineAutoData]
         public async Task ExecuteAsync_multiple_handlers_exists_in_serviceProvider_should_throw_error(string response)
         {
-            var handler1 = A.Fake<ICommandHandler<MyCommandWithResponse, string>>();
-            var handler2 = A.Fake<ICommandHandler<MyCommandWithResponse, string>>();
+            var handler1 = A.Fake<IBaseCommandHandler<MyCommandWithResponse, string>>();
+            var handler2 = A.Fake<IBaseCommandHandler<MyCommandWithResponse, string>>();
 
-            ServiceCollection.AddScoped<ICommandHandler<MyCommandWithResponse, string>>(_ => handler1);
-            ServiceCollection.AddScoped<ICommandHandler<MyCommandWithResponse, string>>(_ => handler2);
+            ServiceCollection.AddScoped<IBaseCommandHandler<MyCommandWithResponse, string>>(_ => handler1);
+            ServiceCollection.AddScoped<IBaseCommandHandler<MyCommandWithResponse, string>>(_ => handler2);
 
             await InMemoryCommandBus.Invoking(y => y.ExecuteAsync(new MyCommandWithResponse { Message = response }))
                 .Should().ThrowAsync<InvalidOperationException>()
@@ -124,9 +125,9 @@ public class InMemoryCommandBusTests : TestSetup
         [Fact]
         public async Task QueueAsync_handler_exists_in_serviceProvider()
         {
-            var handler = A.Fake<ICommandHandler<MyCommand>>();
+            var handler = A.Fake<IBaseCommandHandler<MyCommand>>();
 
-            ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler);
+            ServiceCollection.AddScoped<IBaseCommandHandler<MyCommand>>(_ => handler);
 
             await InMemoryCommandBus.QueueAsync(new MyCommand());
 
@@ -144,11 +145,11 @@ public class InMemoryCommandBusTests : TestSetup
         [Fact]
         public async Task QueueAsync_multiple_handlers_in_serviceProvider_should_throw_error()
         {
-            var handler1 = A.Fake<ICommandHandler<MyCommand>>();
-            var handler2 = A.Fake<ICommandHandler<MyCommand>>();
+            var handler1 = A.Fake<IBaseCommandHandler<MyCommand>>();
+            var handler2 = A.Fake<IBaseCommandHandler<MyCommand>>();
 
-            ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler1);
-            ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => handler2);
+            ServiceCollection.AddScoped<IBaseCommandHandler<MyCommand>>(_ => handler1);
+            ServiceCollection.AddScoped<IBaseCommandHandler<MyCommand>>(_ => handler2);
 
             await InMemoryCommandBus.Invoking(y => y.QueueAsync(new MyCommand()))
                 .Should().ThrowAsync<InvalidOperationException>()

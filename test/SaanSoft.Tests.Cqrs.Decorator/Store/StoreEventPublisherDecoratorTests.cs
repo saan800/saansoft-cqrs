@@ -1,10 +1,11 @@
+using SaanSoft.Cqrs.Common.Messages;
 using SaanSoft.Cqrs.Core.Messages;
 
 namespace SaanSoft.Tests.Cqrs.Decorator.Store;
 
-public class StoreEventPublisherDecoratorTests : EventBusDecoratorTestSetup
+public class StoreEventPublisherDecoratorTests : EventBusTestSetup
 {
-    protected override IEventBusDecorator SutPublisherDecorator =>
+    protected override IEventBus SutPublisherDecorator =>
         new StoreEventPublisherDecorator(InMemoryEventBus);
 
     public class QueueAsyncTests : StoreEventPublisherDecoratorTests
@@ -25,7 +26,7 @@ public class StoreEventPublisherDecoratorTests : EventBusDecoratorTestSetup
         public async Task Multiple_decorators_should_store_publisher_details()
         {
             var evt = new MyEvent(Guid.NewGuid());
-            var wrappedInDecorator = new WrapperEventBusDecorator(SutPublisherDecorator);
+            var wrappedInDecorator = new WrapperEventBus(SutPublisherDecorator);
 
             await wrappedInDecorator.QueueAsync(evt);
 
@@ -54,7 +55,7 @@ public class StoreEventPublisherDecoratorTests : EventBusDecoratorTestSetup
         }
     }
 
-    private class WrapperEventBusDecorator(IEventBus next) : IEventBus
+    private class WrapperEventBus(IEventBus next) : IEventBus
     {
         public Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
             where TEvent : class, IBaseEvent<Guid>

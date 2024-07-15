@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using SaanSoft.Cqrs.Core.Handlers;
 
 namespace SaanSoft.Cqrs.Core.Utilities;
 
@@ -13,12 +12,12 @@ public static class MessageBusExtensions
     /// <typeparam name="TMessageId"></typeparam>
     /// <returns></returns>
     // ReSharper disable once ReturnTypeCanBeEnumerable.Global
-    public static List<IGrouping<int, IEventHandler<TEvent>>> GetPrioritisedEventHandlers<TEvent, TMessageId>(this IServiceProvider serviceProvider)
+    public static List<IGrouping<int, IBaseEventHandler<TEvent>>> GetPrioritisedEventHandlers<TEvent, TMessageId>(this IServiceProvider serviceProvider)
         where TEvent : IBaseEvent<TMessageId>
         where TMessageId : struct
     {
         return serviceProvider
-            .GetServices<IEventHandler<TEvent>>()
+            .GetServices<IBaseEventHandler<TEvent>>()
             // TODO: create optional attribute on event handlers to indicate running priority,
             // default priority = 0
             .GroupBy(_ => 0)

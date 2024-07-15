@@ -4,10 +4,10 @@ using SaanSoft.Cqrs.Core.Bus;
 namespace SaanSoft.Cqrs.GuidIds.Bus;
 
 public class InMemoryCommandBus(IServiceProvider serviceProvider, IIdGenerator idGenerator) :
-    InMemoryCommandBus<Guid>(serviceProvider, idGenerator),
+    BaseInMemoryCommandBus<Guid>(serviceProvider, idGenerator),
     ICommandBus,
     ICommandSubscriptionBus
 {
-    protected override ICommandSubscriptionBus<Guid> GetSubscriptionBus()
+    protected override IBaseCommandSubscriptionBus<Guid> GetSubscriptionBus()
         => ServiceProvider.GetRequiredService<ICommandSubscriptionBus>();
 }

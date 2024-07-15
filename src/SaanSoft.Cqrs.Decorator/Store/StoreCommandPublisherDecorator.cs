@@ -1,3 +1,5 @@
+using SaanSoft.Cqrs.Common.Messages;
+
 namespace SaanSoft.Cqrs.Decorator.Store;
 
 /// <summary>
@@ -8,14 +10,14 @@ namespace SaanSoft.Cqrs.Decorator.Store;
 /// <param name="next"></param>
 /// <typeparam name="TMessageId"></typeparam>
 // ReSharper disable once SuggestBaseTypeForParameterInConstructor
-public abstract class StoreCommandPublisherDecorator<TMessageId>(ICommandBus<TMessageId> next) :
+public abstract class StoreCommandPublisherDecorator<TMessageId>(IBaseCommandBus<TMessageId> next) :
       BaseStoreMessagePublisherDecorator<TMessageId>,
-      ICommandBusDecorator<TMessageId> where TMessageId : struct
+      IBaseCommandBus<TMessageId> where TMessageId : struct
 {
     public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : class, IBaseCommand<TMessageId>
     {
-        await StorePublisherAsync<ICommandBus<TMessageId>>(command, cancellationToken);
+        await StorePublisherAsync<IBaseCommandBus<TMessageId>>(command, cancellationToken);
         await next.ExecuteAsync(command, cancellationToken);
     }
 
@@ -23,14 +25,14 @@ public abstract class StoreCommandPublisherDecorator<TMessageId>(ICommandBus<TMe
         where TCommand : class, IBaseCommand<TCommand, TResponse>, IBaseCommand<TMessageId, TCommand, TResponse>
     {
         var typedCommand = (TCommand)command;
-        await StorePublisherAsync<ICommandBus<TMessageId>>(typedCommand, cancellationToken);
+        await StorePublisherAsync<IBaseCommandBus<TMessageId>>(typedCommand, cancellationToken);
         return await next.ExecuteAsync(command, cancellationToken);
     }
 
     public async Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : class, IBaseCommand<TMessageId>
     {
-        await StorePublisherAsync<ICommandBus<TMessageId>>(command, cancellationToken);
+        await StorePublisherAsync<IBaseCommandBus<TMessageId>>(command, cancellationToken);
         await next.QueueAsync(command, cancellationToken);
     }
 }

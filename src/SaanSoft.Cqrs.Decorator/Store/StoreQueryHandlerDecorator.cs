@@ -1,10 +1,10 @@
-using SaanSoft.Cqrs.Core.Handlers;
+using SaanSoft.Cqrs.Common.Messages;
 
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public abstract class StoreQueryHandlerDecorator<TMessageId>(IQueryHandlerRepository<TMessageId> repository, IQuerySubscriptionBus<TMessageId> next) :
+public abstract class StoreQueryHandlerDecorator<TMessageId>(IQueryHandlerRepository<TMessageId> repository, IBaseQuerySubscriptionBus<TMessageId> next) :
     BaseStoreMessageHandlerDecorator<TMessageId>(repository),
-    IQuerySubscriptionBusDecorator<TMessageId> where TMessageId : struct
+    IBaseQuerySubscriptionBus<TMessageId> where TMessageId : struct
 {
     public async Task<TResponse> RunAsync<TQuery, TResponse>(IBaseQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
         where TQuery : class, IBaseQuery<TQuery, TResponse>, IBaseQuery<TMessageId>, IBaseMessage<TMessageId>
@@ -24,7 +24,7 @@ public abstract class StoreQueryHandlerDecorator<TMessageId>(IQueryHandlerReposi
         }
     }
 
-    public IQueryHandler<TQuery, TResponse> GetHandler<TQuery, TResponse>()
+    public IBaseQueryHandler<TQuery, TResponse> GetHandler<TQuery, TResponse>()
         where TQuery : class, IBaseQuery<TQuery, TResponse>, IBaseQuery<TMessageId>, IBaseMessage<TMessageId>
         => next.GetHandler<TQuery, TResponse>();
 }

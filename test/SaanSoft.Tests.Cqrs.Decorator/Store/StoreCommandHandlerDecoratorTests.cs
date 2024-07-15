@@ -1,6 +1,8 @@
+using SaanSoft.Cqrs.Common.Handlers;
+
 namespace SaanSoft.Tests.Cqrs.Decorator.Store;
 
-public class StoreCommandHandlerDecoratorTests : CommandSubscriptionBusDecoratorTestSetup
+public class StoreCommandHandlerDecoratorTests : CommandSubscriptionBusTestSetup
 {
     protected StoreCommandHandlerDecoratorTests()
     {
@@ -8,7 +10,7 @@ public class StoreCommandHandlerDecoratorTests : CommandSubscriptionBusDecorator
     }
 
     private readonly ICommandHandlerRepository _repository;
-    protected override ICommandSubscriptionBusDecorator SutSubscriptionBusDecorator =>
+    protected override ICommandSubscriptionBus SutSubscriptionBus =>
         new StoreCommandHandlerDecorator(_repository, InMemoryCommandBus);
 
     public class RunAsync : StoreCommandHandlerDecoratorTests
@@ -16,7 +18,7 @@ public class StoreCommandHandlerDecoratorTests : CommandSubscriptionBusDecorator
         [Fact]
         public async Task Should_store_single_handler_details()
         {
-            await SutSubscriptionBusDecorator.RunAsync(new MyCommand());
+            await SutSubscriptionBus.RunAsync(new MyCommand());
 
             A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, typeof(CommandHandler), null, A<CancellationToken>._)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
@@ -25,7 +27,7 @@ public class StoreCommandHandlerDecoratorTests : CommandSubscriptionBusDecorator
         [Fact]
         public async Task Should_not_store_zero_handler_details()
         {
-            await SutSubscriptionBusDecorator.Invoking(y => y.RunAsync(new NoHandlerCommand()))
+            await SutSubscriptionBus.Invoking(y => y.RunAsync(new NoHandlerCommand()))
                 .Should().ThrowAsync<InvalidOperationException>()
                 .Where(x => x.Message.Contains("No handler for type"));
 
@@ -36,10 +38,10 @@ public class StoreCommandHandlerDecoratorTests : CommandSubscriptionBusDecorator
         [Fact]
         public async Task Should_not_store_multiple_handlers_details()
         {
-            var extraHandler = A.Fake<ICommandHandler<MyCommand>>();
-            ServiceCollection.AddScoped<ICommandHandler<MyCommand>>(_ => extraHandler);
+            var extraHandler = A.Fake<IBaseCommandHandler<MyCommand>>();
+            ServiceCollection.AddScoped<IBaseCommandHandler<MyCommand>>(_ => extraHandler);
 
-            await SutSubscriptionBusDecorator.Invoking(y => y.RunAsync(new MyCommand()))
+            await SutSubscriptionBus.Invoking(y => y.RunAsync(new MyCommand()))
                 .Should().ThrowAsync<InvalidOperationException>()
                 .Where(x => x.Message.Contains("Only one handler for type"));
 
@@ -52,7 +54,7 @@ public class StoreCommandHandlerDecoratorTests : CommandSubscriptionBusDecorator
         {
             AddCommandHandlerException<NoHandlerCommand>();
 
-            await SutSubscriptionBusDecorator.Invoking(y => y.RunAsync(new NoHandlerCommand()))
+            await SutSubscriptionBus.Invoking(y => y.RunAsync(new NoHandlerCommand()))
                 .Should().ThrowAsync<Exception>()
                 .Where(x => x.Message.Contains("it went wrong"));
 
@@ -66,7 +68,7 @@ public class StoreCommandHandlerDecoratorTests : CommandSubscriptionBusDecorator
         [Fact]
         public async Task Should_store_single_handler_details()
         {
-            await SutSubscriptionBusDecorator.RunAsync(new MyCommandWithResponse { Message = "hello" });
+            await SutSubscriptionBus.RunAsync(new MyCommandWithResponse { Message = "hello" });
 
             A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, typeof(CommandHandler), null, A<CancellationToken>._)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
@@ -75,7 +77,7 @@ public class StoreCommandHandlerDecoratorTests : CommandSubscriptionBusDecorator
         [Fact]
         public async Task Should_not_store_zero_handler_details()
         {
-            await SutSubscriptionBusDecorator.Invoking(y => y.RunAsync(new NoHandlerCommandWithResponse { Message = "hello" }))
+            await SutSubscriptionBus.Invoking(y => y.RunAsync(new NoHandlerCommandWithResponse { Message = "hello" }))
                 .Should().ThrowAsync<InvalidOperationException>()
                 .Where(x => x.Message.Contains("No handler for type"));
 
@@ -86,10 +88,10 @@ public class StoreCommandHandlerDecoratorTests : CommandSubscriptionBusDecorator
         [Fact]
         public async Task Should_not_store_multiple_handlers_details()
         {
-            var extraHandler = A.Fake<ICommandHandler<MyCommandWithResponse, string>>();
-            ServiceCollection.AddScoped<ICommandHandler<MyCommandWithResponse, string>>(_ => extraHandler);
+            var extraHandler = A.Fake<IBaseCommandHandler<MyCommandWithResponse, string>>();
+            ServiceCollection.AddScoped<IBaseCommandHandler<MyCommandWithResponse, string>>(_ => extraHandler);
 
-            await SutSubscriptionBusDecorator.Invoking(y => y.RunAsync(new MyCommandWithResponse { Message = "hello" }))
+            await SutSubscriptionBus.Invoking(y => y.RunAsync(new MyCommandWithResponse { Message = "hello" }))
                 .Should().ThrowAsync<InvalidOperationException>()
                 .Where(x => x.Message.Contains("Only one handler for type"));
 
@@ -102,7 +104,7 @@ public class StoreCommandHandlerDecoratorTests : CommandSubscriptionBusDecorator
         {
             AddCommandHandlerException<NoHandlerCommandWithResponse, string>();
 
-            await SutSubscriptionBusDecorator.Invoking(y => y.RunAsync(new NoHandlerCommandWithResponse { Message = "hello" }))
+            await SutSubscriptionBus.Invoking(y => y.RunAsync(new NoHandlerCommandWithResponse { Message = "hello" }))
                 .Should().ThrowAsync<Exception>()
                 .Where(x => x.Message.Contains("it went wrong"));
 

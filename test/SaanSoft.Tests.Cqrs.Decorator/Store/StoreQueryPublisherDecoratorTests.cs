@@ -1,10 +1,11 @@
+using SaanSoft.Cqrs.Common.Messages;
 using SaanSoft.Cqrs.Core.Messages;
 
 namespace SaanSoft.Tests.Cqrs.Decorator.Store;
 
-public class StoreQueryPublisherDecoratorTests : QueryBusDecoratorTestSetup
+public class StoreQueryPublisherDecoratorTests : QueryBusTestSetup
 {
-    protected override IQueryBusDecorator SutPublisherDecorator =>
+    protected override IQueryBus SutPublisherDecorator =>
         new StoreQueryPublisherDecorator(InMemoryQueryBus);
 
     public class FetchAsyncTests : StoreQueryPublisherDecoratorTests
@@ -25,7 +26,7 @@ public class StoreQueryPublisherDecoratorTests : QueryBusDecoratorTestSetup
         public async Task FetchAsync_multiple_decorators_should_store_publisher_details()
         {
             var query = new MyQuery();
-            var wrappedInDecorator = new WrapperQueryBusDecorator(SutPublisherDecorator);
+            var wrappedInDecorator = new WrapperQueryBus(SutPublisherDecorator);
 
             await wrappedInDecorator.FetchAsync(query);
 
@@ -34,7 +35,7 @@ public class StoreQueryPublisherDecoratorTests : QueryBusDecoratorTestSetup
         }
     }
 
-    private class WrapperQueryBusDecorator(IQueryBus next) : IQueryBus
+    private class WrapperQueryBus(IQueryBus next) : IQueryBus
     {
         public Task<TResponse> FetchAsync<TQuery, TResponse>(IBaseQuery<TQuery, TResponse> query,
             CancellationToken cancellationToken = default)

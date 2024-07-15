@@ -6,8 +6,8 @@ namespace SaanSoft.Cqrs.Decorator.EnsureMessageId;
 /// <param name="idGenerator"></param>
 /// <param name="next"></param>
 /// <typeparam name="TMessageId"></typeparam>
-public abstract class EnsureQueryHasIdDecorator<TMessageId>(IIdGenerator<TMessageId> idGenerator, IQueryBus<TMessageId> next)
-    : IQueryBusDecorator<TMessageId>
+public abstract class EnsureQueryHasIdDecorator<TMessageId>(IIdGenerator<TMessageId> idGenerator, IBaseQueryBus<TMessageId> next)
+    : IBaseQueryBus<TMessageId>
     where TMessageId : struct
 {
     public async Task<TResponse> FetchAsync<TQuery, TResponse>(IBaseQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)

@@ -1,10 +1,11 @@
+using SaanSoft.Cqrs.Common.Messages;
 using SaanSoft.Cqrs.Core.Messages;
 
 namespace SaanSoft.Tests.Cqrs.Decorator.Store;
 
-public class StoreCommandPublisherDecoratorTests : CommandBusDecoratorTestSetup
+public class StoreCommandPublisherDecoratorTests : CommandBusTestSetup
 {
-    protected override ICommandBusDecorator SutPublisherDecorator =>
+    protected override ICommandBus SutPublisherDecorator =>
         new StoreCommandPublisherDecorator(InMemoryCommandBus);
 
     public class ExecuteAsyncTests : StoreCommandPublisherDecoratorTests
@@ -25,7 +26,7 @@ public class StoreCommandPublisherDecoratorTests : CommandBusDecoratorTestSetup
         public async Task Multiple_decorators_should_store_publisher_details()
         {
             var command = new MyCommand();
-            var wrappedInDecorator = new WrapperCommandBusDecorator(SutPublisherDecorator);
+            var wrappedInDecorator = new WrapperCommandBus(SutPublisherDecorator);
             await wrappedInDecorator.ExecuteAsync(command);
 
             var publisher = command.Metadata.GetValueOrDefaultAs<string>(StoreConstants.PublisherKey);
@@ -53,7 +54,7 @@ public class StoreCommandPublisherDecoratorTests : CommandBusDecoratorTestSetup
         public async Task Multiple_decorators_should_store_publisher_details(string message)
         {
             var command = new MyCommandWithResponse { Message = message };
-            var wrappedInDecorator = new WrapperCommandBusDecorator(SutPublisherDecorator);
+            var wrappedInDecorator = new WrapperCommandBus(SutPublisherDecorator);
             await wrappedInDecorator.ExecuteAsync(command);
 
             var publisher = command.Metadata.GetValueOrDefaultAs<string>(StoreConstants.PublisherKey);
@@ -79,7 +80,7 @@ public class StoreCommandPublisherDecoratorTests : CommandBusDecoratorTestSetup
         public async Task QueueAsync_multiple_decorators_should_store_publisher_details()
         {
             var command = new MyCommand();
-            var wrappedInDecorator = new WrapperCommandBusDecorator(SutPublisherDecorator);
+            var wrappedInDecorator = new WrapperCommandBus(SutPublisherDecorator);
             await wrappedInDecorator.QueueAsync(command);
 
             var publisher = command.Metadata.GetValueOrDefaultAs<string>(StoreConstants.PublisherKey);
@@ -87,7 +88,7 @@ public class StoreCommandPublisherDecoratorTests : CommandBusDecoratorTestSetup
         }
     }
 
-    private class WrapperCommandBusDecorator(ICommandBus next) : ICommandBus
+    private class WrapperCommandBus(ICommandBus next) : ICommandBus
     {
         public Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
             where TCommand : class, IBaseCommand<Guid>

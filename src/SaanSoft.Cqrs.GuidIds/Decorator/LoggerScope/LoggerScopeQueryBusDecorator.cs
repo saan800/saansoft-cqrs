@@ -2,6 +2,6 @@ using SaanSoft.Cqrs.Decorator.LoggerScope;
 
 namespace SaanSoft.Cqrs.GuidIds.Decorator.LoggerScope;
 
-public class LoggerScopeQueryBusDecorator(ILogger logger, IQueryBus next) :
-    LoggerScopeQueryBusDecorator<Guid>(logger, next),
-    IQueryBusDecorator;
+public class LoggerScopeQueryBus(ILogger logger, IQueryBus next) :
+    LoggerScopeQueryBus<Guid>(logger, next),
+    IQueryBus;

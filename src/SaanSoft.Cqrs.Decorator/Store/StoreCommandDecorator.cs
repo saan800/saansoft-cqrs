@@ -1,8 +1,10 @@
+using SaanSoft.Cqrs.Common.Messages;
+
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public abstract class StoreCommandDecorator<TMessageId>(ICommandRepository<TMessageId> repository, ICommandBus<TMessageId> next)
+public abstract class StoreCommandDecorator<TMessageId>(ICommandRepository<TMessageId> repository, IBaseCommandBus<TMessageId> next)
     : BaseStoreMessageDecorator<TMessageId, IRootCommand<TMessageId>>(repository),
-      ICommandBusDecorator<TMessageId>
+      IBaseCommandBus<TMessageId>
     where TMessageId : struct
 {
     public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)

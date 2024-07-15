@@ -1,4 +1,4 @@
-namespace SaanSoft.Cqrs.Core.Messages;
+namespace SaanSoft.Cqrs.Common.Messages;
 
 public class MessageMetadata : Dictionary<string, object?>
 {

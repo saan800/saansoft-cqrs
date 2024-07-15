@@ -1,3 +1,5 @@
+using SaanSoft.Cqrs.Common.Messages;
+
 namespace SaanSoft.Cqrs.Decorator.Store.MongoDB;
 
 public interface ICommandMongoDbRepository<TMessageId> :

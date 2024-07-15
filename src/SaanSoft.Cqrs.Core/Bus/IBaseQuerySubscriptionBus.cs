@@ -1,8 +1,8 @@
-using SaanSoft.Cqrs.Core.Handlers;
-
 namespace SaanSoft.Cqrs.Core.Bus;
 
-public interface IQuerySubscriptionBus<TMessageId> where TMessageId : struct
+public interface IBaseQuerySubscriptionBus<TMessageId> :
+    IBaseBus
+    where TMessageId : struct
 {
     /// <summary>
     /// Run a query for information
@@ -25,6 +25,6 @@ public interface IQuerySubscriptionBus<TMessageId> where TMessageId : struct
     /// <typeparam name="TQuery"></typeparam>
     /// <typeparam name="TResponse"></typeparam>
     /// <returns></returns>
-    IQueryHandler<TQuery, TResponse> GetHandler<TQuery, TResponse>()
+    IBaseQueryHandler<TQuery, TResponse> GetHandler<TQuery, TResponse>()
         where TQuery : class, IBaseQuery<TQuery, TResponse>, IBaseQuery<TMessageId>, IBaseMessage<TMessageId>;
 }

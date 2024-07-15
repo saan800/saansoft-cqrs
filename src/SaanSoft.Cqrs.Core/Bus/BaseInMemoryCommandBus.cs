@@ -1,12 +1,11 @@
 using Microsoft.Extensions.DependencyInjection;
-using SaanSoft.Cqrs.Core.Handlers;
 using SaanSoft.Cqrs.Core.Utilities;
 
 namespace SaanSoft.Cqrs.Core.Bus;
 
-public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider serviceProvider, IIdGenerator<TMessageId> idGenerator)
-    : ICommandBus<TMessageId>,
-      ICommandSubscriptionBus<TMessageId>
+public abstract class BaseInMemoryCommandBus<TMessageId>(IServiceProvider serviceProvider, IIdGenerator<TMessageId> idGenerator)
+    : IBaseCommandBus<TMessageId>,
+      IBaseCommandSubscriptionBus<TMessageId>
     where TMessageId : struct
 {
     // ReSharper disable MemberCanBePrivate.Global
@@ -46,8 +45,8 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
     /// Get subscription bus via ServiceProvider so it runs through any decorators
     /// </summary>
     /// <returns></returns>
-    protected virtual ICommandSubscriptionBus<TMessageId> GetSubscriptionBus()
-        => ServiceProvider.GetRequiredService<ICommandSubscriptionBus<TMessageId>>();
+    protected virtual IBaseCommandSubscriptionBus<TMessageId> GetSubscriptionBus()
+        => ServiceProvider.GetRequiredService<IBaseCommandSubscriptionBus<TMessageId>>();
 
     public async Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : class, IBaseCommand<TMessageId>
@@ -64,13 +63,13 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
         return await handler.HandleAsync(typedCommand, cancellationToken);
     }
 
-    public virtual ICommandHandler<TCommand> GetHandler<TCommand>()
+    public virtual IBaseCommandHandler<TCommand> GetHandler<TCommand>()
         where TCommand : class, IBaseCommand<TMessageId>
-        => GetCommandHandler<ICommandHandler<TCommand>>();
+        => GetCommandHandler<IBaseCommandHandler<TCommand>>();
 
-    public ICommandHandler<TCommand, TResponse> GetHandler<TCommand, TResponse>()
+    public IBaseCommandHandler<TCommand, TResponse> GetHandler<TCommand, TResponse>()
         where TCommand : class, IBaseCommand<TCommand, TResponse>, IBaseCommand<TMessageId, TCommand, TResponse>
-        => GetCommandHandler<ICommandHandler<TCommand, TResponse>>();
+        => GetCommandHandler<IBaseCommandHandler<TCommand, TResponse>>();
 
     private TCommandHandler GetCommandHandler<TCommandHandler>()
     {

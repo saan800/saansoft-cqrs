@@ -12,24 +12,23 @@ In `SaanSoft.Cqrs.Decorator` new decorators shouldn't add non-generic packages t
 * Add general implementations and interfaces in `SaanSoft.Cqrs.Decorator`, then add another project for implementation specific framework. e.g:
   * The `Store` decorators classes and repository interfaces are in `SaanSoft.Cqrs.Decorator` because they don't require any extra package imports.
   * The database specific implementations are in their own project (e.g. `SaanSoft.Cqrs.Decorator.Store.MongoDB`)
-* This keeps the footprint of `SaanSoft.Cqrs` to a minimum and allows users the flexibility to use the framework that they prefer.
+* This keeps the footprint of `SaanSoft.Cqrs.Common`,  and `SaanSoft.Cqrs.Decorator` to a minimum and allows users the flexibility to use the framework that they prefer.
 
-Where possible add overrides of the decorators to `SaanSoft.Cqrs.GuidIds`
+Where possible add overrides of the decorators to `SaanSoft.Cqrs.GuidIds` and `SaanSoft.Cqrs.MongoObjectIds`
 project so that people don't have to deal with generic `TMessageId` all over their code.
 
 ## Technical
 
 Each decorator should inherit from one of:
-* ICommandBusDecorator
-* ICommandSubscriptionBusDecorator
-* IEventBusDecorator
-* IEventSubscriptionBusDecorator
-* IQueryBusDecorator
-* IQuerySubscriptionBusDecorator
+* IBaseCommandBus
+* IBaseCommandSubscriptionBus
+* IBaseEventBus
+* IBaseEventSubscriptionBus
+* IBaseQueryBus
+* IBaseQuerySubscriptionBus
 
 If you are using `Base...Decorator` classes to reduce code duplicate, it should inherit form one of:
-* IMessageBusDecorator
-* IMessageSubscriptionBus
+* IBaseBus
 
 Each decorator and framework specific implementations should be tested.
 

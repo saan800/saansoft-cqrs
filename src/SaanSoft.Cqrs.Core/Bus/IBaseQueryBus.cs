@@ -1,6 +1,8 @@
 namespace SaanSoft.Cqrs.Core.Bus;
 
-public interface IQueryBus<TMessageId> where TMessageId : struct
+public interface IBaseQueryBus<TMessageId> :
+    IBaseBus
+    where TMessageId : struct
 {
     /// <summary>
     /// Send a query to fetch data.

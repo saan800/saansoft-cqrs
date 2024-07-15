@@ -3,17 +3,17 @@ using SaanSoft.Cqrs.GuidIds.Decorator.LoggerScope;
 
 namespace SaanSoft.Tests.Cqrs.Decorator.LoggerScope;
 
-public class LoggerScopeCommandSubscriptionBusDecoratorTests : CommandSubscriptionBusDecoratorTestSetup
+public class LoggerScopeCommandSubscriptionBusTests : CommandSubscriptionBusTestSetup
 {
     private readonly ILogger _logger = A.Fake<ILogger>();
 
-    protected override ICommandSubscriptionBusDecorator SutSubscriptionBusDecorator =>
-        new LoggerScopeCommandSubscriptionBusDecorator(_logger, InMemoryCommandBus);
+    protected override ICommandSubscriptionBus SutSubscriptionBus =>
+        new LoggerScopeCommandSubscriptionBus(_logger, InMemoryCommandBus);
 
     [Fact]
     public async Task RunAsync_calls_BeginScope()
     {
-        await SutSubscriptionBusDecorator.RunAsync(new MyCommand());
+        await SutSubscriptionBus.RunAsync(new MyCommand());
 
         A.CallTo(() => _logger.BeginScope(A<Dictionary<string, object>>._)).MustHaveHappened();
     }
@@ -21,7 +21,7 @@ public class LoggerScopeCommandSubscriptionBusDecoratorTests : CommandSubscripti
     [Fact]
     public async Task RunAsyncWithResponse_calls_BeginScope()
     {
-        await SutSubscriptionBusDecorator.RunAsync(new MyCommandWithResponse { Message = "hi" });
+        await SutSubscriptionBus.RunAsync(new MyCommandWithResponse { Message = "hi" });
 
         A.CallTo(() => _logger.BeginScope(A<Dictionary<string, object>>._)).MustHaveHappened();
     }

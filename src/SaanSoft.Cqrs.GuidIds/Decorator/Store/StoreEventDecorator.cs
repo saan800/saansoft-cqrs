@@ -8,5 +8,5 @@ public class StoreEventDecorator(IEventRepository repository, IEventBus next)
 // ReSharper disable once SuggestBaseTypeForParameterInConstructor
 public class StoreEventDecorator<TEntityKey>(IEventRepository<TEntityKey> repository, IEventBus next)
     : StoreEventDecorator<Guid, TEntityKey>(repository, next),
-      IEventBusDecorator
+      IEventBus
     where TEntityKey : struct;

@@ -4,39 +4,36 @@ namespace SaanSoft.Tests.Cqrs.Common.Utilities;
 
 public class GenericUtilsBaseTests
 {
-    public class IsNullOrDefault
+    public abstract class IsNullOrDefault<TValue> where TValue : struct
     {
-        public abstract class MessageId<TMessageId> where TMessageId : struct
+        protected abstract TValue NewId();
+
+        [Fact]
+        public void Nullable_without_value_should_return_true()
         {
-            protected abstract TMessageId NewId();
+            TValue? value = null;
+            GenericUtils.IsNullOrDefault(value).Should().Be(true);
+        }
 
-            [Fact]
-            public void Nullable_without_value_should_return_true()
-            {
-                TMessageId? value = null;
-                GenericUtils.IsNullOrDefault(value).Should().Be(true);
-            }
+        [Fact]
+        public void Nullable_with_value_should_return_false()
+        {
+            TValue? value = NewId();
+            GenericUtils.IsNullOrDefault(value).Should().Be(false);
+        }
 
-            [Fact]
-            public void Nullable_with_value_should_return_false()
-            {
-                TMessageId? value = NewId();
-                GenericUtils.IsNullOrDefault(value).Should().Be(false);
-            }
+        [Fact]
+        public void Default_value_should_return_true()
+        {
+            TValue value = default;
+            GenericUtils.IsNullOrDefault(value).Should().BeTrue();
+        }
 
-            [Fact]
-            public void Default_value_should_return_true()
-            {
-                TMessageId value = default;
-                GenericUtils.IsNullOrDefault(value).Should().BeTrue();
-            }
-
-            [Fact]
-            public void Value_should_return_false()
-            {
-                TMessageId value = NewId();
-                GenericUtils.IsNullOrDefault(value).Should().BeFalse();
-            }
+        [Fact]
+        public void Value_should_return_false()
+        {
+            TValue value = NewId();
+            GenericUtils.IsNullOrDefault(value).Should().BeFalse();
         }
     }
 }

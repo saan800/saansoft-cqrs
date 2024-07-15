@@ -1,3 +1,4 @@
+using SaanSoft.Cqrs.Common.Messages;
 using SaanSoft.Cqrs.Decorator.Store.Models;
 
 namespace SaanSoft.Cqrs.Decorator.Store.Utilities;

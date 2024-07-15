@@ -1,6 +1,8 @@
+using SaanSoft.Cqrs.Common.Handlers;
+
 namespace SaanSoft.Tests.Cqrs.Decorator.Store;
 
-public class StoreQueryHandlerDecoratorTests : QuerySubscriptionBusDecoratorTestSetup
+public class StoreQueryHandlerDecoratorTests : QuerySubscriptionBusTestSetup
 {
     protected StoreQueryHandlerDecoratorTests()
     {
@@ -8,7 +10,7 @@ public class StoreQueryHandlerDecoratorTests : QuerySubscriptionBusDecoratorTest
     }
 
     private readonly IQueryHandlerRepository _repository;
-    protected override IQuerySubscriptionBusDecorator SutSubscriptionBusDecorator =>
+    protected override IQuerySubscriptionBus SutSubscriptionBus =>
         new StoreQueryHandlerDecorator(_repository, InMemoryQueryBus);
 
     public class RunAsync : StoreQueryHandlerDecoratorTests
@@ -16,7 +18,7 @@ public class StoreQueryHandlerDecoratorTests : QuerySubscriptionBusDecoratorTest
         [Fact]
         public async Task Should_store_single_handler_details()
         {
-            await SutSubscriptionBusDecorator.RunAsync(new MyQuery());
+            await SutSubscriptionBus.RunAsync(new MyQuery());
 
             A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, typeof(QueryHandler), null, A<CancellationToken>._)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _repository.UpsertHandlerAsync(A<Guid>._, A<Type>._, A<Exception>.That.IsNotNull(), A<CancellationToken>._)).MustNotHaveHappened();
@@ -25,7 +27,7 @@ public class StoreQueryHandlerDecoratorTests : QuerySubscriptionBusDecoratorTest
         [Fact]
         public async Task Should_not_store_zero_handler_details()
         {
-            await SutSubscriptionBusDecorator.Invoking(y => y.RunAsync(new NoHandlerQuery()))
+            await SutSubscriptionBus.Invoking(y => y.RunAsync(new NoHandlerQuery()))
                 .Should().ThrowAsync<Exception>()
                 .Where(x => x.Message.Contains("No handler for type"));
 
@@ -36,10 +38,10 @@ public class StoreQueryHandlerDecoratorTests : QuerySubscriptionBusDecoratorTest
         [Fact]
         public async Task Should_not_store_multiple_handlers_details()
         {
-            var handler1 = A.Fake<IQueryHandler<MyQuery, MyQueryResponse>>();
-            ServiceCollection.AddScoped<IQueryHandler<MyQuery, MyQueryResponse>>(_ => handler1);
+            var handler1 = A.Fake<IBaseQueryHandler<MyQuery, MyQueryResponse>>();
+            ServiceCollection.AddScoped<IBaseQueryHandler<MyQuery, MyQueryResponse>>(_ => handler1);
 
-            await SutSubscriptionBusDecorator.Invoking(y => y.RunAsync(new MyQuery()))
+            await SutSubscriptionBus.Invoking(y => y.RunAsync(new MyQuery()))
                 .Should().ThrowAsync<Exception>()
                 .Where(x => x.Message.Contains("Only one handler for type"));
 
@@ -52,7 +54,7 @@ public class StoreQueryHandlerDecoratorTests : QuerySubscriptionBusDecoratorTest
         {
             AddQueryHandlerException<NoHandlerQuery, string>();
 
-            await SutSubscriptionBusDecorator.Invoking(y => y.RunAsync(new NoHandlerQuery()))
+            await SutSubscriptionBus.Invoking(y => y.RunAsync(new NoHandlerQuery()))
                 .Should().ThrowAsync<Exception>()
                 .Where(x => x.Message.Contains("it went wrong"));
 

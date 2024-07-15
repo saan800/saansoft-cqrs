@@ -1,3 +1,5 @@
+using SaanSoft.Cqrs.Common.Messages;
+
 namespace SaanSoft.Cqrs.Decorator.EnsureCorrelationId;
 
 /// <summary>
@@ -6,8 +8,8 @@ namespace SaanSoft.Cqrs.Decorator.EnsureCorrelationId;
 /// <param name="providers"></param>
 /// <param name="next"></param>
 /// <typeparam name="TMessageId"></typeparam>
-public abstract class EnsureCommandHasCorrelationIdDecorator<TMessageId>(IEnumerable<ICorrelationIdProvider> providers, ICommandBus<TMessageId> next)
-    : ICommandBusDecorator<TMessageId>
+public abstract class EnsureCommandHasCorrelationIdDecorator<TMessageId>(IEnumerable<ICorrelationIdProvider> providers, IBaseCommandBus<TMessageId> next)
+    : IBaseCommandBus<TMessageId>
     where TMessageId : struct
 {
     public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)

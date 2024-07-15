@@ -1,3 +1,5 @@
+using SaanSoft.Cqrs.Common.Messages;
+
 namespace SaanSoft.Cqrs.Decorator.Store;
 
 /// <summary>
@@ -6,14 +8,14 @@ namespace SaanSoft.Cqrs.Decorator.Store;
 /// Should be used in conjunction with <see cref="StoreEventDecorator{TMessageId, TEntityKey}"/>
 /// </summary>
 /// <param name="next"></param>
-public abstract class StoreEventPublisherDecorator<TMessageId>(IEventBus<TMessageId> next) :
+public abstract class StoreEventPublisherDecorator<TMessageId>(IBaseEventBus<TMessageId> next) :
     BaseStoreMessagePublisherDecorator<TMessageId>,
-    IEventBusDecorator<TMessageId> where TMessageId : struct
+    IBaseEventBus<TMessageId> where TMessageId : struct
 {
     public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
         where TEvent : class, IBaseEvent<TMessageId>
     {
-        await StorePublisherAsync<IEventBus<TMessageId>>(evt, cancellationToken);
+        await StorePublisherAsync<IBaseEventBus<TMessageId>>(evt, cancellationToken);
         await next.QueueAsync(evt, cancellationToken);
     }
 
@@ -23,7 +25,7 @@ public abstract class StoreEventPublisherDecorator<TMessageId>(IEventBus<TMessag
         var eventList = events.ToList();
         foreach (var evt in eventList)
         {
-            await StorePublisherAsync<IEventBus<TMessageId>>(evt, cancellationToken);
+            await StorePublisherAsync<IBaseEventBus<TMessageId>>(evt, cancellationToken);
         }
         await next.QueueManyAsync(eventList, cancellationToken);
     }

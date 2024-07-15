@@ -1,6 +1,8 @@
 namespace SaanSoft.Cqrs.Core.Bus;
 
-public interface ICommandBus<TMessageId> where TMessageId : struct
+public interface IBaseCommandBus<TMessageId> :
+    IBaseBus
+    where TMessageId : struct
 {
     /// <summary>
     /// Execute a command and wait for it to finish running.

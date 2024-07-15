@@ -1,6 +1,8 @@
-namespace SaanSoft.Cqrs.Core.Handlers;
+using SaanSoft.Cqrs.Common.Messages;
 
-public interface ICommandHandler<in TCommand> where TCommand : IBaseCommand
+namespace SaanSoft.Cqrs.Common.Handlers;
+
+public interface IBaseCommandHandler<in TCommand> where TCommand : IBaseCommand
 {
     /// <summary>
     /// Process the command including validation and other business logic to ensure its valid to continue.
@@ -12,7 +14,7 @@ public interface ICommandHandler<in TCommand> where TCommand : IBaseCommand
     Task HandleAsync(TCommand command, CancellationToken cancellationToken = default);
 }
 
-public interface ICommandHandler<in TCommand, TResponse>
+public interface IBaseCommandHandler<in TCommand, TResponse>
     where TCommand : IBaseCommand<TCommand, TResponse>
 {
     /// <summary>
