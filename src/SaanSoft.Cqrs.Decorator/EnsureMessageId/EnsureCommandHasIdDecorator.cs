@@ -11,14 +11,14 @@ public abstract class EnsureCommandHasIdDecorator<TMessageId>(IIdGenerator<TMess
     where TMessageId : struct
 {
     public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TMessageId>
+        where TCommand : class, IBaseCommand<TMessageId>
     {
         if (GenericUtils.IsNullOrDefault(command.Id)) command.Id = idGenerator.NewId();
         await next.ExecuteAsync(command, cancellationToken);
     }
 
-    public async Task<TResponse> ExecuteAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+    public async Task<TResponse> ExecuteAsync<TCommand, TResponse>(IBaseCommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
+        where TCommand : class, IBaseCommand<TCommand, TResponse>, IBaseCommand<TMessageId, TCommand, TResponse>
     {
         var typedCommand = (TCommand)command;
         if (GenericUtils.IsNullOrDefault(typedCommand.Id)) typedCommand.Id = idGenerator.NewId();
@@ -26,7 +26,7 @@ public abstract class EnsureCommandHasIdDecorator<TMessageId>(IIdGenerator<TMess
     }
 
     public async Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TMessageId>
+        where TCommand : class, IBaseCommand<TMessageId>
     {
         if (GenericUtils.IsNullOrDefault(command.Id)) command.Id = idGenerator.NewId();
         await next.ExecuteAsync(command, cancellationToken);

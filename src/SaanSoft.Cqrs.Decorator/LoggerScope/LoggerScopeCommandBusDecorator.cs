@@ -11,7 +11,7 @@ public abstract class LoggerScopeCommandBusDecorator<TMessageId>(ILogger logger,
     where TMessageId : struct
 {
     public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TMessageId>
+        where TCommand : class, IBaseCommand<TMessageId>
     {
         using (logger.BeginScope(command.BuildLoggingScopeData()))
         {
@@ -20,8 +20,8 @@ public abstract class LoggerScopeCommandBusDecorator<TMessageId>(ILogger logger,
         }
     }
 
-    public async Task<TResponse> ExecuteAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+    public async Task<TResponse> ExecuteAsync<TCommand, TResponse>(IBaseCommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
+        where TCommand : class, IBaseCommand<TCommand, TResponse>, IBaseCommand<TMessageId, TCommand, TResponse>
     {
         var typedCommand = (TCommand)command;
         using (logger.BeginScope(typedCommand.BuildLoggingScopeData()))
@@ -32,7 +32,7 @@ public abstract class LoggerScopeCommandBusDecorator<TMessageId>(ILogger logger,
     }
 
     public async Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TMessageId>
+        where TCommand : class, IBaseCommand<TMessageId>
     {
         using (logger.BeginScope(command.BuildLoggingScopeData()))
         {

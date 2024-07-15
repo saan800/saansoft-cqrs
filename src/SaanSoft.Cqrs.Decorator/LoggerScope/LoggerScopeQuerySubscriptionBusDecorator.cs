@@ -1,3 +1,5 @@
+using SaanSoft.Cqrs.Core.Handlers;
+
 namespace SaanSoft.Cqrs.Decorator.LoggerScope;
 
 /// <summary>
@@ -10,8 +12,8 @@ public abstract class LoggerScopeQuerySubscriptionBusDecorator<TMessageId>(ILogg
     IQuerySubscriptionBusDecorator<TMessageId>
     where TMessageId : struct
 {
-    public async Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
-        where TQuery : class, IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
+    public async Task<TResponse> RunAsync<TQuery, TResponse>(IBaseQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
+        where TQuery : class, IBaseQuery<TQuery, TResponse>, IBaseQuery<TMessageId>, IBaseMessage<TMessageId>
     {
         var handler = GetHandler<TQuery, TResponse>();
         var typedQuery = (TQuery)query;
@@ -23,6 +25,6 @@ public abstract class LoggerScopeQuerySubscriptionBusDecorator<TMessageId>(ILogg
     }
 
     public IQueryHandler<TQuery, TResponse> GetHandler<TQuery, TResponse>()
-        where TQuery : class, IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
+        where TQuery : class, IBaseQuery<TQuery, TResponse>, IBaseQuery<TMessageId>, IBaseMessage<TMessageId>
         => next.GetHandler<TQuery, TResponse>();
 }

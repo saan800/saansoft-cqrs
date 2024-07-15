@@ -90,15 +90,15 @@ public class StoreCommandPublisherDecoratorTests : CommandBusDecoratorTestSetup
     private class WrapperCommandBusDecorator(ICommandBus next) : ICommandBus
     {
         public Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-            where TCommand : class, ICommand<Guid>
+            where TCommand : class, IBaseCommand<Guid>
             => next.ExecuteAsync(command, cancellationToken);
 
-        public Task<TResponse> ExecuteAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
-            where TCommand : class, ICommand<TCommand, TResponse>, ICommand<Guid, TCommand, TResponse>
+        public Task<TResponse> ExecuteAsync<TCommand, TResponse>(IBaseCommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
+            where TCommand : class, IBaseCommand<TCommand, TResponse>, IBaseCommand<Guid, TCommand, TResponse>
             => next.ExecuteAsync(command, cancellationToken);
 
         public Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-            where TCommand : class, ICommand<Guid>
+            where TCommand : class, IBaseCommand<Guid>
             => next.QueueAsync(command, cancellationToken);
     }
 }

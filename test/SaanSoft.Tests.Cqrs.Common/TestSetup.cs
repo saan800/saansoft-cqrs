@@ -36,7 +36,7 @@ public abstract class TestSetup
     protected InMemoryQueryBus InMemoryQueryBus => new(GetServiceProvider(), IdGenerator);
 
     protected void AddCommandHandlerException<TCommand>()
-        where TCommand : ICommand
+        where TCommand : IBaseCommand
     {
         var handler = A.Fake<ICommandHandler<TCommand>>();
         A.CallTo(() => handler.HandleAsync(A<TCommand>.Ignored, A<CancellationToken>.Ignored))
@@ -45,7 +45,7 @@ public abstract class TestSetup
     }
 
     protected void AddCommandHandlerException<TCommand, TResponse>()
-        where TCommand : ICommand<TCommand, TResponse>
+        where TCommand : IBaseCommand<TCommand, TResponse>
     {
         var handler = A.Fake<ICommandHandler<TCommand, TResponse>>();
         A.CallTo(() => handler.HandleAsync(A<TCommand>.Ignored, A<CancellationToken>.Ignored))
@@ -54,7 +54,7 @@ public abstract class TestSetup
     }
 
     protected void AddEventHandlerException<TEvent>()
-        where TEvent : IEvent
+        where TEvent : IBaseEvent
     {
         var handler = A.Fake<IEventHandler<TEvent>>();
         A.CallTo(() => handler.HandleAsync(A<TEvent>.Ignored, A<CancellationToken>.Ignored))
@@ -63,7 +63,7 @@ public abstract class TestSetup
     }
 
     protected void AddQueryHandlerException<TQuery, TResponse>()
-        where TQuery : IQuery<TQuery, TResponse>
+        where TQuery : IBaseQuery<TQuery, TResponse>
     {
         var handler = A.Fake<IQueryHandler<TQuery, TResponse>>();
         A.CallTo(() => handler.HandleAsync(A<TQuery>.Ignored, A<CancellationToken>.Ignored))

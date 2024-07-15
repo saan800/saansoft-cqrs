@@ -2,7 +2,7 @@ namespace SaanSoft.Cqrs.Core.Messages;
 
 public abstract class Event<TMessageId, TEntityKey> :
     BaseMessage<TMessageId>,
-    IEvent<TMessageId, TEntityKey>
+    IBaseEvent<TMessageId, TEntityKey>
     where TMessageId : struct
     where TEntityKey : struct
 {
@@ -14,7 +14,7 @@ public abstract class Event<TMessageId, TEntityKey> :
         Key = key;
     }
 
-    protected Event(TEntityKey key, IMessage<TMessageId> triggeredByMessage)
+    protected Event(TEntityKey key, IBaseMessage<TMessageId> triggeredByMessage)
         : base(triggeredByMessage)
     {
         Key = key;

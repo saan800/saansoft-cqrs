@@ -19,7 +19,7 @@ public interface ICommandBus<TMessageId> where TMessageId : struct
     /// <param name="cancellationToken"></param>
     /// <typeparam name="TCommand"></typeparam>
     Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TMessageId>;
+        where TCommand : class, IBaseCommand<TMessageId>;
 
     /// <summary>
     /// Execute a command and return the result.
@@ -40,9 +40,9 @@ public interface ICommandBus<TMessageId> where TMessageId : struct
     /// <typeparam name="TCommand"></typeparam>
     /// <typeparam name="TResponse"></typeparam>
     /// <returns></returns>
-    Task<TResponse> ExecuteAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command,
+    Task<TResponse> ExecuteAsync<TCommand, TResponse>(IBaseCommand<TCommand, TResponse> command,
         CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>;
+        where TCommand : class, IBaseCommand<TCommand, TResponse>, IBaseCommand<TMessageId, TCommand, TResponse>;
 
     /// <summary>
     /// Put the command onto the queue (i.e. fire and forget).
@@ -59,5 +59,5 @@ public interface ICommandBus<TMessageId> where TMessageId : struct
     /// <param name="cancellationToken"></param>
     /// <typeparam name="TCommand"></typeparam>
     Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TMessageId>;
+        where TCommand : class, IBaseCommand<TMessageId>;
 }

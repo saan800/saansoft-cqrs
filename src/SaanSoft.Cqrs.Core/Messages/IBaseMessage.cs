@@ -2,9 +2,9 @@ namespace SaanSoft.Cqrs.Core.Messages;
 
 /// <summary>
 /// You should never directly inherit from this interface
-/// use <see cref="IMessage{TMessageId}"/> instead
+/// use <see cref="IBaseMessage{TMessageId}"/> instead
 /// </summary>
-public interface IMessage
+public interface IBaseMessage
 {
     /// <summary>
     /// When the command/event/query was raised.
@@ -39,9 +39,9 @@ public interface IMessage
 /// <summary>
 /// Base interface with common properties for all messages
 /// You should never directly inherit from IMessage
-/// Use <see cref="ICommand{TMessageId}"/>, <see cref="IEvent{TMessageId, TEntityKey}"/> or <see cref="IQuery{TMessageId, TQuery, TResponse}"/> instead
+/// Use <see cref="IBaseCommand{TMessageId}"/>, <see cref="IBaseEvent{TMessageId,TEntityKey}"/> or <see cref="IBaseQuery{TMessageId,TQuery,TResponse}"/> instead
 /// </summary>
-public interface IMessage<TMessageId> : IMessage where TMessageId : struct
+public interface IBaseMessage<TMessageId> : IBaseMessage where TMessageId : struct
 {
     /// <summary>
     /// Unique Id for the command/event/query

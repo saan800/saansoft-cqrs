@@ -9,7 +9,7 @@ public abstract class BaseStoreMessagePublisherDecorator<TMessageId> :
     IMessageBusDecorator
     where TMessageId : struct
 {
-    protected Task StorePublisherAsync<TMessageBus>(IMessage<TMessageId> message, CancellationToken cancellationToken)
+    protected Task StorePublisherAsync<TMessageBus>(IBaseMessage<TMessageId> message, CancellationToken cancellationToken)
     {
         var callerClassType = new StackTrace().GetFrames()
             .Where(f => !string.IsNullOrWhiteSpace(f.GetMethod()?.DeclaringType?.Namespace))

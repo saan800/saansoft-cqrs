@@ -8,7 +8,7 @@ namespace SaanSoft.Cqrs.Core.Messages;
 ///
 /// Use <see cref="Command{TMessageId}"/>, <see cref="Event{TMessageId,TEntityKey}"/> or <see cref="Query{TMessageId,TQuery,TResponse}"/> instead
 /// </summary>
-public abstract class BaseMessage<TMessageId> : IMessage<TMessageId>
+public abstract class BaseMessage<TMessageId> : IBaseMessage<TMessageId>
     where TMessageId : struct
 {
     public TMessageId Id { get; set; }
@@ -30,7 +30,7 @@ public abstract class BaseMessage<TMessageId> : IMessage<TMessageId>
         if (!string.IsNullOrWhiteSpace(triggeredByUser)) Metadata.TriggeredByUser = triggeredByUser;
     }
 
-    protected BaseMessage(IMessage<TMessageId> triggeredByMessage)
+    protected BaseMessage(IBaseMessage<TMessageId> triggeredByMessage)
         : this(triggeredByMessage.Metadata.CorrelationId, triggeredByMessage.Metadata.TriggeredByUser)
     {
         IsReplay = triggeredByMessage.IsReplay;

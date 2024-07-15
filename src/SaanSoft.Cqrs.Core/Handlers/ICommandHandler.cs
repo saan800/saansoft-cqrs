@@ -1,6 +1,6 @@
-namespace SaanSoft.Cqrs.Core.Handler;
+namespace SaanSoft.Cqrs.Core.Handlers;
 
-public interface ICommandHandler<in TCommand> where TCommand : ICommand
+public interface ICommandHandler<in TCommand> where TCommand : IBaseCommand
 {
     /// <summary>
     /// Process the command including validation and other business logic to ensure its valid to continue.
@@ -13,7 +13,7 @@ public interface ICommandHandler<in TCommand> where TCommand : ICommand
 }
 
 public interface ICommandHandler<in TCommand, TResponse>
-    where TCommand : ICommand<TCommand, TResponse>
+    where TCommand : IBaseCommand<TCommand, TResponse>
 {
     /// <summary>
     /// Handle the command and return the result

@@ -13,7 +13,7 @@ public abstract class CommandRepository<TMessageId>(
         IMongoDatabase database, IIdGenerator<TMessageId> idGenerator,
         ILogger logger, InsertOneOptions? insertOneOptions = null
         ) :
-    BaseMessageRepository<TMessageId, IBaseCommand<TMessageId>>(database, idGenerator, logger, insertOneOptions),
+    BaseMessageRepository<TMessageId, IRootCommand<TMessageId>>(database, idGenerator, logger, insertOneOptions),
     ICommandMongoDbRepository<TMessageId>
     where TMessageId : struct
 {

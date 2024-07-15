@@ -36,9 +36,9 @@ public class StoreQueryPublisherDecoratorTests : QueryBusDecoratorTestSetup
 
     private class WrapperQueryBusDecorator(IQueryBus next) : IQueryBus
     {
-        public Task<TResponse> FetchAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
+        public Task<TResponse> FetchAsync<TQuery, TResponse>(IBaseQuery<TQuery, TResponse> query,
             CancellationToken cancellationToken = default)
-            where TQuery : class, IQuery<TQuery, TResponse>, IQuery<Guid>, IMessage<Guid>
+            where TQuery : class, IBaseQuery<TQuery, TResponse>, IBaseQuery<Guid>, IBaseMessage<Guid>
             => next.FetchAsync(query, cancellationToken);
     }
 }

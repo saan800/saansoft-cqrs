@@ -1,3 +1,5 @@
+using SaanSoft.Cqrs.Core.Handlers;
+
 namespace SaanSoft.Cqrs.Core.Bus;
 
 public interface IQuerySubscriptionBus<TMessageId> where TMessageId : struct
@@ -11,9 +13,9 @@ public interface IQuerySubscriptionBus<TMessageId> where TMessageId : struct
     /// <typeparam name="TQuery"></typeparam>
     /// <typeparam name="TResponse"></typeparam>
     /// <returns></returns>
-    Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
+    Task<TResponse> RunAsync<TQuery, TResponse>(IBaseQuery<TQuery, TResponse> query,
         CancellationToken cancellationToken = default)
-        where TQuery : class, IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>;
+        where TQuery : class, IBaseQuery<TQuery, TResponse>, IBaseQuery<TMessageId>, IBaseMessage<TMessageId>;
 
     /// <summary>
     /// Get the handler for the query.
@@ -24,5 +26,5 @@ public interface IQuerySubscriptionBus<TMessageId> where TMessageId : struct
     /// <typeparam name="TResponse"></typeparam>
     /// <returns></returns>
     IQueryHandler<TQuery, TResponse> GetHandler<TQuery, TResponse>()
-        where TQuery : class, IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>;
+        where TQuery : class, IBaseQuery<TQuery, TResponse>, IBaseQuery<TMessageId>, IBaseMessage<TMessageId>;
 }

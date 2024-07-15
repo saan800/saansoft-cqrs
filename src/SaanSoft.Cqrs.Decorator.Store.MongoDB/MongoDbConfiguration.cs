@@ -40,7 +40,7 @@ public static class MongoDbConfiguration
         {
             var result = ObjectSerializer.DefaultAllowedTypes(type) ||
                    (type.FullName?.StartsWith(typeof(List<MessageHandler>).FullName ?? typeof(List<MessageHandler>).Name) ?? false) ||
-                   type.IsAssignableTo(typeof(IMessage));
+                   type.IsAssignableTo(typeof(IBaseMessage));
             return result;
         });
         BsonSerializer.RegisterSerializer(objectSerializer);
@@ -59,7 +59,7 @@ public static class MongoDbConfiguration
         foreach (var t in assemblies
                      .SelectMany(assembly => assembly.GetExportedTypes())
                      .Where(t => t is { IsAbstract: false, IsClass: true }
-                                 && (typeof(IMessage<>).IsAssignableFrom(t))
+                                 && (typeof(IBaseMessage<>).IsAssignableFrom(t))
                      ))
         {
             if (!BsonClassMap.IsClassMapRegistered(t))
@@ -68,12 +68,12 @@ public static class MongoDbConfiguration
                 var classMapType = classMapDefinition.MakeGenericType(t);
                 var classMap = (BsonClassMap)Activator.CreateInstance(classMapType)!;
                 classMap.AutoMap();
-                classMap.MapField(nameof(IMessage.IsReplay)).SetIgnoreIfDefault(true);
-                classMap.UnmapProperty(nameof(IMessage.IsReplay));
-                classMap.UnmapProperty($"{nameof(IMessage.Metadata)}.{nameof(IMessage.Metadata.CorrelationId)}");
-                classMap.UnmapProperty($"{nameof(IMessage.Metadata)}.{nameof(IMessage.Metadata.TriggeredById)}");
-                classMap.UnmapProperty($"{nameof(IMessage.Metadata)}.{nameof(IMessage.Metadata.TriggeredByUser)}");
-                classMap.UnmapProperty($"{nameof(IMessage.Metadata)}.{nameof(IMessage.Metadata.TypeFullName)}");
+                classMap.MapField(nameof(IBaseMessage.IsReplay)).SetIgnoreIfDefault(true);
+                classMap.UnmapProperty(nameof(IBaseMessage.IsReplay));
+                classMap.UnmapProperty($"{nameof(IBaseMessage.Metadata)}.{nameof(IBaseMessage.Metadata.CorrelationId)}");
+                classMap.UnmapProperty($"{nameof(IBaseMessage.Metadata)}.{nameof(IBaseMessage.Metadata.TriggeredById)}");
+                classMap.UnmapProperty($"{nameof(IBaseMessage.Metadata)}.{nameof(IBaseMessage.Metadata.TriggeredByUser)}");
+                classMap.UnmapProperty($"{nameof(IBaseMessage.Metadata)}.{nameof(IBaseMessage.Metadata.TypeFullName)}");
                 BsonClassMap.RegisterClassMap(classMap);
             }
         }

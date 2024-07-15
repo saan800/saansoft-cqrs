@@ -2,22 +2,22 @@ namespace SaanSoft.Cqrs.Core.Messages;
 
 /// <summary>
 /// You should never directly inherit from this interface
-/// use <see cref="IEvent{TMessageId, TEntityKey}"/> instead
+/// use <see cref="IBaseEvent{TMessageId,TEntityKey}"/> instead
 /// </summary>
-public interface IEvent : IMessage
+public interface IBaseEvent : IBaseMessage
 {
 }
 
 /// <summary>
 /// You should never directly inherit from this interface
-/// use <see cref="IEvent{TMessageId, TEntityKey}"/> instead
+/// use <see cref="IBaseEvent{TMessageId,TEntityKey}"/> instead
 /// </summary>
-public interface IEvent<TMessageId> : IEvent, IMessage<TMessageId>
+public interface IBaseEvent<TMessageId> : IBaseEvent, IBaseMessage<TMessageId>
     where TMessageId : struct
 {
 }
 
-public interface IEvent<TMessageId, TEntityKey> : IEvent<TMessageId>
+public interface IBaseEvent<TMessageId, TEntityKey> : IBaseEvent<TMessageId>
     where TMessageId : struct
     where TEntityKey : struct
 {

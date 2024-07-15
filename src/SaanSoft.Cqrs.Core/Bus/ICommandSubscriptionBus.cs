@@ -1,3 +1,5 @@
+using SaanSoft.Cqrs.Core.Handlers;
+
 namespace SaanSoft.Cqrs.Core.Bus;
 
 public interface ICommandSubscriptionBus<TMessageId> where TMessageId : struct
@@ -13,7 +15,7 @@ public interface ICommandSubscriptionBus<TMessageId> where TMessageId : struct
     /// <param name="cancellationToken"></param>
     /// <typeparam name="TCommand"></typeparam>
     Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TMessageId>;
+        where TCommand : class, IBaseCommand<TMessageId>;
 
     /// <summary>
     /// Runs a command and return the response.
@@ -27,8 +29,8 @@ public interface ICommandSubscriptionBus<TMessageId> where TMessageId : struct
     /// <typeparam name="TCommand"></typeparam>
     /// <typeparam name="TResponse"></typeparam>
     /// <returns></returns>
-    Task<TResponse> RunAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>;
+    Task<TResponse> RunAsync<TCommand, TResponse>(IBaseCommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
+        where TCommand : class, IBaseCommand<TCommand, TResponse>, IBaseCommand<TMessageId, TCommand, TResponse>;
 
     /// <summary>
     /// Get the handler for the command.
@@ -38,7 +40,7 @@ public interface ICommandSubscriptionBus<TMessageId> where TMessageId : struct
     /// <typeparam name="TCommand"></typeparam>
     /// <returns></returns>
     ICommandHandler<TCommand> GetHandler<TCommand>()
-        where TCommand : class, ICommand<TMessageId>;
+        where TCommand : class, IBaseCommand<TMessageId>;
 
     /// <summary>
     /// Get the handler for the command.
@@ -49,5 +51,5 @@ public interface ICommandSubscriptionBus<TMessageId> where TMessageId : struct
     /// <typeparam name="TResponse"></typeparam>
     /// <returns></returns>
     ICommandHandler<TCommand, TResponse> GetHandler<TCommand, TResponse>()
-        where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>;
+        where TCommand : class, IBaseCommand<TCommand, TResponse>, IBaseCommand<TMessageId, TCommand, TResponse>;
 }

@@ -10,13 +10,13 @@ public abstract class EnsureEventHasCorrelationIdDecorator<TMessageId>(IEnumerab
     : IEventBusDecorator<TMessageId>
     where TMessageId : struct
 {
-    public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default) where TEvent : class, IEvent<TMessageId>
+    public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default) where TEvent : class, IBaseEvent<TMessageId>
     {
         evt.Metadata.CorrelationId = providers.EnsureCorrelationId(evt.Metadata.CorrelationId);
         await next.QueueAsync(evt, cancellationToken);
     }
 
-    public async Task QueueManyAsync<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default) where TEvent : class, IEvent<TMessageId>
+    public async Task QueueManyAsync<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default) where TEvent : class, IBaseEvent<TMessageId>
     {
         // only do this if any events don't have correlationIds
         var eventList = events.ToList();

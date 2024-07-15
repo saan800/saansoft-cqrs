@@ -10,7 +10,7 @@ public abstract class EnsureQueryHasCorrelationIdDecorator<TMessageId>(IEnumerab
     : IQueryBusDecorator<TMessageId>
     where TMessageId : struct
 {
-    public async Task<TResponse> FetchAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default) where TQuery : class, IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
+    public async Task<TResponse> FetchAsync<TQuery, TResponse>(IBaseQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default) where TQuery : class, IBaseQuery<TQuery, TResponse>, IBaseQuery<TMessageId>, IBaseMessage<TMessageId>
     {
         query.Metadata.CorrelationId = providers.EnsureCorrelationId(query.Metadata.CorrelationId);
         return await next.FetchAsync(query, cancellationToken);

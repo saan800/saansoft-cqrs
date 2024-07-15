@@ -21,7 +21,7 @@ public abstract class EventRepository<TMessageId, TEntityKey>(
         IMongoDatabase database, IIdGenerator<TMessageId> idGenerator,
         ILogger logger, InsertOneOptions? insertOneOptions = null
     ) :
-    BaseMessageRepository<TMessageId, IEvent<TMessageId>>(database, idGenerator, logger, insertOneOptions),
+    BaseMessageRepository<TMessageId, IBaseEvent<TMessageId>>(database, idGenerator, logger, insertOneOptions),
     IEventMongoDbRepository<TMessageId, TEntityKey>
     where TMessageId : struct
     where TEntityKey : struct
@@ -31,13 +31,13 @@ public abstract class EventRepository<TMessageId, TEntityKey>(
     public IMongoCollection<Event<TMessageId, TEntityKey>> MessageCollection
         => Database.GetCollection<Event<TMessageId, TEntityKey>>(CollectionName);
 
-    public async Task<List<IEvent<TMessageId, TEntityKey>>> GetEntityMessagesAsync(TEntityKey key,
+    public async Task<List<IBaseEvent<TMessageId, TEntityKey>>> GetEntityMessagesAsync(TEntityKey key,
         CancellationToken cancellationToken = default)
         => (await MessageCollection
             .Find(x => x.Key.Equals(key))
             .ToListAsync(cancellationToken))
             .OrderBy(x => x.MessageOnUtc)
-            .Select(x => (IEvent<TMessageId, TEntityKey>)x)
+            .Select(x => (IBaseEvent<TMessageId, TEntityKey>)x)
             .ToList();
 
     public override async Task UpsertHandlerAsync(TMessageId id, Type handlerType, Exception? exception = null,

@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using SaanSoft.Cqrs.Core.Handlers;
 using SaanSoft.Cqrs.Core.Utilities;
 
 namespace SaanSoft.Cqrs.Core.Bus;
@@ -14,7 +15,7 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
     // ReSharper restore MemberCanBePrivate.Global
 
     public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TMessageId>
+        where TCommand : class, IBaseCommand<TMessageId>
     {
         if (GenericUtils.IsNullOrDefault(command.Id)) command.Id = IdGenerator.NewId();
 
@@ -22,8 +23,8 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
         await subscriptionBus.RunAsync(command, cancellationToken);
     }
 
-    public async Task<TResponse> ExecuteAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+    public async Task<TResponse> ExecuteAsync<TCommand, TResponse>(IBaseCommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
+        where TCommand : class, IBaseCommand<TCommand, TResponse>, IBaseCommand<TMessageId, TCommand, TResponse>
     {
         var typedCommand = (TCommand)command;
         if (GenericUtils.IsNullOrDefault(typedCommand.Id)) typedCommand.Id = IdGenerator.NewId();
@@ -33,7 +34,7 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
     }
 
     public async Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TMessageId>
+        where TCommand : class, IBaseCommand<TMessageId>
     {
         if (GenericUtils.IsNullOrDefault(command.Id)) command.Id = IdGenerator.NewId();
 
@@ -49,14 +50,14 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
         => ServiceProvider.GetRequiredService<ICommandSubscriptionBus<TMessageId>>();
 
     public async Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TMessageId>
+        where TCommand : class, IBaseCommand<TMessageId>
     {
         var handler = GetHandler<TCommand>();
         await handler.HandleAsync(command, cancellationToken);
     }
 
-    public async Task<TResponse> RunAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+    public async Task<TResponse> RunAsync<TCommand, TResponse>(IBaseCommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
+        where TCommand : class, IBaseCommand<TCommand, TResponse>, IBaseCommand<TMessageId, TCommand, TResponse>
     {
         var handler = GetHandler<TCommand, TResponse>();
         var typedCommand = (TCommand)command;
@@ -64,11 +65,11 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
     }
 
     public virtual ICommandHandler<TCommand> GetHandler<TCommand>()
-        where TCommand : class, ICommand<TMessageId>
+        where TCommand : class, IBaseCommand<TMessageId>
         => GetCommandHandler<ICommandHandler<TCommand>>();
 
     public ICommandHandler<TCommand, TResponse> GetHandler<TCommand, TResponse>()
-        where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+        where TCommand : class, IBaseCommand<TCommand, TResponse>, IBaseCommand<TMessageId, TCommand, TResponse>
         => GetCommandHandler<ICommandHandler<TCommand, TResponse>>();
 
     private TCommandHandler GetCommandHandler<TCommandHandler>()

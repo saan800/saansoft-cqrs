@@ -2,7 +2,7 @@ namespace SaanSoft.Cqrs.Decorator.LoggerScope;
 
 public static class MessageExtensions
 {
-    public static Dictionary<string, object> BuildLoggingScopeData<TMessageId>(this IMessage<TMessageId> message, Type? handlerType = null)
+    public static Dictionary<string, object> BuildLoggingScopeData<TMessageId>(this IBaseMessage<TMessageId> message, Type? handlerType = null)
         where TMessageId : struct
     {
         var scopeData = new Dictionary<string, object>

@@ -2,6 +2,6 @@ using SaanSoft.Cqrs.Core.Messages;
 
 namespace SaanSoft.Cqrs.GuidIds.Messages;
 
-public interface IMessage : IMessage<Guid>
+public interface IMessage : IBaseMessage<Guid>
 {
 }

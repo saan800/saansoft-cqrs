@@ -11,7 +11,7 @@ public abstract class LoggerScopeEventBusDecorator<TMessageId>(ILogger logger, I
     where TMessageId : struct
 {
     public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
-        where TEvent : class, IEvent<TMessageId>
+        where TEvent : class, IBaseEvent<TMessageId>
     {
         using (logger.BeginScope(evt.BuildLoggingScopeData()))
         {
@@ -21,7 +21,7 @@ public abstract class LoggerScopeEventBusDecorator<TMessageId>(ILogger logger, I
     }
 
     public async Task QueueManyAsync<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default)
-        where TEvent : class, IEvent<TMessageId>
+        where TEvent : class, IBaseEvent<TMessageId>
     {
         var tasks = events.Select(evt => QueueAsync(evt, cancellationToken));
         await Task.WhenAll(tasks);

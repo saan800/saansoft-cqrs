@@ -13,7 +13,7 @@ public abstract class QueryRepository<TMessageId>(
         IMongoDatabase database, IIdGenerator<TMessageId> idGenerator,
         ILogger logger, InsertOneOptions? insertOneOptions = null
     ) :
-    BaseMessageRepository<TMessageId, IQuery<TMessageId>>(database, idGenerator, logger, insertOneOptions),
+    BaseMessageRepository<TMessageId, IBaseQuery<TMessageId>>(database, idGenerator, logger, insertOneOptions),
     IQueryMongoDbRepository<TMessageId>
     where TMessageId : struct
 {

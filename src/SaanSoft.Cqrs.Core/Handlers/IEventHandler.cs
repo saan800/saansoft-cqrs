@@ -1,6 +1,6 @@
-namespace SaanSoft.Cqrs.Core.Handler;
+namespace SaanSoft.Cqrs.Core.Handlers;
 
-public interface IEventHandler<in TEvent> where TEvent : IEvent
+public interface IEventHandler<in TEvent> where TEvent : IBaseEvent
 {
     /// <summary>
     /// Handle the event. Often includes updates to the DB state.

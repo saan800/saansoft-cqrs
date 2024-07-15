@@ -5,7 +5,7 @@ namespace SaanSoft.Cqrs.Decorator.Store;
 /// </summary>
 /// <typeparam name="TMessageId"></typeparam>
 /// <typeparam name="TEntityKey"></typeparam>
-public interface IEventRepository<TMessageId, TEntityKey> : IMessageRepository<TMessageId, IEvent<TMessageId>>
+public interface IEventRepository<TMessageId, TEntityKey> : IMessageRepository<TMessageId, IBaseEvent<TMessageId>>
     where TMessageId : struct
     where TEntityKey : struct
 {
@@ -18,5 +18,5 @@ public interface IEventRepository<TMessageId, TEntityKey> : IMessageRepository<T
     /// All events for the key, sorted by MessageOnUtc ascending order.
     /// If no events are found for the key, it will return an empty List
     /// </returns>
-    Task<List<IEvent<TMessageId, TEntityKey>>> GetEntityMessagesAsync(TEntityKey key, CancellationToken cancellationToken = default);
+    Task<List<IBaseEvent<TMessageId, TEntityKey>>> GetEntityMessagesAsync(TEntityKey key, CancellationToken cancellationToken = default);
 }

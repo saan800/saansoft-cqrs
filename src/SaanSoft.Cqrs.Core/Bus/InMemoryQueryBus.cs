@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using SaanSoft.Cqrs.Core.Handlers;
 using SaanSoft.Cqrs.Core.Utilities;
 
 namespace SaanSoft.Cqrs.Core.Bus;
@@ -13,9 +14,9 @@ public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvi
     protected readonly IIdGenerator<TMessageId> IdGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
     // ReSharper restore MemberCanBePrivate.Global
 
-    public async Task<TResponse> FetchAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
+    public async Task<TResponse> FetchAsync<TQuery, TResponse>(IBaseQuery<TQuery, TResponse> query,
         CancellationToken cancellationToken = default)
-        where TQuery : class, IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
+        where TQuery : class, IBaseQuery<TQuery, TResponse>, IBaseQuery<TMessageId>, IBaseMessage<TMessageId>
     {
         var typedQuery = (TQuery)query;
         if (GenericUtils.IsNullOrDefault(typedQuery.Id)) typedQuery.Id = IdGenerator.NewId();
@@ -31,8 +32,8 @@ public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvi
     protected virtual IQuerySubscriptionBus<TMessageId> GetSubscriptionBus()
         => ServiceProvider.GetRequiredService<IQuerySubscriptionBus<TMessageId>>();
 
-    public async Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
-        where TQuery : class, IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
+    public async Task<TResponse> RunAsync<TQuery, TResponse>(IBaseQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
+        where TQuery : class, IBaseQuery<TQuery, TResponse>, IBaseQuery<TMessageId>, IBaseMessage<TMessageId>
     {
         var handler = GetHandler<TQuery, TResponse>();
         var typedQuery = (TQuery)query;
@@ -40,7 +41,7 @@ public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvi
     }
 
     public IQueryHandler<TQuery, TResponse> GetHandler<TQuery, TResponse>()
-        where TQuery : class, IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
+        where TQuery : class, IBaseQuery<TQuery, TResponse>, IBaseQuery<TMessageId>, IBaseMessage<TMessageId>
     {
         var handlers = ServiceProvider.GetServices<IQueryHandler<TQuery, TResponse>>().ToList();
         switch (handlers.Count)

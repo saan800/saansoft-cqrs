@@ -1,3 +1,5 @@
+using SaanSoft.Cqrs.Core.Handlers;
+
 namespace SaanSoft.Cqrs.Decorator.Store;
 
 public abstract class StoreCommandHandlerDecorator<TMessageId>(ICommandHandlerRepository<TMessageId> repository, ICommandSubscriptionBus<TMessageId> next)
@@ -6,7 +8,7 @@ public abstract class StoreCommandHandlerDecorator<TMessageId>(ICommandHandlerRe
     where TMessageId : struct
 {
     public async Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TMessageId>
+        where TCommand : class, IBaseCommand<TMessageId>
     {
         var handler = GetHandler<TCommand>();
         try
@@ -21,8 +23,8 @@ public abstract class StoreCommandHandlerDecorator<TMessageId>(ICommandHandlerRe
         }
     }
 
-    public async Task<TResponse> RunAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+    public async Task<TResponse> RunAsync<TCommand, TResponse>(IBaseCommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
+        where TCommand : class, IBaseCommand<TCommand, TResponse>, IBaseCommand<TMessageId, TCommand, TResponse>
     {
         var handler = GetHandler<TCommand, TResponse>();
         var typedCommand = (TCommand)command;
@@ -40,10 +42,10 @@ public abstract class StoreCommandHandlerDecorator<TMessageId>(ICommandHandlerRe
     }
 
     public ICommandHandler<TCommand> GetHandler<TCommand>()
-        where TCommand : class, ICommand<TMessageId>
+        where TCommand : class, IBaseCommand<TMessageId>
         => next.GetHandler<TCommand>();
 
     public ICommandHandler<TCommand, TResponse> GetHandler<TCommand, TResponse>()
-        where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+        where TCommand : class, IBaseCommand<TCommand, TResponse>, IBaseCommand<TMessageId, TCommand, TResponse>
         => next.GetHandler<TCommand, TResponse>();
 }

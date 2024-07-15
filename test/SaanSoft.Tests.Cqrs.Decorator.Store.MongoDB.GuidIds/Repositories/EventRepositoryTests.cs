@@ -45,7 +45,7 @@ public class EventRepositoryTests : TestSetup
         await _eventRepository.InsertAsync(message2);
 
         // check the collection that the event exists
-        var record1 = (IEvent<Guid, Guid>)await _messageCollection.Find(x => x.Id == message1.Id).FirstOrDefaultAsync();
+        var record1 = (IBaseEvent<Guid, Guid>)await _messageCollection.Find(x => x.Id == message1.Id).FirstOrDefaultAsync();
 
         record1.Should().NotBeNull();
         record1.Id.Should().Be(message1.Id);
@@ -54,7 +54,7 @@ public class EventRepositoryTests : TestSetup
         record1.Should().BeOfType<MyEvent>();
         record1.Should().NotBeOfType<AnotherEvent>();
 
-        var record2 = (IEvent<Guid, Guid>)await _messageCollection.Find(x => x.Id == message2.Id).FirstOrDefaultAsync();
+        var record2 = (IBaseEvent<Guid, Guid>)await _messageCollection.Find(x => x.Id == message2.Id).FirstOrDefaultAsync();
 
         record2.Should().NotBeNull();
         record2.Id.Should().Be(message2.Id);

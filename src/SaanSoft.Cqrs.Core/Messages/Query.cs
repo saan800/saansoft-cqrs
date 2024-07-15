@@ -2,16 +2,16 @@ namespace SaanSoft.Cqrs.Core.Messages;
 
 public abstract class Query<TMessageId, TQuery, TResponse> :
     Query<TMessageId>,
-    IQuery<TMessageId, TQuery, TResponse>
+    IBaseQuery<TMessageId, TQuery, TResponse>
     where TMessageId : struct
-    where TQuery : IQuery<TMessageId, TQuery, TResponse>
+    where TQuery : IBaseQuery<TMessageId, TQuery, TResponse>
 {
     protected Query(string? correlationId = null, string? authenticatedId = null)
         : base(correlationId, authenticatedId)
     {
     }
 
-    protected Query(IMessage<TMessageId> triggeredByMessage)
+    protected Query(IBaseMessage<TMessageId> triggeredByMessage)
         : base(triggeredByMessage)
     {
     }
@@ -32,7 +32,7 @@ public abstract class Query<TMessageId> :
     {
     }
 
-    protected Query(IMessage<TMessageId> triggeredByMessage)
+    protected Query(IBaseMessage<TMessageId> triggeredByMessage)
         : base(triggeredByMessage)
     {
     }

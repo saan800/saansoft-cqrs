@@ -8,35 +8,35 @@ namespace SaanSoft.Cqrs.Core.Messages;
 /// use <see cref="Command{TMessageId}"/> and <see cref="Command{TMessageId, TCommand, TResponse}"/> instead.
 /// </summary>
 /// <typeparam name="TMessageId"></typeparam>
-public abstract class BaseCommand<TMessageId> : BaseMessage<TMessageId>, IBaseCommand<TMessageId>
+public abstract class BaseCommand<TMessageId> : BaseMessage<TMessageId>, IRootCommand<TMessageId>
     where TMessageId : struct
 {
     protected BaseCommand(string? correlationId = null, string? authenticatedId = null)
         : base(correlationId, authenticatedId) { }
 
-    protected BaseCommand(IMessage<TMessageId> triggeredByMessage)
+    protected BaseCommand(IBaseMessage<TMessageId> triggeredByMessage)
         : base(triggeredByMessage) { }
 }
 
-public abstract class Command<TMessageId> : BaseCommand<TMessageId>, ICommand<TMessageId>
+public abstract class Command<TMessageId> : BaseCommand<TMessageId>, IBaseCommand<TMessageId>
     where TMessageId : struct
 {
     protected Command(string? correlationId = null, string? authenticatedId = null)
         : base(correlationId, authenticatedId) { }
 
-    protected Command(IMessage<TMessageId> triggeredByMessage)
+    protected Command(IBaseMessage<TMessageId> triggeredByMessage)
         : base(triggeredByMessage) { }
 }
 
 public abstract class Command<TMessageId, TCommand, TResponse> :
     BaseCommand<TMessageId>,
-    ICommand<TMessageId, TCommand, TResponse>
-    where TCommand : ICommand<TMessageId, TCommand, TResponse>
+    IBaseCommand<TMessageId, TCommand, TResponse>
+    where TCommand : IBaseCommand<TMessageId, TCommand, TResponse>
     where TMessageId : struct
 {
     protected Command(string? correlationId = null, string? authenticatedId = null)
         : base(correlationId, authenticatedId) { }
 
-    protected Command(IMessage<TMessageId> triggeredByMessage)
+    protected Command(IBaseMessage<TMessageId> triggeredByMessage)
         : base(triggeredByMessage) { }
 }

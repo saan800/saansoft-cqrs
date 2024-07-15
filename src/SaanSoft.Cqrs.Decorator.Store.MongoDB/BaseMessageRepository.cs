@@ -15,7 +15,7 @@ public abstract class BaseMessageRepository<TMessageId, TMessage> :
     IMessageHandlerRepository<TMessageId>,
     IMongoDbRepository
     where TMessageId : struct
-    where TMessage : class, IMessage<TMessageId>
+    where TMessage : class, IBaseMessage<TMessageId>
 {
     protected readonly IMongoDatabase Database;
     protected readonly IIdGenerator<TMessageId> IdGenerator;
@@ -41,8 +41,8 @@ public abstract class BaseMessageRepository<TMessageId, TMessage> :
 
     public abstract string CollectionName { get; }
 
-    protected virtual IMongoCollection<IMessage<TMessageId>> BaseMessageCollection
-        => Database.GetCollection<IMessage<TMessageId>>(CollectionName);
+    protected virtual IMongoCollection<IBaseMessage<TMessageId>> BaseMessageCollection
+        => Database.GetCollection<IBaseMessage<TMessageId>>(CollectionName);
 
     public virtual async Task InsertAsync(TMessage message, CancellationToken cancellationToken = default)
     {

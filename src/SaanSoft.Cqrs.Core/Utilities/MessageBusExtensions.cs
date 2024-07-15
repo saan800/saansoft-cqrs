@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using SaanSoft.Cqrs.Core.Handlers;
 
 namespace SaanSoft.Cqrs.Core.Utilities;
 
@@ -13,7 +14,7 @@ public static class MessageBusExtensions
     /// <returns></returns>
     // ReSharper disable once ReturnTypeCanBeEnumerable.Global
     public static List<IGrouping<int, IEventHandler<TEvent>>> GetPrioritisedEventHandlers<TEvent, TMessageId>(this IServiceProvider serviceProvider)
-        where TEvent : IEvent<TMessageId>
+        where TEvent : IBaseEvent<TMessageId>
         where TMessageId : struct
     {
         return serviceProvider

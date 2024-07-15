@@ -12,7 +12,7 @@ public interface IQueryBus<TMessageId> where TMessageId : struct
     /// <typeparam name="TQuery"></typeparam>
     /// <typeparam name="TResponse"></typeparam>
     /// <returns></returns>
-    Task<TResponse> FetchAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
+    Task<TResponse> FetchAsync<TQuery, TResponse>(IBaseQuery<TQuery, TResponse> query,
         CancellationToken cancellationToken = default)
-        where TQuery : class, IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>;
+        where TQuery : class, IBaseQuery<TQuery, TResponse>, IBaseQuery<TMessageId>, IBaseMessage<TMessageId>;
 }
