@@ -3,7 +3,7 @@ using SaanSoft.Cqrs.Core.Messages;
 
 namespace SaanSoft.Cqrs.GuidIds.Messages;
 
-public abstract class Command : Command<Guid>, IMessage
+public abstract class Command : BaseCommand<Guid>, IMessage
 {
     protected Command(string? correlationId = null, string? authenticatedId = null)
         : base(correlationId, authenticatedId) { }
@@ -13,7 +13,7 @@ public abstract class Command : Command<Guid>, IMessage
 }
 
 public abstract class Command<TCommand, TResponse> :
-    Command<Guid, TCommand, TResponse>,
+    BaseCommand<Guid, TCommand, TResponse>,
     IMessage
     where TCommand : IBaseCommand<Guid, TCommand, TResponse>
 {

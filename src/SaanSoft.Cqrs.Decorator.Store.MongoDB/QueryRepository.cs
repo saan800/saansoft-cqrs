@@ -8,7 +8,7 @@ public interface IQueryMongoDbRepository<TMessageId> :
     IMongoDbRepository
     where TMessageId : struct
 {
-    IMongoCollection<Query<TMessageId>> MessageCollection { get; }
+    IMongoCollection<BaseQuery<TMessageId>> MessageCollection { get; }
 }
 
 public abstract class QueryRepository<TMessageId>(
@@ -21,15 +21,15 @@ public abstract class QueryRepository<TMessageId>(
 {
     public override string CollectionName => "QueryMessages";
 
-    public IMongoCollection<Query<TMessageId>> MessageCollection
-        => Database.GetCollection<Query<TMessageId>>(CollectionName);
+    public IMongoCollection<BaseQuery<TMessageId>> MessageCollection
+        => Database.GetCollection<BaseQuery<TMessageId>>(CollectionName);
 
     public override async Task UpsertHandlerAsync(TMessageId id, Type handlerType, Exception? exception = null,
         CancellationToken cancellationToken = default)
     {
         var messageHandler = handlerType.BuildMessageHandler(exception);
 
-        var filter = Builders<Query<TMessageId>>.Filter.Eq(x => x.Id, id);
+        var filter = Builders<BaseQuery<TMessageId>>.Filter.Eq(x => x.Id, id);
         var metadata = (await MessageCollection
             .Find(filter)
             .Project(x => x.Metadata)
@@ -49,7 +49,7 @@ public abstract class QueryRepository<TMessageId>(
 
         await MessageCollection.FindOneAndUpdateAsync(
             filter,
-            Builders<Query<TMessageId>>.Update.Set(x => x.Metadata, metadata),
+            Builders<BaseQuery<TMessageId>>.Update.Set(x => x.Metadata, metadata),
             cancellationToken: cancellationToken);
     }
 
@@ -58,11 +58,11 @@ public abstract class QueryRepository<TMessageId>(
     /// </summary>
     public override async Task EnsureCollectionIndexesAsync(CancellationToken cancellationToken = default)
     {
-        var keyIndex = Builders<Query<TMessageId>>.IndexKeys
+        var keyIndex = Builders<BaseQuery<TMessageId>>.IndexKeys
             .Ascending(x => x.MessageOnUtc);
 
         var indexModel =
-            new CreateIndexModel<Query<TMessageId>>(keyIndex, new CreateIndexOptions { Unique = false, Background = false });
+            new CreateIndexModel<BaseQuery<TMessageId>>(keyIndex, new CreateIndexOptions { Unique = false, Background = false });
 
         await MessageCollection.Indexes.CreateOneAsync(indexModel, new CreateOneIndexOptions(), cancellationToken);
     }

@@ -9,7 +9,7 @@ public interface IEventMongoDbRepository<TMessageId, TEntityKey> :
     where TMessageId : struct
     where TEntityKey : struct
 {
-    IMongoCollection<Event<TMessageId, TEntityKey>> MessageCollection { get; }
+    IMongoCollection<BaseEvent<TMessageId, TEntityKey>> MessageCollection { get; }
 }
 
 /// <summary>
@@ -30,8 +30,8 @@ public abstract class EventRepository<TMessageId, TEntityKey>(
 {
     public override string CollectionName => "EventMessages";
 
-    public IMongoCollection<Event<TMessageId, TEntityKey>> MessageCollection
-        => Database.GetCollection<Event<TMessageId, TEntityKey>>(CollectionName);
+    public IMongoCollection<BaseEvent<TMessageId, TEntityKey>> MessageCollection
+        => Database.GetCollection<BaseEvent<TMessageId, TEntityKey>>(CollectionName);
 
     public async Task<List<IBaseEvent<TMessageId, TEntityKey>>> GetEntityMessagesAsync(TEntityKey key,
         CancellationToken cancellationToken = default)
@@ -47,7 +47,7 @@ public abstract class EventRepository<TMessageId, TEntityKey>(
     {
         var messageHandler = handlerType.BuildMessageHandler(exception);
 
-        var filter = Builders<Event<TMessageId, TEntityKey>>.Filter.Eq(x => x.Id, id);
+        var filter = Builders<BaseEvent<TMessageId, TEntityKey>>.Filter.Eq(x => x.Id, id);
         var metadata = (await MessageCollection
             .Find(filter)
             .Project(x => x.Metadata)
@@ -67,7 +67,7 @@ public abstract class EventRepository<TMessageId, TEntityKey>(
 
         await MessageCollection.FindOneAndUpdateAsync(
             filter,
-            Builders<Event<TMessageId, TEntityKey>>.Update.Set(x => x.Metadata, metadata),
+            Builders<BaseEvent<TMessageId, TEntityKey>>.Update.Set(x => x.Metadata, metadata),
             cancellationToken: cancellationToken);
     }
 
@@ -78,12 +78,12 @@ public abstract class EventRepository<TMessageId, TEntityKey>(
     {
         var indexes = MessageCollection.Indexes;
 
-        var keyIndex = Builders<Event<TMessageId, TEntityKey>>.IndexKeys
+        var keyIndex = Builders<BaseEvent<TMessageId, TEntityKey>>.IndexKeys
             .Ascending(x => x.Key)
             .Ascending(x => x.MessageOnUtc);
 
         await indexes.CreateOneAsync(
-            new CreateIndexModel<Event<TMessageId, TEntityKey>>(keyIndex, new CreateIndexOptions { Unique = false }),
+            new CreateIndexModel<BaseEvent<TMessageId, TEntityKey>>(keyIndex, new CreateIndexOptions { Unique = false }),
             null,
             cancellationToken
         );

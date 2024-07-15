@@ -4,7 +4,7 @@ using SaanSoft.Cqrs.Core.Messages;
 namespace SaanSoft.Cqrs.GuidIds.Messages;
 
 public abstract class Query<TQuery, TResponse> :
-    Query<Guid, TQuery, TResponse>,
+    BaseQuery<Guid, TQuery, TResponse>,
     IMessage
     where TQuery : IBaseQuery<Guid, TQuery, TResponse>
 {

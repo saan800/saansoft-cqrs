@@ -13,7 +13,7 @@ public abstract class Event : Event<Guid>
 }
 
 public abstract class Event<TEntityKey> :
-    Event<Guid, TEntityKey>,
+    BaseEvent<Guid, TEntityKey>,
     IMessage
     where TEntityKey : struct
 {

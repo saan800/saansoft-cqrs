@@ -1,6 +1,6 @@
 namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.GuidIds.Repositories;
 
-public class EventHandlerRepositoryTests : BaseHandlerRepositoryTests<MyEvent, EventRepository, Event<Guid, Guid>>
+public class EventHandlerRepositoryTests : BaseHandlerRepositoryTests<MyEvent, EventRepository, BaseEvent<Guid, Guid>>
 {
     public EventHandlerRepositoryTests()
     {

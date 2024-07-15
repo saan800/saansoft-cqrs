@@ -3,7 +3,7 @@ namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.GuidIds.Repositories;
 
 public class CommandRepositoryTests : TestSetup
 {
-    private readonly IMongoCollection<BaseCommand<Guid>> _messageCollection;
+    private readonly IMongoCollection<RootCommand<Guid>> _messageCollection;
     private readonly CommandRepository _commandRepository;
 
     public CommandRepositoryTests()

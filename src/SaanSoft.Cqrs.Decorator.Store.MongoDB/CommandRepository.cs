@@ -8,7 +8,7 @@ public interface ICommandMongoDbRepository<TMessageId> :
     IMongoDbRepository
     where TMessageId : struct
 {
-    IMongoCollection<BaseCommand<TMessageId>> MessageCollection { get; }
+    IMongoCollection<RootCommand<TMessageId>> MessageCollection { get; }
 }
 
 public abstract class CommandRepository<TMessageId>(
@@ -21,15 +21,15 @@ public abstract class CommandRepository<TMessageId>(
 {
     public override string CollectionName => "CommandMessages";
 
-    public IMongoCollection<BaseCommand<TMessageId>> MessageCollection
-        => Database.GetCollection<BaseCommand<TMessageId>>(CollectionName);
+    public IMongoCollection<RootCommand<TMessageId>> MessageCollection
+        => Database.GetCollection<RootCommand<TMessageId>>(CollectionName);
 
     public override async Task UpsertHandlerAsync(TMessageId id, Type handlerType, Exception? exception = null,
         CancellationToken cancellationToken = default)
     {
         var messageHandler = handlerType.BuildMessageHandler(exception);
 
-        var filter = Builders<BaseCommand<TMessageId>>.Filter.Eq(x => x.Id, id);
+        var filter = Builders<RootCommand<TMessageId>>.Filter.Eq(x => x.Id, id);
         var metadata = (await MessageCollection
             .Find(filter)
             .Project(x => x.Metadata)
@@ -49,7 +49,7 @@ public abstract class CommandRepository<TMessageId>(
 
         await MessageCollection.FindOneAndUpdateAsync(
             filter,
-            Builders<BaseCommand<TMessageId>>.Update.Set(x => x.Metadata, metadata),
+            Builders<RootCommand<TMessageId>>.Update.Set(x => x.Metadata, metadata),
             cancellationToken: cancellationToken);
     }
 
@@ -58,11 +58,11 @@ public abstract class CommandRepository<TMessageId>(
     /// </summary>
     public override async Task EnsureCollectionIndexesAsync(CancellationToken cancellationToken = default)
     {
-        var keyIndex = Builders<BaseCommand<TMessageId>>.IndexKeys
+        var keyIndex = Builders<RootCommand<TMessageId>>.IndexKeys
             .Ascending(x => x.MessageOnUtc);
 
         var indexModel =
-            new CreateIndexModel<BaseCommand<TMessageId>>(keyIndex, new CreateIndexOptions { Unique = false, Background = true });
+            new CreateIndexModel<RootCommand<TMessageId>>(keyIndex, new CreateIndexOptions { Unique = false, Background = true });
 
         await MessageCollection.Indexes.CreateOneAsync(indexModel, new CreateOneIndexOptions(), cancellationToken);
     }

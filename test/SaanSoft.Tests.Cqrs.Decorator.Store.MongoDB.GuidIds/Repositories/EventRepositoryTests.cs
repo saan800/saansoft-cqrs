@@ -4,7 +4,7 @@ namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.GuidIds.Repositories;
 
 public class EventRepositoryTests : TestSetup
 {
-    private readonly IMongoCollection<Event<Guid, Guid>> _messageCollection;
+    private readonly IMongoCollection<BaseEvent<Guid, Guid>> _messageCollection;
     private readonly EventRepository _eventRepository;
 
     public EventRepositoryTests()
