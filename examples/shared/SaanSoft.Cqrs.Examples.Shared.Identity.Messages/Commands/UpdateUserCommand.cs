@@ -8,7 +8,7 @@ public class UpdateUserCommand : Command
     public UpdateUserCommand(IMessage triggeredByMessage)
         : base(triggeredByMessage) { }
 
-    public Guid Key { get; set; }
+    public Guid UserKey { get; set; }
 
     public string UserName { get; set; }
 

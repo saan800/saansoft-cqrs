@@ -5,11 +5,17 @@ namespace SaanSoft.Cqrs.Examples.Shared.Identity.Messages.Commands;
 /// </summary>
 public class ForgetUserCommand : Command
 {
-    public ForgetUserCommand(string? correlationId = null, string? authenticatedId = null)
-        : base(correlationId, authenticatedId) { }
+    public ForgetUserCommand(Guid userKey, string? correlationId = null, string? authenticatedId = null)
+        : base(correlationId, authenticatedId)
+    {
+        UserKey = userKey;
+    }
 
-    public ForgetUserCommand(IMessage triggeredByMessage)
-        : base(triggeredByMessage) { }
+    public ForgetUserCommand(Guid userKey, IMessage triggeredByMessage)
+        : base(triggeredByMessage)
+    {
+        UserKey = userKey;
+    }
 
-    public Guid Key { get; set; }
+    public Guid UserKey { get; set; }
 }

@@ -14,5 +14,7 @@ public class User
 
     public DateTime CreatedOnUtc { get; set; }
 
-    public Guid CreatedBy { get; set; }
+    public string CreatedBy { get; set; }
+
+    public DateTime LastUpdatedOnUtc { get; set; }
 }

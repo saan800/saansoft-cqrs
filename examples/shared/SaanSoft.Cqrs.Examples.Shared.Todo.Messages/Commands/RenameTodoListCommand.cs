@@ -8,7 +8,7 @@ public class RenameTodoListCommand : Command
     public RenameTodoListCommand(IMessage triggeredByMessage)
         : base(triggeredByMessage) { }
 
-    public Guid Key { get; set; }
+    public Guid ListKey { get; set; }
 
     public string Title { get; set; }
 }

@@ -1,6 +1,6 @@
 namespace SaanSoft.Cqrs.Examples.Shared.Identity.Messages.Queries;
 
-public class GetUserQuery : Query<GetUserQuery, User>
+public class GetUserQuery : Query<GetUserQuery, User?>
 {
     public GetUserQuery(Guid userKey, string? correlationId = null, string? authenticatedId = null)
         : base(correlationId, authenticatedId)

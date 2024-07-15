@@ -1,16 +1,15 @@
+using SaanSoft.Cqrs.Examples.Shared.Identity.Messages.Commands;
 using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Examples.Shared.Identity.Messages.Events;
 
-public class UserUpdatedEvent : Event
+public class UserUpdatedEvent : Event, IEntityEvent<User>
 {
-    public UserUpdatedEvent(Guid key, string? correlationId = null, string? authenticatedId = null) :
-        base(key, correlationId, authenticatedId)
+    public UserUpdatedEvent(UpdateUserCommand command) : base(command.UserKey, command)
     {
-    }
-
-    public UserUpdatedEvent(Guid key, IMessage<Guid> triggeredByMessage) : base(key, triggeredByMessage)
-    {
+        UserName = command.UserName;
+        FirstName = command.FirstName;
+        LastName = command.LastName;
     }
 
     public string UserName { get; set; }
@@ -20,4 +19,16 @@ public class UserUpdatedEvent : Event
     public string LastName { get; set; }
 
     public string? Biography { get; set; }
+
+    public User? ApplyEvent(User? entity)
+    {
+        if (entity == null) throw new ArgumentNullException(nameof(entity), $"User was null when applying {nameof(UserUpdatedEvent)}");
+
+        entity.UserName = UserName;
+        entity.FirstName = FirstName;
+        entity.LastName = LastName;
+        entity.Biography = Biography;
+        entity.LastUpdatedOnUtc = MessageOnUtc;
+        return entity;
+    }
 }

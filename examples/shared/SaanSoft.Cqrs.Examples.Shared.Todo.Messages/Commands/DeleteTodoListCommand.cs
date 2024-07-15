@@ -8,5 +8,5 @@ public class DeleteTodoListCommand : Command
     public DeleteTodoListCommand(IMessage triggeredByMessage)
         : base(triggeredByMessage) { }
 
-    public Guid Key { get; set; }
+    public Guid ListKey { get; set; }
 }

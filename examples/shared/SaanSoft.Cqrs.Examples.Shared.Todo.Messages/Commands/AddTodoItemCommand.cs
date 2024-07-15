@@ -1,14 +1,16 @@
 namespace SaanSoft.Cqrs.Examples.Shared.Todo.Messages.Commands;
 
-public class CreateTodoListCommand : Command
+public class AddTodoItemCommand : Command
 {
-    public CreateTodoListCommand(string? correlationId = null, string? authenticatedId = null)
+    public AddTodoItemCommand(string? correlationId = null, string? authenticatedId = null)
         : base(correlationId, authenticatedId) { }
 
-    public CreateTodoListCommand(IMessage triggeredByMessage)
+    public AddTodoItemCommand(IMessage triggeredByMessage)
         : base(triggeredByMessage) { }
 
     public Guid ListKey { get; set; }
+
+    public Guid ItemKey { get; set; }
 
     public string Title { get; set; }
 }

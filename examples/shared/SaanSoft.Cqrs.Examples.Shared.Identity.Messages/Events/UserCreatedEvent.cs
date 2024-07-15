@@ -1,16 +1,15 @@
+using SaanSoft.Cqrs.Examples.Shared.Identity.Messages.Commands;
 using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Examples.Shared.Identity.Messages.Events;
 
-public class UserCreatedEvent : Event
+public class UserCreatedEvent : Event, IEntityEvent<User>
 {
-    public UserCreatedEvent(Guid key, string? correlationId = null, string? authenticatedId = null) :
-        base(key, correlationId, authenticatedId)
+    public UserCreatedEvent(Guid userKey, CreateUserCommand command) : base(userKey, command)
     {
-    }
-
-    public UserCreatedEvent(Guid key, IMessage<Guid> triggeredByMessage) : base(key, triggeredByMessage)
-    {
+        UserName = command.UserName;
+        FirstName = command.FirstName;
+        LastName = command.LastName;
     }
 
     public string UserName { get; set; }
@@ -18,4 +17,20 @@ public class UserCreatedEvent : Event
     public string FirstName { get; set; }
 
     public string LastName { get; set; }
+
+    public User? ApplyEvent(User? entity)
+    {
+        if (entity != null) throw new ArgumentOutOfRangeException(nameof(entity), $"User was not null when applying {nameof(UserCreatedEvent)}");
+
+        return new User
+        {
+            Key = Key,
+            UserName = UserName,
+            FirstName = FirstName,
+            LastName = LastName,
+            CreatedOnUtc = MessageOnUtc,
+            CreatedBy = Metadata.TriggeredByUser ?? Key.ToString(),
+            LastUpdatedOnUtc = MessageOnUtc
+        };
+    }
 }
