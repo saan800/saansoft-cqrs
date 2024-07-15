@@ -1,5 +1,4 @@
 using FluentAssertions;
-using SaanSoft.Cqrs.Utilities;
 
 namespace SaanSoft.Tests.Cqrs.Common.Utilities;
 

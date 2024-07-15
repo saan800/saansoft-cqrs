@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs", "src\SaanSoft.Cqrs\SaanSoft.Cqrs.csproj", "{BEC44C1D-322F-4AE2-B5B9-9A2B32E80616}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Core", "src\SaanSoft.Cqrs.Core\SaanSoft.Cqrs.Core.csproj", "{BEC44C1D-322F-4AE2-B5B9-9A2B32E80616}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Example.InMemory.Api", "examples\SaanSoft.Cqrs.Example.InMemory.Api\SaanSoft.Cqrs.Example.InMemory.Api.csproj", "{14FB4E51-D7DF-4045-BF3D-9635FFE3E309}"
 EndProject
@@ -50,6 +50,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Examples.Shared.Todo.Entities", "examples\shared\SaanSoft.Cqrs.Examples.Shared.Todo.Entities\SaanSoft.Cqrs.Examples.Shared.Todo.Entities.csproj", "{2025D8D2-3D86-4BF4-946B-7CF6B04E0228}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Examples.Shared.Identity.Messages", "examples\shared\SaanSoft.Cqrs.Examples.Shared.Identity.Messages\SaanSoft.Cqrs.Examples.Shared.Identity.Messages.csproj", "{D4C715B1-3377-43BB-A850-1697BC166254}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Common", "src\SaanSoft.Cqrs.Common\SaanSoft.Cqrs.Common.csproj", "{4D3E622E-7F8E-4630-AED2-4CC8BA1B0E88}"
 EndProject
 Global
 				GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -117,6 +119,10 @@ Global
 					{D4C715B1-3377-43BB-A850-1697BC166254}.Debug|Any CPU.Build.0 = Debug|Any CPU
 					{D4C715B1-3377-43BB-A850-1697BC166254}.Release|Any CPU.ActiveCfg = Release|Any CPU
 					{D4C715B1-3377-43BB-A850-1697BC166254}.Release|Any CPU.Build.0 = Release|Any CPU
+					{4D3E622E-7F8E-4630-AED2-4CC8BA1B0E88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+					{4D3E622E-7F8E-4630-AED2-4CC8BA1B0E88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+					{4D3E622E-7F8E-4630-AED2-4CC8BA1B0E88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+					{4D3E622E-7F8E-4630-AED2-4CC8BA1B0E88}.Release|Any CPU.Build.0 = Release|Any CPU
 				EndGlobalSection
 				GlobalSection(NestedProjects) = preSolution
 								{14FB4E51-D7DF-4045-BF3D-9635FFE3E309} = {446FC180-C478-471E-A0A4-DB7B76C0B674}

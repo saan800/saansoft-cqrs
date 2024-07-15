@@ -1,3 +1,5 @@
+using SaanSoft.Cqrs.Core.Messages;
+
 namespace SaanSoft.Tests.Cqrs.Decorator.Store;
 
 public class StoreEventPublisherDecoratorTests : EventBusDecoratorTestSetup

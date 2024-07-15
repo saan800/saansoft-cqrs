@@ -8,7 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\SaanSoft.Cqrs\SaanSoft.Cqrs.csproj" />
       <ProjectReference Include="..\SaanSoft.Tests.Cqrs.Common\SaanSoft.Tests.Cqrs.Common.csproj" />
     </ItemGroup>
 

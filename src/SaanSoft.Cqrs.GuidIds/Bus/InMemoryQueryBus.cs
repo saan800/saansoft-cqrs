@@ -1,5 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
-using SaanSoft.Cqrs.Bus;
+using SaanSoft.Cqrs.Core.Bus;
 
 namespace SaanSoft.Cqrs.GuidIds.Bus;
 

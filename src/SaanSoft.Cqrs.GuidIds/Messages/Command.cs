@@ -1,4 +1,4 @@
-using SaanSoft.Cqrs.Messages;
+using SaanSoft.Cqrs.Core.Messages;
 
 namespace SaanSoft.Cqrs.GuidIds.Messages;
 

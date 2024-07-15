@@ -1,4 +1,4 @@
-using SaanSoft.Cqrs.Utilities;
+using SaanSoft.Cqrs.Core.Utilities;
 
 namespace SaanSoft.Cqrs.GuidIds.Utilities;
 

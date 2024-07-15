@@ -1,5 +1,5 @@
+using SaanSoft.Cqrs.Core.Messages;
 using SaanSoft.Cqrs.Examples.Shared.Identity.Messages.Commands;
-using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Examples.Shared.Identity.Messages.Events;
 

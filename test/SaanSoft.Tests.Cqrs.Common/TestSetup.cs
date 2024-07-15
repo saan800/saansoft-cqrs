@@ -1,5 +1,5 @@
+using SaanSoft.Cqrs.Core.Messages;
 using SaanSoft.Cqrs.GuidIds.Utilities;
-using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Tests.Cqrs.Common;
 

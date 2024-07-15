@@ -1,6 +1,6 @@
 using EphemeralMongo;
+using SaanSoft.Cqrs.Common.Utilities;
 using SaanSoft.Cqrs.Decorator.Store.MongoDB;
-using SaanSoft.Cqrs.Utilities;
 
 namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.GuidIds;
 

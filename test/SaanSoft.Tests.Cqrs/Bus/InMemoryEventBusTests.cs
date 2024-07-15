@@ -1,5 +1,3 @@
-using SaanSoft.Cqrs.Handler;
-
 namespace SaanSoft.Tests.Cqrs.Bus;
 
 public class InMemoryEventBusTests : TestSetup

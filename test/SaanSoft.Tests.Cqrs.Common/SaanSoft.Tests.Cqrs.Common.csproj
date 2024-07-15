@@ -21,7 +21,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\SaanSoft.Cqrs.GuidIds\SaanSoft.Cqrs.GuidIds.csproj" />
-      <ProjectReference Include="..\..\src\SaanSoft.Cqrs\SaanSoft.Cqrs.csproj" />
     </ItemGroup>
 
 </Project>

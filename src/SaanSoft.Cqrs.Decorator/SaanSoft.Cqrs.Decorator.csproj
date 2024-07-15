@@ -4,7 +4,7 @@
     <IsPackable>true</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SaanSoft.Cqrs\SaanSoft.Cqrs.csproj" />
+    <ProjectReference Include="..\SaanSoft.Cqrs.Core\SaanSoft.Cqrs.Core.csproj" />
   </ItemGroup>
 
 </Project>

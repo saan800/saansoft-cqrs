@@ -1,4 +1,3 @@
-using SaanSoft.Cqrs.Handler;
 using SaanSoft.Tests.Cqrs.Common.TestHandlers;
 
 namespace SaanSoft.Tests.Cqrs.Bus;
