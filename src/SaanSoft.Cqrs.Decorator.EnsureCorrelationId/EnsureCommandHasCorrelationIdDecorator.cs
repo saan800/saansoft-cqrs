@@ -13,21 +13,21 @@ public abstract class EnsureCommandHasCorrelationIdDecorator<TMessageId>(IEnumer
     public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : class, ICommand<TMessageId>
     {
-        command.Metadata.CorrelationId = providers.EnsureCorrelationId(command.Metadata.CorrelationId);
+        command.CorrelationId = providers.EnsureCorrelationId(command.CorrelationId);
         await next.ExecuteAsync(command, cancellationToken);
     }
 
     public async Task<TResponse> ExecuteAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
         where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
     {
-        command.Metadata.CorrelationId = providers.EnsureCorrelationId(command.Metadata.CorrelationId);
+        command.CorrelationId = providers.EnsureCorrelationId(command.CorrelationId);
         return await next.ExecuteAsync(command, cancellationToken);
     }
 
     public async Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : class, ICommand<TMessageId>
     {
-        command.Metadata.CorrelationId = providers.EnsureCorrelationId(command.Metadata.CorrelationId);
+        command.CorrelationId = providers.EnsureCorrelationId(command.CorrelationId);
         await next.QueueAsync(command, cancellationToken);
     }
 }

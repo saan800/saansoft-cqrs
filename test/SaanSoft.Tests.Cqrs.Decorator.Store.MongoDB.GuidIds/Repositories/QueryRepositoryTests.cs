@@ -22,7 +22,7 @@ public class QueryRepositoryTests : TestSetup
 
         record.Should().NotBeNull();
         record.Id.Should().Be(message.Id);
-        record.Metadata.TypeFullName.Should().Be(typeof(MyQuery).FullName);
+        record.TypeFullName.Should().Be(typeof(MyQuery).FullName);
         record.GetType().Should().Be<MyQuery>();
     }
 
@@ -39,7 +39,7 @@ public class QueryRepositoryTests : TestSetup
 
         record1.Should().NotBeNull();
         record1.Id.Should().Be(message1.Id);
-        record1.Metadata.TypeFullName.Should().Be(typeof(MyQuery).FullName);
+        record1.TypeFullName.Should().Be(typeof(MyQuery).FullName);
         record1.GetType().Should().Be<MyQuery>();
         record1.GetType().Should().NotBe<AnotherQuery>();
 
@@ -47,7 +47,7 @@ public class QueryRepositoryTests : TestSetup
 
         record2.Should().NotBeNull();
         record2.Id.Should().Be(message2.Id);
-        record2.Metadata.TypeFullName.Should().Be(typeof(AnotherQuery).FullName);
+        record2.TypeFullName.Should().Be(typeof(AnotherQuery).FullName);
         record2.GetType().Should().Be<AnotherQuery>();
         record2.GetType().Should().NotBe<MyQuery>();
     }

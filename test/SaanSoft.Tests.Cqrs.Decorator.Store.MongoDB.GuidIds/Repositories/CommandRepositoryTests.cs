@@ -22,7 +22,7 @@ public class CommandRepositoryTests : TestSetup
 
         record.Should().NotBeNull();
         record.Id.Should().Be(message.Id);
-        record.Metadata.TypeFullName.Should().Be(typeof(MyCommand).FullName);
+        record.TypeFullName.Should().Be(typeof(MyCommand).FullName);
         record.GetType().Should().Be<MyCommand>();
     }
 
@@ -42,21 +42,21 @@ public class CommandRepositoryTests : TestSetup
         var record1 = await _messageCollection.Find(x => x.Id == message1.Id).FirstOrDefaultAsync();
         record1.Should().NotBeNull();
         record1.Id.Should().Be(message1.Id);
-        record1.Metadata.TypeFullName.Should().Be(typeof(MyCommand).FullName);
+        record1.TypeFullName.Should().Be(typeof(MyCommand).FullName);
         record1.GetType().Should().Be<MyCommand>();
         record1.GetType().Should().NotBe<AnotherCommand>();
 
         var record2 = await _messageCollection.Find(x => x.Id == message2.Id).FirstOrDefaultAsync();
         record2.Should().NotBeNull();
         record2.Id.Should().Be(message2.Id);
-        record2.Metadata.TypeFullName.Should().Be(typeof(AnotherCommand).FullName);
+        record2.TypeFullName.Should().Be(typeof(AnotherCommand).FullName);
         record2.GetType().Should().Be<AnotherCommand>();
         record2.GetType().Should().NotBe<MyCommand>();
 
         var record3 = await _messageCollection.Find(x => x.Id == message3.Id).FirstOrDefaultAsync();
         record3.Should().NotBeNull();
         record3.Id.Should().Be(message3.Id);
-        record3.Metadata.TypeFullName.Should().Be(typeof(MyCommandWithResponse).FullName);
+        record3.TypeFullName.Should().Be(typeof(MyCommandWithResponse).FullName);
         record3.GetType().Should().Be<MyCommandWithResponse>();
         record3.GetType().Should().NotBe<MyCommand>();
         record3.GetType().Should().NotBe<AnotherCommandWithResponse>();
@@ -64,7 +64,7 @@ public class CommandRepositoryTests : TestSetup
         var record4 = await _messageCollection.Find(x => x.Id == message4.Id).FirstOrDefaultAsync();
         record4.Should().NotBeNull();
         record4.Id.Should().Be(message4.Id);
-        record4.Metadata.TypeFullName.Should().Be(typeof(AnotherCommandWithResponse).FullName);
+        record4.TypeFullName.Should().Be(typeof(AnotherCommandWithResponse).FullName);
         record4.GetType().Should().Be<AnotherCommandWithResponse>();
         record4.GetType().Should().NotBe<MyCommand>();
         record4.GetType().Should().NotBe<MyCommandWithResponse>();

@@ -29,7 +29,7 @@ public class UserCreatedEvent : Event, IEntityEvent<User>
             FirstName = FirstName,
             LastName = LastName,
             CreatedOnUtc = MessageOnUtc,
-            CreatedBy = Metadata.TriggeredByUser ?? Key.ToString(),
+            CreatedBy = TriggeredByUser ?? Key.ToString(),
             LastUpdatedOnUtc = MessageOnUtc
         };
     }

@@ -12,7 +12,7 @@ public abstract class EnsureQueryHasCorrelationIdDecorator<TMessageId>(IEnumerab
 {
     public async Task<TResponse> FetchAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default) where TQuery : class, IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
     {
-        query.Metadata.CorrelationId = providers.EnsureCorrelationId(query.Metadata.CorrelationId);
+        query.CorrelationId = providers.EnsureCorrelationId(query.CorrelationId);
         return await next.FetchAsync(query, cancellationToken);
     }
 }

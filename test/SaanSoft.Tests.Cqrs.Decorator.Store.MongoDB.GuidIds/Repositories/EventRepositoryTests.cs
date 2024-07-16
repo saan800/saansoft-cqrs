@@ -23,7 +23,7 @@ public class EventRepositoryTests : TestSetup
 
         record.Should().NotBeNull();
         record.Id.Should().Be(message.Id);
-        record.Metadata.TypeFullName.Should().Be(typeof(MyEvent).FullName);
+        record.TypeFullName.Should().Be(typeof(MyEvent).FullName);
 
         // check that have entity record
         var entityRecord = (await _eventRepository.GetEntityMessagesAsync(message.Key)).FirstOrDefault();
@@ -33,7 +33,7 @@ public class EventRepositoryTests : TestSetup
         entityRecord!.Id.Should().Be(message.Id);
         entityRecord.Key.Should().Be(entityKey);
         entityRecord.Key.Should().Be(message.Key);
-        entityRecord.Metadata.TypeFullName.Should().Be(typeof(MyEvent).FullName);
+        entityRecord.TypeFullName.Should().Be(typeof(MyEvent).FullName);
     }
 
     [Fact]
@@ -50,7 +50,7 @@ public class EventRepositoryTests : TestSetup
         record1.Should().NotBeNull();
         record1.Id.Should().Be(message1.Id);
         record1.Key.Should().Be(message1.Key);
-        record1.Metadata.TypeFullName.Should().Be(typeof(MyEvent).FullName);
+        record1.TypeFullName.Should().Be(typeof(MyEvent).FullName);
         record1.Should().BeOfType<MyEvent>();
         record1.Should().NotBeOfType<AnotherEvent>();
 
@@ -59,7 +59,7 @@ public class EventRepositoryTests : TestSetup
         record2.Should().NotBeNull();
         record2.Id.Should().Be(message2.Id);
         record2.Key.Should().Be(message2.Key);
-        record2.Metadata.TypeFullName.Should().Be(typeof(AnotherEvent).FullName);
+        record2.TypeFullName.Should().Be(typeof(AnotherEvent).FullName);
         record2.Should().BeOfType<AnotherEvent>();
         record2.Should().NotBeOfType<MyEvent>();
     }

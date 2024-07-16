@@ -70,10 +70,7 @@ public static class MongoDbConfiguration
                 classMap.AutoMap();
                 classMap.MapField(nameof(IMessage.IsReplay)).SetIgnoreIfDefault(true);
                 classMap.UnmapProperty(nameof(IMessage.IsReplay));
-                classMap.UnmapProperty($"{nameof(IMessage.Metadata)}.{nameof(IMessage.Metadata.CorrelationId)}");
-                classMap.UnmapProperty($"{nameof(IMessage.Metadata)}.{nameof(IMessage.Metadata.TriggeredById)}");
-                classMap.UnmapProperty($"{nameof(IMessage.Metadata)}.{nameof(IMessage.Metadata.TriggeredByUser)}");
-                classMap.UnmapProperty($"{nameof(IMessage.Metadata)}.{nameof(IMessage.Metadata.TypeFullName)}");
+                classMap.UnmapProperty($"{nameof(IMessage.Metadata)}.{nameof(IMessage.Metadata.TriggeredByMessageId)}");
                 BsonClassMap.RegisterClassMap(classMap);
             }
         }

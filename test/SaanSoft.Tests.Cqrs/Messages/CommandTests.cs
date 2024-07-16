@@ -10,10 +10,10 @@ public class CommandTests
         var result = new MyCommand();
         result.Id.Should().Be(default(Guid));
         result.MessageOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
-        result.Metadata.TypeFullName.Should().Be(typeof(MyCommand).FullName);
-        result.Metadata.TriggeredById.Should().BeNull();
-        result.Metadata.CorrelationId.Should().BeNull();
-        result.Metadata.TriggeredByUser.Should().BeNull();
+        result.TypeFullName.Should().Be(typeof(MyCommand).FullName);
+        result.CorrelationId.Should().BeNull();
+        result.TriggeredByUser.Should().BeNull();
+        result.Metadata.TriggeredByMessageId.Should().BeNull();
     }
 
     [Theory]
@@ -26,10 +26,10 @@ public class CommandTests
 
         result.Id.Should().Be(default(Guid));
         result.MessageOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
-        result.Metadata.TypeFullName.Should().Be(typeof(MyCommand).FullName);
-        result.Metadata.TriggeredById.Should().BeNull();
-        result.Metadata.CorrelationId.Should().Be(correlationId);
-        result.Metadata.TriggeredByUser.Should().Be(authId);
+        result.TypeFullName.Should().Be(typeof(MyCommand).FullName);
+        result.CorrelationId.Should().Be(correlationId);
+        result.TriggeredByUser.Should().Be(authId);
+        result.Metadata.TriggeredByMessageId.Should().BeNull();
     }
 
     [Theory]
@@ -47,9 +47,9 @@ public class CommandTests
         result.Id.Should().NotBe(triggeredBy.Id);
         result.MessageOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
         result.MessageOnUtc.Should().NotBe(triggeredBy.MessageOnUtc);
-        result.Metadata.TypeFullName.Should().Be(typeof(MyCommand).FullName);
-        result.Metadata.TriggeredById.Should().Be(triggeredBy.Id.ToString());
-        result.Metadata.CorrelationId.Should().Be(triggeredBy.Metadata.CorrelationId);
-        result.Metadata.TriggeredByUser.Should().Be(triggeredBy.Metadata.TriggeredByUser);
+        result.TypeFullName.Should().Be(typeof(MyCommand).FullName);
+        result.CorrelationId.Should().Be(triggeredBy.CorrelationId);
+        result.TriggeredByUser.Should().Be(triggeredBy.TriggeredByUser);
+        result.Metadata.TriggeredByMessageId.Should().Be(triggeredBy.Id.ToString());
     }
 }

@@ -13,7 +13,7 @@ public class EnsureCommandHasCorrelationIdDecoratorTests : CommandBusDecoratorTe
             var command = new MyCommand();
             await SutPublisherDecorator.ExecuteAsync(command);
 
-            command.Metadata.CorrelationId.Should().NotBeNullOrWhiteSpace();
+            command.CorrelationId.Should().NotBeNullOrWhiteSpace();
         }
 
         [Theory]
@@ -22,21 +22,21 @@ public class EnsureCommandHasCorrelationIdDecoratorTests : CommandBusDecoratorTe
         [InlineData("  ")]
         public async Task Should_generate_correlationId_if_empty(string? emptyCorrelationId)
         {
-            var command = new MyCommand { Metadata = { CorrelationId = emptyCorrelationId } };
+            var command = new MyCommand { CorrelationId = emptyCorrelationId };
             await SutPublisherDecorator.ExecuteAsync(command);
 
-            command.Metadata.CorrelationId.Should().NotBeNullOrWhiteSpace();
-            command.Metadata.CorrelationId.Should().NotBe(emptyCorrelationId);
+            command.CorrelationId.Should().NotBeNullOrWhiteSpace();
+            command.CorrelationId.Should().NotBe(emptyCorrelationId);
         }
 
         [Theory]
         [AutoFakeData]
         public async Task Should_not_change_correlationId_if_already_set(string correlationId)
         {
-            var command = new MyCommand { Metadata = { CorrelationId = correlationId } };
+            var command = new MyCommand { CorrelationId = correlationId };
             await SutPublisherDecorator.ExecuteAsync(command);
 
-            command.Metadata.CorrelationId.Should().Be(correlationId);
+            command.CorrelationId.Should().Be(correlationId);
         }
     }
 
@@ -48,7 +48,7 @@ public class EnsureCommandHasCorrelationIdDecoratorTests : CommandBusDecoratorTe
             var command = new MyCommandWithResponse { Message = "hello" };
             await SutPublisherDecorator.ExecuteAsync(command);
 
-            command.Metadata.CorrelationId.Should().NotBeNullOrWhiteSpace();
+            command.CorrelationId.Should().NotBeNullOrWhiteSpace();
         }
 
         [Theory]
@@ -57,21 +57,21 @@ public class EnsureCommandHasCorrelationIdDecoratorTests : CommandBusDecoratorTe
         [InlineData("  ")]
         public async Task Should_generate_correlationId_if_empty(string? emptyCorrelationId)
         {
-            var command = new MyCommandWithResponse { Message = "hello", Metadata = { CorrelationId = emptyCorrelationId } };
+            var command = new MyCommandWithResponse { Message = "hello", CorrelationId = emptyCorrelationId };
             await SutPublisherDecorator.ExecuteAsync(command);
 
-            command.Metadata.CorrelationId.Should().NotBeNullOrWhiteSpace();
-            command.Metadata.CorrelationId.Should().NotBe(emptyCorrelationId);
+            command.CorrelationId.Should().NotBeNullOrWhiteSpace();
+            command.CorrelationId.Should().NotBe(emptyCorrelationId);
         }
 
         [Theory]
         [AutoFakeData]
         public async Task Should_not_change_correlationId_if_already_set(string correlationId)
         {
-            var command = new MyCommandWithResponse { Message = "hello", Metadata = { CorrelationId = correlationId } };
+            var command = new MyCommandWithResponse { Message = "hello", CorrelationId = correlationId };
             await SutPublisherDecorator.ExecuteAsync(command);
 
-            command.Metadata.CorrelationId.Should().Be(correlationId);
+            command.CorrelationId.Should().Be(correlationId);
         }
     }
 
@@ -83,7 +83,7 @@ public class EnsureCommandHasCorrelationIdDecoratorTests : CommandBusDecoratorTe
             var command = new MyCommand();
             await SutPublisherDecorator.QueueAsync(command);
 
-            command.Metadata.CorrelationId.Should().NotBeNullOrWhiteSpace();
+            command.CorrelationId.Should().NotBeNullOrWhiteSpace();
         }
 
         [Theory]
@@ -92,21 +92,21 @@ public class EnsureCommandHasCorrelationIdDecoratorTests : CommandBusDecoratorTe
         [InlineData("  ")]
         public async Task Should_generate_correlationId_if_empty(string? emptyCorrelationId)
         {
-            var command = new MyCommand { Metadata = { CorrelationId = emptyCorrelationId } };
+            var command = new MyCommand { CorrelationId = emptyCorrelationId };
             await SutPublisherDecorator.QueueAsync(command);
 
-            command.Metadata.CorrelationId.Should().NotBeNullOrWhiteSpace();
-            command.Metadata.CorrelationId.Should().NotBe(emptyCorrelationId);
+            command.CorrelationId.Should().NotBeNullOrWhiteSpace();
+            command.CorrelationId.Should().NotBe(emptyCorrelationId);
         }
 
         [Theory]
         [AutoFakeData]
         public async Task Should_not_change_correlationId_if_already_set(string correlationId)
         {
-            var command = new MyCommand { Metadata = { CorrelationId = correlationId } };
+            var command = new MyCommand { CorrelationId = correlationId };
             await SutPublisherDecorator.QueueAsync(command);
 
-            command.Metadata.CorrelationId.Should().Be(correlationId);
+            command.CorrelationId.Should().Be(correlationId);
         }
     }
 }

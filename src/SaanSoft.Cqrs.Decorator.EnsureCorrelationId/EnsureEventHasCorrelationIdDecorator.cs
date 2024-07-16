@@ -12,7 +12,7 @@ public abstract class EnsureEventHasCorrelationIdDecorator<TMessageId>(IEnumerab
 {
     public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default) where TEvent : class, IEvent<TMessageId>
     {
-        evt.Metadata.CorrelationId = providers.EnsureCorrelationId(evt.Metadata.CorrelationId);
+        evt.CorrelationId = providers.EnsureCorrelationId(evt.CorrelationId);
         await next.QueueAsync(evt, cancellationToken);
     }
 
@@ -20,12 +20,12 @@ public abstract class EnsureEventHasCorrelationIdDecorator<TMessageId>(IEnumerab
     {
         // only do this if any events don't have correlationIds
         var eventList = events.ToList();
-        if (eventList.Any(evt => string.IsNullOrWhiteSpace(evt.Metadata.CorrelationId)))
+        if (eventList.Any(evt => string.IsNullOrWhiteSpace(evt.CorrelationId)))
         {
             // check if there are any correlationIds already populated
             var existingCorrelationIds = eventList
-                .Where(evt => !string.IsNullOrWhiteSpace(evt.Metadata.CorrelationId))
-                .Select(evt => evt.Metadata.CorrelationId ?? string.Empty)
+                .Where(evt => !string.IsNullOrWhiteSpace(evt.CorrelationId))
+                .Select(evt => evt.CorrelationId ?? string.Empty)
                 .Distinct()
                 .ToList();
 
@@ -35,9 +35,9 @@ public abstract class EnsureEventHasCorrelationIdDecorator<TMessageId>(IEnumerab
                 // otherwise generate a new correlationId for the events that don't have one
                 : providers.EnsureCorrelationId(null);
 
-            foreach (var evt in eventList.Where(evt => string.IsNullOrWhiteSpace(evt.Metadata.CorrelationId)).ToList())
+            foreach (var evt in eventList.Where(evt => string.IsNullOrWhiteSpace(evt.CorrelationId)).ToList())
             {
-                evt.Metadata.CorrelationId = correlationId;
+                evt.CorrelationId = correlationId;
             }
         }
 
