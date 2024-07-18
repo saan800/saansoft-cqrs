@@ -30,7 +30,10 @@ TODO:
 * Add `SaanSoft.CorrelationIdProviders` repository
   * Move interface over (and update these decorators to use new package)
   * add generic guid provider
-  * add other (eg http header) correlation id providers in there
+  * add other correlation id providers in there
+    * http header
+    * OpenTelemetry (maybe?)
+  * SubscriptionBus read from message, then auto populate on publisher bus?
 
 ## Recommended Order
 
