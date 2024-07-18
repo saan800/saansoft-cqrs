@@ -13,6 +13,10 @@ Lightweight CQRS and Event Sourcing implementation for C#
 ## Documentation
 
 Todo...
+* event source vs event stream vs event driven
+* cqrs
+* glossary
+* index with links to implemented decoratirs (instrad of in this file)
 
 ## TODO
 
