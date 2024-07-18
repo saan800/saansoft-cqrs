@@ -5,7 +5,9 @@
 If you are storing messages, ensure you are taking appropriate security measures for 
 sensitive data such as PPI, usernames, passwords, etc.
 
-TODO:... Consider using the `Encryption` decorator to secure sensitive data.
+TODO:... Consider using the `Encryption` decorator to secure sensitive data. 
+
+If your database technology offers encryption, that is another good option.
 
 ## Purpose
 
@@ -29,8 +31,10 @@ is stored in the message's `Metadata` property.
 
 The Store decorators require an implementation of the repository interfaces for your database (or other storage solution) of choice.
 
-Check out [SaanSoft.Cqrs.Decorator.Store.MongoDB](../../SaanSoft.Cqrs.Decorator.Store.MongoDB)
+Check [SaanSoft.Cqrs.Decorator.Store.MongoDB](../../SaanSoft.Cqrs.Decorator.Store.MongoDB)
 for an example.
+
+If you are using a different database than the ones already provided, please add the implementation to the repository so it's available to others.
 
 ## Recommended Order
 
