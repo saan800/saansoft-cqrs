@@ -33,7 +33,7 @@ TODO:
   * add other correlation id providers in there
     * http header
     * OpenTelemetry (maybe?)
-  * SubscriptionBus read from message, then auto populate on publisher bus?
+* SubscriptionBus read from message, then auto populate on publisher bus?
 
 ## Recommended Order
 
