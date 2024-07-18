@@ -38,7 +38,7 @@ all messages - attribute to have 3rd party queue group name (for aws/azure/etc)
     * add implementations for:
       * http header
       * OpenTelemetry (maybe?)
-  * SubscriptionBus read from message, then auto populate on publisher bus?
+      * SubscriptionBus read from message, then auto populate on publisher bus?
 * Encryption / Decryption
 * retry with polly
 
