@@ -7,7 +7,7 @@ consistent structured logging attributes added.
 
 ## Dependencies
 
-* `ILogger` setup in IoC
+* `ILogger`
 
 ## Recommended Order
 
