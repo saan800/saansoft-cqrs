@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Tests.Cqrs.Common"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Decorator.Store.MongoDB", "src\SaanSoft.Cqrs.Decorator.Store.MongoDB\SaanSoft.Cqrs.Decorator.Store.MongoDB.csproj", "{73DF9405-CA2A-4A08-AEF2-1549471DD0AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.GuidIds", "test\SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.GuidIds\SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.GuidIds.csproj", "{2F2E1D89-634E-4CC4-AED6-179DAA952A93}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB", "test\SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB\SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.csproj", "{2F2E1D89-634E-4CC4-AED6-179DAA952A93}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_solution", "_solution", "{8962FA21-773D-4F0E-81CB-AF1D7AE5B9A7}"
 	ProjectSection(SolutionItems) = preProject

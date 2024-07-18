@@ -1,4 +1,4 @@
-namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.GuidIds.Repositories;
+namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.Repositories;
 
 public class QueryRepositoryTests : TestSetup
 {

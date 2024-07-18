@@ -2,7 +2,7 @@ using EphemeralMongo;
 using SaanSoft.Cqrs.Decorator.Store.MongoDB;
 using SaanSoft.Cqrs.Utilities;
 
-namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.GuidIds;
+namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB;
 
 public class TestSetup : SaanSoft.Tests.Cqrs.Common.TestSetup
 {
