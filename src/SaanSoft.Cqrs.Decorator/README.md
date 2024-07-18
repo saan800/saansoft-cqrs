@@ -6,7 +6,7 @@ For more information on each decorator please check the `README.md` in each deci
 
 ## Contributing
 
-Each decorator (or set of decorators - i.e. possibly one each for command, event, query, bus and subscription bus) should be in its own folder and namespace.
+Each decorator (or set of decorators - i.e. possibly one each for command, event, query bus and/or subscription bus) should be in its own folder and namespace.
 
 Each decorator should be minimal and targeted to specific functionality.
 
