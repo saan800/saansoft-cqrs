@@ -10,6 +10,7 @@
   </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\src\SaanSoft.Cqrs\SaanSoft.Cqrs.csproj" />
       <ProjectReference Include="..\SaanSoft.Cqrs.Examples.Shared.Todo.Entities\SaanSoft.Cqrs.Examples.Shared.Todo.Entities.csproj" />
     </ItemGroup>
 

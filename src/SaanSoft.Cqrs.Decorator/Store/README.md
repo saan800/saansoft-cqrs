@@ -30,7 +30,6 @@ is stored in the message's `Metadata` property.
 The Store decorators require an implementation of the repository interfaces for your database (or other storage solution) of choice.
 
 Check out [SaanSoft.Cqrs.Decorator.Store.MongoDB](../../SaanSoft.Cqrs.Decorator.Store.MongoDB)
-and [SaanSoft.Cqrs.Decorator.Store.MongoDB.GuidIds](../../SaanSoft.Cqrs.Decorator.Store.MongoDB.GuidIds)
 for an example.
 
 ## Recommended Order

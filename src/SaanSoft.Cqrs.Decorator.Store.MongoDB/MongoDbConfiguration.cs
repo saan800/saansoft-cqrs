@@ -49,7 +49,7 @@ public static class MongoDbConfiguration
     }
 
     /// <summary>
-    /// Register all ClassMaps for classes that extend IMessage in the list of provided assemblies
+    /// Register all ClassMaps for Commands, Events and Queries in the list of provided assemblies
     /// </summary>
     /// <param name="assemblies"></param>
     public static void RegisterMessageClassMaps(IList<Assembly>? assemblies)
@@ -68,7 +68,6 @@ public static class MongoDbConfiguration
                 var classMapType = classMapDefinition.MakeGenericType(t);
                 var classMap = (BsonClassMap)Activator.CreateInstance(classMapType)!;
                 classMap.AutoMap();
-                classMap.MapField(nameof(IMessage.IsReplay)).SetIgnoreIfDefault(true);
                 classMap.UnmapProperty(nameof(IMessage.IsReplay));
                 classMap.UnmapProperty($"{nameof(IMessage.Metadata)}.{nameof(IMessage.Metadata.TriggeredByMessageId)}");
                 BsonClassMap.RegisterClassMap(classMap);

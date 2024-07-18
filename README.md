@@ -44,8 +44,7 @@ all messages - attribute to have 3rd party queue group name (for aws/azure/etc)
 
 ### Message Repository
 
-* :white_check_mark: [MongoDB](./src/SaanSoft.Cqrs.Decorator.Store.MongoDB) 
-  and the [MongoDB.GuidIds](./src/SaanSoft.Cqrs.Decorator.Store.MongoDB.GuidIds) implementation.
+* :white_check_mark: [MongoDB](./src/SaanSoft.Cqrs.Decorator.Store.MongoDB) implementation
 * AWS DynamoDB (maybe, plus example app if doing)
 * Azure Cosmos DB (maybe, plus example app if doing)
 

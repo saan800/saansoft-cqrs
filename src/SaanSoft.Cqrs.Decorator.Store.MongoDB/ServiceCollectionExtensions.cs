@@ -25,7 +25,7 @@ public static class ServiceCollectionExtensions
     public static void AddEventRepository(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddScoped<IEventRepository, EventRepository>();
-        serviceCollection.AddScoped<IEventRepository, EventRepository>();
+        serviceCollection.AddScoped<IEventRepository<Guid>, EventRepository>();
 
         serviceCollection.AddScoped<IEventHandlerRepository, EventRepository>();
     }

@@ -14,6 +14,7 @@ public abstract class BaseStoreMessagePublisherDecorator :
             .Where(f => !string.IsNullOrWhiteSpace(f.GetMethod()?.DeclaringType?.Namespace))
             .Where(f => f.GetMethod()!.DeclaringType.IsClass)
             .Where(f => f.GetMethod()!.DeclaringType.IsVisible)
+            .Where(f => !f.GetMethod()!.DeclaringType.IsAbstract)
             .Where(f => !f.GetMethod()!.DeclaringType.Namespace.StartsWith("System"))
             .Where(f => !f.GetMethod().DeclaringType.IsAssignableTo(typeof(IDecorator)))
             .Where(f => !f.GetMethod().DeclaringType.IsAssignableTo(typeof(ICommandBus)))

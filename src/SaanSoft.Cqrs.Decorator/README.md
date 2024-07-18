@@ -14,9 +14,6 @@ In `SaanSoft.Cqrs.Decorator` new decorators shouldn't add non-generic packages t
   * The database specific implementations are in their own project (e.g. `SaanSoft.Cqrs.Decorator.Store.MongoDB`)
 * This keeps the footprint of `SaanSoft.Cqrs` to a minimum and allows users the flexibility to use the framework that they prefer.
 
-Where possible add overrides of the decorators to `SaanSoft.Cqrs.GuidIds`
-project so that people don't have to deal with generic `TMessageId` all over their code.
-
 ## Technical
 
 Each decorator should inherit from one of:
