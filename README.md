@@ -1,6 +1,6 @@
 # SaanSoft.Cqrs
 
-CQRS and Event Sourcing implementation for C#
+Lightweight CQRS and Event Sourcing implementation for C#
 
 ## Status
 
