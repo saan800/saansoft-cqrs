@@ -5,13 +5,11 @@ namespace SaanSoft.Cqrs.Decorator.LoggerScope;
 /// </summary>
 /// <param name="logger"></param>
 /// <param name="next"></param>
-/// <typeparam name="TMessageId"></typeparam>
-public abstract class LoggerScopeEventBusDecorator<TMessageId>(ILogger logger, IEventBus<TMessageId> next) :
-    IEventBusDecorator<TMessageId>
-    where TMessageId : struct
+public class LoggerScopeEventBusDecorator(ILogger logger, IEventBus next) :
+    IEventBusDecorator
 {
     public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
-        where TEvent : class, IEvent<TMessageId>
+        where TEvent : class, IEvent
     {
         using (logger.BeginScope(evt.BuildLoggingScopeData()))
         {
@@ -21,7 +19,7 @@ public abstract class LoggerScopeEventBusDecorator<TMessageId>(ILogger logger, I
     }
 
     public async Task QueueManyAsync<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default)
-        where TEvent : class, IEvent<TMessageId>
+        where TEvent : class, IEvent
     {
         var tasks = events.Select(evt => QueueAsync(evt, cancellationToken));
         await Task.WhenAll(tasks);

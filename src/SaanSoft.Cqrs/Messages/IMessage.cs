@@ -1,8 +1,9 @@
 namespace SaanSoft.Cqrs.Messages;
 
 /// <summary>
-/// You should never directly inherit from this interface
-/// use <see cref="IMessage{TMessageId}"/> instead
+/// Base interface with common properties for all messages
+/// You should never directly inherit from IMessage
+/// Use <see cref="ICommand"/>, <see cref="IEvent{TEntityKey}"/> or <see cref="IQuery{TQuery, TResponse}"/> instead
 /// </summary>
 public interface IMessage
 {
@@ -64,11 +65,3 @@ public interface IMessage
     MessageMetadata Metadata { get; set; }
 }
 
-/// <summary>
-/// Base interface with common properties for all messages
-/// You should never directly inherit from IMessage
-/// Use <see cref="ICommand{TMessageId}"/>, <see cref="IEvent{TMessageId, TEntityKey}"/> or <see cref="IQuery{TMessageId, TQuery, TResponse}"/> instead
-/// </summary>
-public interface IMessage<TMessageId> : IMessage where TMessageId : struct
-{
-}

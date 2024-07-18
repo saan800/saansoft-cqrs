@@ -5,7 +5,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\SaanSoft.Cqrs.Decorator\SaanSoft.Cqrs.Decorator.csproj" />
-    <ProjectReference Include="..\SaanSoft.Cqrs.GuidIds\SaanSoft.Cqrs.GuidIds.csproj" />
   </ItemGroup>
 
 </Project>

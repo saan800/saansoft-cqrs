@@ -59,7 +59,7 @@ public static class MongoDbConfiguration
         foreach (var t in assemblies
                      .SelectMany(assembly => assembly.GetExportedTypes())
                      .Where(t => t is { IsAbstract: false, IsClass: true }
-                                 && (typeof(IMessage<>).IsAssignableFrom(t))
+                                 && (typeof(IMessage).IsAssignableFrom(t))
                      ))
         {
             if (!BsonClassMap.IsClassMapRegistered(t))

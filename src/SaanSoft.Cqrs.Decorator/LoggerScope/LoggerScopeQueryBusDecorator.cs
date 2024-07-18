@@ -5,13 +5,11 @@ namespace SaanSoft.Cqrs.Decorator.LoggerScope;
 /// </summary>
 /// <param name="logger"></param>
 /// <param name="next"></param>
-/// <typeparam name="TMessageId"></typeparam>
-public abstract class LoggerScopeQueryBusDecorator<TMessageId>(ILogger logger, IQueryBus<TMessageId> next) :
-    IQueryBusDecorator<TMessageId>
-    where TMessageId : struct
+public class LoggerScopeQueryBusDecorator(ILogger logger, IQueryBus next) :
+    IQueryBusDecorator
 {
     public async Task<TResponse> FetchAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
-        where TQuery : class, IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
+        where TQuery : class, IQuery<TQuery, TResponse>
     {
         var typedQuery = (TQuery)query;
         using (logger.BeginScope(typedQuery.BuildLoggingScopeData()))

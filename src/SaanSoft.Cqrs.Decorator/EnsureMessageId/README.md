@@ -15,7 +15,7 @@ exact change of messages that occurred.
 
 ## Dependencies
 
-* `IIdGenerator<TMessageId>`
+none
 
 ## Recommended Order
 

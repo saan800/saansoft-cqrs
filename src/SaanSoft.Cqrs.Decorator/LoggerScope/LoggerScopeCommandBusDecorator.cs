@@ -5,13 +5,11 @@ namespace SaanSoft.Cqrs.Decorator.LoggerScope;
 /// </summary>
 /// <param name="logger"></param>
 /// <param name="next"></param>
-/// <typeparam name="TMessageId"></typeparam>
-public abstract class LoggerScopeCommandBusDecorator<TMessageId>(ILogger logger, ICommandBus<TMessageId> next) :
-    ICommandBusDecorator<TMessageId>
-    where TMessageId : struct
+public class LoggerScopeCommandBusDecorator(ILogger logger, ICommandBus next) :
+    ICommandBusDecorator
 {
     public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TMessageId>
+        where TCommand : class, ICommand
     {
         using (logger.BeginScope(command.BuildLoggingScopeData()))
         {
@@ -21,7 +19,7 @@ public abstract class LoggerScopeCommandBusDecorator<TMessageId>(ILogger logger,
     }
 
     public async Task<TResponse> ExecuteAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+        where TCommand : class, ICommand<TCommand, TResponse>
     {
         var typedCommand = (TCommand)command;
         using (logger.BeginScope(typedCommand.BuildLoggingScopeData()))
@@ -32,7 +30,7 @@ public abstract class LoggerScopeCommandBusDecorator<TMessageId>(ILogger logger,
     }
 
     public async Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TMessageId>
+        where TCommand : class, ICommand
     {
         using (logger.BeginScope(command.BuildLoggingScopeData()))
         {

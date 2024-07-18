@@ -10,21 +10,11 @@ public class InMemoryCommandBusTests : TestSetup
         [Fact]
         public void Can_not_create_with_null_serviceProvider()
         {
-            Action act = () => new InMemoryCommandBus(null, IdGenerator);
+            Action act = () => new InMemoryCommandBus(null);
 
             act.Should()
                 .Throw<ArgumentNullException>()
                 .Where(x => x.ParamName == "serviceProvider");
-        }
-
-        [Fact]
-        public void Can_not_create_with_null_IdGenerator()
-        {
-            Action act = () => new InMemoryCommandBus(GetServiceProvider(), null);
-
-            act.Should()
-                .Throw<ArgumentNullException>()
-                .Where(x => x.ParamName == "idGenerator");
         }
     }
 

@@ -1,6 +1,6 @@
 namespace SaanSoft.Cqrs.Bus;
 
-public interface IEventBus<TMessageId> where TMessageId : struct
+public interface IEventBus
 {
     /// <summary>
     /// Put the event onto the queue.
@@ -11,7 +11,7 @@ public interface IEventBus<TMessageId> where TMessageId : struct
     /// <typeparam name="TEvent"></typeparam>
     /// <returns></returns>
     Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
-        where TEvent : class, IEvent<TMessageId>;
+        where TEvent : class, IEvent;
 
     /// <summary>
     /// Put the events onto the queue
@@ -23,5 +23,5 @@ public interface IEventBus<TMessageId> where TMessageId : struct
     /// <typeparam name="TEvent"></typeparam>
     /// <returns></returns>
     Task QueueManyAsync<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default)
-        where TEvent : class, IEvent<TMessageId>;
+        where TEvent : class, IEvent;
 }

@@ -1,5 +1,3 @@
-using System.Reflection;
-
 namespace SaanSoft.Cqrs.Utilities;
 
 public static class TypeExtensions

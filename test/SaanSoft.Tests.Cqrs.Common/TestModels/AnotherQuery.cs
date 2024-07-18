@@ -1,5 +1,3 @@
-using IMessage = SaanSoft.Cqrs.GuidIds.Messages.IMessage;
-
 namespace SaanSoft.Tests.Cqrs.Common.TestModels;
 
 public class AnotherQuery : Query<AnotherQuery, MyQueryResponse>

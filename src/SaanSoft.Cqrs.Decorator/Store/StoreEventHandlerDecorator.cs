@@ -1,12 +1,11 @@
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public abstract class StoreEventHandlerDecorator<TMessageId>(IEventHandlerRepository<TMessageId> repository, IEventSubscriptionBus<TMessageId> next)
-    : BaseStoreMessageHandlerDecorator<TMessageId>(repository),
-      IEventSubscriptionBusDecorator<TMessageId>
-    where TMessageId : struct
+public class StoreEventHandlerDecorator(IEventHandlerRepository repository, IEventSubscriptionBus next)
+    : BaseStoreMessageHandlerDecorator(repository),
+      IEventSubscriptionBusDecorator
 {
     public async Task RunAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
-        where TEvent : class, IEvent<TMessageId>
+        where TEvent : class, IEvent
     {
         // run each group of handlers in the given priority order
         foreach (var tasks in GetHandlers<TEvent>()
@@ -18,7 +17,7 @@ public abstract class StoreEventHandlerDecorator<TMessageId>(IEventHandlerReposi
     }
 
     public async Task RunOneAsync<TEvent>(TEvent evt, IEventHandler<TEvent> handler, CancellationToken cancellationToken = default)
-        where TEvent : class, IEvent<TMessageId>
+        where TEvent : class, IEvent
     {
         try
         {
@@ -33,6 +32,6 @@ public abstract class StoreEventHandlerDecorator<TMessageId>(IEventHandlerReposi
     }
 
     public List<IGrouping<int, IEventHandler<TEvent>>> GetHandlers<TEvent>()
-        where TEvent : class, IEvent<TMessageId>
+        where TEvent : class, IEvent
         => next.GetHandlers<TEvent>();
 }

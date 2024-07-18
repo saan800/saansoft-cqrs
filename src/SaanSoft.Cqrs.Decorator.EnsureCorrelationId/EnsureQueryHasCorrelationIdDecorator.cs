@@ -5,12 +5,11 @@ namespace SaanSoft.Cqrs.Decorator.EnsureCorrelationId;
 /// </summary>
 /// <param name="providers"></param>
 /// <param name="next"></param>
-/// <typeparam name="TMessageId"></typeparam>
-public abstract class EnsureQueryHasCorrelationIdDecorator<TMessageId>(IEnumerable<ICorrelationIdProvider> providers, IQueryBus<TMessageId> next)
-    : IQueryBusDecorator<TMessageId>
-    where TMessageId : struct
+public class EnsureQueryHasCorrelationIdDecorator(IEnumerable<ICorrelationIdProvider> providers, IQueryBus next)
+    : IQueryBusDecorator
 {
-    public async Task<TResponse> FetchAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default) where TQuery : class, IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
+    public async Task<TResponse> FetchAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
+        where TQuery : class, IQuery<TQuery, TResponse>
     {
         query.CorrelationId = providers.EnsureCorrelationId(query.CorrelationId);
         return await next.FetchAsync(query, cancellationToken);

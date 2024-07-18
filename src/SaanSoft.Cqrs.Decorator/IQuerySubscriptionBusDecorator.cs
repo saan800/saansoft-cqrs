@@ -9,8 +9,8 @@ namespace SaanSoft.Cqrs.Decorator;
 /// Useful for when you need to specifically include or exclude subscription bus decorators
 /// (e.g. BaseStoreMessagePublisherDecorator needs to filter our all decorators)
 /// </remarks>
-public interface IQuerySubscriptionBusDecorator<TMessageId> :
+public interface IQuerySubscriptionBusDecorator :
     IMessageSubscriptionBus,
-    IQuerySubscriptionBus<TMessageId> where TMessageId : struct
+    IQuerySubscriptionBus
 {
 }

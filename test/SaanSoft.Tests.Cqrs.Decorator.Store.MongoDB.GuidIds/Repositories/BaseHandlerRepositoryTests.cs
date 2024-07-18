@@ -5,9 +5,9 @@ using SaanSoft.Cqrs.Decorator.Store.Utilities;
 namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.GuidIds.Repositories;
 
 public abstract class BaseHandlerRepositoryTests<TMessage, TRepository, TCollectionEntity> : TestSetup
-     where TMessage : class, IMessage<Guid>
-     where TRepository : IMessageHandlerRepository<Guid>, IMessageRepository<Guid, TMessage>
-     where TCollectionEntity : class, IMessage<Guid>
+     where TMessage : class, IMessage
+     where TRepository : IMessageHandlerRepository, IMessageRepository<TMessage>
+     where TCollectionEntity : class, IMessage
 {
     protected TRepository SutRepository;
     protected IMongoCollection<TCollectionEntity> MessageCollection;

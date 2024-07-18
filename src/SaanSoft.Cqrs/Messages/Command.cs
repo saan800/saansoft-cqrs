@@ -1,42 +1,38 @@
 namespace SaanSoft.Cqrs.Messages;
 
 /// <summary>
-/// Because we have both Command{TMessageId} and Command{TMessageId, TCommand, TResponse} that
+/// Because we have both Command and Command{TCommand, TResponse} that
 /// sometimes can be handled the same way, but other times need to differentiate them.
 ///
 /// You should never directly inherit from this interface
-/// use <see cref="Command{TMessageId}"/> and <see cref="Command{TMessageId, TCommand, TResponse}"/> instead.
+/// use <see cref="Command"/> and <see cref="Command{TCommand, TResponse}"/> instead.
 /// </summary>
-/// <typeparam name="TMessageId"></typeparam>
-public abstract class BaseCommand<TMessageId> : BaseMessage<TMessageId>, IBaseCommand<TMessageId>
-    where TMessageId : struct
+public abstract class BaseCommand : BaseMessage, IBaseCommand
 {
     protected BaseCommand(string? correlationId = null, string? authenticatedId = null)
         : base(correlationId, authenticatedId) { }
 
-    protected BaseCommand(IMessage<TMessageId> triggeredByMessage)
+    protected BaseCommand(IMessage triggeredByMessage)
         : base(triggeredByMessage) { }
 }
 
-public abstract class Command<TMessageId> : BaseCommand<TMessageId>, ICommand<TMessageId>
-    where TMessageId : struct
+public abstract class Command : BaseCommand, ICommand
 {
     protected Command(string? correlationId = null, string? authenticatedId = null)
         : base(correlationId, authenticatedId) { }
 
-    protected Command(IMessage<TMessageId> triggeredByMessage)
+    protected Command(IMessage triggeredByMessage)
         : base(triggeredByMessage) { }
 }
 
-public abstract class Command<TMessageId, TCommand, TResponse> :
-    BaseCommand<TMessageId>,
-    ICommand<TMessageId, TCommand, TResponse>
-    where TCommand : ICommand<TMessageId, TCommand, TResponse>
-    where TMessageId : struct
+public abstract class Command<TCommand, TResponse> :
+    BaseCommand,
+    ICommand<TCommand, TResponse>
+    where TCommand : ICommand<TCommand, TResponse>
 {
     protected Command(string? correlationId = null, string? authenticatedId = null)
         : base(correlationId, authenticatedId) { }
 
-    protected Command(IMessage<TMessageId> triggeredByMessage)
+    protected Command(IMessage triggeredByMessage)
         : base(triggeredByMessage) { }
 }

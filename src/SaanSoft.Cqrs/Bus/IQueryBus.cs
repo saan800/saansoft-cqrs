@@ -1,6 +1,6 @@
 namespace SaanSoft.Cqrs.Bus;
 
-public interface IQueryBus<TMessageId> where TMessageId : struct
+public interface IQueryBus
 {
     /// <summary>
     /// Send a query to fetch data.
@@ -14,5 +14,5 @@ public interface IQueryBus<TMessageId> where TMessageId : struct
     /// <returns></returns>
     Task<TResponse> FetchAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
         CancellationToken cancellationToken = default)
-        where TQuery : class, IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>;
+        where TQuery : class, IQuery<TQuery, TResponse>;
 }

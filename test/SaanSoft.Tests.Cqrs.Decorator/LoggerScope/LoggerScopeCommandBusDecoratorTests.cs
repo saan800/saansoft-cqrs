@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Logging;
-using SaanSoft.Cqrs.GuidIds.Decorator.LoggerScope;
+using SaanSoft.Cqrs.Decorator.LoggerScope;
 
 namespace SaanSoft.Tests.Cqrs.Decorator.LoggerScope;
 

@@ -6,53 +6,48 @@ namespace SaanSoft.Cqrs.Decorator.Store.MongoDB;
 /// <summary>
 /// Base class with common methods for message stores
 /// You should never directly use BaseMessageRepository
-/// Use <see cref="CommandRepository{TMessageId}"/>, <see cref="EventRepository{TMessageId,TEntityKey}"/> or <see cref="QueryRepository{TMessageId}"/> instead
+/// Use <see cref="CommandRepository"/>, <see cref="EventRepository{TEntityKey}"/> or <see cref="QueryRepository"/> instead
 /// </summary>
-/// <typeparam name="TMessageId"></typeparam>
 /// <typeparam name="TMessage"></typeparam>
-public abstract class BaseMessageRepository<TMessageId, TMessage> :
-    IMessageRepository<TMessageId, TMessage>,
-    IMessageHandlerRepository<TMessageId>,
+public abstract class BaseMessageRepository<TMessage> :
+    IMessageRepository<TMessage>,
+    IMessageHandlerRepository,
     IMongoDbRepository
-    where TMessageId : struct
-    where TMessage : class, IMessage<TMessageId>
+    where TMessage : class, IMessage
 {
     protected readonly IMongoDatabase Database;
-    protected readonly IIdGenerator<TMessageId> IdGenerator;
     protected readonly ILogger Logger;
     protected readonly InsertOneOptions InsertOneOptions;
 
     /// <summary>
     /// </summary>
     /// <param name="database"></param>
-    /// <param name="idGenerator"></param>
     /// <param name="logger"></param>
     /// <param name="insertOneOptions"></param>
     protected BaseMessageRepository(
-        IMongoDatabase database, IIdGenerator<TMessageId> idGenerator,
+        IMongoDatabase database,
         ILogger logger, InsertOneOptions? insertOneOptions = null
         )
     {
         Database = database;
-        IdGenerator = idGenerator;
         Logger = logger;
         InsertOneOptions = insertOneOptions ?? new InsertOneOptions();
     }
 
     public abstract string CollectionName { get; }
 
-    protected virtual IMongoCollection<IMessage<TMessageId>> BaseMessageCollection
-        => Database.GetCollection<IMessage<TMessageId>>(CollectionName);
+    protected virtual IMongoCollection<IMessage> BaseMessageCollection
+        => Database.GetCollection<IMessage>(CollectionName);
 
     public virtual async Task InsertAsync(TMessage message, CancellationToken cancellationToken = default)
     {
         if (message.IsReplay) return;
 
-        if (GenericUtils.IsNullOrDefault(message.Id)) message.Id = IdGenerator.NewId();
+        if (GenericUtils.IsNullOrDefault(message.Id)) message.Id = Guid.NewGuid();
         await BaseMessageCollection.InsertOneAsync(message, InsertOneOptions, cancellationToken);
     }
 
-    public abstract Task UpsertHandlerAsync(TMessageId id, Type handlerType, Exception? exception = null, CancellationToken cancellationToken = default);
+    public abstract Task UpsertHandlerAsync(Guid id, Type handlerType, Exception? exception = null, CancellationToken cancellationToken = default);
 
     public abstract Task EnsureCollectionIndexesAsync(CancellationToken cancellationToken = default);
 }

@@ -5,18 +5,16 @@ namespace SaanSoft.Cqrs.Decorator.EnsureCorrelationId;
 /// </summary>
 /// <param name="providers"></param>
 /// <param name="next"></param>
-/// <typeparam name="TMessageId"></typeparam>
-public abstract class EnsureEventHasCorrelationIdDecorator<TMessageId>(IEnumerable<ICorrelationIdProvider> providers, IEventBus<TMessageId> next)
-    : IEventBusDecorator<TMessageId>
-    where TMessageId : struct
+public class EnsureEventHasCorrelationIdDecorator(IEnumerable<ICorrelationIdProvider> providers, IEventBus next)
+    : IEventBusDecorator
 {
-    public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default) where TEvent : class, IEvent<TMessageId>
+    public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default) where TEvent : class, IEvent
     {
         evt.CorrelationId = providers.EnsureCorrelationId(evt.CorrelationId);
         await next.QueueAsync(evt, cancellationToken);
     }
 
-    public async Task QueueManyAsync<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default) where TEvent : class, IEvent<TMessageId>
+    public async Task QueueManyAsync<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default) where TEvent : class, IEvent
     {
         // only do this if any events don't have correlationIds
         var eventList = events.ToList();

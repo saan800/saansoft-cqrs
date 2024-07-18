@@ -1,10 +1,10 @@
 namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.GuidIds.Repositories;
 
-public class CommandHandlerRepositoryTests : BaseHandlerRepositoryTests<MyCommand, CommandRepository, BaseCommand<Guid>>
+public class CommandHandlerRepositoryTests : BaseHandlerRepositoryTests<MyCommand, CommandRepository, BaseCommand>
 {
     public CommandHandlerRepositoryTests()
     {
-        SutRepository = new CommandRepository(Database, IdGenerator, Logger);
+        SutRepository = new CommandRepository(Database, Logger);
         MessageCollection = SutRepository.MessageCollection;
     }
 

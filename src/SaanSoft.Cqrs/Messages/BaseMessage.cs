@@ -4,12 +4,11 @@ namespace SaanSoft.Cqrs.Messages;
 
 /// <summary>
 /// Base class with common properties for all messages
-/// You should never directly inherit from BaseMessage{TMessageId}
+/// You should never directly inherit from BaseMessage
 ///
-/// Use <see cref="Command{TMessageId}"/>, <see cref="Event{TMessageId,TEntityKey}"/> or <see cref="Query{TMessageId,TQuery,TResponse}"/> instead
+/// Use <see cref="Command"/>, <see cref="Event{TEntityKey}"/> or <see cref="Query{TQuery,TResponse}"/> instead
 /// </summary>
-public abstract class BaseMessage<TMessageId> : IMessage<TMessageId>
-    where TMessageId : struct
+public abstract class BaseMessage : IMessage
 {
     /// <summary>
     /// Unique Id for the command/event/query
@@ -75,7 +74,7 @@ public abstract class BaseMessage<TMessageId> : IMessage<TMessageId>
         if (!string.IsNullOrWhiteSpace(triggeredByUser)) TriggeredByUser = triggeredByUser;
     }
 
-    protected BaseMessage(IMessage<TMessageId> triggeredByMessage)
+    protected BaseMessage(IMessage triggeredByMessage)
         : this(triggeredByMessage.CorrelationId, triggeredByMessage.TriggeredByUser)
     {
         IsReplay = triggeredByMessage.IsReplay;

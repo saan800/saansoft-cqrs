@@ -1,4 +1,3 @@
-using SaanSoft.Cqrs.GuidIds.Utilities;
 using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Tests.Cqrs.Common;
@@ -6,34 +5,29 @@ namespace SaanSoft.Tests.Cqrs.Common;
 public abstract class TestSetup
 {
     protected readonly ILogger Logger;
-    protected readonly IIdGenerator IdGenerator;
     protected readonly ServiceCollection ServiceCollection;
 
     protected TestSetup()
     {
         Logger = A.Fake<ILogger>();
-        IdGenerator = new GuidIdGenerator();
 
         ServiceCollection = new ServiceCollection();
         ServiceCollection.AddScoped<ILogger>(_ => Logger);
-        ServiceCollection.AddScoped<IIdGenerator>(_ => IdGenerator);
 
         ServiceCollection.AddScoped<ICommandSubscriptionBus, InMemoryCommandBus>();
         ServiceCollection.AddScoped<IEventSubscriptionBus, InMemoryEventBus>();
         ServiceCollection.AddScoped<IQuerySubscriptionBus, InMemoryQueryBus>();
-
-        ServiceCollection.AddScoped<IIdGenerator, GuidIdGenerator>();
     }
 
     private IServiceProvider? _serviceProvider = null;
     protected IServiceProvider GetServiceProvider()
         => _serviceProvider ??= ServiceCollection.BuildServiceProvider();
 
-    protected InMemoryCommandBus InMemoryCommandBus => new(GetServiceProvider(), IdGenerator);
+    protected InMemoryCommandBus InMemoryCommandBus => new(GetServiceProvider());
 
-    protected InMemoryEventBus InMemoryEventBus => new(GetServiceProvider(), IdGenerator);
+    protected InMemoryEventBus InMemoryEventBus => new(GetServiceProvider());
 
-    protected InMemoryQueryBus InMemoryQueryBus => new(GetServiceProvider(), IdGenerator);
+    protected InMemoryQueryBus InMemoryQueryBus => new(GetServiceProvider());
 
     protected void AddCommandHandlerException<TCommand>()
         where TCommand : ICommand

@@ -5,12 +5,10 @@ namespace SaanSoft.Cqrs.Decorator.LoggerScope;
 /// </summary>
 /// <param name="logger"></param>
 /// <param name="next"></param>
-/// <typeparam name="TMessageId"></typeparam>
-public abstract class LoggerScopeCommandSubscriptionBusDecorator<TMessageId>(ILogger logger, ICommandSubscriptionBus<TMessageId> next) :
-    ICommandSubscriptionBusDecorator<TMessageId>
-    where TMessageId : struct
+public class LoggerScopeCommandSubscriptionBusDecorator(ILogger logger, ICommandSubscriptionBus next) :
+    ICommandSubscriptionBusDecorator
 {
-    public async Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : class, ICommand<TMessageId>
+    public async Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : class, ICommand
     {
         var handler = GetHandler<TCommand>();
         using (logger.BeginScope(command.BuildLoggingScopeData(handler.GetType())))
@@ -20,7 +18,7 @@ public abstract class LoggerScopeCommandSubscriptionBusDecorator<TMessageId>(ILo
         }
     }
 
-    public async Task<TResponse> RunAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default) where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+    public async Task<TResponse> RunAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default) where TCommand : class, ICommand<TCommand, TResponse>
     {
         var handler = GetHandler<TCommand, TResponse>();
         var typedCommand = (TCommand)command;
@@ -32,10 +30,10 @@ public abstract class LoggerScopeCommandSubscriptionBusDecorator<TMessageId>(ILo
     }
 
     public ICommandHandler<TCommand> GetHandler<TCommand>()
-        where TCommand : class, ICommand<TMessageId>
+        where TCommand : class, ICommand
         => next.GetHandler<TCommand>();
 
     public ICommandHandler<TCommand, TResponse> GetHandler<TCommand, TResponse>()
-        where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+        where TCommand : class, ICommand<TCommand, TResponse>
         => next.GetHandler<TCommand, TResponse>();
 }

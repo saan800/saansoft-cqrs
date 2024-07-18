@@ -2,12 +2,12 @@ namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.GuidIds.Repositories;
 
 public class QueryRepositoryTests : TestSetup
 {
-    private readonly IMongoCollection<Query<Guid>> _messageCollection;
+    private readonly IMongoCollection<Query> _messageCollection;
     private readonly QueryRepository _queryRepository;
 
     public QueryRepositoryTests()
     {
-        _queryRepository = new QueryRepository(Database, IdGenerator, Logger);
+        _queryRepository = new QueryRepository(Database, Logger);
         _messageCollection = _queryRepository.MessageCollection;
     }
 

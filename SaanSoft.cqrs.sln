@@ -35,10 +35,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Decorator", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Tests.Cqrs.Decorator", "test\SaanSoft.Tests.Cqrs.Decorator\SaanSoft.Tests.Cqrs.Decorator.csproj", "{241D036D-F677-4F05-94F9-BCE8FBE671DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.GuidIds", "src\SaanSoft.Cqrs.GuidIds\SaanSoft.Cqrs.GuidIds.csproj", "{AF159B96-B46C-4998-B748-EC86F1F45C8C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Decorator.Store.MongoDB.GuidIds", "src\SaanSoft.Cqrs.Decorator.Store.MongoDB.GuidIds\SaanSoft.Cqrs.Decorator.Store.MongoDB.GuidIds.csproj", "{EAA2420F-0957-45D9-ADDD-E1DE2152AB60}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Decorator.EnsureCorrelationId", "src\SaanSoft.Cqrs.Decorator.EnsureCorrelationId\SaanSoft.Cqrs.Decorator.EnsureCorrelationId.csproj", "{1C63E23F-5A11-466D-BCCD-6B181E5218E9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Tests.Cqrs.Decorator.EnsureCorrelationId", "test\SaanSoft.Tests.Cqrs.Decorator.EnsureCorrelationId\SaanSoft.Tests.Cqrs.Decorator.EnsureCorrelationId.csproj", "{62EE606B-51E9-443E-B365-A2B0F816210C}"
@@ -89,14 +85,6 @@ Global
 					{241D036D-F677-4F05-94F9-BCE8FBE671DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 					{241D036D-F677-4F05-94F9-BCE8FBE671DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 					{241D036D-F677-4F05-94F9-BCE8FBE671DE}.Release|Any CPU.Build.0 = Release|Any CPU
-					{AF159B96-B46C-4998-B748-EC86F1F45C8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-					{AF159B96-B46C-4998-B748-EC86F1F45C8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-					{AF159B96-B46C-4998-B748-EC86F1F45C8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-					{AF159B96-B46C-4998-B748-EC86F1F45C8C}.Release|Any CPU.Build.0 = Release|Any CPU
-					{EAA2420F-0957-45D9-ADDD-E1DE2152AB60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-					{EAA2420F-0957-45D9-ADDD-E1DE2152AB60}.Debug|Any CPU.Build.0 = Debug|Any CPU
-					{EAA2420F-0957-45D9-ADDD-E1DE2152AB60}.Release|Any CPU.ActiveCfg = Release|Any CPU
-					{EAA2420F-0957-45D9-ADDD-E1DE2152AB60}.Release|Any CPU.Build.0 = Release|Any CPU
 					{1C63E23F-5A11-466D-BCCD-6B181E5218E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 					{1C63E23F-5A11-466D-BCCD-6B181E5218E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 					{1C63E23F-5A11-466D-BCCD-6B181E5218E9}.Release|Any CPU.ActiveCfg = Release|Any CPU

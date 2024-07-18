@@ -3,13 +3,11 @@ namespace SaanSoft.Cqrs.Decorator.Store;
 /// <summary>
 /// Base interface with common methods for all message stores
 /// You should never directly inherit from IMessageRepository
-/// Use <see cref="ICommandRepository{TMessageId}"/>, <see cref="IEventRepository{TMessageId,TEntityKey}"/> or <see cref="IQueryRepository{TMessageId}"/> instead
+/// Use <see cref="ICommandRepository"/>, <see cref="IEventRepository{TEntityKey}"/> or <see cref="IQueryRepository"/> instead
 /// </summary>
-/// <typeparam name="TMessageId"></typeparam>
 /// <typeparam name="TMessage"></typeparam>
-public interface IMessageRepository<TMessageId, in TMessage>
-    where TMessageId : struct
-    where TMessage : IMessage<TMessageId>
+public interface IMessageRepository<in TMessage>
+    where TMessage : IMessage
 {
     /// <summary>
     /// Add a message to the Store

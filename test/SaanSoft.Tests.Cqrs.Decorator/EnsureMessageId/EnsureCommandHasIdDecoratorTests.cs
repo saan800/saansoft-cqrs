@@ -1,11 +1,11 @@
-using SaanSoft.Cqrs.GuidIds.Decorator.EnsureMessageId;
+using SaanSoft.Cqrs.Decorator.EnsureMessageId;
 
 namespace SaanSoft.Tests.Cqrs.Decorator.EnsureMessageId;
 
 public class EnsureCommandHasIdDecoratorTests : CommandBusDecoratorTestSetup
 {
     protected override ICommandBusDecorator SutPublisherDecorator =>
-        new EnsureCommandHasIdDecorator(IdGenerator, InMemoryCommandBus);
+        new EnsureCommandHasIdDecorator(InMemoryCommandBus);
 
     public class ExecuteAsyncTests : EnsureCommandHasIdDecoratorTests
     {

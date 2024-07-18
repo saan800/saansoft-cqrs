@@ -3,39 +3,37 @@ using SaanSoft.Cqrs.Utilities;
 
 namespace SaanSoft.Cqrs.Bus;
 
-public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider serviceProvider, IIdGenerator<TMessageId> idGenerator)
-    : ICommandBus<TMessageId>,
-      ICommandSubscriptionBus<TMessageId>
-    where TMessageId : struct
+public class InMemoryCommandBus(IServiceProvider serviceProvider)
+    : ICommandBus,
+      ICommandSubscriptionBus
 {
     // ReSharper disable MemberCanBePrivate.Global
     protected readonly IServiceProvider ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-    protected readonly IIdGenerator<TMessageId> IdGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
     // ReSharper restore MemberCanBePrivate.Global
 
     public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TMessageId>
+        where TCommand : class, ICommand
     {
-        if (GenericUtils.IsNullOrDefault(command.Id)) command.Id = IdGenerator.NewId();
+        if (GenericUtils.IsNullOrDefault(command.Id)) command.Id = Guid.NewGuid();
 
         var subscriptionBus = GetSubscriptionBus();
         await subscriptionBus.RunAsync(command, cancellationToken);
     }
 
     public async Task<TResponse> ExecuteAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+        where TCommand : class, ICommand<TCommand, TResponse>
     {
         var typedCommand = (TCommand)command;
-        if (GenericUtils.IsNullOrDefault(typedCommand.Id)) typedCommand.Id = IdGenerator.NewId();
+        if (GenericUtils.IsNullOrDefault(typedCommand.Id)) typedCommand.Id = Guid.NewGuid();
 
         var subscriptionBus = GetSubscriptionBus();
         return await subscriptionBus.RunAsync(typedCommand, cancellationToken);
     }
 
     public async Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TMessageId>
+        where TCommand : class, ICommand
     {
-        if (GenericUtils.IsNullOrDefault(command.Id)) command.Id = IdGenerator.NewId();
+        if (GenericUtils.IsNullOrDefault(command.Id)) command.Id = Guid.NewGuid();
 
         var subscriptionBus = GetSubscriptionBus();
         await subscriptionBus.RunAsync(command, cancellationToken);
@@ -45,18 +43,18 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
     /// Get subscription bus via ServiceProvider so it runs through any decorators
     /// </summary>
     /// <returns></returns>
-    protected virtual ICommandSubscriptionBus<TMessageId> GetSubscriptionBus()
-        => ServiceProvider.GetRequiredService<ICommandSubscriptionBus<TMessageId>>();
+    protected virtual ICommandSubscriptionBus GetSubscriptionBus()
+        => ServiceProvider.GetRequiredService<ICommandSubscriptionBus>();
 
     public async Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TMessageId>
+        where TCommand : class, ICommand
     {
         var handler = GetHandler<TCommand>();
         await handler.HandleAsync(command, cancellationToken);
     }
 
     public async Task<TResponse> RunAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+        where TCommand : class, ICommand<TCommand, TResponse>
     {
         var handler = GetHandler<TCommand, TResponse>();
         var typedCommand = (TCommand)command;
@@ -64,11 +62,11 @@ public abstract class InMemoryCommandBus<TMessageId>(IServiceProvider servicePro
     }
 
     public virtual ICommandHandler<TCommand> GetHandler<TCommand>()
-        where TCommand : class, ICommand<TMessageId>
+        where TCommand : class, ICommand
         => GetCommandHandler<ICommandHandler<TCommand>>();
 
     public ICommandHandler<TCommand, TResponse> GetHandler<TCommand, TResponse>()
-        where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+        where TCommand : class, ICommand<TCommand, TResponse>
         => GetCommandHandler<ICommandHandler<TCommand, TResponse>>();
 
     private TCommandHandler GetCommandHandler<TCommandHandler>()

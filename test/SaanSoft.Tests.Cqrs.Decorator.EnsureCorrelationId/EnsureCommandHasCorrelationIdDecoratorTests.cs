@@ -3,7 +3,7 @@ namespace SaanSoft.Tests.Cqrs.Decorator.EnsureCorrelationId;
 public class EnsureCommandHasCorrelationIdDecoratorTests : CommandBusDecoratorTestSetup
 {
     protected override ICommandBusDecorator SutPublisherDecorator =>
-        new EnsureCommandHasCorrelationIdDecorator(InMemoryCommandBus);
+        new EnsureCommandHasCorrelationIdDecorator([], InMemoryCommandBus);
 
     public class ExecuteAsyncTests : EnsureCommandHasCorrelationIdDecoratorTests
     {

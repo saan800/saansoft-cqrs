@@ -1,9 +1,8 @@
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public abstract class BaseStoreMessageHandlerDecorator<TMessageId>(IMessageHandlerRepository<TMessageId> repository)
+public abstract class BaseStoreMessageHandlerDecorator(IMessageHandlerRepository repository)
     : IMessageSubscriptionBus
-    where TMessageId : struct
 {
-    protected readonly IMessageHandlerRepository<TMessageId> Repository = repository;
+    protected readonly IMessageHandlerRepository Repository = repository;
 }
 

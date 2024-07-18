@@ -55,11 +55,11 @@ public class StoreEventPublisherDecoratorTests : EventBusDecoratorTestSetup
     private class WrapperEventBusDecorator(IEventBus next) : IEventBus
     {
         public Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
-            where TEvent : class, IEvent<Guid>
+            where TEvent : class, IEvent
             => next.QueueAsync(evt, cancellationToken);
 
         public Task QueueManyAsync<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default)
-            where TEvent : class, IEvent<Guid>
+            where TEvent : class, IEvent
             => next.QueueManyAsync(events, cancellationToken);
     }
 }

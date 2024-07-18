@@ -9,8 +9,4 @@
     <NoWarn>CS1591;CS8602;CS8625;CS8618</NoWarn>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\src\SaanSoft.Cqrs.GuidIds\SaanSoft.Cqrs.GuidIds.csproj" />
-  </ItemGroup>
-
 </Project>

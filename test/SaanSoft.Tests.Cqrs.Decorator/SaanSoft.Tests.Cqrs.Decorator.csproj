@@ -9,7 +9,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\SaanSoft.Cqrs.Decorator\SaanSoft.Cqrs.Decorator.csproj" />
-      <ProjectReference Include="..\..\src\SaanSoft.Cqrs.GuidIds\SaanSoft.Cqrs.GuidIds.csproj" />
       <ProjectReference Include="..\SaanSoft.Tests.Cqrs.Common\SaanSoft.Tests.Cqrs.Common.csproj" />
     </ItemGroup>
 
