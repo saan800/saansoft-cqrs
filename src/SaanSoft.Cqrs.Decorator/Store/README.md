@@ -5,9 +5,9 @@
 If you are storing messages, ensure you are taking appropriate security measures for 
 sensitive data such as PPI, usernames, passwords, etc.
 
-TODO:... Consider using the `Encryption` decorator to secure sensitive data. 
+If your database technology offers an encrypted data option, that is a good solution.
 
-If your database technology offers encryption, that is another good option.
+TODO:... Otherwise consider using the `Encryption` decorator to secure sensitive data. 
 
 ## Purpose
 
