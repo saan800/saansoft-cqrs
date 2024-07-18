@@ -2,15 +2,12 @@ bson
 codecov
 color
 cqrs
-extern
 nojournal
 opencover
 ouput
 Saan
 SaanSoft
-signoff
 Specflow
 svelvet
 unittests
-validatable
 Xunit
