@@ -16,7 +16,7 @@ Todo...
 * event source vs event stream vs event driven
 * cqrs
 * glossary
-* index with links to implemented decoratirs (instrad of in this file)
+* index with links to implemented decorators (instead of in this file)
 
 ## TODO
 
