@@ -2,7 +2,7 @@
 
 This project is used for adding decorators for the message buses.
 
-For more information on each decorator please check the `README.md` in each deciratir folder.
+For more information on each decorator please check the `README.md` in each decorator folder.
 
 ## Contributing
 
