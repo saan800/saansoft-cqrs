@@ -2,7 +2,6 @@ namespace SaanSoft.Cqrs.Decorator.Store.MongoDB;
 
 public interface IEventMongoDbRepository<TEntityKey> :
     IEventRepository<TEntityKey>,
-    IEventHandlerRepository,
     IMongoDbRepository
     where TEntityKey : struct
 {
@@ -28,14 +27,18 @@ public class EventRepository<TEntityKey>(
     public virtual IMongoCollection<Event<TEntityKey>> MessageCollection
         => Database.GetCollection<Event<TEntityKey>>(CollectionName);
 
-    public async Task<List<IEvent<TEntityKey>>> GetEntityMessagesAsync(TEntityKey key,
-        CancellationToken cancellationToken = default)
+    public async Task<List<IEvent<TEntityKey>>> GetEntityMessagesAsync(TEntityKey key, CancellationToken cancellationToken = default)
         => (await MessageCollection
             .Find(x => x.Key.Equals(key))
             .ToListAsync(cancellationToken))
             .OrderBy(x => x.MessageOnUtc)
             .Select(x => (IEvent<TEntityKey>)x)
             .ToList();
+
+    public override async Task<IEvent?> GetMessageByIdAsync(Guid messageId, CancellationToken cancellationToken = default)
+        => await MessageCollection
+            .Find(x => x.Id == messageId)
+            .SingleOrDefaultAsync(cancellationToken);
 
     public override async Task UpsertHandlerAsync(Guid id, Type handlerType, Exception? exception = null,
         CancellationToken cancellationToken = default)

@@ -1,18 +1,17 @@
-using SaanSoft.Cqrs.Decorator.Store;
 using SaanSoft.Cqrs.Decorator.Store.Models;
 using SaanSoft.Cqrs.Decorator.Store.Utilities;
 
 namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.Repositories;
 
-public abstract class BaseHandlerRepositoryTests<TMessage, TRepository, TCollectionEntity> : TestSetup
+public abstract class BaseHandlerRepositoryTests<TMessage, TRepository> : TestSetup
      where TMessage : class, IMessage
-     where TRepository : IMessageHandlerRepository, IMessageRepository<TMessage>
-     where TCollectionEntity : class, IMessage
+     where TRepository : IMessageRepository<TMessage>
 {
-    protected TRepository SutRepository;
-    protected IMongoCollection<TCollectionEntity> MessageCollection;
+    protected TRepository SutRepository { get; init; }
 
     protected abstract TMessage CreateNewMessage();
+
+    #region UpsertHandlerAsync
 
     [Theory]
     [InlineAutoData]
@@ -23,9 +22,7 @@ public abstract class BaseHandlerRepositoryTests<TMessage, TRepository, TCollect
         await SutRepository.UpsertHandlerAsync(message.Id, handlerType);
 
         // check the collection that the record exists
-        var recordMetadata = await MessageCollection.Find(x => x.Id == message.Id)
-            .Project(x => x.Metadata)
-            .SingleOrDefaultAsync();
+        var recordMetadata = (await SutRepository.GetMessageByIdAsync(message.Id))?.Metadata;
         var messageHandlers = recordMetadata.GetValueOrDefaultAs<List<MessageHandler>>(StoreConstants.HandlersKey) ?? [];
 
         var record = messageHandlers.SingleOrDefault(x => x.TypeFullName == handlerType.FullName);
@@ -44,9 +41,7 @@ public abstract class BaseHandlerRepositoryTests<TMessage, TRepository, TCollect
         await SutRepository.UpsertHandlerAsync(message.Id, handlerType, exception);
 
         // check the collection that the record exists
-        var recordMetadata = await MessageCollection.Find(x => x.Id == message.Id)
-            .Project(x => x.Metadata)
-            .SingleOrDefaultAsync();
+        var recordMetadata = (await SutRepository.GetMessageByIdAsync(message.Id))?.Metadata;
         var messageHandlers = recordMetadata.GetValueOrDefaultAs<List<MessageHandler>>(StoreConstants.HandlersKey) ?? [];
 
         var record = messageHandlers.SingleOrDefault(x => x.TypeFullName == handlerType.FullName);
@@ -68,9 +63,7 @@ public abstract class BaseHandlerRepositoryTests<TMessage, TRepository, TCollect
         await SutRepository.UpsertHandlerAsync(message.Id, handlerType);
 
         // check the collection that the record exists
-        var recordMetadata = await MessageCollection.Find(x => x.Id == message.Id)
-            .Project(x => x.Metadata)
-            .SingleOrDefaultAsync();
+        var recordMetadata = (await SutRepository.GetMessageByIdAsync(message.Id))?.Metadata;
         var messageHandlers = recordMetadata.GetValueOrDefaultAs<List<MessageHandler>>(StoreConstants.HandlersKey) ?? [];
 
         var records = messageHandlers.Where(x => x.TypeFullName == handlerType.FullName).ToList();
@@ -90,9 +83,7 @@ public abstract class BaseHandlerRepositoryTests<TMessage, TRepository, TCollect
         await SutRepository.UpsertHandlerAsync(message.Id, handlerType, exception);
 
         // check the collection that the record exists
-        var recordMetadata = await MessageCollection.Find(x => x.Id == message.Id)
-            .Project(x => x.Metadata)
-            .SingleOrDefaultAsync();
+        var recordMetadata = (await SutRepository.GetMessageByIdAsync(message.Id))?.Metadata;
         var messageHandlers = recordMetadata.GetValueOrDefaultAs<List<MessageHandler>>(StoreConstants.HandlersKey) ?? [];
 
         var records = messageHandlers.Where(x => x.TypeFullName == handlerType.FullName).ToList();
@@ -111,14 +102,14 @@ public abstract class BaseHandlerRepositoryTests<TMessage, TRepository, TCollect
         await SutRepository.UpsertHandlerAsync(message.Id, handlerType);
 
         // check the collection that the record exists
-        var recordMetadata = await MessageCollection.Find(x => x.Id == message.Id)
-            .Project(x => x.Metadata)
-            .SingleOrDefaultAsync();
+        var recordMetadata = (await SutRepository.GetMessageByIdAsync(message.Id))?.Metadata;
         var messageHandlers = recordMetadata.GetValueOrDefaultAs<List<MessageHandler>>(StoreConstants.HandlersKey) ?? [];
 
         var records = messageHandlers.FirstOrDefault(x => x.TypeFullName == handlerType.FullName);
         records.Should().NotBeNull();
         records.Succeeded.Should().BeTrue();
     }
+
+    #endregion
 }
 

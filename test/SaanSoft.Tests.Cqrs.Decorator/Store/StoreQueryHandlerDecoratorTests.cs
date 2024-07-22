@@ -4,10 +4,11 @@ public class StoreQueryHandlerDecoratorTests : QuerySubscriptionBusDecoratorTest
 {
     protected StoreQueryHandlerDecoratorTests()
     {
-        _repository = A.Fake<IQueryHandlerRepository>();
+        _repository = A.Fake<IQueryRepository>();
     }
 
-    private readonly IQueryHandlerRepository _repository;
+    private readonly IQueryRepository _repository;
+
     protected override IQuerySubscriptionBusDecorator SutSubscriptionBusDecorator =>
         new StoreQueryHandlerDecorator(_repository, InMemoryQueryBus);
 

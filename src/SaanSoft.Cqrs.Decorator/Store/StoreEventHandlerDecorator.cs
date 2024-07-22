@@ -1,8 +1,12 @@
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public class StoreEventHandlerDecorator(IEventHandlerRepository repository, IEventSubscriptionBus next)
-    : BaseStoreMessageHandlerDecorator(repository),
+public class StoreEventHandlerDecorator(IEventRepository repository, IEventSubscriptionBus next)
+    : StoreEventHandlerDecorator<Guid>(repository, next);
+
+public class StoreEventHandlerDecorator<TEntityKey>(IEventRepository<TEntityKey> repository, IEventSubscriptionBus next)
+    : BaseStoreMessageHandlerDecorator<IEvent>(repository),
       IEventSubscriptionBusDecorator
+      where TEntityKey : struct
 {
     public async Task RunAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
         where TEvent : class, IEvent

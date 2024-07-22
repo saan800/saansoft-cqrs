@@ -1,7 +1,7 @@
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public class StoreCommandHandlerDecorator(ICommandHandlerRepository repository, ICommandSubscriptionBus next)
-    : BaseStoreMessageHandlerDecorator(repository),
+public class StoreCommandHandlerDecorator(ICommandRepository repository, ICommandSubscriptionBus next)
+    : BaseStoreMessageHandlerDecorator<IBaseCommand>(repository),
       ICommandSubscriptionBusDecorator
 {
     public async Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)

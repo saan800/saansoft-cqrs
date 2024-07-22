@@ -1,7 +1,7 @@
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public class StoreQueryHandlerDecorator(IQueryHandlerRepository repository, IQuerySubscriptionBus next) :
-    BaseStoreMessageHandlerDecorator(repository),
+public class StoreQueryHandlerDecorator(IQueryRepository repository, IQuerySubscriptionBus next) :
+    BaseStoreMessageHandlerDecorator<IQuery>(repository),
     IQuerySubscriptionBusDecorator
 {
     public async Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)

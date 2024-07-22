@@ -11,7 +11,6 @@ namespace SaanSoft.Cqrs.Decorator.Store.MongoDB;
 /// <typeparam name="TMessage"></typeparam>
 public abstract class BaseMessageRepository<TMessage> :
     IMessageRepository<TMessage>,
-    IMessageHandlerRepository,
     IMongoDbRepository
     where TMessage : class, IMessage
 {
@@ -38,6 +37,8 @@ public abstract class BaseMessageRepository<TMessage> :
 
     protected virtual IMongoCollection<IMessage> BaseMessageCollection
         => Database.GetCollection<IMessage>(CollectionName);
+
+    public abstract Task<TMessage?> GetMessageByIdAsync(Guid messageId, CancellationToken cancellationToken = default);
 
     public virtual async Task InsertAsync(TMessage message, CancellationToken cancellationToken = default)
     {

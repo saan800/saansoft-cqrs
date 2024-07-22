@@ -2,7 +2,6 @@ namespace SaanSoft.Cqrs.Decorator.Store.MongoDB;
 
 public interface ICommandMongoDbRepository :
     ICommandRepository,
-    ICommandHandlerRepository,
     IMongoDbRepository
 {
     IMongoCollection<BaseCommand> MessageCollection { get; }
@@ -19,6 +18,11 @@ public class CommandRepository(
 
     public IMongoCollection<BaseCommand> MessageCollection
         => Database.GetCollection<BaseCommand>(CollectionName);
+
+    public override async Task<IBaseCommand?> GetMessageByIdAsync(Guid messageId, CancellationToken cancellationToken = default)
+        => await MessageCollection
+            .Find(x => x.Id == messageId)
+            .FirstOrDefaultAsync(cancellationToken);
 
     public override async Task UpsertHandlerAsync(Guid id, Type handlerType, Exception? exception = null,
         CancellationToken cancellationToken = default)

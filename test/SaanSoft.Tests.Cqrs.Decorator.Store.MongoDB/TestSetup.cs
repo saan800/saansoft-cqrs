@@ -1,10 +1,9 @@
 using EphemeralMongo;
-using SaanSoft.Cqrs.Decorator.Store.MongoDB;
-using SaanSoft.Cqrs.Utilities;
+using SaanSoft.Tests.Cqrs.Decorator.Store.BaseRepository;
 
 namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB;
 
-public class TestSetup : SaanSoft.Tests.Cqrs.Common.TestSetup
+public class TestSetup : BaseTestSetup
 {
     protected TestSetup() : base()
     {
@@ -22,6 +21,8 @@ public class TestSetup : SaanSoft.Tests.Cqrs.Common.TestSetup
                 typeof(MyCommand).Assembly
             ]
         });
+
+        ServiceCollection.AddRepositories();
     }
 
     private readonly Lazy<IMongoRunner> _temporaryMongoDb = new Lazy<IMongoRunner>((Func<IMongoRunner>)(() => MongoRunner.Run(new MongoRunnerOptions
@@ -32,4 +33,6 @@ public class TestSetup : SaanSoft.Tests.Cqrs.Common.TestSetup
 
     private readonly Lazy<IMongoDatabase> _database;
     protected IMongoDatabase Database => _database.Value;
+
+    protected ICommandRepository CommandRepository { get; }
 }
