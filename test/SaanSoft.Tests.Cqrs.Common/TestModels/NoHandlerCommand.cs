@@ -7,9 +7,9 @@ namespace SaanSoft.Tests.Cqrs.Common.TestModels;
 /// </summary>
 public class NoHandlerCommand : Command
 {
-    public NoHandlerCommand(Guid? id = null, string? correlationId = null, string? authenticatedId = null)
-        : base(id, correlationId, authenticatedId) { }
+    public NoHandlerCommand(string? correlationId = null, string? authenticatedId = null)
+        : base(correlationId, authenticatedId) { }
 
-    public NoHandlerCommand(IMessage<Guid> triggeredByMessage)
+    public NoHandlerCommand(IMessage triggeredByMessage)
         : base(triggeredByMessage) { }
 }

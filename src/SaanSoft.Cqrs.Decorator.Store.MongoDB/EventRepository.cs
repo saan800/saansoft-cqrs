@@ -1,13 +1,12 @@
 namespace SaanSoft.Cqrs.Decorator.Store.MongoDB;
 
-public interface IEventMongoDbRepository<TMessageId, TEntityKey> :
-    IEventRepository<TMessageId, TEntityKey>,
-    IEventHandlerRepository<TMessageId>,
+public interface IEventMongoDbRepository<TEntityKey> :
+    IEventRepository<TEntityKey>,
+    IEventHandlerRepository,
     IMongoDbRepository
-    where TMessageId : struct
     where TEntityKey : struct
 {
-    IMongoCollection<Event<TMessageId, TEntityKey>> MessageCollection { get; }
+    IMongoCollection<Event<TEntityKey>> MessageCollection { get; }
 }
 
 /// <summary>
@@ -15,37 +14,35 @@ public interface IEventMongoDbRepository<TMessageId, TEntityKey> :
 /// <remarks>
 /// Ensure you add an index on the mongo collection's Key property
 /// </remarks>
-/// <typeparam name="TMessageId"></typeparam>
 /// <typeparam name="TEntityKey"></typeparam>
-public abstract class EventRepository<TMessageId, TEntityKey>(
-        IMongoDatabase database, IIdGenerator<TMessageId> idGenerator,
+public class EventRepository<TEntityKey>(
+        IMongoDatabase database,
         ILogger logger, InsertOneOptions? insertOneOptions = null
     ) :
-    BaseMessageRepository<TMessageId, IEvent<TMessageId>>(database, idGenerator, logger, insertOneOptions),
-    IEventMongoDbRepository<TMessageId, TEntityKey>
-    where TMessageId : struct
+    BaseMessageRepository<IEvent>(database, logger, insertOneOptions),
+    IEventMongoDbRepository<TEntityKey>
     where TEntityKey : struct
 {
     public override string CollectionName => "EventMessages";
 
-    public IMongoCollection<Event<TMessageId, TEntityKey>> MessageCollection
-        => Database.GetCollection<Event<TMessageId, TEntityKey>>(CollectionName);
+    public virtual IMongoCollection<Event<TEntityKey>> MessageCollection
+        => Database.GetCollection<Event<TEntityKey>>(CollectionName);
 
-    public async Task<List<IEvent<TMessageId, TEntityKey>>> GetEntityMessagesAsync(TEntityKey key,
+    public async Task<List<IEvent<TEntityKey>>> GetEntityMessagesAsync(TEntityKey key,
         CancellationToken cancellationToken = default)
         => (await MessageCollection
             .Find(x => x.Key.Equals(key))
             .ToListAsync(cancellationToken))
             .OrderBy(x => x.MessageOnUtc)
-            .Select(x => (IEvent<TMessageId, TEntityKey>)x)
+            .Select(x => (IEvent<TEntityKey>)x)
             .ToList();
 
-    public override async Task UpsertHandlerAsync(TMessageId id, Type handlerType, Exception? exception = null,
+    public override async Task UpsertHandlerAsync(Guid id, Type handlerType, Exception? exception = null,
         CancellationToken cancellationToken = default)
     {
         var messageHandler = handlerType.BuildMessageHandler(exception);
 
-        var filter = Builders<Event<TMessageId, TEntityKey>>.Filter.Eq(x => x.Id, id);
+        var filter = Builders<Event<TEntityKey>>.Filter.Eq(x => x.Id, id);
         var metadata = (await MessageCollection
             .Find(filter)
             .Project(x => x.Metadata)
@@ -65,7 +62,7 @@ public abstract class EventRepository<TMessageId, TEntityKey>(
 
         await MessageCollection.FindOneAndUpdateAsync(
             filter,
-            Builders<Event<TMessageId, TEntityKey>>.Update.Set(x => x.Metadata, metadata),
+            Builders<Event<TEntityKey>>.Update.Set(x => x.Metadata, metadata),
             cancellationToken: cancellationToken);
     }
 
@@ -76,14 +73,30 @@ public abstract class EventRepository<TMessageId, TEntityKey>(
     {
         var indexes = MessageCollection.Indexes;
 
-        var keyIndex = Builders<Event<TMessageId, TEntityKey>>.IndexKeys
+        var keyIndex = Builders<Event<TEntityKey>>.IndexKeys
             .Ascending(x => x.Key)
             .Ascending(x => x.MessageOnUtc);
 
         await indexes.CreateOneAsync(
-            new CreateIndexModel<Event<TMessageId, TEntityKey>>(keyIndex, new CreateIndexOptions { Unique = false }),
+            new CreateIndexModel<Event<TEntityKey>>(keyIndex, new CreateIndexOptions { Unique = false }),
             null,
             cancellationToken
         );
     }
+}
+
+
+/// <summary>
+/// </summary>
+/// <remarks>
+/// Ensure you add an index on the mongo collection's Key property
+/// </remarks>
+public class EventRepository(
+    IMongoDatabase database,
+    ILogger logger,
+    InsertOneOptions? insertOneOptions = null
+) :
+    EventRepository<Guid>(database, logger, insertOneOptions),
+    IEventRepository
+{
 }

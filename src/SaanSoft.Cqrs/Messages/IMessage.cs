@@ -1,11 +1,42 @@
 namespace SaanSoft.Cqrs.Messages;
 
 /// <summary>
-/// You should never directly inherit from this interface
-/// use <see cref="IMessage{TMessageId}"/> instead
+/// Base interface with common properties for all messages
+/// You should never directly inherit from IMessage
+/// Use <see cref="ICommand"/>, <see cref="IEvent{TEntityKey}"/> or <see cref="IQuery{TQuery, TResponse}"/> instead
 /// </summary>
 public interface IMessage
 {
+    /// <summary>
+    /// Unique Id for the command/event/query
+    /// This will normally be the EventStore (or CommandStore and QueryStore if using) primary key
+    /// Also used to populate the Metadata.TriggeredByMessageId property of any subsequent messages it raises
+    /// </summary>
+    Guid Id { get; set; }
+
+    /// <summary>
+    /// Used to track related commands/events/queries.
+    /// Should be propagated between related messages.
+    ///
+    /// The initial message could be populated by services such as OpenTelemetry,
+    /// Http header (e.g. "X-Request-Id"), or a simple guid (as string)
+    /// </summary>
+    string? CorrelationId { get; set; }
+
+    /// <summary>
+    /// Who triggered the command/event/query (eg UserId, third party (eg Auth0) Id).
+    ///
+    /// Should be propagated between related messages.
+    ///
+    /// IMPORTANT: Do not use any PII data.
+    /// </summary>
+    string? TriggeredByUser { get; set; }
+
+    /// <summary>
+    /// FullName for the type of the message
+    /// </summary>
+    string? TypeFullName { get; set; }
+
     /// <summary>
     /// When the command/event/query was raised.
     ///
@@ -24,10 +55,8 @@ public interface IMessage
     bool IsReplay { get; set; }
 
     /// <summary>
-    /// Metadata about:
+    /// Extra info mostly populated by decorators
     /// - the message itself
-    /// - the user that triggered the message
-    /// - correlation Id
     /// - if this message was triggered by another message
     /// - publishing class
     /// - handlers
@@ -36,17 +65,3 @@ public interface IMessage
     MessageMetadata Metadata { get; set; }
 }
 
-/// <summary>
-/// Base interface with common properties for all messages
-/// You should never directly inherit from IMessage
-/// Use <see cref="ICommand{TMessageId}"/>, <see cref="IEvent{TMessageId, TEntityKey}"/> or <see cref="IQuery{TMessageId, TQuery, TResponse}"/> instead
-/// </summary>
-public interface IMessage<TMessageId> : IMessage where TMessageId : struct
-{
-    /// <summary>
-    /// Unique Id for the command/event/query
-    /// This will normally be the EventStore (or CommandStore and QueryStore if using) primary key
-    /// Also used to populate the Metadata.TriggeredById property of any subsequent messages it raises
-    /// </summary>
-    TMessageId Id { get; set; }
-}

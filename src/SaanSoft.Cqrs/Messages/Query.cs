@@ -1,38 +1,36 @@
 namespace SaanSoft.Cqrs.Messages;
 
-public abstract class Query<TMessageId, TQuery, TResponse> :
-    Query<TMessageId>,
-    IQuery<TMessageId, TQuery, TResponse>
-    where TMessageId : struct
-    where TQuery : IQuery<TMessageId, TQuery, TResponse>
+/// <summary>
+/// Base class with common properties for all query messages in standard IQuery format
+/// You should never directly inherit from Query
+///
+/// Use <see cref="Query{TQuery,TResponse}"/> instead
+/// </summary>
+public abstract class Query :
+    BaseMessage
 {
-    protected Query(TMessageId? id = null, string? correlationId = null, string? authenticatedId = null)
-        : base(id, correlationId, authenticatedId)
+    protected Query(string? correlationId = null, string? authenticatedId = null)
+        : base(correlationId, authenticatedId)
     {
     }
 
-    protected Query(IMessage<TMessageId> triggeredByMessage)
+    protected Query(IMessage triggeredByMessage)
         : base(triggeredByMessage)
     {
     }
 }
 
-/// <summary>
-/// Base class with common properties for all query messages in standard IQuery{TMessageId} format
-/// You should never directly inherit from Query{TMessageId}
-///
-/// Use <see cref="Query{TMessageId,TQuery,TResponse}"/> instead
-/// </summary>
-public abstract class Query<TMessageId> :
-    BaseMessage<TMessageId>
-    where TMessageId : struct
+public abstract class Query<TQuery, TResponse> :
+    Query,
+    IQuery<TQuery, TResponse>
+    where TQuery : IQuery<TQuery, TResponse>
 {
-    protected Query(TMessageId? id = null, string? correlationId = null, string? authenticatedId = null)
-        : base(id, correlationId, authenticatedId)
+    protected Query(string? correlationId = null, string? authenticatedId = null)
+        : base(correlationId, authenticatedId)
     {
     }
 
-    protected Query(IMessage<TMessageId> triggeredByMessage)
+    protected Query(IMessage triggeredByMessage)
         : base(triggeredByMessage)
     {
     }

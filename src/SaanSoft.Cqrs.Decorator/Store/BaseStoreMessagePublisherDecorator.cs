@@ -5,24 +5,24 @@ using SaanSoft.Cqrs.Decorator.Store.Utilities;
 
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public abstract class BaseStoreMessagePublisherDecorator<TMessageId> :
+public abstract class BaseStoreMessagePublisherDecorator :
     IMessageBusDecorator
-    where TMessageId : struct
 {
-    protected Task StorePublisherAsync<TMessageBus>(IMessage<TMessageId> message, CancellationToken cancellationToken)
+    protected Task StorePublisherAsync<TMessageBus>(IMessage message, CancellationToken cancellationToken)
     {
         var callerClassType = new StackTrace().GetFrames()
             .Where(f => !string.IsNullOrWhiteSpace(f.GetMethod()?.DeclaringType?.Namespace))
             .Where(f => f.GetMethod()!.DeclaringType.IsClass)
             .Where(f => f.GetMethod()!.DeclaringType.IsVisible)
+            .Where(f => !f.GetMethod()!.DeclaringType.IsAbstract)
             .Where(f => !f.GetMethod()!.DeclaringType.Namespace.StartsWith("System"))
             .Where(f => !f.GetMethod().DeclaringType.IsAssignableTo(typeof(IDecorator)))
-            .Where(f => !f.GetMethod().DeclaringType.IsAssignableTo(typeof(ICommandBus<>)))
-            .Where(f => !f.GetMethod().DeclaringType.IsAssignableTo(typeof(ICommandSubscriptionBus<>)))
-            .Where(f => !f.GetMethod().DeclaringType.IsAssignableTo(typeof(IEventBus<>)))
-            .Where(f => !f.GetMethod().DeclaringType.IsAssignableTo(typeof(IEventSubscriptionBus<>)))
-            .Where(f => !f.GetMethod().DeclaringType.IsAssignableTo(typeof(IQueryBus<>)))
-            .Where(f => !f.GetMethod().DeclaringType.IsAssignableTo(typeof(IQuerySubscriptionBus<>)))
+            .Where(f => !f.GetMethod().DeclaringType.IsAssignableTo(typeof(ICommandBus)))
+            .Where(f => !f.GetMethod().DeclaringType.IsAssignableTo(typeof(ICommandSubscriptionBus)))
+            .Where(f => !f.GetMethod().DeclaringType.IsAssignableTo(typeof(IEventBus)))
+            .Where(f => !f.GetMethod().DeclaringType.IsAssignableTo(typeof(IEventSubscriptionBus)))
+            .Where(f => !f.GetMethod().DeclaringType.IsAssignableTo(typeof(IQueryBus)))
+            .Where(f => !f.GetMethod().DeclaringType.IsAssignableTo(typeof(IQuerySubscriptionBus)))
             .FirstOrDefault(f => !f.GetMethod()!.DeclaringType.IsAssignableTo(typeof(TMessageBus)))
             ?.GetMethod()
             ?.DeclaringType;

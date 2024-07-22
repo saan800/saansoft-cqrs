@@ -9,12 +9,10 @@ public static class MessageBusExtensions
     /// </summary>
     /// <param name="serviceProvider"></param>
     /// <typeparam name="TEvent"></typeparam>
-    /// <typeparam name="TMessageId"></typeparam>
     /// <returns></returns>
     // ReSharper disable once ReturnTypeCanBeEnumerable.Global
-    public static List<IGrouping<int, IEventHandler<TEvent>>> GetPrioritisedEventHandlers<TEvent, TMessageId>(this IServiceProvider serviceProvider)
-        where TEvent : IEvent<TMessageId>
-        where TMessageId : struct
+    public static List<IGrouping<int, IEventHandler<TEvent>>> GetPrioritisedEventHandlers<TEvent>(this IServiceProvider serviceProvider)
+        where TEvent : IEvent
     {
         return serviceProvider
             .GetServices<IEventHandler<TEvent>>()

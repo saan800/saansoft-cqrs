@@ -7,10 +7,10 @@ namespace SaanSoft.Tests.Cqrs.Common.TestModels;
 /// </summary>
 public class NoHandlerQuery : Query<NoHandlerQuery, string>
 {
-    public NoHandlerQuery(Guid? id = null, string? correlationId = null, string? authenticatedId = null)
-        : base(id, correlationId, authenticatedId) { }
+    public NoHandlerQuery(string? correlationId = null, string? authenticatedId = null)
+        : base(correlationId, authenticatedId) { }
 
-    public NoHandlerQuery(IMessage<Guid> triggeredByMessage)
+    public NoHandlerQuery(IMessage triggeredByMessage)
         : base(triggeredByMessage) { }
 
     public string? Message { get; set; }

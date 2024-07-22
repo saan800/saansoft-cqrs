@@ -1,12 +1,11 @@
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public abstract class StoreCommandHandlerDecorator<TMessageId>(ICommandHandlerRepository<TMessageId> repository, ICommandSubscriptionBus<TMessageId> next)
-    : BaseStoreMessageHandlerDecorator<TMessageId>(repository),
-      ICommandSubscriptionBusDecorator<TMessageId>
-    where TMessageId : struct
+public class StoreCommandHandlerDecorator(ICommandHandlerRepository repository, ICommandSubscriptionBus next)
+    : BaseStoreMessageHandlerDecorator(repository),
+      ICommandSubscriptionBusDecorator
 {
     public async Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TMessageId>
+        where TCommand : class, ICommand
     {
         var handler = GetHandler<TCommand>();
         try
@@ -22,7 +21,7 @@ public abstract class StoreCommandHandlerDecorator<TMessageId>(ICommandHandlerRe
     }
 
     public async Task<TResponse> RunAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
-        where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+        where TCommand : class, ICommand<TCommand, TResponse>
     {
         var handler = GetHandler<TCommand, TResponse>();
         var typedCommand = (TCommand)command;
@@ -40,10 +39,10 @@ public abstract class StoreCommandHandlerDecorator<TMessageId>(ICommandHandlerRe
     }
 
     public ICommandHandler<TCommand> GetHandler<TCommand>()
-        where TCommand : class, ICommand<TMessageId>
+        where TCommand : class, ICommand
         => next.GetHandler<TCommand>();
 
     public ICommandHandler<TCommand, TResponse> GetHandler<TCommand, TResponse>()
-        where TCommand : class, ICommand<TCommand, TResponse>, ICommand<TMessageId, TCommand, TResponse>
+        where TCommand : class, ICommand<TCommand, TResponse>
         => next.GetHandler<TCommand, TResponse>();
 }

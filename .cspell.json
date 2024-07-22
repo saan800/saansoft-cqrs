@@ -17,6 +17,7 @@
     "./Directory.*.props",
     "./Directory.*.targets",
     "**/*.csproj",
+    "./test/SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB/TestSetup.cs"
   ],
   "dictionaryDefinitions": [
     {

@@ -7,9 +7,8 @@ namespace SaanSoft.Cqrs.Decorator;
 /// Useful for when you need to specifically include or exclude command bus decorators
 /// (e.g. BaseStoreMessagePublisherDecorator needs to filter our all decorators)
 /// </remarks>
-public interface ICommandBusDecorator<TMessageId> :
+public interface ICommandBusDecorator :
     IMessageBusDecorator,
-    ICommandBus<TMessageId>
-    where TMessageId : struct
+    ICommandBus
 {
 }

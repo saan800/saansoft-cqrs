@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Logging;
-using SaanSoft.Cqrs.GuidIds.Decorator.LoggerScope;
+using SaanSoft.Cqrs.Decorator.LoggerScope;
 
 namespace SaanSoft.Tests.Cqrs.Decorator.LoggerScope;
 
@@ -13,7 +13,7 @@ public class LoggerScopeQueryBusDecoratorTests : QueryBusDecoratorTestSetup
     [Fact]
     public async Task FetchAsync_calls_BeginScope()
     {
-        await SutPublisherDecorator.FetchAsync(new MyQuery(Guid.NewGuid()));
+        await SutPublisherDecorator.FetchAsync(new MyQuery());
 
         A.CallTo(() => _logger.BeginScope(A<Dictionary<string, object>>._)).MustHaveHappened();
     }

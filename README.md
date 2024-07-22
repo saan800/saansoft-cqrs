@@ -1,6 +1,6 @@
 # SaanSoft.Cqrs
 
-CQRS and Event Sourcing implementation for C#
+Lightweight CQRS and Event Sourcing implementation for C#
 
 ## Status
 
@@ -13,6 +13,10 @@ CQRS and Event Sourcing implementation for C#
 ## Documentation
 
 Todo...
+* event source vs event stream vs event driven
+* cqrs
+* glossary
+* index with links to implemented decorators (instead of in this file)
 
 ## TODO
 
@@ -28,25 +32,16 @@ all messages - attribute to have 3rd party queue group name (for aws/azure/etc)
 
 ### Decorators
 
-* :white_check_mark: [Ensure Message Id](./src/SaanSoft.Cqrs.Decorator/EnsureMessageId/README.md)
 * :white_check_mark: [Store](./src/SaanSoft.Cqrs.Decorator/Store/README.md) - Store messages, and optionally their publisher and handlers
 * :white_check_mark: [ILogger Scope](./src/SaanSoft.Cqrs.Decorator/LoggerScope/README.md)
   * Ensure useful structured logging by adding `ILogger.BeginScope` with message metadata
-* [Ensure CorrelationId](./src/SaanSoft.Cqrs.Decorator.EnsureCorrelationId/README.md) <!--  can we do similar for auth id? -->
-  * :white_check_mark: Guid (default)
-  * TODO: move CorrelationId decorators:
-    * add SaanSoft.CorrelationIdProvider repo
-    * add implementations for:
-      * http header
-      * OpenTelemetry (maybe?)
-  * SubscriptionBus read from message, then auto populate on publisher bus?
+* :white_check_mark: [Ensure CorrelationId](./src/SaanSoft.Cqrs.Decorator.EnsureCorrelationId/README.md) <!--  can we do similar for auth id? -->
 * Encryption / Decryption
 * retry with polly
 
 ### Message Repository
 
-* :white_check_mark: [MongoDB](./src/SaanSoft.Cqrs.Decorator.Store.MongoDB) 
-  and the [MongoDB.GuidIds](./src/SaanSoft.Cqrs.Decorator.Store.MongoDB.GuidIds) implementation.
+* :white_check_mark: [MongoDB](./src/SaanSoft.Cqrs.Decorator.Store.MongoDB) implementation
 * AWS DynamoDB (maybe, plus example app if doing)
 * Azure Cosmos DB (maybe, plus example app if doing)
 
@@ -64,6 +59,8 @@ all messages - attribute to have 3rd party queue group name (for aws/azure/etc)
 ## Examples
 
 ### Shared api and messaging functionality
+
+:eyes:
 
 Users
 

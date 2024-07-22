@@ -18,24 +18,27 @@ transaction.
 
 ## Dependencies
 
-The decoration can optionally be provided a list of `ICorrelationIdProvider`.
+The decorator can optionally be provided a list of `ICorrelationIdProvider`.
 
 Providers will be run in order to attempt to find the most appropriate value to 
 set the message's `CorrelationId` to.
 
-If none of the `ICorrelationIdProvider` return a value, the `CorrelationId`
+If none of the `ICorrelationIdProvider` return a value, the message's `CorrelationId`
 will be defaulted to `Guid.NewGuid.ToString()`.
 
 TODO: 
 * Add `SaanSoft.CorrelationIdProviders` repository
   * Move interface over (and update these decorators to use new package)
-  * add generic Guid provider
-  * add other (eg http header) correlation id providers in there
+  * add generic guid provider
+  * add other correlation id providers in there
+    * http header
+    * OpenTelemetry (maybe?)
+* SubscriptionBus read from message, then auto populate on publisher bus?
 
 ## Recommended Order
 
 The CorrelationId decorators should be at the top (or very near to) of
-the `IMessageBus` decorator stack.
+the decorator stacks.
 
 If your also using the [LoggerScope decorators](../SaanSoft.Cqrs.Decorator/LoggerScope/README.md), add
 the CorrelationId decorators higher in the decorator stack.

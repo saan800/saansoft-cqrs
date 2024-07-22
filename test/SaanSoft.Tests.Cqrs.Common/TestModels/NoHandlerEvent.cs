@@ -7,9 +7,9 @@ namespace SaanSoft.Tests.Cqrs.Common.TestModels;
 /// </summary>
 public class NoHandlerEvent : Event
 {
-    public NoHandlerEvent(Guid key, Guid? id = null, string? correlationId = null, string? authenticatedId = null)
-        : base(key, id, correlationId, authenticatedId) { }
+    public NoHandlerEvent(Guid key, string? correlationId = null, string? authenticatedId = null)
+        : base(key, correlationId, authenticatedId) { }
 
-    public NoHandlerEvent(Guid key, IMessage<Guid> triggeredByMessage)
+    public NoHandlerEvent(Guid key, IMessage triggeredByMessage)
         : base(key, triggeredByMessage) { }
 }

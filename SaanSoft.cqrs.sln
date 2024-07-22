@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Tests.Cqrs.Common"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Decorator.Store.MongoDB", "src\SaanSoft.Cqrs.Decorator.Store.MongoDB\SaanSoft.Cqrs.Decorator.Store.MongoDB.csproj", "{73DF9405-CA2A-4A08-AEF2-1549471DD0AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.GuidIds", "test\SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.GuidIds\SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.GuidIds.csproj", "{2F2E1D89-634E-4CC4-AED6-179DAA952A93}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB", "test\SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB\SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB.csproj", "{2F2E1D89-634E-4CC4-AED6-179DAA952A93}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_solution", "_solution", "{8962FA21-773D-4F0E-81CB-AF1D7AE5B9A7}"
 	ProjectSection(SolutionItems) = preProject
@@ -35,13 +35,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Decorator", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Tests.Cqrs.Decorator", "test\SaanSoft.Tests.Cqrs.Decorator\SaanSoft.Tests.Cqrs.Decorator.csproj", "{241D036D-F677-4F05-94F9-BCE8FBE671DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.GuidIds", "src\SaanSoft.Cqrs.GuidIds\SaanSoft.Cqrs.GuidIds.csproj", "{AF159B96-B46C-4998-B748-EC86F1F45C8C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Decorator.Store.MongoDB.GuidIds", "src\SaanSoft.Cqrs.Decorator.Store.MongoDB.GuidIds\SaanSoft.Cqrs.Decorator.Store.MongoDB.GuidIds.csproj", "{EAA2420F-0957-45D9-ADDD-E1DE2152AB60}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Decorator.EnsureCorrelationId", "src\SaanSoft.Cqrs.Decorator.EnsureCorrelationId\SaanSoft.Cqrs.Decorator.EnsureCorrelationId.csproj", "{1C63E23F-5A11-466D-BCCD-6B181E5218E9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Tests.Cqrs.Decorator.EnsureCorrelationId", "test\SaanSoft.Tests.Cqrs.Decorator.EnsureCorrelationId\SaanSoft.Tests.Cqrs.Decorator.EnsureCorrelationId.csproj", "{62EE606B-51E9-443E-B365-A2B0F816210C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shared", "shared", "{E9296CE7-A3C1-4FD0-8508-E002AEDB05D5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Examples.Shared.Todo.Messages", "examples\shared\SaanSoft.Cqrs.Examples.Shared.Todo.Messages\SaanSoft.Cqrs.Examples.Shared.Todo.Messages.csproj", "{DAB2B2CD-9211-4570-AC46-C40E39DDC261}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Examples.Shared.Todo.Entities", "examples\shared\SaanSoft.Cqrs.Examples.Shared.Todo.Entities\SaanSoft.Cqrs.Examples.Shared.Todo.Entities.csproj", "{2025D8D2-3D86-4BF4-946B-7CF6B04E0228}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Examples.Shared.Identity.Messages", "examples\shared\SaanSoft.Cqrs.Examples.Shared.Identity.Messages\SaanSoft.Cqrs.Examples.Shared.Identity.Messages.csproj", "{D4C715B1-3377-43BB-A850-1697BC166254}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Examples.Shared.Identity.Handlers", "examples\shared\SaanSoft.Cqrs.Examples.Shared.Identity.Handlers\SaanSoft.Cqrs.Examples.Shared.Identity.Handlers.csproj", "{2E1403C2-718E-4D11-AA04-0A563E91858B}"
 EndProject
 Global
 				GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,14 +87,6 @@ Global
 					{241D036D-F677-4F05-94F9-BCE8FBE671DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 					{241D036D-F677-4F05-94F9-BCE8FBE671DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 					{241D036D-F677-4F05-94F9-BCE8FBE671DE}.Release|Any CPU.Build.0 = Release|Any CPU
-					{AF159B96-B46C-4998-B748-EC86F1F45C8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-					{AF159B96-B46C-4998-B748-EC86F1F45C8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-					{AF159B96-B46C-4998-B748-EC86F1F45C8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-					{AF159B96-B46C-4998-B748-EC86F1F45C8C}.Release|Any CPU.Build.0 = Release|Any CPU
-					{EAA2420F-0957-45D9-ADDD-E1DE2152AB60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-					{EAA2420F-0957-45D9-ADDD-E1DE2152AB60}.Debug|Any CPU.Build.0 = Debug|Any CPU
-					{EAA2420F-0957-45D9-ADDD-E1DE2152AB60}.Release|Any CPU.ActiveCfg = Release|Any CPU
-					{EAA2420F-0957-45D9-ADDD-E1DE2152AB60}.Release|Any CPU.Build.0 = Release|Any CPU
 					{1C63E23F-5A11-466D-BCCD-6B181E5218E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 					{1C63E23F-5A11-466D-BCCD-6B181E5218E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 					{1C63E23F-5A11-466D-BCCD-6B181E5218E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -97,6 +95,22 @@ Global
 					{62EE606B-51E9-443E-B365-A2B0F816210C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 					{62EE606B-51E9-443E-B365-A2B0F816210C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 					{62EE606B-51E9-443E-B365-A2B0F816210C}.Release|Any CPU.Build.0 = Release|Any CPU
+					{DAB2B2CD-9211-4570-AC46-C40E39DDC261}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+					{DAB2B2CD-9211-4570-AC46-C40E39DDC261}.Debug|Any CPU.Build.0 = Debug|Any CPU
+					{DAB2B2CD-9211-4570-AC46-C40E39DDC261}.Release|Any CPU.ActiveCfg = Release|Any CPU
+					{DAB2B2CD-9211-4570-AC46-C40E39DDC261}.Release|Any CPU.Build.0 = Release|Any CPU
+					{2025D8D2-3D86-4BF4-946B-7CF6B04E0228}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+					{2025D8D2-3D86-4BF4-946B-7CF6B04E0228}.Debug|Any CPU.Build.0 = Debug|Any CPU
+					{2025D8D2-3D86-4BF4-946B-7CF6B04E0228}.Release|Any CPU.ActiveCfg = Release|Any CPU
+					{2025D8D2-3D86-4BF4-946B-7CF6B04E0228}.Release|Any CPU.Build.0 = Release|Any CPU
+					{D4C715B1-3377-43BB-A850-1697BC166254}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+					{D4C715B1-3377-43BB-A850-1697BC166254}.Debug|Any CPU.Build.0 = Debug|Any CPU
+					{D4C715B1-3377-43BB-A850-1697BC166254}.Release|Any CPU.ActiveCfg = Release|Any CPU
+					{D4C715B1-3377-43BB-A850-1697BC166254}.Release|Any CPU.Build.0 = Release|Any CPU
+					{2E1403C2-718E-4D11-AA04-0A563E91858B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+					{2E1403C2-718E-4D11-AA04-0A563E91858B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+					{2E1403C2-718E-4D11-AA04-0A563E91858B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+					{2E1403C2-718E-4D11-AA04-0A563E91858B}.Release|Any CPU.Build.0 = Release|Any CPU
 				EndGlobalSection
 				GlobalSection(NestedProjects) = preSolution
 								{14FB4E51-D7DF-4045-BF3D-9635FFE3E309} = {446FC180-C478-471E-A0A4-DB7B76C0B674}
@@ -105,5 +119,10 @@ Global
 					{2F2E1D89-634E-4CC4-AED6-179DAA952A93} = {C22C944B-A9A4-4E23-B3D1-A6D7856304F3}
 					{241D036D-F677-4F05-94F9-BCE8FBE671DE} = {C22C944B-A9A4-4E23-B3D1-A6D7856304F3}
 					{62EE606B-51E9-443E-B365-A2B0F816210C} = {C22C944B-A9A4-4E23-B3D1-A6D7856304F3}
+					{E9296CE7-A3C1-4FD0-8508-E002AEDB05D5} = {446FC180-C478-471E-A0A4-DB7B76C0B674}
+					{DAB2B2CD-9211-4570-AC46-C40E39DDC261} = {E9296CE7-A3C1-4FD0-8508-E002AEDB05D5}
+					{2025D8D2-3D86-4BF4-946B-7CF6B04E0228} = {E9296CE7-A3C1-4FD0-8508-E002AEDB05D5}
+					{D4C715B1-3377-43BB-A850-1697BC166254} = {E9296CE7-A3C1-4FD0-8508-E002AEDB05D5}
+					{2E1403C2-718E-4D11-AA04-0A563E91858B} = {E9296CE7-A3C1-4FD0-8508-E002AEDB05D5}
 				EndGlobalSection
 EndGlobal

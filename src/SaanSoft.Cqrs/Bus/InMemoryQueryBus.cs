@@ -3,22 +3,20 @@ using SaanSoft.Cqrs.Utilities;
 
 namespace SaanSoft.Cqrs.Bus;
 
-public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvider, IIdGenerator<TMessageId> idGenerator) :
-    IQueryBus<TMessageId>,
-    IQuerySubscriptionBus<TMessageId>
-    where TMessageId : struct
+public class InMemoryQueryBus(IServiceProvider serviceProvider) :
+    IQueryBus,
+    IQuerySubscriptionBus
 {
     // ReSharper disable MemberCanBePrivate.Global
     protected readonly IServiceProvider ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-    protected readonly IIdGenerator<TMessageId> IdGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
     // ReSharper restore MemberCanBePrivate.Global
 
     public async Task<TResponse> FetchAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query,
         CancellationToken cancellationToken = default)
-        where TQuery : class, IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
+        where TQuery : class, IQuery<TQuery, TResponse>
     {
         var typedQuery = (TQuery)query;
-        if (GenericUtils.IsNullOrDefault(typedQuery.Id)) typedQuery.Id = IdGenerator.NewId();
+        if (GenericUtils.IsNullOrDefault(typedQuery.Id)) typedQuery.Id = Guid.NewGuid();
 
         var subscriptionBus = GetSubscriptionBus();
         return await subscriptionBus.RunAsync(typedQuery, cancellationToken);
@@ -28,11 +26,11 @@ public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvi
     /// Get subscription bus via ServiceProvider so it runs through any decorators
     /// </summary>
     /// <returns></returns>
-    protected virtual IQuerySubscriptionBus<TMessageId> GetSubscriptionBus()
-        => ServiceProvider.GetRequiredService<IQuerySubscriptionBus<TMessageId>>();
+    protected virtual IQuerySubscriptionBus GetSubscriptionBus()
+        => ServiceProvider.GetRequiredService<IQuerySubscriptionBus>();
 
     public async Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
-        where TQuery : class, IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
+        where TQuery : class, IQuery<TQuery, TResponse>
     {
         var handler = GetHandler<TQuery, TResponse>();
         var typedQuery = (TQuery)query;
@@ -40,7 +38,7 @@ public abstract class InMemoryQueryBus<TMessageId>(IServiceProvider serviceProvi
     }
 
     public IQueryHandler<TQuery, TResponse> GetHandler<TQuery, TResponse>()
-        where TQuery : class, IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
+        where TQuery : class, IQuery<TQuery, TResponse>
     {
         var handlers = ServiceProvider.GetServices<IQueryHandler<TQuery, TResponse>>().ToList();
         switch (handlers.Count)

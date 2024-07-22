@@ -1,33 +1,31 @@
 namespace SaanSoft.Cqrs.Decorator.Store.MongoDB;
 
-public interface ICommandMongoDbRepository<TMessageId> :
-    ICommandRepository<TMessageId>,
-    ICommandHandlerRepository<TMessageId>,
+public interface ICommandMongoDbRepository :
+    ICommandRepository,
+    ICommandHandlerRepository,
     IMongoDbRepository
-    where TMessageId : struct
 {
-    IMongoCollection<BaseCommand<TMessageId>> MessageCollection { get; }
+    IMongoCollection<BaseCommand> MessageCollection { get; }
 }
 
-public abstract class CommandRepository<TMessageId>(
-        IMongoDatabase database, IIdGenerator<TMessageId> idGenerator,
+public class CommandRepository(
+        IMongoDatabase database,
         ILogger logger, InsertOneOptions? insertOneOptions = null
         ) :
-    BaseMessageRepository<TMessageId, IBaseCommand<TMessageId>>(database, idGenerator, logger, insertOneOptions),
-    ICommandMongoDbRepository<TMessageId>
-    where TMessageId : struct
+    BaseMessageRepository<IBaseCommand>(database, logger, insertOneOptions),
+    ICommandMongoDbRepository
 {
     public override string CollectionName => "CommandMessages";
 
-    public IMongoCollection<BaseCommand<TMessageId>> MessageCollection
-        => Database.GetCollection<BaseCommand<TMessageId>>(CollectionName);
+    public IMongoCollection<BaseCommand> MessageCollection
+        => Database.GetCollection<BaseCommand>(CollectionName);
 
-    public override async Task UpsertHandlerAsync(TMessageId id, Type handlerType, Exception? exception = null,
+    public override async Task UpsertHandlerAsync(Guid id, Type handlerType, Exception? exception = null,
         CancellationToken cancellationToken = default)
     {
         var messageHandler = handlerType.BuildMessageHandler(exception);
 
-        var filter = Builders<BaseCommand<TMessageId>>.Filter.Eq(x => x.Id, id);
+        var filter = Builders<BaseCommand>.Filter.Eq(x => x.Id, id);
         var metadata = (await MessageCollection
             .Find(filter)
             .Project(x => x.Metadata)
@@ -47,7 +45,7 @@ public abstract class CommandRepository<TMessageId>(
 
         await MessageCollection.FindOneAndUpdateAsync(
             filter,
-            Builders<BaseCommand<TMessageId>>.Update.Set(x => x.Metadata, metadata),
+            Builders<BaseCommand>.Update.Set(x => x.Metadata, metadata),
             cancellationToken: cancellationToken);
     }
 
@@ -56,11 +54,11 @@ public abstract class CommandRepository<TMessageId>(
     /// </summary>
     public override async Task EnsureCollectionIndexesAsync(CancellationToken cancellationToken = default)
     {
-        var keyIndex = Builders<BaseCommand<TMessageId>>.IndexKeys
+        var keyIndex = Builders<BaseCommand>.IndexKeys
             .Ascending(x => x.MessageOnUtc);
 
         var indexModel =
-            new CreateIndexModel<BaseCommand<TMessageId>>(keyIndex, new CreateIndexOptions { Unique = false, Background = true });
+            new CreateIndexModel<BaseCommand>(keyIndex, new CreateIndexOptions { Unique = false, Background = true });
 
         await MessageCollection.Indexes.CreateOneAsync(indexModel, new CreateOneIndexOptions(), cancellationToken);
     }

@@ -1,11 +1,11 @@
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public abstract class StoreQueryHandlerDecorator<TMessageId>(IQueryHandlerRepository<TMessageId> repository, IQuerySubscriptionBus<TMessageId> next) :
-    BaseStoreMessageHandlerDecorator<TMessageId>(repository),
-    IQuerySubscriptionBusDecorator<TMessageId> where TMessageId : struct
+public class StoreQueryHandlerDecorator(IQueryHandlerRepository repository, IQuerySubscriptionBus next) :
+    BaseStoreMessageHandlerDecorator(repository),
+    IQuerySubscriptionBusDecorator
 {
     public async Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
-        where TQuery : class, IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
+        where TQuery : class, IQuery<TQuery, TResponse>
     {
         var handler = GetHandler<TQuery, TResponse>();
         var typedQuery = (TQuery)query;
@@ -23,6 +23,6 @@ public abstract class StoreQueryHandlerDecorator<TMessageId>(IQueryHandlerReposi
     }
 
     public IQueryHandler<TQuery, TResponse> GetHandler<TQuery, TResponse>()
-        where TQuery : class, IQuery<TQuery, TResponse>, IQuery<TMessageId>, IMessage<TMessageId>
+        where TQuery : class, IQuery<TQuery, TResponse>
         => next.GetHandler<TQuery, TResponse>();
 }
