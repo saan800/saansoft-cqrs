@@ -6,7 +6,7 @@ namespace SaanSoft.Cqrs.Decorator.EnsureCorrelationId;
 /// <param name="providers"></param>
 /// <param name="next"></param>
 public class EnsureQueryHasCorrelationIdDecorator(IEnumerable<ICorrelationIdProvider> providers, IQueryBus next)
-    : IQueryBusDecorator
+    : IQueryBus
 {
     public async Task<TResponse> FetchAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
         where TQuery : class, IQuery<TQuery, TResponse>

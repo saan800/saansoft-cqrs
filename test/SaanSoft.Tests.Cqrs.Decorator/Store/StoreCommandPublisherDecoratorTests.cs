@@ -2,7 +2,7 @@ namespace SaanSoft.Tests.Cqrs.Decorator.Store;
 
 public class StoreCommandPublisherDecoratorTests : CommandBusDecoratorTestSetup
 {
-    protected override ICommandBusDecorator SutPublisherDecorator =>
+    protected override ICommandBus SutPublisherDecorator =>
         new StoreCommandPublisherDecorator(InMemoryCommandBus);
 
     public class ExecuteAsyncTests : StoreCommandPublisherDecoratorTests

@@ -2,7 +2,7 @@ namespace SaanSoft.Tests.Cqrs.Decorator.EnsureCorrelationId;
 
 public class EnsureQueryHasCorrelationIdDecoratorTests : QueryBusDecoratorTestSetup
 {
-    protected override IQueryBusDecorator SutPublisherDecorator =>
+    protected override IQueryBus SutPublisherDecorator =>
         new EnsureQueryHasCorrelationIdDecorator([], InMemoryQueryBus);
 
     public class FetchAsyncTests : EnsureQueryHasCorrelationIdDecoratorTests

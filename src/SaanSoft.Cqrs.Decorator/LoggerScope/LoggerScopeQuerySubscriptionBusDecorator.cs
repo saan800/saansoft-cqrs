@@ -6,7 +6,7 @@ namespace SaanSoft.Cqrs.Decorator.LoggerScope;
 /// <param name="logger"></param>
 /// <param name="next"></param>
 public class LoggerScopeQuerySubscriptionBusDecorator(ILogger logger, IQuerySubscriptionBus next) :
-    IQuerySubscriptionBusDecorator
+    IQuerySubscriptionBus
 {
     public async Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
         where TQuery : class, IQuery<TQuery, TResponse>

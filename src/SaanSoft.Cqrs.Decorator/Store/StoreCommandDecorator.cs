@@ -1,8 +1,6 @@
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public class StoreCommandDecorator(ICommandRepository repository, ICommandBus next)
-    : BaseStoreMessageDecorator<IBaseCommand>(repository),
-      ICommandBusDecorator
+public class StoreCommandDecorator(ICommandRepository repository, ICommandBus next) : ICommandBus
 {
     public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : class, ICommand
@@ -14,7 +12,7 @@ public class StoreCommandDecorator(ICommandRepository repository, ICommandBus ne
     public async Task<TResponse> ExecuteAsync<TCommand, TResponse>(ICommand<TCommand, TResponse> command, CancellationToken cancellationToken = default)
         where TCommand : class, ICommand<TCommand, TResponse>
     {
-        await StoreMessageAsync((TCommand)command, cancellationToken);
+        await StoreMessageAsync(command, cancellationToken);
         return await next.ExecuteAsync(command, cancellationToken);
     }
 
@@ -23,5 +21,13 @@ public class StoreCommandDecorator(ICommandRepository repository, ICommandBus ne
     {
         await StoreMessageAsync(command, cancellationToken);
         await next.ExecuteAsync(command, cancellationToken);
+    }
+
+    private async Task StoreMessageAsync(IBaseCommand message, CancellationToken cancellationToken)
+    {
+        if (!message.IsReplay)
+        {
+            await repository.InsertAsync(message, cancellationToken);
+        }
     }
 }

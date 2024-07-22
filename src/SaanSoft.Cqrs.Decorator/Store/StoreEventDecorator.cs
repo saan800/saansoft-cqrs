@@ -1,8 +1,7 @@
 namespace SaanSoft.Cqrs.Decorator.Store;
 
 public class StoreEventDecorator<TEntityKey>(IEventRepository<TEntityKey> repository, IEventBus next)
-    : BaseStoreMessageDecorator<IEvent>(repository),
-      IEventBusDecorator
+    : IEventBus
     where TEntityKey : struct
 {
     public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
@@ -21,6 +20,14 @@ public class StoreEventDecorator<TEntityKey>(IEventRepository<TEntityKey> reposi
             await StoreMessageAsync(evt, cancellationToken);
         }
         await next.QueueManyAsync(eventsList, cancellationToken);
+    }
+
+    private async Task StoreMessageAsync(IEvent message, CancellationToken cancellationToken)
+    {
+        if (!message.IsReplay)
+        {
+            await repository.InsertAsync(message, cancellationToken);
+        }
     }
 }
 

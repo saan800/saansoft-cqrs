@@ -9,7 +9,7 @@ public class StoreEventHandlerDecoratorTests : EventSubscriptionBusDecoratorTest
 
     private readonly IEventRepository _repository;
 
-    protected override IEventSubscriptionBusDecorator SutSubscriptionBusDecorator =>
+    protected override IEventSubscriptionBus SutSubscriptionBusDecorator =>
         new StoreEventHandlerDecorator(_repository, InMemoryEventBus);
 
     public class RunAsync : StoreEventHandlerDecoratorTests

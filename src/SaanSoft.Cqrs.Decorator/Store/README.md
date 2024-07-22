@@ -34,7 +34,19 @@ The Store decorators require an implementation of the repository interfaces for 
 Check [SaanSoft.Cqrs.Decorator.Store.MongoDB](../../SaanSoft.Cqrs.Decorator.Store.MongoDB)
 for an example.
 
-If you are using a different database than the ones already provided, please add the implementation to the repository so it's available to others.
+### Contributing a new implementation of repository interfaces
+
+If you are using a different database/store than the ones already provided, please add the implementation for the repository interfaces so it's available to others.
+
+All repository implementations should be tested. The 
+[SaanSoft.Tests.Cqrs.Decorator.Store.BaseRepository](../../../test/SaanSoft.Tests.Cqrs.Decorator.Store.BaseRepository)
+has the minimum base tests that all repository implementations should handle and pass. 
+
+If there are extra requirements for a repository implementation (eg database indexing, ServiceCollection extension methods),
+then add those to the repository specific test project.
+
+Check [SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB](../../../test/SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB)
+for an example.
 
 ## Recommended Order
 

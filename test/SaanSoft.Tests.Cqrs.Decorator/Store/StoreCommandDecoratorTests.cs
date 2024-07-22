@@ -9,7 +9,7 @@ public class StoreCommandDecoratorTests : CommandBusDecoratorTestSetup
 
     private readonly ICommandRepository _repository;
 
-    protected override ICommandBusDecorator SutPublisherDecorator =>
+    protected override ICommandBus SutPublisherDecorator =>
         new StoreCommandDecorator(_repository, InMemoryCommandBus);
 
     public class ExecuteAsyncTests : StoreCommandDecoratorTests

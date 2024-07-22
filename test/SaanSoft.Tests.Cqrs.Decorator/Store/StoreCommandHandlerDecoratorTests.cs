@@ -9,7 +9,7 @@ public class StoreCommandHandlerDecoratorTests : CommandSubscriptionBusDecorator
 
     private readonly ICommandRepository _repository;
 
-    protected override ICommandSubscriptionBusDecorator SutSubscriptionBusDecorator =>
+    protected override ICommandSubscriptionBus SutSubscriptionBusDecorator =>
         new StoreCommandHandlerDecorator(_repository, InMemoryCommandBus);
 
     public class RunAsync : StoreCommandHandlerDecoratorTests

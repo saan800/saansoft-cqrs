@@ -8,5 +8,5 @@ public abstract class EventSubscriptionBusDecoratorTestSetup : TestSetup
         ServiceCollection.AddScoped<IEventHandler<AnotherEvent>, EventsHandler>();
     }
 
-    protected abstract IEventSubscriptionBusDecorator SutSubscriptionBusDecorator { get; }
+    protected abstract IEventSubscriptionBus SutSubscriptionBusDecorator { get; }
 }

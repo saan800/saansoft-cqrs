@@ -8,5 +8,5 @@ public abstract class QuerySubscriptionBusDecoratorTestSetup : TestSetup
         ServiceCollection.AddScoped<IQueryHandler<AnotherQuery, MyQueryResponse>, QueryHandler>();
     }
 
-    protected abstract IQuerySubscriptionBusDecorator SutSubscriptionBusDecorator { get; }
+    protected abstract IQuerySubscriptionBus SutSubscriptionBusDecorator { get; }
 }

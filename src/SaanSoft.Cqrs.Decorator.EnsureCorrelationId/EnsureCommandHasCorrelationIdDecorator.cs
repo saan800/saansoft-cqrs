@@ -6,7 +6,7 @@ namespace SaanSoft.Cqrs.Decorator.EnsureCorrelationId;
 /// <param name="providers"></param>
 /// <param name="next"></param>
 public class EnsureCommandHasCorrelationIdDecorator(IEnumerable<ICorrelationIdProvider> providers, ICommandBus next)
-    : ICommandBusDecorator
+    : ICommandBus
 {
     public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : class, ICommand

@@ -1,8 +1,7 @@
 namespace SaanSoft.Cqrs.Decorator.Store;
 
 public class StoreQueryHandlerDecorator(IQueryRepository repository, IQuerySubscriptionBus next) :
-    BaseStoreMessageHandlerDecorator<IQuery>(repository),
-    IQuerySubscriptionBusDecorator
+    IQuerySubscriptionBus
 {
     public async Task<TResponse> RunAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
         where TQuery : class, IQuery<TQuery, TResponse>
@@ -12,12 +11,12 @@ public class StoreQueryHandlerDecorator(IQueryRepository repository, IQuerySubsc
         try
         {
             var response = await next.RunAsync(query, cancellationToken);
-            await Repository.UpsertHandlerAsync(typedQuery.Id, handler.GetType(), null, cancellationToken);
+            await repository.UpsertHandlerAsync(typedQuery.Id, handler.GetType(), null, cancellationToken);
             return response;
         }
         catch (Exception exception)
         {
-            await Repository.UpsertHandlerAsync(typedQuery.Id, handler.GetType(), exception, cancellationToken);
+            await repository.UpsertHandlerAsync(typedQuery.Id, handler.GetType(), exception, cancellationToken);
             throw;
         }
     }

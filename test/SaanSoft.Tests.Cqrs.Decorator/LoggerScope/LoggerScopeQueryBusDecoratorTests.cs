@@ -7,7 +7,7 @@ public class LoggerScopeQueryBusDecoratorTests : QueryBusDecoratorTestSetup
 {
     private readonly ILogger _logger = A.Fake<ILogger>();
 
-    protected override IQueryBusDecorator SutPublisherDecorator =>
+    protected override IQueryBus SutPublisherDecorator =>
         new LoggerScopeQueryBusDecorator(_logger, InMemoryQueryBus);
 
     [Fact]

@@ -11,5 +11,5 @@ public abstract class CommandBusDecoratorTestSetup : TestSetup
         ServiceCollection.AddScoped<ICommandHandler<AnotherCommandWithResponse, string>, CommandHandler>();
     }
 
-    protected abstract ICommandBusDecorator SutPublisherDecorator { get; }
+    protected abstract ICommandBus SutPublisherDecorator { get; }
 }

@@ -8,12 +8,12 @@ namespace SaanSoft.Cqrs.Decorator.Store;
 /// <param name="next"></param>
 public class StoreEventPublisherDecorator(IEventBus next) :
     BaseStoreMessagePublisherDecorator,
-    IEventBusDecorator
+    IEventBus
 {
     public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
         where TEvent : class, IEvent
     {
-        await StorePublisherAsync<IEventBus>(evt, cancellationToken);
+        await AddPublisherToMetadataAsync<IEventBus>(evt);
         await next.QueueAsync(evt, cancellationToken);
     }
 
@@ -23,7 +23,7 @@ public class StoreEventPublisherDecorator(IEventBus next) :
         var eventList = events.ToList();
         foreach (var evt in eventList)
         {
-            await StorePublisherAsync<IEventBus>(evt, cancellationToken);
+            await AddPublisherToMetadataAsync<IEventBus>(evt);
         }
         await next.QueueManyAsync(eventList, cancellationToken);
     }

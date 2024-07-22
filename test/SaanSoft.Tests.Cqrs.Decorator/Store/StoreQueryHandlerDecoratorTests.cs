@@ -9,7 +9,7 @@ public class StoreQueryHandlerDecoratorTests : QuerySubscriptionBusDecoratorTest
 
     private readonly IQueryRepository _repository;
 
-    protected override IQuerySubscriptionBusDecorator SutSubscriptionBusDecorator =>
+    protected override IQuerySubscriptionBus SutSubscriptionBusDecorator =>
         new StoreQueryHandlerDecorator(_repository, InMemoryQueryBus);
 
     public class RunAsync : StoreQueryHandlerDecoratorTests

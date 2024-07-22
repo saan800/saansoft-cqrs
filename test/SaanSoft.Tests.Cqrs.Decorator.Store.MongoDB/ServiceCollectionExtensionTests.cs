@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using SaanSoft.Tests.Cqrs.Common;
 
 namespace SaanSoft.Tests.Cqrs.Decorator.Store.MongoDB;
 
@@ -10,7 +11,7 @@ public abstract class ServiceCollectionExtensionTests : TestSetup
     {
         _serviceCollection = new ServiceCollection();
         _serviceCollection.AddScoped<ILogger>(_ => Logger);
-        _serviceCollection.AddScoped<IMongoDatabase>(_ => Database);
+        _serviceCollection.AddScoped<IMongoDatabase>(_ => TestHelpers.GetDatabase());
     }
 
     public class CommandRepositoryExtensions : ServiceCollectionExtensionTests

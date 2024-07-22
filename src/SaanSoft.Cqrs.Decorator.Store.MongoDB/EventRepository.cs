@@ -45,6 +45,7 @@ public class EventRepository<TEntityKey>(
     {
         var messageHandler = handlerType.BuildMessageHandler(exception);
 
+        // TODO: figure out mongoDb $push and $pull to remove race conditions
         var filter = Builders<Event<TEntityKey>>.Filter.Eq(x => x.Id, id);
         var metadata = (await MessageCollection
             .Find(filter)

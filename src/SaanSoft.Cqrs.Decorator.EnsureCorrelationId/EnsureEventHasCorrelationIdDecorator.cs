@@ -6,7 +6,7 @@ namespace SaanSoft.Cqrs.Decorator.EnsureCorrelationId;
 /// <param name="providers"></param>
 /// <param name="next"></param>
 public class EnsureEventHasCorrelationIdDecorator(IEnumerable<ICorrelationIdProvider> providers, IEventBus next)
-    : IEventBusDecorator
+    : IEventBus
 {
     public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default) where TEvent : class, IEvent
     {

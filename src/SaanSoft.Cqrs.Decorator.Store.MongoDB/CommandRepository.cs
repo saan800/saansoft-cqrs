@@ -29,6 +29,7 @@ public class CommandRepository(
     {
         var messageHandler = handlerType.BuildMessageHandler(exception);
 
+        // TODO: figure out mongoDb $push and $pull to remove race conditions
         var filter = Builders<BaseCommand>.Filter.Eq(x => x.Id, id);
         var metadata = (await MessageCollection
             .Find(filter)

@@ -9,7 +9,7 @@ public class StoreEventDecoratorTests : EventBusDecoratorTestSetup
 
     private readonly IEventRepository _repository;
 
-    protected override IEventBusDecorator SutPublisherDecorator =>
+    protected override IEventBus SutPublisherDecorator =>
         new StoreEventDecorator(_repository, InMemoryEventBus);
 
     public class QueueAsyncTests : StoreEventDecoratorTests

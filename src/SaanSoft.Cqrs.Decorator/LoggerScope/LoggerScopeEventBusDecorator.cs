@@ -6,7 +6,7 @@ namespace SaanSoft.Cqrs.Decorator.LoggerScope;
 /// <param name="logger"></param>
 /// <param name="next"></param>
 public class LoggerScopeEventBusDecorator(ILogger logger, IEventBus next) :
-    IEventBusDecorator
+    IEventBus
 {
     public async Task QueueAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
         where TEvent : class, IEvent
