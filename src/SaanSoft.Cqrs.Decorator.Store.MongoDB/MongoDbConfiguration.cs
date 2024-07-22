@@ -56,6 +56,16 @@ public static class MongoDbConfiguration
     {
         assemblies ??= [];
 
+        if (!BsonClassMap.IsClassMapRegistered(typeof(BaseMessage)))
+        {
+            BsonClassMap.RegisterClassMap<BaseMessage>(classMap =>
+            {
+                classMap.AutoMap();
+                classMap.SetIsRootClass(true);
+                classMap.UnmapMember(x => x.IsReplay);
+            });
+        }
+
         foreach (var t in assemblies
                      .SelectMany(assembly => assembly.GetExportedTypes())
                      .Where(t => t is { IsAbstract: false, IsClass: true }
@@ -68,8 +78,6 @@ public static class MongoDbConfiguration
                 var classMapType = classMapDefinition.MakeGenericType(t);
                 var classMap = (BsonClassMap)Activator.CreateInstance(classMapType)!;
                 classMap.AutoMap();
-               // classMap.UnmapProperty(nameof(IMessage.IsReplay));
-               // classMap.UnmapProperty($"{nameof(IMessage.Metadata)}.{nameof(IMessage.Metadata.TriggeredByMessageId)}");
                 BsonClassMap.RegisterClassMap(classMap);
             }
         }
