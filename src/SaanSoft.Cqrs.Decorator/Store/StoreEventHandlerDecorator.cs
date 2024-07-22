@@ -1,8 +1,11 @@
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public class StoreEventHandlerDecorator(IEventHandlerRepository repository, IEventSubscriptionBus next)
-    : BaseStoreMessageHandlerDecorator(repository),
-      IEventSubscriptionBusDecorator
+public class StoreEventHandlerDecorator(IEventRepository repository, IEventSubscriptionBus next)
+    : StoreEventHandlerDecorator<Guid>(repository, next);
+
+public class StoreEventHandlerDecorator<TEntityKey>(IEventRepository<TEntityKey> repository, IEventSubscriptionBus next)
+    : IEventSubscriptionBus
+      where TEntityKey : struct
 {
     public async Task RunAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
         where TEvent : class, IEvent
@@ -22,11 +25,11 @@ public class StoreEventHandlerDecorator(IEventHandlerRepository repository, IEve
         try
         {
             await next.RunOneAsync(evt, handler, cancellationToken);
-            await Repository.UpsertHandlerAsync(evt.Id, handler.GetType(), null, cancellationToken);
+            await repository.UpsertHandlerAsync(evt.Id, handler.GetType(), null, cancellationToken);
         }
         catch (Exception exception)
         {
-            await Repository.UpsertHandlerAsync(evt.Id, handler.GetType(), exception, cancellationToken);
+            await repository.UpsertHandlerAsync(evt.Id, handler.GetType(), exception, cancellationToken);
             throw;
         }
     }

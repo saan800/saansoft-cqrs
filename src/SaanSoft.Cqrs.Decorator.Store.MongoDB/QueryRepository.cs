@@ -2,7 +2,6 @@ namespace SaanSoft.Cqrs.Decorator.Store.MongoDB;
 
 public interface IQueryMongoDbRepository :
     IQueryRepository,
-    IQueryHandlerRepository,
     IMongoDbRepository
 {
     IMongoCollection<Query> MessageCollection { get; }
@@ -20,11 +19,17 @@ public class QueryRepository(
     public IMongoCollection<Query> MessageCollection
         => Database.GetCollection<Query>(CollectionName);
 
+    public override async Task<IQuery?> GetMessageByIdAsync(Guid messageId, CancellationToken cancellationToken = default)
+        => await MessageCollection
+            .Find(x => x.Id == messageId)
+            .FirstOrDefaultAsync(cancellationToken);
+
     public override async Task UpsertHandlerAsync(Guid id, Type handlerType, Exception? exception = null,
         CancellationToken cancellationToken = default)
     {
         var messageHandler = handlerType.BuildMessageHandler(exception);
 
+        // TODO: figure out mongoDb $push and $pull to remove race conditions
         var filter = Builders<Query>.Filter.Eq(x => x.Id, id);
         var metadata = (await MessageCollection
             .Find(filter)

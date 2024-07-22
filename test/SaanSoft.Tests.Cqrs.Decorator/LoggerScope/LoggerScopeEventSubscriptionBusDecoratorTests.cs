@@ -7,7 +7,7 @@ public class LoggerScopeEventSubscriptionBusDecoratorTests : EventSubscriptionBu
 {
     private readonly ILogger _logger = A.Fake<ILogger>();
 
-    protected override IEventSubscriptionBusDecorator SutSubscriptionBusDecorator =>
+    protected override IEventSubscriptionBus SutSubscriptionBusDecorator =>
         new LoggerScopeEventSubscriptionBusDecorator(_logger, InMemoryEventBus);
 
     [Fact]

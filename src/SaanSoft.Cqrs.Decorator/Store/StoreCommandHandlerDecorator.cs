@@ -1,8 +1,7 @@
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public class StoreCommandHandlerDecorator(ICommandHandlerRepository repository, ICommandSubscriptionBus next)
-    : BaseStoreMessageHandlerDecorator(repository),
-      ICommandSubscriptionBusDecorator
+public class StoreCommandHandlerDecorator(ICommandRepository repository, ICommandSubscriptionBus next)
+    : ICommandSubscriptionBus
 {
     public async Task RunAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : class, ICommand
@@ -11,11 +10,11 @@ public class StoreCommandHandlerDecorator(ICommandHandlerRepository repository, 
         try
         {
             await next.RunAsync(command, cancellationToken);
-            await Repository.UpsertHandlerAsync(command.Id, handler.GetType(), null, cancellationToken);
+            await repository.UpsertHandlerAsync(command.Id, handler.GetType(), null, cancellationToken);
         }
         catch (Exception exception)
         {
-            await Repository.UpsertHandlerAsync(command.Id, handler.GetType(), exception, cancellationToken);
+            await repository.UpsertHandlerAsync(command.Id, handler.GetType(), exception, cancellationToken);
             throw;
         }
     }
@@ -28,12 +27,12 @@ public class StoreCommandHandlerDecorator(ICommandHandlerRepository repository, 
         try
         {
             var response = await next.RunAsync(command, cancellationToken);
-            await Repository.UpsertHandlerAsync(typedCommand.Id, handler.GetType(), null, cancellationToken);
+            await repository.UpsertHandlerAsync(typedCommand.Id, handler.GetType(), null, cancellationToken);
             return response;
         }
         catch (Exception exception)
         {
-            await Repository.UpsertHandlerAsync(typedCommand.Id, handler.GetType(), exception, cancellationToken);
+            await repository.UpsertHandlerAsync(typedCommand.Id, handler.GetType(), exception, cancellationToken);
             throw;
         }
     }

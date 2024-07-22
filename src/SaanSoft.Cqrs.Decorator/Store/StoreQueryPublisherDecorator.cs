@@ -8,13 +8,13 @@ namespace SaanSoft.Cqrs.Decorator.Store;
 /// <param name="next"></param>
 public class StoreQueryPublisherDecorator(IQueryBus next) :
     BaseStoreMessagePublisherDecorator,
-    IQueryBusDecorator
+    IQueryBus
 {
     public async Task<TResponse> FetchAsync<TQuery, TResponse>(IQuery<TQuery, TResponse> query, CancellationToken cancellationToken = default)
         where TQuery : class, IQuery<TQuery, TResponse>
     {
         var typedQuery = (TQuery)query;
-        await StorePublisherAsync<IQueryBus>(typedQuery, cancellationToken);
+        await AddPublisherToMetadataAsync<IQueryBus>(typedQuery);
         return await next.FetchAsync(query, cancellationToken);
     }
 }

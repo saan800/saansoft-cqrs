@@ -7,7 +7,8 @@ namespace SaanSoft.Cqrs.Messages;
 /// Use <see cref="Query{TQuery,TResponse}"/> instead
 /// </summary>
 public abstract class Query :
-    BaseMessage
+    BaseMessage,
+    IQuery
 {
     protected Query(string? correlationId = null, string? authenticatedId = null)
         : base(correlationId, authenticatedId)

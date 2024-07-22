@@ -2,7 +2,7 @@ namespace SaanSoft.Tests.Cqrs.Decorator.Store;
 
 public class StoreEventPublisherDecoratorTests : EventBusDecoratorTestSetup
 {
-    protected override IEventBusDecorator SutPublisherDecorator =>
+    protected override IEventBus SutPublisherDecorator =>
         new StoreEventPublisherDecorator(InMemoryEventBus);
 
     public class QueueAsyncTests : StoreEventPublisherDecoratorTests

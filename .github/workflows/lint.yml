@@ -33,18 +33,18 @@ jobs:
         with:
           # Avoid using single or double quotes for multiline patterns
           files: |
-             **.cs
+            **.cs
 
       - name: Setup linting config
         id: config
+        env:
+          hasChangedCSharpFiles: ${{ steps.changed-csharp-files.outputs.any_changed == 'true' }}
         run: |
           if [ "${hasChangedCSharpFiles}" == "true" ]; then
             echo "VALIDATE_ALL_CODEBASE=false" >> "$GITHUB_OUTPUT"
           else
             echo "VALIDATE_ALL_CODEBASE=true" >> "$GITHUB_OUTPUT"
           fi
-        env:
-          hasChangedCSharpFiles: ${{ steps.changed-csharp-files.outputs.any_changed == 'true' }}
 
       - name: Run super-linter
         uses: super-linter/super-linter@3fe03abab2eafb293ace16d4a3b07aeabcb3f1a0 # v6.7.0
@@ -61,8 +61,8 @@ jobs:
 
   spellcheck:
     permissions:
-      contents: read  # for streetsidesoftware/cspell-action to fetch files for commit
-      pull-requests: read  # for streetsidesoftware/cspell-action to fetch commits for PR
+      contents: read # for streetsidesoftware/cspell-action to fetch files for commit
+      pull-requests: read # for streetsidesoftware/cspell-action to fetch commits for PR
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -79,4 +79,3 @@ jobs:
           config: .cspell.json
           check_dot_files: false
           incremental_files_only: true
-

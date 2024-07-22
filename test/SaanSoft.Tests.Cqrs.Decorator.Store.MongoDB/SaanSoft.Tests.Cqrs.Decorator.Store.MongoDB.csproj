@@ -16,7 +16,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\SaanSoft.Cqrs.Decorator.Store.MongoDB\SaanSoft.Cqrs.Decorator.Store.MongoDB.csproj" />
-      <ProjectReference Include="..\SaanSoft.Tests.Cqrs.Common\SaanSoft.Tests.Cqrs.Common.csproj" />
+      <ProjectReference Include="..\SaanSoft.Tests.Cqrs.Decorator.Store.BaseRepository\SaanSoft.Tests.Cqrs.Decorator.Store.BaseRepository.csproj" />
     </ItemGroup>
 
     <!--

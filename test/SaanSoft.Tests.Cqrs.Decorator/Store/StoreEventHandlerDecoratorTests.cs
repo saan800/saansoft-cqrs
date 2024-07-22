@@ -4,11 +4,12 @@ public class StoreEventHandlerDecoratorTests : EventSubscriptionBusDecoratorTest
 {
     protected StoreEventHandlerDecoratorTests()
     {
-        _repository = A.Fake<IEventHandlerRepository>();
+        _repository = A.Fake<IEventRepository>();
     }
 
-    private readonly IEventHandlerRepository _repository;
-    protected override IEventSubscriptionBusDecorator SutSubscriptionBusDecorator =>
+    private readonly IEventRepository _repository;
+
+    protected override IEventSubscriptionBus SutSubscriptionBusDecorator =>
         new StoreEventHandlerDecorator(_repository, InMemoryEventBus);
 
     public class RunAsync : StoreEventHandlerDecoratorTests

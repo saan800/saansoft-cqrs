@@ -5,10 +5,9 @@ using SaanSoft.Cqrs.Decorator.Store.Utilities;
 
 namespace SaanSoft.Cqrs.Decorator.Store;
 
-public abstract class BaseStoreMessagePublisherDecorator :
-    IMessageBusDecorator
+public abstract class BaseStoreMessagePublisherDecorator : IDecorator
 {
-    protected Task StorePublisherAsync<TMessageBus>(IMessage message, CancellationToken cancellationToken)
+    protected Task AddPublisherToMetadataAsync<TMessageBus>(IMessage message)
     {
         var callerClassType = new StackTrace().GetFrames()
             .Where(f => !string.IsNullOrWhiteSpace(f.GetMethod()?.DeclaringType?.Namespace))

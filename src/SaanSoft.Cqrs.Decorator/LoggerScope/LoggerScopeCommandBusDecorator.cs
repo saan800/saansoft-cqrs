@@ -5,8 +5,7 @@ namespace SaanSoft.Cqrs.Decorator.LoggerScope;
 /// </summary>
 /// <param name="logger"></param>
 /// <param name="next"></param>
-public class LoggerScopeCommandBusDecorator(ILogger logger, ICommandBus next) :
-    ICommandBusDecorator
+public class LoggerScopeCommandBusDecorator(ILogger logger, ICommandBus next) : ICommandBus
 {
     public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : class, ICommand

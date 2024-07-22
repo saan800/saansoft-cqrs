@@ -6,7 +6,7 @@ namespace SaanSoft.Cqrs.Decorator.LoggerScope;
 /// <param name="logger"></param>
 /// <param name="next"></param>
 public class LoggerScopeEventSubscriptionBusDecorator(ILogger logger, IEventSubscriptionBus next) :
-    IEventSubscriptionBusDecorator
+    IEventSubscriptionBus
 {
     public async Task RunAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
         where TEvent : class, IEvent

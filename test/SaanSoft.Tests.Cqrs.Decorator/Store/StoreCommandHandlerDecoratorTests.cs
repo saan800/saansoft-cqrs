@@ -4,11 +4,12 @@ public class StoreCommandHandlerDecoratorTests : CommandSubscriptionBusDecorator
 {
     protected StoreCommandHandlerDecoratorTests()
     {
-        _repository = A.Fake<ICommandHandlerRepository>();
+        _repository = A.Fake<ICommandRepository>();
     }
 
-    private readonly ICommandHandlerRepository _repository;
-    protected override ICommandSubscriptionBusDecorator SutSubscriptionBusDecorator =>
+    private readonly ICommandRepository _repository;
+
+    protected override ICommandSubscriptionBus SutSubscriptionBusDecorator =>
         new StoreCommandHandlerDecorator(_repository, InMemoryCommandBus);
 
     public class RunAsync : StoreCommandHandlerDecoratorTests

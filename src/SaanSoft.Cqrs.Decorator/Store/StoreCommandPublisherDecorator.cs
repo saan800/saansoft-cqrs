@@ -9,12 +9,12 @@ namespace SaanSoft.Cqrs.Decorator.Store;
 // ReSharper disable once SuggestBaseTypeForParameterInConstructor
 public class StoreCommandPublisherDecorator(ICommandBus next) :
       BaseStoreMessagePublisherDecorator,
-      ICommandBusDecorator
+      ICommandBus
 {
     public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : class, ICommand
     {
-        await StorePublisherAsync<ICommandBus>(command, cancellationToken);
+        await AddPublisherToMetadataAsync<ICommandBus>(command);
         await next.ExecuteAsync(command, cancellationToken);
     }
 
@@ -22,14 +22,14 @@ public class StoreCommandPublisherDecorator(ICommandBus next) :
         where TCommand : class, ICommand<TCommand, TResponse>
     {
         var typedCommand = (TCommand)command;
-        await StorePublisherAsync<ICommandBus>(typedCommand, cancellationToken);
+        await AddPublisherToMetadataAsync<ICommandBus>(typedCommand);
         return await next.ExecuteAsync(command, cancellationToken);
     }
 
     public async Task QueueAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : class, ICommand
     {
-        await StorePublisherAsync<ICommandBus>(command, cancellationToken);
+        await AddPublisherToMetadataAsync<ICommandBus>(command);
         await next.QueueAsync(command, cancellationToken);
     }
 }
