@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\src\SaanSoft.Cqrs.Decorator\SaanSoft.Cqrs.Decorator.csproj" />
     <ProjectReference Include="..\SaanSoft.Cqrs.Examples.Shared.Identity.Messages\SaanSoft.Cqrs.Examples.Shared.Identity.Messages.csproj" />
   </ItemGroup>
 

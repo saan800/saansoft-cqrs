@@ -1,8 +1,8 @@
+using SaanSoft.Cqrs.Bus;
 using SaanSoft.Cqrs.Examples.Shared.Identity.Messages.Commands;
 using SaanSoft.Cqrs.Examples.Shared.Identity.Messages.Events;
 using SaanSoft.Cqrs.Examples.Shared.Identity.Messages.Queries;
-using SaanSoft.Cqrs.GuidIds.Bus;
-using SaanSoft.Cqrs.Core.Handler;
+using SaanSoft.Cqrs.Handler;
 
 namespace SaanSoft.Cqrs.Examples.Shared.Identity.Handlers;
 
@@ -65,5 +65,5 @@ public class UserCommandHandlers(IQueryBus queryBus, IEventBus eventBus) :
     }
 
     public Task HandleAsync(ForgetUserCommand command, CancellationToken cancellationToken = default)
-        => eventBus.QueueAsync(new UserForgottenEvent(command), cancellationToken);
+        => eventBus.QueueAsync(new UserForgottenEvent(command.UserKey, command), cancellationToken);
 }

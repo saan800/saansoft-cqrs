@@ -1,11 +1,13 @@
-using SaanSoft.Cqrs.Examples.Shared.Identity.Messages.Commands;
-using SaanSoft.Cqrs.Messages;
-
 namespace SaanSoft.Cqrs.Examples.Shared.Identity.Messages.Events;
 
-public class UserForgottenEvent(ForgetUserCommand command) :
-    Event(command.UserKey, command),
-    IEntityEvent<User>
+public class UserForgottenEvent : Event
 {
-    public User? ApplyEvent(User? entity) => null;
+    public UserForgottenEvent(Guid userKey, string? correlationId = null, string? authenticatedId = null)
+        : base(userKey, correlationId, authenticatedId)
+    {
+    }
+
+    public UserForgottenEvent(Guid userKey, IMessage message) : base(userKey, message)
+    {
+    }
 }

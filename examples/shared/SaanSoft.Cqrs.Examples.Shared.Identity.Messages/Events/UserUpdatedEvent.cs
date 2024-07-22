@@ -1,10 +1,14 @@
 using SaanSoft.Cqrs.Examples.Shared.Identity.Messages.Commands;
-using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.Examples.Shared.Identity.Messages.Events;
 
-public class UserUpdatedEvent : Event, IEntityEvent<User>
+public class UserUpdatedEvent : Event
 {
+    public UserUpdatedEvent(Guid userKey, string? correlationId = null, string? authenticatedId = null)
+        : base(userKey, correlationId, authenticatedId)
+    {
+    }
+
     public UserUpdatedEvent(UpdateUserCommand command) : base(command.UserKey, command)
     {
         UserName = command.UserName;

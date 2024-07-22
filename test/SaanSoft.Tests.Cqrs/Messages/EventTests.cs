@@ -10,7 +10,7 @@ public class EventTests
         var result = new MyEvent(key);
 
         result.Key.Should().Be(key);
-        result.Id.Should().Be(default(Guid));
+        result.Id.Should().NotBe(default(Guid));
         result.MessageOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
         result.TypeFullName.Should().Be(typeof(MyEvent).FullName);
         result.CorrelationId.Should().BeNull();
@@ -26,7 +26,7 @@ public class EventTests
         var result = new MyEvent(key, correlationId, authId);
 
         result.Key.Should().Be(key);
-        result.Id.Should().Be(default(Guid));
+        result.Id.Should().NotBe(default(Guid));
         result.MessageOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
         result.TypeFullName.Should().Be(typeof(MyEvent).FullName);
         result.CorrelationId.Should().Be(correlationId);
@@ -45,7 +45,7 @@ public class EventTests
         var startTime = DateTime.UtcNow;
         var result = new MyEvent(key, triggeredBy);
         result.Key.Should().Be(key);
-        result.Id.Should().Be(default(Guid));
+        result.Id.Should().NotBe(default(Guid));
         result.Id.Should().NotBe(triggeredBy.Id);
         result.MessageOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
         result.MessageOnUtc.Should().NotBe(triggeredBy.MessageOnUtc);

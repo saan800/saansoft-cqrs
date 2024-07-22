@@ -69,6 +69,7 @@ public abstract class BaseMessage : IMessage
 
     protected BaseMessage(string? correlationId = null, string? triggeredByUser = null)
     {
+        if (Id == Guid.Empty) Id = Guid.NewGuid();
         if (string.IsNullOrWhiteSpace(TypeFullName)) TypeFullName = GetType().GetTypeFullName();
         if (!string.IsNullOrWhiteSpace(correlationId)) CorrelationId = correlationId;
         if (!string.IsNullOrWhiteSpace(triggeredByUser)) TriggeredByUser = triggeredByUser;

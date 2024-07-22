@@ -9,7 +9,7 @@ public class CommandWithResponseTests
         var startTime = DateTime.UtcNow;
 
         var result = new MyCommandWithResponse { Message = message };
-        result.Id.Should().Be(default(Guid));
+        result.Id.Should().NotBe(default(Guid));
         result.MessageOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
         result.Message.Should().Be(message);
         result.TypeFullName.Should().Be(typeof(MyCommandWithResponse).FullName);
@@ -25,7 +25,7 @@ public class CommandWithResponseTests
         var startTime = DateTime.UtcNow;
 
         var result = new MyCommandWithResponse(correlationId, authId) { Message = message };
-        result.Id.Should().Be(default(Guid));
+        result.Id.Should().NotBe(default(Guid));
         result.MessageOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
         result.Message.Should().Be(message);
         result.TypeFullName.Should().Be(typeof(MyCommandWithResponse).FullName);
@@ -45,7 +45,7 @@ public class CommandWithResponseTests
         var startTime = DateTime.UtcNow;
 
         var result = new MyCommandWithResponse(triggeredBy) { Message = message };
-        result.Id.Should().Be(default(Guid));
+        result.Id.Should().NotBe(default(Guid));
         result.Id.Should().NotBe(triggeredBy.Id);
         result.MessageOnUtc.Should().BeOnOrAfter(startTime).And.BeOnOrBefore(DateTime.UtcNow);
         result.MessageOnUtc.Should().NotBe(triggeredBy.MessageOnUtc);

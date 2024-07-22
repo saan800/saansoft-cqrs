@@ -47,6 +47,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Examples.Shar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Examples.Shared.Identity.Messages", "examples\shared\SaanSoft.Cqrs.Examples.Shared.Identity.Messages\SaanSoft.Cqrs.Examples.Shared.Identity.Messages.csproj", "{D4C715B1-3377-43BB-A850-1697BC166254}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaanSoft.Cqrs.Examples.Shared.Identity.Handlers", "examples\shared\SaanSoft.Cqrs.Examples.Shared.Identity.Handlers\SaanSoft.Cqrs.Examples.Shared.Identity.Handlers.csproj", "{2E1403C2-718E-4D11-AA04-0A563E91858B}"
+EndProject
 Global
 				GlobalSection(SolutionConfigurationPlatforms) = preSolution
 								Debug|Any CPU = Debug|Any CPU
@@ -105,6 +107,10 @@ Global
 					{D4C715B1-3377-43BB-A850-1697BC166254}.Debug|Any CPU.Build.0 = Debug|Any CPU
 					{D4C715B1-3377-43BB-A850-1697BC166254}.Release|Any CPU.ActiveCfg = Release|Any CPU
 					{D4C715B1-3377-43BB-A850-1697BC166254}.Release|Any CPU.Build.0 = Release|Any CPU
+					{2E1403C2-718E-4D11-AA04-0A563E91858B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+					{2E1403C2-718E-4D11-AA04-0A563E91858B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+					{2E1403C2-718E-4D11-AA04-0A563E91858B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+					{2E1403C2-718E-4D11-AA04-0A563E91858B}.Release|Any CPU.Build.0 = Release|Any CPU
 				EndGlobalSection
 				GlobalSection(NestedProjects) = preSolution
 								{14FB4E51-D7DF-4045-BF3D-9635FFE3E309} = {446FC180-C478-471E-A0A4-DB7B76C0B674}
@@ -117,5 +123,6 @@ Global
 					{DAB2B2CD-9211-4570-AC46-C40E39DDC261} = {E9296CE7-A3C1-4FD0-8508-E002AEDB05D5}
 					{2025D8D2-3D86-4BF4-946B-7CF6B04E0228} = {E9296CE7-A3C1-4FD0-8508-E002AEDB05D5}
 					{D4C715B1-3377-43BB-A850-1697BC166254} = {E9296CE7-A3C1-4FD0-8508-E002AEDB05D5}
+					{2E1403C2-718E-4D11-AA04-0A563E91858B} = {E9296CE7-A3C1-4FD0-8508-E002AEDB05D5}
 				EndGlobalSection
 EndGlobal
