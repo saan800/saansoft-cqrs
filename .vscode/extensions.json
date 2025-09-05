@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "EditorConfig.EditorConfig",
+    "ms-dotnettools.csdevkit",
+    "streetsidesoftware.code-spell-checker",
+    "k--kato.docomment",
+    "github.vscode-github-actions",
+  ]
+}

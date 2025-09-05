@@ -1,0 +1,7 @@
+﻿<Solution>
+  <Folder Name="/_solution/" />
+  <Folder Name="/tests/">
+    <Project Path="tests/SaanSoft.Tests.Cqrs/SaanSoft.Tests.Cqrs.csproj" Id="8b554651-7305-491d-97fa-3eb6fa561a6f" />
+  </Folder>
+  <Project Path="src/SaanSoft.Cqrs/SaanSoft.Cqrs.csproj" Id="2cbeb33e-3390-4015-963d-51a5ab26efdc" />
+</Solution>
