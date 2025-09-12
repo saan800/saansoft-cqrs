@@ -2,6 +2,8 @@ using System.Text.Json;
 
 namespace SaanSoft.Cqrs.Transport;
 
+// TODO: this?
+
 // public sealed class SystemTextJsonSerializer : ITransportSerializer
 // {
 //     private readonly JsonSerializerOptions _options;

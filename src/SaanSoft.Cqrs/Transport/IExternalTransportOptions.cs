@@ -8,14 +8,11 @@ namespace SaanSoft.Cqrs.Transport;
 public interface IBaseExternalTransportOptions
 {
     /// <summary>
-    /// Timeout for transport operations, e.g. sending or receiving messages.
+    /// Timeout for handling a message, especially those messages where the publisher is waiting for a result.
+    /// If a message implements <see cref="ITimeout"/>, that value will be set here at runtime.
+    /// Defaults to 15min.
     /// </summary>
-    TimeSpan? Timeout { get; set; }
-
-    /// <summary>
-    /// Optional headers to include with transport operations, e.g. for routing, priority, etc.
-    /// </summary>
-    Dictionary<string, string> Headers { get; }
+    TimeSpan Timeout { get; set; }
 }
 
 /// <summary>
@@ -34,7 +31,7 @@ public interface IDefaultExternalTransportOptions : IBaseExternalTransportOption
 /// Transport options provided to the IExternalMessageTransport.
 /// Also used in TransportContext and IExternalTransportMiddleware to be enriched before publishing
 /// </summary>
-public interface IExternalTransportOptions
+public interface IExternalTransportOptions : IBaseExternalTransportOptions
 {
     /// <summary>
     /// Whether to wait for the external handler to deal with the message, or if its fire-and-forget.
@@ -45,4 +42,10 @@ public interface IExternalTransportOptions
     /// but Success is that the message was published successfully, rather than handled successfully.
     /// </remarks>
     bool WaitForExecution { get; set; }
+
+    /// <summary>
+    /// Whether we are expecting a single handler for the message (ie ICommands and IQueries) or multiple handlers
+    /// (ie IEvents).
+    /// </summary>
+    bool ExpectSingleHandler { get; set; }
 }

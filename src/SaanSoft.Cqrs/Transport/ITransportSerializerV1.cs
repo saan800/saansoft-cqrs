@@ -1,5 +1,7 @@
 namespace SaanSoft.Cqrs.Transport;
 
+// TODO: this?
+
 // public interface ITransportSerializer
 // {
 //     string Serialize<T>(T value);

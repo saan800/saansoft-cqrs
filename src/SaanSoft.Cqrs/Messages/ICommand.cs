@@ -22,4 +22,4 @@ public interface ICommand : IMessage;
 /// <remarks>
 /// Names should be in the form of a verb, eg CreateOrder, UpdateUserDetails, DeleteBlogPost
 /// </remarks>
-public interface ICommand<TResult> : IMessage<TResult>;
+public interface ICommand<TResult> : ICommand, IMessage<TResult>;

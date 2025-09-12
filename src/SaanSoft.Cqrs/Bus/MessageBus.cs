@@ -16,6 +16,7 @@ public sealed class MessageBus(
     IExternalMessageTransport? externalMessageTransport,
     IEnumerable<IExternalTransportPublisherMiddleware<IMessage>>? externalTransportPublisherMiddleware) : IMessageBus
 {
+    private readonly string _externalMessageTransportName = "External transport";
     private readonly IDefaultExternalTransportOptions _defaultExternalTransportOptions
         = defaultExternalTransportOptions ?? new DefaultExternalTransportOptions();
 
@@ -84,31 +85,46 @@ public sealed class MessageBus(
         );
     }
 
-    public async Task PublishAsync<TEvent>(TEvent evt, CancellationToken ct = default) where TEvent : IEvent
-    {
-        var envelope = MessageEnvelope.Wrap(evt);
-        await RunPublisherPipeline<TEvent>(envelope, ct);
+    public Task PublishAsync<TEvent>(TEvent evt, CancellationToken ct = default) where TEvent : IEvent
+        => PublishManyAsync([evt], ct);
 
-        if (routing.IsExternalMessage(evt))
+    public async Task PublishManyAsync<TEvent>(IReadOnlyCollection<TEvent> events, CancellationToken ct = default)
+        where TEvent : IEvent
+    {
+        if (events.Count == 0) return;
+
+        var envelopeTasks = events.Select(async evt =>
         {
-            await PublishExternallyAsync<TEvent>(envelope, waitForExecution: false, ct);
+            var envelope = MessageEnvelope.Wrap(evt);
+            await RunPublisherPipeline<TEvent>(envelope, ct);
+            return envelope;
+        });
+        var envelopes = await Task.WhenAll(envelopeTasks);
+        var firstEvent = events.First();
+
+        if (routing.IsExternalMessage(firstEvent))
+        {
+            await PublishExternallyAsync<TEvent>(envelopes, waitForExecution: false, ct);
             return;
         }
 
         // handle InMemory
-        var handlerType = typeof(IEventHandler<>).MakeGenericType(evt.GetType());
+        var handlerType = typeof(IEventHandler<>).MakeGenericType(firstEvent.GetType());
         var handlers = serviceRegistry.ResolveMultipleHandlers(handlerType).ToArray();
         foreach (var handler in handlers)
         {
-            var handlerName = handler.GetType().FullName ?? handler.GetType().Name;
-            envelope.MarkPending(handlerName);
+            foreach (var envelope in envelopes)
+            {
+                var handlerName = handler.GetType().FullName ?? handler.GetType().Name;
+                envelope.MarkPending(handlerName);
 
-            await RunSubscriberPipeline<TEvent>(
-                envelope,
-                handlerType,
-                () => HandleMessageInMemoryAsync(evt, envelope, handlerType, handler, ct),
-                ct
-            );
+                await RunSubscriberPipeline<TEvent>(
+                    envelope,
+                    handlerType,
+                    () => HandleMessageInMemoryAsync((IEvent)envelope.Message, envelope, handlerType, handler, ct),
+                    ct
+                );
+            }
         }
     }
 
@@ -164,19 +180,32 @@ public sealed class MessageBus(
     /// <summary>
     /// Handle the message in memory
     /// </summary>
-    private static async Task HandleMessageInMemoryAsync<TMessage>(
+    private async Task HandleMessageInMemoryAsync<TMessage>(
         TMessage message,
         MessageEnvelope envelope,
         Type handlerType,
         object handler,
         CancellationToken ct) where TMessage : IMessage
     {
+        var timeout = _defaultExternalTransportOptions.Timeout;
+        if (envelope.Message is ITimeout timeoutMessage)
+            timeout = timeoutMessage.Timeout;
+
+        using var timeoutCts = new CancellationTokenSource(timeout);
+        using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(ct, timeoutCts.Token);
+
         var handlerName = handlerType.GetTypeFullName();
         try
         {
             await (Task)handlerType.GetMethod("HandleAsync")!
-                .Invoke(handler, [message, ct])!;
+                .Invoke(handler, [message, linkedCts.Token])!;
             envelope.MarkSuccess(handlerName);
+        }
+        catch (OperationCanceledException ex) when (timeoutCts.IsCancellationRequested)
+        {
+            var exception = new TimeoutException($"Handler {handlerName} timed out after {timeout}.", ex);
+            envelope.MarkFailed(handlerName, exception);
+            throw exception;
         }
         catch (Exception ex)
         {
@@ -188,24 +217,37 @@ public sealed class MessageBus(
     /// <summary>
     /// Handle the message in memory and return the result
     /// </summary>
-    private static async Task<TResult> HandleMessageInMemoryWithResultAsync<TMessage, TResult>(
+    private async Task<TResult> HandleMessageInMemoryWithResultAsync<TMessage, TResult>(
         TMessage message,
         MessageEnvelope envelope,
         Type handlerType,
         object handler,
         CancellationToken ct) where TMessage : IMessage<TResult>
     {
+        var timeout = _defaultExternalTransportOptions.Timeout;
+        if (envelope.Message is ITimeout timeoutMessage)
+            timeout = timeoutMessage.Timeout;
+
+        using var timeoutCts = new CancellationTokenSource(timeout);
+        using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(ct, timeoutCts.Token);
+
         var handlerName = handlerType.GetTypeFullName();
         try
         {
             var task = (Task)handlerType.GetMethod("HandleAsync")!
-                .Invoke(handler, [message, ct])!;
+                .Invoke(handler, [message, linkedCts.Token])!;
             await task.ConfigureAwait(false);
             // Task<TResult> result extraction
             var t = (dynamic)task;
             var result = (TResult)t.GetAwaiter().GetResult();
             envelope.MarkSuccess(handlerName);
             return result;
+        }
+        catch (OperationCanceledException ex) when (timeoutCts.IsCancellationRequested)
+        {
+            var exception = new TimeoutException($"Handler {handlerName} timed out after {timeout}.", ex);
+            envelope.MarkFailed(handlerName, exception);
+            throw exception;
         }
         catch (Exception ex)
         {
@@ -214,34 +256,80 @@ public sealed class MessageBus(
         }
     }
 
-    private async Task PublishExternallyAsync<TMessage>(MessageEnvelope envelope, bool waitForExecution, CancellationToken ct)
+    private Task PublishExternallyAsync<TMessage>(MessageEnvelope envelope, bool waitForExecution, CancellationToken ct)
+        where TMessage : IMessage
+        => PublishExternallyAsync<TMessage>([envelope], waitForExecution, ct);
+
+    private async Task PublishExternallyAsync<TMessage>(MessageEnvelope[] envelopes, bool waitForExecution, CancellationToken ct)
         where TMessage : IMessage
     {
         if (externalMessageTransport == null)
         {
             throw new ApplicationException("No external transport is configured and routing strategy requires external transport");
         }
+        if (envelopes.Length == 0) return;
+        if (waitForExecution && envelopes.Length > 1)
+        {
+            // this should never happen, as this is a private method so we should ensure this is not a thing.
+            throw new ApplicationException("Cannot wait for multiple messages to execute. Only messages that are fire-and-forget can publish multiple messages at once.");
+        }
+
+        var firstMessage = envelopes.First().Message;
 
         var options = _defaultExternalTransportOptions.Clone(waitForExecution);
+        options.ExpectSingleHandler = firstMessage is not IEvent;
 
-        await RunTransportPipeline<TMessage>(envelope, options, ct);
-        var result = await externalMessageTransport.PublishAsync(envelope, options, ct);
-        if (result is { Success: true }) return;
-
-        // handler threw an exception - rethrow
-        if (result?.Exception != null)
+        if (firstMessage is ITimeout timeoutMessage)
         {
-            throw result.Exception;
+            var timeoutMessages = envelopes.Select(e => (ITimeout)e.Message);
+            options.Timeout = timeoutMessages.MaxBy(e => e.Timeout)?.Timeout ?? timeoutMessage.Timeout;
         }
+        using var timeoutCts = new CancellationTokenSource(options.Timeout);
+        using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(ct, timeoutCts.Token);
 
-        var errorMessage = result?.ErrorMessage ?? "External publish message failed";
-        if (result == null)
+        try
         {
-            errorMessage = $"External publish message failed: External transport did not return a result";
-            envelope.MarkFailed("External transport", errorMessage);
-        }
+            var transportCt = linkedCts.Token;
 
-        throw new ApplicationException(errorMessage);
+            // run the transport pipeline over each envelope
+            var tasks = envelopes.Select(envelope => RunTransportPipeline<TMessage>(envelope, ct));
+            await Task.WhenAll(tasks);
+
+            var result = await externalMessageTransport.PublishManyAsync(envelopes, options, transportCt);
+            if (result is { Success: true }) return;
+
+            // handler threw an exception - rethrow
+            if (result?.Exception != null)
+            {
+                throw result.Exception;
+            }
+
+            var errorMessage = result?.ErrorMessage ?? "External publish message failed";
+            if (result == null)
+            {
+                errorMessage = $"External publish message failed: External transport did not return a result";
+            }
+
+            throw new ApplicationException(errorMessage);
+        }
+        catch (OperationCanceledException ex) when (timeoutCts.IsCancellationRequested)
+        {
+            var exception = new TimeoutException($"External publish message(s) failed: Timed out after {options.Timeout}.", ex);
+
+            foreach (var envelope in envelopes)
+            {
+                envelope.MarkFailed(_externalMessageTransportName, exception);
+            }
+            throw exception;
+        }
+        catch (Exception ex)
+        {
+            foreach (var envelope in envelopes)
+            {
+                envelope.MarkFailed(_externalMessageTransportName, ex);
+            }
+            throw;
+        }
     }
 
     private async Task<TResult> PublishExternallyWithResultAsync<TMessage, TResult>(MessageEnvelope envelope, CancellationToken ct)
@@ -254,37 +342,58 @@ public sealed class MessageBus(
 
         // if we want a response, we have to wait for the execution
         var options = _defaultExternalTransportOptions.Clone(waitForExecution: true);
+        options.ExpectSingleHandler = envelope.Message is not IEvent;
+        if (envelope.Message is ITimeout timeoutMessage)
+            options.Timeout = timeoutMessage.Timeout;
 
-        await RunTransportPipeline<TMessage>(envelope, options, ct);
-        var result = await externalMessageTransport!.PublishAsync(envelope, options, ct);
-        if (result?.Exception != null) throw result.Exception;
+        using var timeoutCts = new CancellationTokenSource(options.Timeout);
+        using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(ct, timeoutCts.Token);
 
-        var errorMessage = result?.ErrorMessage ?? "External publish message failed";
-        if (result != null && result.Success)
+        try
         {
-            if (result.Payload != null) return (TResult)result.Payload;
+            var transportCt = linkedCts.Token;
 
-            var returnType = typeof(TResult);
-            // Reference types or Nullable<T> are allowed to return null
-            if (!returnType.IsValueType || Nullable.GetUnderlyingType(returnType) != null)
+            await RunTransportPipeline<TMessage>(envelope, transportCt);
+            var result = await externalMessageTransport!.PublishAsync(envelope, options, transportCt);
+            if (result?.Exception != null) throw result.Exception;
+
+            var errorMessage = result?.ErrorMessage ?? "External publish message failed";
+            if (result != null && result.Success)
             {
-                // null for reference/nullable, compiler-safe
-                return default!;
+                if (result.Payload != null) return (TResult)result.Payload;
+
+                var returnType = typeof(TResult);
+                // Reference types or Nullable<T> are allowed to return null
+                if (!returnType.IsValueType || Nullable.GetUnderlyingType(returnType) != null)
+                {
+                    // null for reference/nullable, compiler-safe
+                    return default!;
+                }
+
+                // Success=true, but Payload is null and TResult is not nullable
+                // populate errorMessage for use below
+                errorMessage = $"Result from transport was marked as a success, but {nameof(ExternalResult.Payload)} was null and {returnType.GetTypeFullName()} is not nullable.";
+                envelope.MarkFailed(_externalMessageTransportName, errorMessage);
             }
 
-            // Success=true, but Payload is null and TResult is not nullable
-            // populate errorMessage for use below
-            errorMessage = $"Result from transport was marked as a success, but {nameof(ExternalResult.Payload)} was null and {returnType.GetTypeFullName()} is not nullable.";
-            envelope.MarkFailed("External transport", errorMessage);
-        }
+            if (result == null)
+            {
+                errorMessage = $"External publish message failed: External transport did not return a result";
+            }
 
-        if (result == null)
+            throw new ApplicationException(errorMessage);
+        }
+        catch (OperationCanceledException ex) when (timeoutCts.IsCancellationRequested)
         {
-            errorMessage = $"External publish message failed: External transport did not return a result";
-            envelope.MarkFailed("External transport", errorMessage);
+            var exception = new TimeoutException($"External publish message failed: Timed out after {options.Timeout}.", ex);
+            envelope.MarkFailed(_externalMessageTransportName, exception);
+            throw exception;
         }
-
-        throw new ApplicationException(errorMessage);
+        catch (Exception ex)
+        {
+            envelope.MarkFailed(_externalMessageTransportName, ex);
+            throw;
+        }
     }
 
     private Task RunPublisherPipeline<TMessage>(MessageEnvelope envelope, CancellationToken ct)
@@ -332,10 +441,10 @@ public sealed class MessageBus(
         return result;
     }
 
-    private Task RunTransportPipeline<TMessage>(MessageEnvelope envelope, IExternalTransportOptions options, CancellationToken ct)
+    private Task RunTransportPipeline<TMessage>(MessageEnvelope envelope, CancellationToken ct)
         where TMessage : IMessage
     {
-        var ctx = new TransportContext(envelope, options, serviceRegistry);
+        var ctx = new TransportContext(envelope, serviceRegistry);
         static Task Terminal() => Task.CompletedTask;
 
         var validMiddlewares = GetValidMiddlewares<IExternalTransportPublisherMiddleware<TMessage>, IExternalTransportPublisherMiddleware<IMessage>>(

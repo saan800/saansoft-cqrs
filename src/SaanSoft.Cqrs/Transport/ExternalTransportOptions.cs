@@ -4,8 +4,8 @@ public class ExternalTransportOptions : IExternalTransportOptions
 {
     public bool WaitForExecution { get; set; }
 
-    public virtual TimeSpan? Timeout { get; set; }
+    public bool ExpectSingleHandler { get; set; }
 
-    public virtual Dictionary<string, string> Headers { get; } = new(StringComparer.OrdinalIgnoreCase);
+    public virtual TimeSpan Timeout { get; set; } = TimeSpan.FromMinutes(15);
 }
 

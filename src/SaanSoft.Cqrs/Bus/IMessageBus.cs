@@ -47,6 +47,14 @@ public interface IMessageBus
         where TEvent : IEvent;
 
     /// <summary>
+    /// Publish many events of the same type - fire and forget from caller perspective
+    ///
+    /// Exceptions that are thrown by event handlers will not be propagated back to the caller.
+    /// </summary>
+    Task PublishManyAsync<TEvent>(IReadOnlyCollection<TEvent> events, CancellationToken ct = default)
+        where TEvent : IEvent;
+
+    /// <summary>
     /// Query - always wait for the result
     ///
     /// Exceptions that are thrown by the query handler will be propagated back to the caller.

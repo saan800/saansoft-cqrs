@@ -161,7 +161,6 @@ public sealed class MessageEnvelope
         if (string.IsNullOrWhiteSpace(errorMessage) && exception != null)
             errorMessage = exception.Message;
 
-
         var index = Handlers.FindIndex(h =>
             string.Equals(h.HandlerName, handlerName, StringComparison.OrdinalIgnoreCase) &&
             h.Status == HandlerStatus.Pending

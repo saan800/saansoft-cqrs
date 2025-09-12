@@ -2,9 +2,7 @@ namespace SaanSoft.Cqrs.Transport;
 
 public class DefaultExternalTransportOptions : IDefaultExternalTransportOptions
 {
-    public virtual TimeSpan? Timeout { get; set; }
-
-    public virtual Dictionary<string, string> Headers { get; } = new(StringComparer.OrdinalIgnoreCase);
+    public virtual TimeSpan Timeout { get; set; } = TimeSpan.FromMinutes(15);
 
     public IExternalTransportOptions Clone(bool waitForExecution)
     {
@@ -13,11 +11,6 @@ public class DefaultExternalTransportOptions : IDefaultExternalTransportOptions
             WaitForExecution = waitForExecution,
             Timeout = Timeout,
         };
-
-        foreach (var h in Headers)
-        {
-            eto.Headers.Add(h.Key, h.Value);
-        }
 
         return eto;
     }

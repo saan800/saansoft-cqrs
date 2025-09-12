@@ -3,6 +3,9 @@ using SaanSoft.Cqrs.Handlers;
 
 namespace SaanSoft.Cqrs.DependencyInjection;
 
+// TODO: move to IServiceProvider specific package
+// TODO: add helper to add default services and config
+
 /// <summary>
 /// Minimal service registry backed by IServiceProvider.
 /// </summary>

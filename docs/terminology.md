@@ -19,6 +19,10 @@ messages are being replayed, then don't re-run the command logic). eg
 A command handler will often raise one or more associated events if the command validation and
 business logic is successful.
 
+Commands can be handled by exactly 1 command handler. 
+* Zero command handlers will result in an exception being thrown
+* Multiple command handlers will result in an exception being thrown
+
 ## Event
 
 Events are a record of what has happened in the system - OrderCreated, PaymentProcessed, BlogDetailsUpdated, FileUploaded
@@ -27,6 +31,8 @@ Event handling should update the system (ie database or other storage writes), b
 
 Events should be safe to replay, and the aggregate root of events being replayed should result in the same entity state.
 
+Events can be handled by 0-n event handlers.
+
 ## Query
 
 Queries should only ever be "fetch" and never alter the state of the system.
@@ -34,3 +40,6 @@ Queries should only ever be "fetch" and never alter the state of the system.
 While replaying queries should be safe, it is unlikely to happen except when event handlers publish queries to 
 fetch additional data.
 
+Queries can be handled by exactly 1 query handler. 
+* Zero query handlers will result in an exception being thrown
+* Multiple query handlers will result in an exception being thrown

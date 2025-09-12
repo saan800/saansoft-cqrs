@@ -6,6 +6,8 @@ namespace SaanSoft.Cqrs.Utilities;
 
 public static class MessageBusExtensions
 {
+    // TODO: this??
+
     /// <summary>
     /// Get handlers for an event, grouped and ordered by handler priority
     /// </summary>
