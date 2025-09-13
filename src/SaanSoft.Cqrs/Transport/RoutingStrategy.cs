@@ -1,7 +1,7 @@
 using SaanSoft.Cqrs.DependencyInjection;
 using SaanSoft.Cqrs.Utilities;
 
-namespace SaanSoft.Cqrs.Core.Transport;
+namespace SaanSoft.Cqrs.Transport;
 
 /// <summary>
 /// Default: use in-memory if a handler is registered; otherwise external if registered.

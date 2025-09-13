@@ -1,3 +1,5 @@
+using SaanSoft.Cqrs.Handlers;
+
 namespace SaanSoft.Cqrs.DependencyInjection;
 
 /// <summary>
@@ -37,6 +39,8 @@ public interface IServiceRegistry
     /// </remarks>
     /// <exception cref="ApplicationException">Multiple handlers found for the given type.</exception>
     object? ResolveSingleHandler(Type handlerType);
+
+    // TODO: ICommandHandler<TCommand> GetCommandHandler<TCommand>(TCommand command) where TCommand : ICommand;
 
     /// <summary>
     /// Resolve multiple handler instances for the given handler type.

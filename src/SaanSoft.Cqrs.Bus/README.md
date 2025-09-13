@@ -1,3 +1,3 @@
-# SaanSoft.Cqrs.Core
+# SaanSoft.Cqrs.Bus
 
 Core infrastructure of the message bus

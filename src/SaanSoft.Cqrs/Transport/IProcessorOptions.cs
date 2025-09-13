@@ -1,37 +1,36 @@
-namespace SaanSoft.Cqrs.Core.Transport;
+namespace SaanSoft.Cqrs.Transport;
 
 /// <summary>
-/// Base interface with common properties for ExternalTransportOptions
-/// You should never directly inherit from IBaseExternalTransportOptions
-/// Use <see cref="IDefaultExternalTransportOptions"/> or <see cref="IExternalTransportOptions"/> instead
+/// Base interface with common properties for ProcessorOptions
+/// You should never directly inherit from IBaseProcessorOptions.
+/// Use <see cref="IDefaultProcessorOptions"/> or <see cref="IExternalProcessorOptions"/> instead
 /// </summary>
-public interface IBaseExternalTransportOptions
+public interface IBaseProcessorOptions
 {
     /// <summary>
     /// Timeout for handling a message, especially those messages where the publisher is waiting for a result.
-    /// If a message implements <see cref="ITimeout"/>, that value will be set here at runtime.
-    /// Defaults to 15min.
+    /// If a message implements <see cref="ITimeout"/>, that value will overwrite the default at runtime.
     /// </summary>
     TimeSpan Timeout { get; set; }
 }
 
 /// <summary>
-/// Provide the default transport options for use with external message transports.
+/// Provide the default processor options for use with in memory and external message transports.
 /// At run time the defaults will be cloned for each message.
 /// </summary>
-public interface IDefaultExternalTransportOptions : IBaseExternalTransportOptions
+public interface IDefaultProcessorOptions : IBaseProcessorOptions
 {
     /// <summary>
-    /// Create a IExternalTransportOptions from the defaults
+    /// Create a IExternalProcessorOptions from the defaults
     /// </summary>
-    IExternalTransportOptions Clone(bool waitForExecution);
+    IExternalProcessorOptions Clone(bool waitForExecution);
 }
 
 /// <summary>
 /// Transport options provided to the IExternalMessageTransport.
 /// Also used in TransportContext and IExternalTransportMiddleware to be enriched before publishing
 /// </summary>
-public interface IExternalTransportOptions : IBaseExternalTransportOptions
+public interface IExternalProcessorOptions : IBaseProcessorOptions
 {
     /// <summary>
     /// Whether to wait for the external handler to deal with the message, or if its fire-and-forget.
@@ -47,5 +46,8 @@ public interface IExternalTransportOptions : IBaseExternalTransportOptions
     /// Whether we are expecting a single handler for the message (ie ICommands and IQueries) or multiple handlers
     /// (ie IEvents).
     /// </summary>
+    /// <remarks>
+    /// Some message transports can differ if setting up messaging as 1-to-many (ie pub/sub) vs 1-to-1
+    /// </remarks>
     bool ExpectSingleHandler { get; set; }
 }

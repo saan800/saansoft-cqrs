@@ -4,7 +4,7 @@ using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.DependencyInjection.ServiceProvider;
 
-// TODO: add helper to add default services and config
+// TODO: add helper to add default services and config?
 
 /// <summary>
 /// Minimal service registry backed by IServiceProvider.
@@ -49,8 +49,7 @@ public sealed class ServiceProviderRegistry(IServiceProvider serviceProvider) : 
     {
         // TODO: see if can get actual IXxxHandler<> here, rather than IEnumerable<object>
         var enumerableType = typeof(IEnumerable<>).MakeGenericType(handlerType);
-        var resolved = serviceProvider.GetService(enumerableType) as System.Collections.IEnumerable;
-        if (resolved == null) yield break;
+        if (serviceProvider.GetService(enumerableType) is not System.Collections.IEnumerable resolved) yield break;
         foreach (var item in resolved) yield return item!;
     }
 

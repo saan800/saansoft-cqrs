@@ -1,4 +1,4 @@
-namespace SaanSoft.Cqrs.Core.Transport;
+namespace SaanSoft.Cqrs.Transport;
 
 public sealed class ExternalResult
 {

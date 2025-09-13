@@ -2,8 +2,7 @@ namespace SaanSoft.Cqrs.Middleware;
 
 /// <summary>
 /// Enrich messages that will be published externally.
-/// (eg. Add the response message queue name to the IExternalTransportOptions.Headers,
-/// or serialise the message ready to send over the wire)
+/// (eg. serialise the message ready to send over the wire)
 /// </summary>
 /// <remarks>
 /// It is likely that any IExternalTransportPublisherMiddleware that alters a message will require a

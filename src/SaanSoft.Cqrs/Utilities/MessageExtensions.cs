@@ -2,8 +2,6 @@ namespace SaanSoft.Cqrs.Utilities;
 
 public static class MessageExtensions
 {
-    // TODO: this??
-
     public static Dictionary<string, object> BuildLoggingScopeData<TMessage>(this TMessage message, Type? handlerType = null)
         where TMessage : IMessage
     {

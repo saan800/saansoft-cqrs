@@ -1,4 +1,4 @@
-namespace SaanSoft.Cqrs.Core.Transport;
+namespace SaanSoft.Cqrs.Transport;
 
 /// <summary>
 /// Strategy for deciding on how to route messages to different destinations based on their content or type.

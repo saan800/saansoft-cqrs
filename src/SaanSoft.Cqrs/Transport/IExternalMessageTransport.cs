@@ -1,6 +1,6 @@
 using SaanSoft.Cqrs.Middleware;
 
-namespace SaanSoft.Cqrs.Core.Transport;
+namespace SaanSoft.Cqrs.Transport;
 
 /// <summary>
 /// Interface for an external pub/sub provider (eg Azure Service Bus, AWS SNS/SQS, RabbitMq)
@@ -20,7 +20,10 @@ public interface IExternalMessageTransport
     /// A null ExternalResult indicates an issue happened while publishing the message, and will result
     /// in exceptions.
     /// </returns>
-    Task<ExternalResult?> PublishAsync(MessageEnvelope envelope, IExternalTransportOptions options, CancellationToken ct);
+    Task<ExternalResult?> PublishAsync(
+        MessageEnvelope envelope,
+        IExternalProcessorOptions options,
+        CancellationToken ct);
 
     /// <summary>
     /// Publish messages of the same type to the external transport.
@@ -39,5 +42,8 @@ public interface IExternalMessageTransport
     /// A null ExternalResult indicates an issue happened while publishing the messages, and will result
     /// in exceptions.
     /// </returns>
-    Task<ExternalResult?> PublishManyAsync(IReadOnlyCollection<MessageEnvelope> envelopes, IExternalTransportOptions options, CancellationToken ct);
+    Task<ExternalResult?> PublishManyAsync(
+        IReadOnlyCollection<MessageEnvelope> envelopes,
+        IExternalProcessorOptions options,
+        CancellationToken ct);
 }

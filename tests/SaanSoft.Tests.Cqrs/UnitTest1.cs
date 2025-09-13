@@ -1,4 +1,4 @@
-namespace SaanSoft.Tests.Cqrs.Core;
+namespace SaanSoft.Tests.Cqrs;
 
 public class UnitTest1
 {
