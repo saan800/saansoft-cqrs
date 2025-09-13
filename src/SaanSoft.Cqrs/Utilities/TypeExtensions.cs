@@ -1,7 +1,5 @@
 namespace SaanSoft.Cqrs.Utilities;
 
-// TODO: these?
-
 public static class TypeExtensions
 {
     public static string GetTypeFullName(this Type? type)
@@ -10,6 +8,7 @@ public static class TypeExtensions
             : type.FullName ?? type.Name;
 
 
+    // TODO: this?
     public static string GetAssemblyName(this Type? type)
     {
         if (type == null) return string.Empty;

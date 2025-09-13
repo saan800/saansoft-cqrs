@@ -1,9 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using SaanSoft.Cqrs.Handlers;
+using SaanSoft.Cqrs.Messages;
 
 namespace SaanSoft.Cqrs.DependencyInjection;
 
-// TODO: move to IServiceProvider specific package
 // TODO: add helper to add default services and config
 
 /// <summary>

@@ -1,7 +1,24 @@
-﻿<Solution>
-  <Folder Name="/_solution/" />
-  <Folder Name="/tests/">
-    <Project Path="tests/SaanSoft.Tests.Cqrs/SaanSoft.Tests.Cqrs.csproj" Id="8b554651-7305-491d-97fa-3eb6fa561a6f" />
+<Solution>
+  <Folder Name="/_solution/">
+    <File Path=".cspell.json" />
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="CODE_OF_CONDUCT.md" />
+    <File Path="CONTRIBUTING.md" />
+    <File Path="dictionary.dic" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="LICENSE" />
+    <File Path="nuget.config" />
+    <File Path="README.md" />
+    <File Path="SECURITY.md" />
   </Folder>
-  <Project Path="src/SaanSoft.Cqrs/SaanSoft.Cqrs.csproj" Id="2cbeb33e-3390-4015-963d-51a5ab26efdc" />
+  <Folder Name="/tests/">
+    <Project Path="tests/SaanSoft.Tests.Cqrs.Core/SaanSoft.Tests.Cqrs.Core.csproj" Id="8b554651-7305-491d-97fa-3eb6fa561a6f" />
+    <Project Path="tests/SaanSoft.Tests.Cqrs.DependencyInjection.ServiceProvider/SaanSoft.Tests.Cqrs.DependencyInjection.ServiceProvider.csproj" Id="81a0cf8b-e4ea-4379-84f0-7101acedfdfc" />
+    <Project Path="tests/SaanSoft.Tests.Cqrs.Shared/SaanSoft.Tests.Cqrs.Shared.csproj" Id="e2c151a4-d529-4a5e-846f-e5ecbc0f8ddc" />
+  </Folder>
+  <Project Path="src/SaanSoft.Cqrs.Core/SaanSoft.Cqrs.Core.csproj" Id="2cbeb33e-3390-4015-963d-51a5ab26efdc" />
+  <Project Path="src/SaanSoft.Cqrs.DependencyInjection.ServiceProvider/SaanSoft.Cqrs.DependencyInjection.ServiceProvider.csproj" Id="d1943adc-fd37-42a5-82fe-55d50011ad0f" />
+  <Project Path="src/SaanSoft.Cqrs/SaanSoft.Cqrs.csproj" Id="6d1830b7-662d-4711-a044-19aa1428e50c" />
 </Solution>

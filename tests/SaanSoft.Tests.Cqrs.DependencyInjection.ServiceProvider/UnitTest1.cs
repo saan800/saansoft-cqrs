@@ -1,11 +1,10 @@
-namespace SaanSoft.Tests.Cqrs;
+namespace SaanSoft.Tests.Cqrs.DependencyInjection.ServiceProvider;
 
 public class UnitTest1
 {
     [Fact]
     public void Test1()
     {
-        Assert.Equal(1, 1);
 
     }
 }

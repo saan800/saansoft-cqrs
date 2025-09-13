@@ -165,7 +165,7 @@ public sealed class MessageBus(
             var _ when messageType.ImplementsGeneric(typeof(ICommand<>)) => typeof(ICommandHandler<,>),
             var _ when messageType.ImplementsGeneric(typeof(IQuery<>)) => typeof(IQueryHandler<,>),
             ICommand => typeof(ICommandHandler<>),
-            IEvent => throw new NotSupportedException($"Can have multiple {nameof(IEventHandler<>)}, use PublishAsync<TEvent> instead"),
+            IEvent => throw new NotSupportedException($"Can have multiple IEventHandler<>, use PublishAsync<TEvent> instead"),
             _ => throw new NotSupportedException($"Unsupported message type: {messageType.GetTypeFullName()}"),
         };
 

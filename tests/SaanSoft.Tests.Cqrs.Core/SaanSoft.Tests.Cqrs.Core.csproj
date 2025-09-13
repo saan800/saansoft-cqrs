@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SaanSoft.Tests.Cqrs.Shared\SaanSoft.Tests.Cqrs.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

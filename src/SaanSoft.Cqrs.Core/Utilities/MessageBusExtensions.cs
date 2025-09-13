@@ -14,7 +14,6 @@ public static class MessageBusExtensions
     /// <param name="serviceProvider"></param>
     /// <typeparam name="TEvent"></typeparam>
     /// <returns></returns>
-    // ReSharper disable once ReturnTypeCanBeEnumerable.Global
     public static List<IGrouping<int, IEventHandler<TEvent>>> GetPrioritisedEventHandlers<TEvent>(this IServiceProvider serviceProvider)
         where TEvent : IEvent
     {

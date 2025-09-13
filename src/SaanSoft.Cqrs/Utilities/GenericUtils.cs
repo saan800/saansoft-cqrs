@@ -2,6 +2,9 @@ namespace SaanSoft.Cqrs.Utilities;
 
 public static class GenericUtils
 {
+    /// <summary>
+    /// Check if the value is null or the default value for the type (eg int=0, Guid=Guid.NewGuid())
+    /// </summary>
     public static bool IsNullOrDefault<T>(this T? value)
     {
         // If value is null, return true
