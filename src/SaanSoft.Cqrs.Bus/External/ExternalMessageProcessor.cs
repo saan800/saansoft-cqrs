@@ -156,7 +156,7 @@ public sealed class ExternalMessageProcessor(
                 // Success=true, but Payload is null and TResult is not nullable
                 // populate errorMessage for use below
                 errorMessage = @$"Result from transport was marked as a success, but " +
-                     $"{nameof(ExternalResult.Payload)} was null and {returnType.GetTypeFullName()} is not nullable.";
+                    $"{nameof(ExternalResult.Payload)} was null and {returnType.GetTypeFullName()} is not nullable.";
                 envelope.MarkFailed(_externalMessageTransportName, errorMessage);
             }
 
