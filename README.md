@@ -17,7 +17,6 @@ Todo...
 * glossary
 * index with links to implemented decorators (instead of in this file)
 
-
 ## TODO
 
 InMemoryBus for publishers
