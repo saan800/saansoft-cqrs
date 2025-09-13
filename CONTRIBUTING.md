@@ -4,6 +4,8 @@
 
 ### Git Hooks
 
+We use a conventional commits approach to commit and PR titles.
+
 All PRs will be verified against linting scripts to ensure styling consistency.
 For a faster feedback cycle, we recommend configuring git hooks.
 

@@ -1,0 +1,22 @@
+name: dependabot-review-and-merge
+
+on: pull_request
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  dependabot-auto-approve-and-merge:
+    # Checking the author and fork will prevent your Action run failing on non-Dependabot PRs
+    if: |
+      github.event.repository.fork == false &&
+      github.event.pull_request.user.login == 'dependabot[bot]'
+    permissions:
+      contents: write
+      pull-requests: write
+    uses: saan800/github/.github/workflows/_dependabot-auto-approve-and-merge.yml@main
+    with:
+      pr-url: ${{ github.event.pull_request.html_url }}
+    secrets:
+      GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}

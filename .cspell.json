@@ -13,10 +13,13 @@
     "./.githooks/**",
     "./.github/dependabot.yml",
     "./.github/workflows/**",
+    "./.vscode/**",
     "./dictionary.dic",
     "./Directory.*.props",
     "./Directory.*.targets",
-    "**/*.csproj"
+    "**/*.lock.json",
+    "**/*.csproj",
+    "*.slnx"
   ],
   "dictionaryDefinitions": [
     {
