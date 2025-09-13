@@ -12,6 +12,7 @@ updates:
       prefix: "chore(github-actions): "
     labels:
       - "dependencies"
+      - "no-release"
       - "no-release-notes"
       - "github-actions"
 
@@ -50,3 +51,4 @@ updates:
       prefix: "dependencies(nuget): "
     labels:
       - "dependencies"
+      - "no-release"
