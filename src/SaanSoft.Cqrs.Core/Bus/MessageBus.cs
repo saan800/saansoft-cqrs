@@ -1,11 +1,11 @@
 
+using SaanSoft.Cqrs.Core.Transport;
 using SaanSoft.Cqrs.DependencyInjection;
 using SaanSoft.Cqrs.Handlers;
 using SaanSoft.Cqrs.Middleware;
-using SaanSoft.Cqrs.Transport;
 using SaanSoft.Cqrs.Utilities;
 
-namespace SaanSoft.Cqrs.Bus;
+namespace SaanSoft.Cqrs.Core.Bus;
 
 public sealed class MessageBus(
     IServiceRegistry serviceRegistry,

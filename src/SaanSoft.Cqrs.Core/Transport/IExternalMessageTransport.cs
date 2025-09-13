@@ -1,6 +1,6 @@
 using SaanSoft.Cqrs.Middleware;
 
-namespace SaanSoft.Cqrs.Transport;
+namespace SaanSoft.Cqrs.Core.Transport;
 
 /// <summary>
 /// Interface for an external pub/sub provider (eg Azure Service Bus, AWS SNS/SQS, RabbitMq)

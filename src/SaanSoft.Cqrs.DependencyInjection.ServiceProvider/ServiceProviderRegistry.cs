@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SaanSoft.Cqrs.Handlers;
 using SaanSoft.Cqrs.Messages;
 
-namespace SaanSoft.Cqrs.DependencyInjection;
+namespace SaanSoft.Cqrs.DependencyInjection.ServiceProvider;
 
 // TODO: add helper to add default services and config
 

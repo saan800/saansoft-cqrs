@@ -1,4 +1,4 @@
-// // namespace SaanSoft.Cqrs;
+// // namespace SaanSoft.Cqrs.Core;
 
 // // ------------------------------------------------------------
 // // 1) Abstractions: Messages & Handlers

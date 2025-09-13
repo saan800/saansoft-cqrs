@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using SaanSoft.Cqrs.Utilities;
 
-namespace SaanSoft.Cqrs.Middleware;
+namespace SaanSoft.Cqrs.Core.Middleware;
 
 // public sealed class LoggingMiddleware<TMessage>(ILogger<LoggingMiddleware<TMessage>> logger) :
 //     IPublishMiddleware<TMessage>,

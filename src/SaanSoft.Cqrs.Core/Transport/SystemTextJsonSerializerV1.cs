@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace SaanSoft.Cqrs.Transport;
+namespace SaanSoft.Cqrs.Core.Transport;
 
 // TODO: this?
 

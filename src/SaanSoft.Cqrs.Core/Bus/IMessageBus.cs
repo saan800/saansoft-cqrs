@@ -1,4 +1,4 @@
-namespace SaanSoft.Cqrs.Bus;
+namespace SaanSoft.Cqrs.Core.Bus;
 
 public interface IMessageBus
 {

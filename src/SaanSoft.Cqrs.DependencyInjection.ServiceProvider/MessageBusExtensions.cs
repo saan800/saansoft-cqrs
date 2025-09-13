@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SaanSoft.Cqrs.Handlers;
 using SaanSoft.Cqrs.Messages;
 
-namespace SaanSoft.Cqrs.Utilities;
+namespace SaanSoft.Cqrs.DependencyInjection.ServiceProvider;
 
 public static class MessageBusExtensions
 {

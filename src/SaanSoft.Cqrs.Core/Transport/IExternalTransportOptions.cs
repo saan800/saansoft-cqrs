@@ -1,4 +1,4 @@
-namespace SaanSoft.Cqrs.Transport;
+namespace SaanSoft.Cqrs.Core.Transport;
 
 /// <summary>
 /// Base interface with common properties for ExternalTransportOptions
