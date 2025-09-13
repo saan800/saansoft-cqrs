@@ -1,7 +1,8 @@
 changelog:
   exclude:
-    authors:
-      - dependabot
+    labels:
+      - no-release-notes
+      - github_actions
   categories:
     - title: 🔥🔥 Breaking Changes 🔥🔥
       labels:

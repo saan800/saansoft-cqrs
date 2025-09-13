@@ -5,7 +5,7 @@ namespace SaanSoft.Cqrs.Bus.External;
 public interface IExternalMessageProcessor
 {
     /// <summary>
-    /// Publish 0-n messages to an external message transport, without waiting for a response. (ie fire-and-forget)
+    /// Publish 0-n messages to an external message transport, without waiting for a response. (i.e. fire-and-forget)
     /// Used with <see cref="IEvent"/> and <see cref="ICommand"/> via IMessageBus.SendAsync.
     /// </summary>
     /// <remarks>
@@ -33,6 +33,7 @@ public interface IExternalMessageProcessor
     /// <remarks>
     /// Success/failure/exceptions are an indications of the handler's execution status.
     /// </remarks>
-    Task<TResult> PublishExternallyAndWaitForResultsAsync<TMessage, TResult>(MessageEnvelope envelope, CancellationToken ct)
+    Task<TResult> PublishExternallyAndWaitForResultsAsync<TMessage, TResult>(
+        MessageEnvelope envelope, CancellationToken ct)
         where TMessage : IMessage;
 }

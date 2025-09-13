@@ -8,6 +8,8 @@ public interface IRoutingStrategy
     /// <summary>
     /// Decide if need to route the message externally or use in memory (default) transport.
     /// </summary>
-    /// <exception cref="ApplicationException">Any critical issues which arise during routing decision making.</exception>
+    /// <exception cref="ApplicationException">
+    /// Any critical issues which arise during routing decision making.
+    /// </exception>
     bool IsExternalMessage<TMessage>(TMessage message) where TMessage : IMessage;
 }

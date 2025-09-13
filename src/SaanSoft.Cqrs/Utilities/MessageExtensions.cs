@@ -2,7 +2,8 @@ namespace SaanSoft.Cqrs.Utilities;
 
 public static class MessageExtensions
 {
-    public static Dictionary<string, object> BuildLoggingScopeData<TMessage>(this TMessage message, Type? handlerType = null)
+    public static Dictionary<string, object> BuildLoggingScopeData<TMessage>(
+        this TMessage message, Type? handlerType = null)
         where TMessage : IMessage
     {
         var scopeData = new Dictionary<string, object>

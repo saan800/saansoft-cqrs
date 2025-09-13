@@ -23,7 +23,7 @@ trim_trailing_whitespace = false
 [*.{yml,yaml}]
 max_line_length = off
 
-[*.slnx, *.csproj, *.ruleset, *.props, *.targets]
+[*.{sln,slnx,csproj,ruleset,props,targets}]
 max_line_length = off
 
 [*.cs]

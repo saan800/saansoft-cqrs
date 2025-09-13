@@ -45,7 +45,8 @@ public sealed class MessageBus(
             await RunPublisherPipeline<TCommand>(envelope, ct);
 
             return routing.IsExternalMessage(command) && externalMessageProcessor != null
-                ? await externalMessageProcessor.PublishExternallyAndWaitForResultsAsync<TCommand, TResult>(envelope, ct)
+                ? await externalMessageProcessor
+                    .PublishExternallyAndWaitForResultsAsync<TCommand, TResult>(envelope, ct)
                 : await inMemoryMessageProcessor.HandleCommandEnvelopeAsync<TCommand, TResult>(envelope, ct);
         }
     }

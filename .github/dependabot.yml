@@ -12,6 +12,8 @@ updates:
       prefix: "chore(github-actions): "
     labels:
       - "dependencies"
+      - "no-release-notes"
+      - "github-actions"
 
   - package-ecosystem: nuget
     directory: "/"
@@ -19,6 +21,11 @@ updates:
       microsoft:
         patterns:
           - Microsoft*
+        update-types: ["minor", "patch"]
+      mongodb:
+        patterns:
+          - EphemeralMongo*
+          - MongoDB*
         update-types: ["minor", "patch"]
       testing:
         patterns:

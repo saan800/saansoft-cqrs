@@ -33,7 +33,8 @@ public sealed class InMemoryMessageProcessor(
         }
     }
 
-    public async Task<TResult> HandleCommandEnvelopeAsync<TCommand, TResult>(MessageEnvelope envelope, CancellationToken ct)
+    public async Task<TResult> HandleCommandEnvelopeAsync<TCommand, TResult>(
+        MessageEnvelope envelope, CancellationToken ct)
         where TCommand : ICommand<TResult>
     {
         var command = (TCommand)envelope.Message;
@@ -43,13 +44,15 @@ public sealed class InMemoryMessageProcessor(
             return await RunSubscriberPipelineWithResult<TCommand, TResult>(
                 envelope,
                 handlerType,
-                () => HandleMessageInMemoryWithResultAsync<TCommand, TResult>(command, envelope, handlerType, handler, ct),
+                () => HandleMessageInMemoryWithResultAsync<TCommand, TResult>(
+                    command, envelope, handlerType, handler, ct),
                 ct
             );
         }
     }
 
-    public async Task HandleEventEnvelopesAsync<TEvent>(MessageEnvelope[] envelopes, CancellationToken ct) where TEvent : IEvent
+    public async Task HandleEventEnvelopesAsync<TEvent>(MessageEnvelope[] envelopes, CancellationToken ct)
+        where TEvent : IEvent
     {
         if (envelopes.Length == 0) return;
 
@@ -77,7 +80,9 @@ public sealed class InMemoryMessageProcessor(
         }
     }
 
-    public async Task<TResult> HandleQueryEnvelopeAsync<TQuery, TResult>(MessageEnvelope envelope, CancellationToken ct) where TQuery : IQuery<TResult>
+    public async Task<TResult> HandleQueryEnvelopeAsync<TQuery, TResult>(
+        MessageEnvelope envelope, CancellationToken ct)
+        where TQuery : IQuery<TResult>
     {
         var query = (TQuery)envelope.Message;
         var (handlerType, handler) = GetHandlerInfo(query);
@@ -86,7 +91,8 @@ public sealed class InMemoryMessageProcessor(
             return await RunSubscriberPipelineWithResult<TQuery, TResult>(
                 envelope,
                 handlerType,
-                () => HandleMessageInMemoryWithResultAsync<TQuery, TResult>(query, envelope, handlerType, handler, ct),
+                () => HandleMessageInMemoryWithResultAsync<TQuery, TResult>(
+                    query, envelope, handlerType, handler, ct),
                 ct
             );
         }
@@ -108,7 +114,8 @@ public sealed class InMemoryMessageProcessor(
             var _ when messageType.ImplementsGeneric(typeof(ICommand<>)) => typeof(ICommandHandler<,>),
             var _ when messageType.ImplementsGeneric(typeof(IQuery<>)) => typeof(IQueryHandler<,>),
             ICommand => typeof(ICommandHandler<>),
-            IEvent => throw new NotSupportedException($"Can have multiple IEventHandler<>, use PublishAsync<TEvent> instead"),
+            IEvent => throw new NotSupportedException(
+                $"Can have multiple IEventHandler<>, use PublishAsync<TEvent> instead"),
             _ => throw new NotSupportedException($"Unsupported message type: {messageType.GetTypeFullName()}"),
         };
 
@@ -120,7 +127,8 @@ public sealed class InMemoryMessageProcessor(
         return (handlerType, handler);
     }
 
-    private Task RunSubscriberPipeline<TMessage>(MessageEnvelope envelope, Type handlerType, Func<Task> terminal, CancellationToken ct)
+    private Task RunSubscriberPipeline<TMessage>(
+        MessageEnvelope envelope, Type handlerType, Func<Task> terminal, CancellationToken ct)
         where TMessage : IMessage
     {
         envelope.MarkPending(handlerType.GetTypeFullName());
@@ -134,7 +142,8 @@ public sealed class InMemoryMessageProcessor(
         return MiddlewareExtensions.RunPipeline(middlewares, terminal);
     }
 
-    private async Task<TResult> RunSubscriberPipelineWithResult<TMessage, TResult>(MessageEnvelope envelope, Type handlerType, Func<Task<TResult>> terminal, CancellationToken ct)
+    private async Task<TResult> RunSubscriberPipelineWithResult<TMessage, TResult>(
+        MessageEnvelope envelope, Type handlerType, Func<Task<TResult>> terminal, CancellationToken ct)
         where TMessage : IMessage
     {
         envelope.MarkPending(handlerType.GetTypeFullName());
@@ -177,7 +186,8 @@ public sealed class InMemoryMessageProcessor(
             await (Task)handlerType.GetMethod("HandleAsync")!
                 .Invoke(handler, [message, linkedCts.Token])!;
             envelope.MarkSuccess(handlerTypeName);
-            logger.LogDebug("Stop: Handled the {MessageType} by {HandlerType} successfully", messageTypeName, handlerTypeName);
+            logger.LogDebug(
+                "Stop: Handled the {MessageType} by {HandlerType} successfully", messageTypeName, handlerTypeName);
         }
         catch (OperationCanceledException ex) when (timeoutCts.IsCancellationRequested)
         {

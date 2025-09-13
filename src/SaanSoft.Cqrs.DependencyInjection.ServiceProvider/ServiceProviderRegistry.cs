@@ -16,7 +16,10 @@ public sealed class ServiceProviderRegistry(IServiceProvider serviceProvider) : 
 
     public bool HasCommandResultHandler(Type commandType)
     {
-        var i = commandType.GetInterfaces().FirstOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(ICommand<>));
+        var i = commandType.GetInterfaces().FirstOrDefault(x =>
+                x.IsGenericType &&
+                x.GetGenericTypeDefinition() == typeof(ICommand<>)
+            );
         if (i == null) return false;
 
         var tResult = i.GetGenericArguments()[0];
@@ -26,7 +29,10 @@ public sealed class ServiceProviderRegistry(IServiceProvider serviceProvider) : 
 
     public bool HasQueryHandler(Type queryType)
     {
-        var i = queryType.GetInterfaces().FirstOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IQuery<>));
+        var i = queryType.GetInterfaces().FirstOrDefault(x =>
+                x.IsGenericType &&
+                x.GetGenericTypeDefinition() == typeof(IQuery<>)
+            );
         if (i == null) return false;
 
         var tResult = i.GetGenericArguments()[0];

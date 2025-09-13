@@ -84,7 +84,10 @@ public sealed class ExternalMessageProcessor(
         }
         catch (OperationCanceledException ex) when (timeoutCts.IsCancellationRequested)
         {
-            var exception = new TimeoutException($"External publish message(s) failed: Timed out after {options.Timeout}.", ex);
+            var exception = new TimeoutException(
+                $"External publish message(s) failed: Timed out after {options.Timeout}.",
+                ex
+            );
             logger.LogError(
                 exception,
                 "Failed to process {MessageType}: {Reason}",
@@ -152,7 +155,8 @@ public sealed class ExternalMessageProcessor(
 
                 // Success=true, but Payload is null and TResult is not nullable
                 // populate errorMessage for use below
-                errorMessage = $"Result from transport was marked as a success, but {nameof(ExternalResult.Payload)} was null and {returnType.GetTypeFullName()} is not nullable.";
+                errorMessage = @$"Result from transport was marked as a success, but " +
+                     $"{nameof(ExternalResult.Payload)} was null and {returnType.GetTypeFullName()} is not nullable.";
                 envelope.MarkFailed(_externalMessageTransportName, errorMessage);
             }
 
@@ -165,7 +169,10 @@ public sealed class ExternalMessageProcessor(
         }
         catch (OperationCanceledException ex) when (timeoutCts.IsCancellationRequested)
         {
-            var exception = new TimeoutException($"External publish message failed: Timed out after {options.Timeout}.", ex);
+            var exception = new TimeoutException(
+                $"External publish message failed: Timed out after {options.Timeout}.",
+                ex
+            );
             logger.LogError(
                 exception,
                 "Failed to process {MessageType}: {Reason}",
@@ -190,7 +197,8 @@ public sealed class ExternalMessageProcessor(
         static Task Terminal() => Task.CompletedTask;
 
         var validMiddlewares = externalTransportPublisherMiddleware
-            .GetValidMiddlewares<IExternalTransportPublisherMiddleware<TMessage>, IExternalTransportPublisherMiddleware<IMessage>>();
+            .GetValidMiddlewares<
+                IExternalTransportPublisherMiddleware<TMessage>, IExternalTransportPublisherMiddleware<IMessage>>();
         var middlewares = validMiddlewares
             .Select(mw => (Func<Func<Task>, Func<Task>>)(next => () => mw.InvokeAsync(ctx, next, ct)));
 

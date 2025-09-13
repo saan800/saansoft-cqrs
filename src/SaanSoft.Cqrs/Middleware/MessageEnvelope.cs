@@ -82,14 +82,16 @@ public sealed class MessageEnvelope
     /// Create a new <see cref="MessageEnvelope"/> from the provided message
     /// </summary>
     /// <exception cref="ArgumentNullException">If <paramref name="message"/> is null</exception>
-    /// <exception cref="ArgumentException">If <paramref name="message"/> does not implement <see cref="IMessage"/></exception>
+    /// <exception cref="ArgumentException">If <paramref name="message"/> does not implement
+    /// <see cref="IMessage"/></exception>
     /// <remarks>
     /// If the message does not have an Id or OccurredOn set, they will be automatically populated.
     /// </remarks>
     public static MessageEnvelope Wrap<TMessage>(TMessage message) where TMessage : IMessage
     {
         ArgumentNullException.ThrowIfNull(message);
-        if (message is not IMessage m) throw new ArgumentException($"Message must implement {nameof(IMessage)} interface", nameof(message));
+        if (message is not IMessage m) throw new ArgumentException(
+            $"Message must implement {nameof(IMessage)} interface", nameof(message));
 
         if (m.Id.IsNullOrDefault()) m.Id = Guid.NewGuid();
         if (m.OccurredOn.IsNullOrDefault()) m.OccurredOn = DateTime.UtcNow;
@@ -156,7 +158,8 @@ public sealed class MessageEnvelope
     public void MarkFailed(string handlerName, string? errorMessage, Exception? exception)
     {
         if (string.IsNullOrWhiteSpace(errorMessage) && exception == null)
-            throw new ArgumentException($"Must provide at least one of {nameof(errorMessage)} or {nameof(exception)}");
+            throw new ArgumentException(
+                $"Must provide at least one of {nameof(errorMessage)} or {nameof(exception)}");
 
         if (string.IsNullOrWhiteSpace(errorMessage) && exception != null)
             errorMessage = exception.Message;
@@ -177,7 +180,9 @@ public sealed class MessageEnvelope
         }
         else
         {
-            Handlers.Add(new HandlerRecord(handlerName, HandlerStatus.Failed, DateTime.UtcNow, errorMessage, exception));
+            Handlers.Add(
+                new HandlerRecord(handlerName, HandlerStatus.Failed, DateTime.UtcNow, errorMessage, exception)
+            );
         }
     }
 }

@@ -3,7 +3,8 @@ namespace SaanSoft.Cqrs.Messages;
 /// <summary>
 /// Base interface with common properties for all messages
 /// You should never directly inherit from IMessage
-/// Use <see cref="ICommand"/>, <see cref="ICommand{TResult}"/>, <see cref="IEvent{TEntityKey}"/> or <see cref="IQuery{TResult}"/> instead
+/// Use <see cref="ICommand"/>, <see cref="ICommand{TResult}"/>, <see cref="IEvent{TEntityKey}"/> or
+/// <see cref="IQuery{TResult}"/> instead
 /// </summary>
 public interface IMessage
 {
@@ -19,8 +20,8 @@ public interface IMessage
     ///
     /// Should be propagated between related messages.
     ///
-    /// The initial message's CorrelationId could be populated by sources as "traceparent" header from the commonly used W3C standard,
-    /// OpenTelemetry, Http header (e.g. "X-Request-Id"), or a simple guid (as string)
+    /// The initial message's CorrelationId could be populated by sources as "traceparent" header from the commonly
+    /// used W3C standard, OpenTelemetry, Http header (e.g. "X-Request-Id"), or a simple guid (as string)
     /// </summary>
     string? CorrelationId { get; set; }
 
