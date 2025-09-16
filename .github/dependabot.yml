@@ -4,7 +4,7 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: daily
+      interval: weekly
       day: friday
       time: "05:00"
       timezone: "Australia/Perth"
@@ -12,6 +12,7 @@ updates:
       prefix: "chore(github-actions): "
     labels:
       - "dependencies"
+      - "no-release"
       - "no-release-notes"
       - "github-actions"
 
@@ -42,8 +43,7 @@ updates:
           - "minor"
           - "patch"
     schedule:
-      interval: weekly
-      day: friday
+      interval: monthly
       time: "05:00"
       timezone: "Australia/Perth"
     commit-message:

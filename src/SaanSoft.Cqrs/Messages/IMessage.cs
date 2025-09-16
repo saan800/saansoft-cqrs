@@ -46,7 +46,7 @@ public interface IMessage
     /// Should be populated by the initiating command/event/query/message Id
     /// Similar to CorrelationId, it provides a way to track messages through the system
     /// </summary>
-    public string? TriggeredByMessageId { get; set; }
+    public Guid? TriggeredByMessageId { get; set; }
 
     /// <summary>
     /// Whether the message is being replayed or not

@@ -9,7 +9,7 @@ namespace SaanSoft.Cqrs.Messages;
 public interface ITimeout
 {
     /// <summary>
-    /// Timeout for handling message
+    /// When to timeout handling of messages
     /// </summary>
     TimeSpan Timeout { get; }
 }

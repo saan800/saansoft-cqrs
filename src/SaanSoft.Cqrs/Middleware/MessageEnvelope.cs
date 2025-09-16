@@ -47,7 +47,7 @@ public sealed class MessageEnvelope
     /// Should be populated by the initiating command/event/query/message Id.
     /// Similar idea to CorrelationId, it provides a way to trace messages through the system
     /// </summary>
-    public string? TriggeredByMessageId { get; set; }
+    public Guid? TriggeredByMessageId { get; set; }
 
     // TODO: helpers to add/overwrite/read Metadata
     /// <summary>
@@ -111,8 +111,19 @@ public sealed class MessageEnvelope
     /// <summary>
     /// Mark that a handler is about to process the message
     /// </summary>
+    /// <remarks>
+    /// Only adds a pending record if one doesn't already exist for the handler
+    /// </remarks>
     public void MarkPending(string handlerName)
-        => Handlers.Add(new HandlerRecord(handlerName, HandlerStatus.Pending));
+    {
+        if (!Handlers.Any(h =>
+            string.Equals(h.HandlerName, handlerName, StringComparison.OrdinalIgnoreCase) &&
+            h.Status == HandlerStatus.Pending)
+        )
+        {
+            Handlers.Add(new HandlerRecord(handlerName, HandlerStatus.Pending));
+        }
+    }
 
     /// <summary>
     /// Mark that a handler has successfully processed the message.
@@ -120,33 +131,39 @@ public sealed class MessageEnvelope
     /// If the handler was previously marked as pending or failed, we update the status to success and clear
     /// any error information.
     /// </summary>
+    /// <remarks>
+    /// Replaces any pending or failed records for the handler
+    /// </remarks>
     public void MarkSuccess(string handlerName)
     {
-        var index = Handlers.FindIndex(h =>
+        var existingRecords = Handlers.Where(h =>
             string.Equals(h.HandlerName, handlerName, StringComparison.OrdinalIgnoreCase) &&
             h.Status != HandlerStatus.Success
-        );
-        if (index >= 0)
-            Handlers[index] = Handlers[index] with
-            {
-                Status = HandlerStatus.Success,
-                HandledOnUtc = DateTime.UtcNow,
-                ErrorMessage = null,
-                Exception = null
-            };
-        else
-            Handlers.Add(new HandlerRecord(handlerName, HandlerStatus.Success, DateTime.UtcNow));
+        ).ToList();
+
+        var record = new HandlerRecord(handlerName, HandlerStatus.Success, DateTime.UtcNow);
+        foreach (var h in existingRecords)
+        {
+            Handlers.Remove(h);
+        }
+        Handlers.Add(record);
     }
 
     /// <summary>
     /// Mark that a handler has failed to process the message
     /// </summary>
+    /// <remarks>
+    /// Will replace any pending records for the handler
+    /// </remarks>
     public void MarkFailed(string handlerName, string errorMessage)
         => MarkFailed(handlerName, errorMessage, null);
 
     /// <summary>
     /// Mark that a handler has failed to process the message
     /// </summary>
+    /// <remarks>
+    /// Will replace any pending records for the handler
+    /// </remarks>
     public void MarkFailed(string handlerName, Exception exception)
         => MarkFailed(handlerName, null, exception);
 
@@ -155,6 +172,9 @@ public sealed class MessageEnvelope
     ///
     /// Must provide either an error message or an exception or both
     /// </summary>
+    /// <remarks>
+    /// Will replace any pending records for the handler
+    /// </remarks>
     public void MarkFailed(string handlerName, string? errorMessage, Exception? exception)
     {
         if (string.IsNullOrWhiteSpace(errorMessage) && exception == null)
@@ -164,25 +184,16 @@ public sealed class MessageEnvelope
         if (string.IsNullOrWhiteSpace(errorMessage) && exception != null)
             errorMessage = exception.Message;
 
-        var index = Handlers.FindIndex(h =>
+        var existingPendingRecords = Handlers.Where(h =>
             string.Equals(h.HandlerName, handlerName, StringComparison.OrdinalIgnoreCase) &&
             h.Status == HandlerStatus.Pending
-        );
-        if (index >= 0)
+        ).ToList();
+
+        var record = new HandlerRecord(handlerName, HandlerStatus.Failed, DateTime.UtcNow, errorMessage, exception);
+        foreach (var h in existingPendingRecords)
         {
-            Handlers[index] = Handlers[index] with
-            {
-                Status = HandlerStatus.Failed,
-                HandledOnUtc = DateTime.UtcNow,
-                ErrorMessage = errorMessage,
-                Exception = exception
-            };
+            Handlers.Remove(h);
         }
-        else
-        {
-            Handlers.Add(
-                new HandlerRecord(handlerName, HandlerStatus.Failed, DateTime.UtcNow, errorMessage, exception)
-            );
-        }
+        Handlers.Add(record);
     }
 }

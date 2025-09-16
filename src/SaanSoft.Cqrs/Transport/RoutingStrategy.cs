@@ -9,9 +9,7 @@ namespace SaanSoft.Cqrs.Transport;
 public sealed class RoutingStrategy(IServiceRegistry serviceRegistry) : IRoutingStrategy
 {
     /// <summary>
-    /// TODO: update implementation and test for these rules
-    ///
-    /// If IExternalMessageTransport is not registered, this will:
+    /// If IExternalMessageTransport is not registered and doing InMemory execution only, this will:
     /// - Throw an exception if multiple handlers for ICommand, ICommand&lt;TResult&gt;, IQuery&lt;TResult&gt; are
     ///   found in the serviceRegistry.
     /// - Throw an exception if no handlers for ICommand, ICommand&lt;TResult&gt;, IQuery&lt;TResult&gt; are not found
@@ -32,6 +30,9 @@ public sealed class RoutingStrategy(IServiceRegistry serviceRegistry) : IRouting
     /// </summary>
     /// <exception cref="ApplicationException">
     /// Any critical issues which arise during routing decision making.
+    /// </exception>
+    /// <exception cref="NotSupportedException">
+    /// Pass in a message that is not a command/event/query (ie probably inherited directory from IMessage)
     /// </exception>
     public bool IsExternalMessage<TMessage>(TMessage message) where TMessage : IMessage
     {
@@ -70,7 +71,13 @@ public sealed class RoutingStrategy(IServiceRegistry serviceRegistry) : IRouting
                 ? true
                 : throw new ApplicationException($"Could not find a handler for {messageType.GetTypeFullName()}");
         }
-        throw new ApplicationException($"Unknown message type: {messageType.GetTypeFullName()}");
+        if (Implements(messageType, typeof(IMessage)))
+        {
+            throw new NotSupportedException(
+                @$"{messageType.GetTypeFullName()} directly implements {nameof(IMessage)}. " +
+                " Messages must use ICommand, IEvent or IQuery");
+        }
+        throw new NotSupportedException($"Unknown message type: {messageType.GetTypeFullName()}");
     }
 
     /// <summary>

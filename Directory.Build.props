@@ -51,6 +51,9 @@
     <Using Include="AwesomeAssertions" />
     <Using Include="FakeItEasy" />
     <Using Include="SaanSoft.Cqrs.Messages" />
+    <Using Include="SaanSoft.Tests.Cqrs.Shared.AutoFixture" />
+    <Using Include="SaanSoft.Tests.Cqrs.Shared.TestHandlers" />
+    <Using Include="SaanSoft.Tests.Cqrs.Shared.TestMessages" />
     <Using Include="Xunit" />
   </ItemGroup>
 </Project>

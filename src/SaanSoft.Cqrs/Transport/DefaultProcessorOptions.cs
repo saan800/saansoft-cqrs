@@ -18,12 +18,13 @@ public class DefaultProcessorOptions : IDefaultProcessorOptions
     /// </summary>
     public virtual TimeSpan Timeout { get; set; } = TimeSpan.FromMinutes(15);
 
-    public virtual IExternalProcessorOptions Clone(bool waitForExecution)
+    public virtual IExternalProcessorOptions Clone(bool waitForExecution, bool expectSingleHandler)
     {
         var eto = new ExternalProcessorOptions
         {
             WaitForExecution = waitForExecution,
             Timeout = Timeout,
+            ExpectSingleHandler = expectSingleHandler
         };
 
         return eto;
