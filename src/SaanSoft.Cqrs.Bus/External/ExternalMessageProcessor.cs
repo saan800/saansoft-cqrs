@@ -36,8 +36,7 @@ public sealed class ExternalMessageProcessor(
         var firstMessage = envelopes.First().Message;
         var messageTypeName = typeof(TMessage).GetTypeFullName();
 
-        var options = _defaultProcessorOptions.Clone(waitForExecution);
-        options.ExpectSingleHandler = firstMessage is not IEvent;
+        var options = _defaultProcessorOptions.Clone(waitForExecution, expectSingleHandler: firstMessage is not IEvent);
 
         if (firstMessage is ITimeout timeoutMessage)
         {
@@ -119,8 +118,7 @@ public sealed class ExternalMessageProcessor(
         var messageTypeName = typeof(TMessage).GetTypeFullName();
 
         // if we want a response, we have to wait for the execution
-        var options = _defaultProcessorOptions.Clone(waitForExecution: true);
-        options.ExpectSingleHandler = true;
+        var options = _defaultProcessorOptions.Clone(waitForExecution: true, expectSingleHandler: true);
         if (envelope.Message is ITimeout timeoutMessage)
             options.Timeout = timeoutMessage.Timeout;
 

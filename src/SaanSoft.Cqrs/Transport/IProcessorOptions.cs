@@ -23,7 +23,7 @@ public interface IDefaultProcessorOptions : IBaseProcessorOptions
     /// <summary>
     /// Create a IExternalProcessorOptions from the defaults
     /// </summary>
-    IExternalProcessorOptions Clone(bool waitForExecution);
+    IExternalProcessorOptions Clone(bool waitForExecution, bool expectSingleHandler);
 }
 
 /// <summary>
