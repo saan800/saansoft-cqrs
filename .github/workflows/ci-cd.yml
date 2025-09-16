@@ -8,21 +8,31 @@ on:
     paths:
       - "src/**"
       - "Directory.*.props"
+  workflow_dispatch: # 👈 manual trigger here to release
+    inputs:
+      force-release:
+        description: "Force a release regardless of PR labels"
+        type: boolean
+        required: false
+        default: false
 
 permissions:
   contents: read
+  pull-requests: read
 
 jobs:
   ci-cd:
     permissions:
       contents: write
       packages: write
-    uses: saan800/github/.github/workflows/_dotnet-build-test-pack-publish.yml@main
+      pull-requests: read
+    uses: saan800/github/.github/workflows/_dotnet-build-test-pack-publish-nuget.yml@main
     with:
       os: ubuntu-latest
       dotnet-version: 9.0.x
       codecov-slug: "saan800/saansoft-cqrs"
       is-release: ${{ github.ref == 'refs/heads/main' }}
+      force-release: ${{ github.event.inputs.force-release || false }}
     secrets:
       GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

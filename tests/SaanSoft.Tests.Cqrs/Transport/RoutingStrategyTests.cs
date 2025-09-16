@@ -171,7 +171,8 @@ public class RoutingStrategyTests
         public ExternalMessageTransport()
         {
             _serviceRegistry = A.Fake<IServiceRegistry>();
-            A.CallTo(() => _serviceRegistry.ResolveService<IExternalMessageTransport>()).Returns(A.Fake<IExternalMessageTransport>());
+            A.CallTo(() => _serviceRegistry.ResolveService<IExternalMessageTransport>())
+                .Returns(A.Fake<IExternalMessageTransport>());
 
             _routingStrategy = new RoutingStrategy(_serviceRegistry);
         }

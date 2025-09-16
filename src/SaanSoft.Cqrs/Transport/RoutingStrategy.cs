@@ -73,7 +73,9 @@ public sealed class RoutingStrategy(IServiceRegistry serviceRegistry) : IRouting
         }
         if (Implements(messageType, typeof(IMessage)))
         {
-            throw new NotSupportedException($"{messageType.GetTypeFullName()} directly implements {nameof(IMessage)}. Messages must use ICommand, IEvent or IQuery");
+            throw new NotSupportedException(
+                @$"{messageType.GetTypeFullName()} directly implements {nameof(IMessage)}. " +
+                " Messages must use ICommand, IEvent or IQuery");
         }
         throw new NotSupportedException($"Unknown message type: {messageType.GetTypeFullName()}");
     }
