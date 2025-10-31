@@ -43,12 +43,12 @@ public class RoutingStrategyTests
 // {
 //     /// <summary>
 //     /// If IExternalMessageBroker is not registered and doing Local execution only, this will:
-//     /// - Throw an exception if multiple handlers for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt; are
-//     ///   found in the serviceRegistry.
-//     /// - Throw an exception if no handlers for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt; are not found
-//     ///   in the serviceRegistry.
-//     /// - Return false if a single handler for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt; is found in
-//     ///   the serviceRegistry.
+//     /// - Throw an exception if multiple handlers for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt;
+//           are found in the serviceRegistry.
+//     /// - Throw an exception if no handlers for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt; are not
+//           found in the serviceRegistry.
+//     /// - Return false if a single handler for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt; is found
+//           in the serviceRegistry.
 //     /// - Return false for IEvent, regardless of the number of handlers in the serviceRegistry.
 //     /// </summary>
 //     public class LocalOnly
@@ -107,7 +107,8 @@ public class RoutingStrategyTests
 //             [Fact]
 //             public void Zero_handlers_should_throw_exception()
 //             {
-//                 A.CallTo(() => _serviceRegistry.HasCommandWithResponseHandler<MyCommandWithResponse>()).Returns(false);
+//                 A.CallTo(() => _serviceRegistry.HasCommandWithResponseHandler<MyCommandWithResponse>())
+//                     .Returns(false);
 
 //                 _routingStrategy.Invoking(y => _routingStrategy.IsExternalMessage<MyCommandWithResponse>())
 //                     .Should().Throw<ApplicationException>();
@@ -116,7 +117,8 @@ public class RoutingStrategyTests
 //             [Fact]
 //             public void One_handler_should_return_false()
 //             {
-//                 A.CallTo(() => _serviceRegistry.HasCommandWithResponseHandler<MyCommandWithResponse>()).Returns(true);
+//                 A.CallTo(() => _serviceRegistry.HasCommandWithResponseHandler<MyCommandWithResponse>())
+//                     .Returns(true);
 
 //                 var result = _routingStrategy.IsExternalMessage<MyCommandWithResponse>();
 
@@ -126,7 +128,8 @@ public class RoutingStrategyTests
 //             [Fact]
 //             public void Multiple_handlers_ServiceRegistry_throws_exception_that_should_bubble_up()
 //             {
-//                 A.CallTo(() => _serviceRegistry.HasCommandWithResponseHandler<MyCommandWithResponse>()).Throws<Exception>();
+//                 A.CallTo(() => _serviceRegistry.HasCommandWithResponseHandler<MyCommandWithResponse>())
+//                     .Throws<Exception>();
 
 //                 _routingStrategy.Invoking(y => _routingStrategy.IsExternalMessage<MyCommandWithResponse>())
 //                     .Should().Throw<Exception>();
@@ -190,12 +193,12 @@ public class RoutingStrategyTests
 
 //     /// <summary>
 //     /// If IExternalMessageBroker is registered, this will:
-//     /// - Throw an exception if multiple handlers for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt; are
+//     /// - Throw an exception if multiple handlers for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt
+//     ///   are found in the serviceRegistry.
+//     /// - Return true if no handlers for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt; are not 
+//     ///   found in theserviceRegistry.
+//     /// - Return false if a single handler for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt; is 
 //     ///   found in the serviceRegistry.
-//     /// - Return true if no handlers for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt; are not found in the
-//     ///   serviceRegistry.
-//     /// - Return false if a single handler for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt; is found in
-//     ///   the serviceRegistry.
 //     /// - Return true for IEvent, regardless of the number of handlers in the serviceRegistry (assures events are
 //     ///   handled by all subscribers, and in published order).
 //     /// </summary>
@@ -258,7 +261,8 @@ public class RoutingStrategyTests
 //             [Fact]
 //             public void Zero_handlers_should_return_true()
 //             {
-//                 A.CallTo(() => _serviceRegistry.HasCommandWithResponseHandler<MyCommandWithResponse>()).Returns(false);
+//                 A.CallTo(() => _serviceRegistry.HasCommandWithResponseHandler<MyCommandWithResponse>())
+//                     .Returns(false);
 
 //                 var result = _routingStrategy.IsExternalMessage<MyCommandWithResponse>();
 
@@ -268,7 +272,8 @@ public class RoutingStrategyTests
 //             [Fact]
 //             public void One_handler_should_return_false()
 //             {
-//                 A.CallTo(() => _serviceRegistry.HasCommandWithResponseHandler<MyCommandWithResponse>()).Returns(true);
+//                 A.CallTo(() => _serviceRegistry.HasCommandWithResponseHandler<MyCommandWithResponse>())
+//                     .Returns(true);
 
 //                 var result = _routingStrategy.IsExternalMessage<MyCommandWithResponse>();
 
@@ -278,7 +283,8 @@ public class RoutingStrategyTests
 //             [Fact]
 //             public void Multiple_handlers_ServiceRegistry_throws_exception_that_should_bubble_up()
 //             {
-//                 A.CallTo(() => _serviceRegistry.HasCommandWithResponseHandler<MyCommandWithResponse>()).Throws<Exception>();
+//                 A.CallTo(() => _serviceRegistry.HasCommandWithResponseHandler<MyCommandWithResponse>())
+//                     .Throws<Exception>();
 
 //                 _routingStrategy.Invoking(y => _routingStrategy.IsExternalMessage<MyCommandWithResponse>())
 //                     .Should().Throw<Exception>();

@@ -56,7 +56,7 @@ public sealed class MessageEnvelope
     /// <summary>
     /// Private constructor to force use of <see cref="Wrap"/>.
     ///
-    /// Also a lot of serialisers (e.g. System.Text.Json, Newtonsoft.Json, etc.) and databases require a
+    /// Also a lot of serializers (e.g. System.Text.Json, Newtonsoft.Json, etc.) and databases require a
     /// parameter-less constructor
     /// </summary>
     private MessageEnvelope()

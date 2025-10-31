@@ -16,7 +16,8 @@ public interface IServiceRegistry
     bool HasCommandHandler<TCommand>() where TCommand : IMessage;
 
     /// <summary>
-    /// Checks if a command handler is registered in the current application for the given ICommand&lt;TResponse&gt; type.
+    /// Checks if a command handler is registered in the current application for the given ICommand&lt;TResponse&gt;
+    /// type.
     /// Throws ApplicationException if more than one handler for the command.
     /// </summary>
     /// <exception cref="ApplicationException" />

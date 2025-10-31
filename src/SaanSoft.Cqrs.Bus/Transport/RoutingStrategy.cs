@@ -19,8 +19,8 @@ public sealed class RoutingStrategy(IServiceRegistry serviceRegistry)
     /// If IExternalMessageBroker is not registered and doing local execution only, this will:
     /// - Throw an exception if multiple handlers for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt; are
     ///   found in the serviceRegistry.
-    /// - Throw an exception if no handlers for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt; are not found
-    ///   in the serviceRegistry.
+    /// - Throw an exception if no handlers for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt; are not
+    ///   found in the serviceRegistry.
     /// - Return LocalMessageRouter if a single handler for ICommand, ICommand&lt;TResponse&gt;,
     ///   IQuery&lt;TResponse&gt; is found in the serviceRegistry.
     /// - Return LocalMessageRouter for IEvent, regardless of the number of handlers in the serviceRegistry.
@@ -28,10 +28,10 @@ public sealed class RoutingStrategy(IServiceRegistry serviceRegistry)
     /// If IExternalMessageBroker is registered, this will:
     /// - Throw an exception if multiple handlers for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt; are
     ///   found in the serviceRegistry.
-    /// - Return ExternalMessageProcessor if no handlers for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt;
-    ///   are not found in the serviceRegistry.
-    /// - Return LocalMessageRouter if a single handler for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt; is
-    ///   found in the serviceRegistry.
+    /// - Return ExternalMessageProcessor if no handlers for ICommand, ICommand&lt;TResponse&gt;,
+    ///   IQuery&lt;TResponse&gt; are not found in the serviceRegistry.
+    /// - Return LocalMessageRouter if a single handler for ICommand, ICommand&lt;TResponse&gt;,
+    ///   IQuery&lt;TResponse&gt; is found in the serviceRegistry.
     /// - Return ExternalMessageProcessor for IEvent, regardless of the number of handlers in the serviceRegistry
     ///   (assures events are handled by all subscribers, and in published order).
     /// </remarks>
