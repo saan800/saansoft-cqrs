@@ -195,9 +195,9 @@ public class RoutingStrategyTests
 //     /// If IExternalMessageBroker is registered, this will:
 //     /// - Throw an exception if multiple handlers for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt
 //     ///   are found in the serviceRegistry.
-//     /// - Return true if no handlers for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt; are not 
-//     ///   found in theserviceRegistry.
-//     /// - Return false if a single handler for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt; is 
+//     /// - Return true if no handlers for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt; are not
+//     ///   found in the serviceRegistry.
+//     /// - Return false if a single handler for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt; is
 //     ///   found in the serviceRegistry.
 //     /// - Return true for IEvent, regardless of the number of handlers in the serviceRegistry (assures events are
 //     ///   handled by all subscribers, and in published order).
