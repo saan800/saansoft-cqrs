@@ -8,14 +8,14 @@ namespace SaanSoft.Cqrs.Transport;
 public interface IBaseProcessorOptions
 {
     /// <summary>
-    /// Timeout for handling a message, especially those messages where the publisher is waiting for a result.
+    /// Timeout for handling a message, especially those messages where the publisher is waiting for a response.
     /// If a message implements <see cref="ITimeout"/>, that value will overwrite the default at runtime.
     /// </summary>
     TimeSpan Timeout { get; set; }
 }
 
 /// <summary>
-/// Provide the default processor options for use with in memory and external message transports.
+/// Provide the default processor options for use with local and external message transports.
 /// At run time the defaults will be cloned for each message.
 /// </summary>
 public interface IDefaultProcessorOptions : IBaseProcessorOptions
@@ -27,7 +27,7 @@ public interface IDefaultProcessorOptions : IBaseProcessorOptions
 }
 
 /// <summary>
-/// Transport options provided to the IExternalMessageTransport.
+/// Transport options provided to the IExternalMessageBroker.
 /// Also used in TransportContext and IExternalTransportMiddleware to be enriched before publishing
 /// </summary>
 public interface IExternalProcessorOptions : IBaseProcessorOptions
@@ -37,7 +37,7 @@ public interface IExternalProcessorOptions : IBaseProcessorOptions
     /// Configured at run time for each message, depending on the message type and IMessageBus method used.
     /// </summary>
     /// <remarks>
-    /// If WaitForExecution=false, the IExternalMessageTransport should still return a ExternalResult,
+    /// If WaitForExecution=false, the IExternalMessageBroker should still return a ExternalResponse,
     /// but Success is that the message was published successfully, rather than handled successfully.
     /// </remarks>
     bool WaitForExecution { get; set; }

@@ -17,9 +17,9 @@ public interface ICommand : IMessage;
 /// Command handling should not alter any state in the system.
 /// The handler will often raise one or more associated events.
 ///
-/// Returns the result of the command
+/// Returns the response of the command
 /// </summary>
 /// <remarks>
 /// Names should be in the form of a verb, eg CreateOrder, UpdateUserDetails, DeleteBlogPost
 /// </remarks>
-public interface ICommand<TResult> : ICommand, IMessage<TResult>;
+public interface ICommand<TResponse> : ICommand, IMessage<TResponse>;

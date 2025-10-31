@@ -5,8 +5,8 @@ namespace SaanSoft.Tests.Cqrs.Shared.TestMessages;
 /// - want to mock throwing an exception in the handler
 /// - tests where there are none in the ServiceProvider
 /// </summary>
-public class NoHandlerCommandWithResult : Command<string>
+public class NoHandlerCommandWithResponse : Command<string>
 {
-    public NoHandlerCommandWithResult() : base() { }
-    public NoHandlerCommandWithResult(IMessage triggeredByMessage) : base(triggeredByMessage) { }
+    public NoHandlerCommandWithResponse() : base() { }
+    public NoHandlerCommandWithResponse(IMessage triggeredByMessage) : base(triggeredByMessage) { }
 }

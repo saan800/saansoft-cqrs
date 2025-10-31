@@ -3,18 +3,18 @@ using SaanSoft.Cqrs.Handlers;
 namespace SaanSoft.Tests.Cqrs.Shared.TestHandlers;
 
 public class QueryHandler :
-    IQueryHandler<MyQuery, MyQueryResult?>,
-    IQueryHandler<AnotherQuery, MyQueryResult>
+    IQueryHandler<MyQuery, MyQueryResponse?>,
+    IQueryHandler<AnotherQuery, MyQueryResponse>
 {
-    public Task<MyQueryResult?> HandleAsync(MyQuery query, CancellationToken cancellationToken = default)
+    public Task<MyQueryResponse?> HandleAsync(MyQuery query, CancellationToken cancellationToken = default)
     {
         var result = string.IsNullOrWhiteSpace(query.Message)
             ? null
-            : new MyQueryResult { Message = query.Message };
+            : new MyQueryResponse { Message = query.Message };
 
         return Task.FromResult(result);
     }
 
-    public Task<MyQueryResult> HandleAsync(AnotherQuery query, CancellationToken cancellationToken = default)
-        => Task.FromResult(new MyQueryResult());
+    public Task<MyQueryResponse> HandleAsync(AnotherQuery query, CancellationToken cancellationToken = default)
+        => Task.FromResult(new MyQueryResponse());
 }

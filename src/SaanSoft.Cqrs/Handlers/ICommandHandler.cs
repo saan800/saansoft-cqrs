@@ -10,15 +10,15 @@ public interface ICommandHandler<TCommand> where TCommand : ICommand
     Task HandleAsync(TCommand command, CancellationToken ct = default);
 }
 
-public interface ICommandHandler<in TCommand, TResult>
-    where TCommand : ICommand<TResult>
+public interface ICommandHandler<in TCommand, TResponse>
+    where TCommand : ICommand<TResponse>
 {
     /// <summary>
     /// Process the command including validation and other business logic to ensure its valid to continue.
     /// Command handling should not alter any state in the DB.
     /// The handler will often raise one or more associated events.
     ///
-    /// Returns the result of the command
+    /// Returns the response of the command
     /// </summary>
-    Task<TResult> HandleAsync(TCommand command, CancellationToken ct = default);
+    Task<TResponse> HandleAsync(TCommand command, CancellationToken ct = default);
 }
