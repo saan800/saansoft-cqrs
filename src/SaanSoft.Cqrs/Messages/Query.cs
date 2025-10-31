@@ -1,6 +1,6 @@
 namespace SaanSoft.Cqrs.Messages;
 
-public abstract class Query<TResult> : MessageBase, IQuery<TResult>
+public abstract class Query<TResponse> : MessageBase, IQuery<TResponse>
 {
     public Query() : base() { }
 

@@ -1,129 +1,125 @@
-
+using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging;
-using SaanSoft.Cqrs.Bus.External;
-using SaanSoft.Cqrs.Bus.InMemory;
+using SaanSoft.Cqrs.Bus.Transport;
 using SaanSoft.Cqrs.Bus.Utilities;
-using SaanSoft.Cqrs.DependencyInjection;
 using SaanSoft.Cqrs.Middleware;
-using SaanSoft.Cqrs.Transport;
 using SaanSoft.Cqrs.Utilities;
 
 namespace SaanSoft.Cqrs.Bus;
 
 public sealed class MessageBus(
     ILogger<MessageBus> logger,
-    IServiceRegistry serviceRegistry,
-    IRoutingStrategy routing,
-    IInMemoryMessageProcessor inMemoryMessageProcessor,
-    IEnumerable<IPublisherMiddleware<IMessage>>? publisherMiddleware,
-    IExternalMessageProcessor? externalMessageProcessor) : IMessageBus
+    RoutingStrategy routing,
+    IMiddleware[]? publisherMiddlewares) : IMessageBus
 {
-    public async Task ExecuteAsync<TCommand>(TCommand command, CancellationToken ct = default)
+    private readonly IMiddleware[] _middlewares = publisherMiddlewares ?? [];
+
+    public async Task ExecuteAsync<TCommand>(
+        TCommand command,
+        CancellationToken ct = default,
+        [CallerFilePath] string callerFile = "")
         where TCommand : ICommand
     {
-        using (logger.BeginScope(command.BuildLoggingScopeData()))
+        var callerClass = Path.GetFileNameWithoutExtension(callerFile);
+        var envelope = MessageEnvelope.Wrap(command, callerClass);
+
+        using (logger.BeginScope(envelope.BuildLoggingScopeData()))
         {
-            var envelope = MessageEnvelope.Wrap(command);
-            await RunPublisherPipeline<TCommand>(envelope, ct);
+            await _middlewares.InvokeAsync<TCommand>(envelope, ct);
 
-            if (routing.IsExternalMessage(command) && externalMessageProcessor != null)
-            {
-                await externalMessageProcessor.PublishExternallyAndWaitAsync<TCommand>(envelope, ct);
-                return;
-            }
-
-            await inMemoryMessageProcessor.HandleCommandEnvelopeAsync<TCommand>(envelope, ct);
+            var messageRouter = routing.GetMessageRouter<TCommand>();
+            await messageRouter.ExecuteAsync<TCommand>(envelope, ct);
         }
     }
 
-    public async Task<TResult> ExecuteAsync<TCommand, TResult>(TCommand command, CancellationToken ct = default)
-        where TCommand : ICommand<TResult>
+    public async Task<TResponse> ExecuteAsync<TCommand, TResponse>(
+        TCommand command,
+        CancellationToken ct = default,
+        [CallerFilePath] string callerFile = "")
+        where TCommand : ICommand<TResponse>
     {
-        using (logger.BeginScope(command.BuildLoggingScopeData()))
-        {
-            var envelope = MessageEnvelope.Wrap(command);
-            await RunPublisherPipeline<TCommand>(envelope, ct);
+        var callerClass = Path.GetFileNameWithoutExtension(callerFile);
+        var envelope = MessageEnvelope.Wrap(command, callerClass);
 
-            return routing.IsExternalMessage(command) && externalMessageProcessor != null
-                ? await externalMessageProcessor
-                    .PublishExternallyAndWaitForResultsAsync<TCommand, TResult>(envelope, ct)
-                : await inMemoryMessageProcessor.HandleCommandEnvelopeAsync<TCommand, TResult>(envelope, ct);
+        using (logger.BeginScope(envelope.BuildLoggingScopeData()))
+        {
+            await _middlewares.InvokeAsync<TCommand>(envelope, ct);
+
+            var messageRouter = routing.GetMessageRouter<TCommand>();
+            return await messageRouter.ExecuteAsync<TCommand, TResponse>(envelope, ct);
         }
     }
 
-    public async Task SendAsync<TCommand>(TCommand command, CancellationToken ct = default)
+    public async Task SendAsync<TCommand>(
+        TCommand command,
+        CancellationToken ct = default,
+        [CallerFilePath] string callerFile = "")
         where TCommand : ICommand
     {
-        using (logger.BeginScope(command.BuildLoggingScopeData()))
+        var callerClass = Path.GetFileNameWithoutExtension(callerFile);
+        var envelope = MessageEnvelope.Wrap(command, callerClass);
+
+        using (logger.BeginScope(envelope.BuildLoggingScopeData()))
         {
-            var envelope = MessageEnvelope.Wrap(command);
-            await RunPublisherPipeline<TCommand>(envelope, ct);
+            await _middlewares.InvokeAsync<TCommand>(envelope, ct);
 
-            if (routing.IsExternalMessage(command) && externalMessageProcessor != null)
-            {
-                await externalMessageProcessor.PublishExternallyAsync<TCommand>([envelope], ct);
-                return;
-            }
-
-            await inMemoryMessageProcessor.HandleCommandEnvelopeAsync<TCommand>(envelope, ct);
+            var messageRouter = routing.GetMessageRouter<TCommand>();
+            await messageRouter.SendAsync<TCommand>(envelope, ct);
         }
     }
 
-    public async Task PublishAsync<TEvent>(TEvent evt, CancellationToken ct = default) where TEvent : IEvent
+    public async Task<TResponse> QueryAsync<TQuery, TResponse>(
+        TQuery query,
+        CancellationToken ct = default,
+        [CallerFilePath] string callerFile = "")
+        where TQuery : IQuery<TResponse>
     {
-        using (logger.BeginScope(evt.BuildLoggingScopeData()))
+        var callerClass = Path.GetFileNameWithoutExtension(callerFile);
+        var envelope = MessageEnvelope.Wrap(query, callerClass);
+
+        using (logger.BeginScope(envelope.BuildLoggingScopeData()))
         {
-            await PublishManyAsync([evt], ct);
+            await _middlewares.InvokeAsync<TQuery>(envelope, ct);
+
+            var messageRouter = routing.GetMessageRouter<TQuery>();
+            return await messageRouter.QueryAsync<TQuery, TResponse>(envelope, ct);
         }
     }
 
-    public async Task PublishManyAsync<TEvent>(IReadOnlyCollection<TEvent> events, CancellationToken ct = default)
+    public async Task PublishAsync<TEvent>(
+        TEvent evt,
+        CancellationToken ct = default,
+        [CallerFilePath] string callerFile = "")
+        where TEvent : IEvent
+    {
+        var callerClass = Path.GetFileNameWithoutExtension(callerFile);
+        var envelope = MessageEnvelope.Wrap(evt, callerClass);
+        using (logger.BeginScope(envelope.BuildLoggingScopeData()))
+        {
+            await _middlewares.InvokeAsync<TEvent>(envelope, ct);
+
+            var messageRouter = routing.GetMessageRouter<TEvent>();
+            await messageRouter.PublishManyAsync<TEvent>([envelope], ct);
+        }
+    }
+
+    public async Task PublishManyAsync<TEvent>(
+        IReadOnlyCollection<TEvent> events,
+        CancellationToken ct = default,
+        [CallerFilePath] string callerFile = "")
         where TEvent : IEvent
     {
         if (events.Count == 0) return;
-        var firstEvent = events.First();
 
-        var envelopeTasks = events.Select(async evt =>
+        var callerClass = Path.GetFileNameWithoutExtension(callerFile);
+        var envelopes = events.Select(evt => MessageEnvelope.Wrap(evt, callerClass)).ToArray();
+        using (logger.BeginScope(envelopes.BuildLoggingScopeData()))
         {
-            var envelope = MessageEnvelope.Wrap(evt);
-            await RunPublisherPipeline<TEvent>(envelope, ct);
-            return envelope;
-        });
-        var envelopes = await Task.WhenAll(envelopeTasks);
+            var tasks = envelopes.Select(async envelope => await _middlewares.InvokeAsync<TEvent>(envelope, ct));
+            await Task.WhenAll(tasks);
 
-        if (routing.IsExternalMessage(firstEvent) && externalMessageProcessor != null)
-        {
-            await externalMessageProcessor.PublishExternallyAsync<TEvent>(envelopes, ct);
-            return;
+            var messageRouter = routing.GetMessageRouter<TEvent>();
+            await messageRouter.PublishManyAsync<TEvent>(envelopes, ct);
         }
-
-        await inMemoryMessageProcessor.HandleEventEnvelopesAsync<TEvent>(envelopes, ct);
-    }
-
-    public async Task<TResult> QueryAsync<TQuery, TResult>(TQuery query, CancellationToken ct = default)
-        where TQuery : IQuery<TResult>
-    {
-        using (logger.BeginScope(query.BuildLoggingScopeData()))
-        {
-            var envelope = MessageEnvelope.Wrap(query);
-            await RunPublisherPipeline<TQuery>(envelope, ct);
-
-            return routing.IsExternalMessage(query) && externalMessageProcessor != null
-                ? await externalMessageProcessor.PublishExternallyAndWaitForResultsAsync<TQuery, TResult>(envelope, ct)
-                : await inMemoryMessageProcessor.HandleQueryEnvelopeAsync<TQuery, TResult>(envelope, ct);
-        }
-    }
-
-    private Task RunPublisherPipeline<TMessage>(MessageEnvelope envelope, CancellationToken ct)
-        where TMessage : IMessage
-    {
-        var ctx = new PublishContext(envelope, serviceRegistry);
-        static Task Terminal() => Task.CompletedTask;
-
-        var validMiddlewares = publisherMiddleware
-            .GetValidMiddlewares<IPublisherMiddleware<TMessage>, IPublisherMiddleware<IMessage>>();
-        var middlewares = validMiddlewares
-            .Select(mw => (Func<Func<Task>, Func<Task>>)(next => () => mw.InvokeAsync(ctx, next, ct)));
-        return MiddlewareExtensions.RunPipeline(middlewares, Terminal);
     }
 }

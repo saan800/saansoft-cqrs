@@ -8,7 +8,7 @@ public abstract class Command : MessageBase, ICommand
     protected Command(IMessage triggeredByMessage) : base(triggeredByMessage) { }
 }
 
-public abstract class Command<TResult> : MessageBase, ICommand<TResult>
+public abstract class Command<TResponse> : MessageBase, ICommand<TResponse>
 {
     public Command() : base() { }
 

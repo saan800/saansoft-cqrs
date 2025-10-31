@@ -1,6 +1,6 @@
 namespace SaanSoft.Tests.Cqrs.Shared.TestMessages;
 
-public class MyQueryResult
+public class MyQueryResponse
 {
     public string? Message { get; set; }
 }

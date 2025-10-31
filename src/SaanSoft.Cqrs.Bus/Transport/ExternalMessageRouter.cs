@@ -1,30 +1,49 @@
 using Microsoft.Extensions.Logging;
-using SaanSoft.Cqrs.Bus.External;
 using SaanSoft.Cqrs.Bus.Utilities;
-using SaanSoft.Cqrs.DependencyInjection;
 using SaanSoft.Cqrs.Middleware;
 using SaanSoft.Cqrs.Transport;
 using SaanSoft.Cqrs.Utilities;
 
-namespace SaanSoft.Cqrs.Bus.InMemory;
+namespace SaanSoft.Cqrs.Bus.Transport;
 
 public sealed class ExternalMessageProcessor(
         ILogger<ExternalMessageProcessor> logger,
-        IServiceRegistry serviceRegistry,
         IDefaultProcessorOptions? defaultProcessorOptions,
-        IExternalMessageTransport externalMessageTransport,
-        IEnumerable<IExternalTransportPublisherMiddleware<IMessage>>? externalTransportPublisherMiddleware
-    ) : IExternalMessageProcessor
+        IExternalMessageBroker externalMessageBroker,
+        IMiddleware[]? externalPublisherMiddlewares
+    ) : IMessageRouter
 {
-    private readonly string _externalMessageTransportName = "External transport";
+    private readonly string _externalMessageBrokerName = "External transport";
+    private readonly IMiddleware[] _middlewares
+        = externalPublisherMiddlewares ?? [];
 
     private readonly IDefaultProcessorOptions _defaultProcessorOptions
         = defaultProcessorOptions ?? new DefaultProcessorOptions();
 
-    public Task PublishExternallyAndWaitAsync<TMessage>(MessageEnvelope envelope, CancellationToken ct)
+    public Task ExecuteAsync<TCommand>(MessageEnvelope envelope, CancellationToken ct)
+        where TCommand : ICommand
+        => PublishExternallyAndWaitAsync<TCommand>(envelope, ct);
+
+    public Task<TResponse> ExecuteAsync<TCommand, TResponse>(MessageEnvelope envelope, CancellationToken ct)
+        where TCommand : ICommand<TResponse>
+        => PublishExternallyAndWaitForResponseAsync<TCommand, TResponse>(envelope, ct);
+
+    public Task SendAsync<TCommand>(MessageEnvelope envelope, CancellationToken ct)
+        where TCommand : ICommand
+        => PublishExternallyAsync<TCommand>([envelope], ct);
+
+    public Task<TResponse> QueryAsync<TQuery, TResponse>(MessageEnvelope envelope, CancellationToken ct)
+        where TQuery : IQuery<TResponse>
+        => PublishExternallyAndWaitForResponseAsync<TQuery, TResponse>(envelope, ct);
+
+    public Task PublishManyAsync<TEvent>(MessageEnvelope[] envelopes, CancellationToken ct)
+        where TEvent : IEvent
+        => PublishExternallyAsync<TEvent>(envelopes, ct);
+
+    private Task PublishExternallyAndWaitAsync<TMessage>(MessageEnvelope envelope, CancellationToken ct)
         where TMessage : IMessage => PublishExternallyAsync<TMessage>([envelope], true, ct);
 
-    public Task PublishExternallyAsync<TMessage>(MessageEnvelope[] envelopes, CancellationToken ct)
+    private Task PublishExternallyAsync<TMessage>(MessageEnvelope[] envelopes, CancellationToken ct)
         where TMessage : IMessage => PublishExternallyAsync<TMessage>(envelopes, false, ct);
 
     private async Task PublishExternallyAsync<TMessage>(
@@ -51,32 +70,32 @@ public sealed class ExternalMessageProcessor(
             var transportCt = linkedCts.Token;
 
             // run the transport pipeline over each envelope
-            var tasks = envelopes.Select(envelope => RunTransportPipeline<TMessage>(envelope, ct));
+            var tasks = envelopes.Select(envelope => _middlewares.InvokeAsync<TMessage>(envelope, ct));
             await Task.WhenAll(tasks);
 
             logger.LogDebug("Start: Publishing {MessageType}", messageTypeName);
-            var result = await externalMessageTransport.PublishManyAsync(envelopes, options, transportCt);
-            if (result is { Success: true })
+            var response = await externalMessageBroker.PublishManyAsync(envelopes, options, transportCt);
+            if (response is { Success: true })
             {
                 logger.LogDebug("Stop: Successfully published {MessageType}", messageTypeName);
                 return;
             }
 
             // handler threw an exception - mark failed and rethrow
-            if (result?.Exception != null)
+            if (response?.Exception != null)
             {
-                logger.LogError(result.Exception, "Failed to process {MessageType}", messageTypeName);
+                logger.LogError(response.Exception, "Failed to process {MessageType}", messageTypeName);
                 foreach (var envelope in envelopes)
                 {
-                    envelope.MarkFailed(_externalMessageTransportName, result.Exception);
+                    envelope.MarkFailed(_externalMessageBrokerName, response.Exception);
                 }
-                throw result.Exception;
+                throw response.Exception;
             }
 
-            var errorMessage = result?.ErrorMessage ?? "External publish message failed";
-            if (result == null)
+            var errorMessage = response?.ErrorMessage ?? "External publish message failed";
+            if (response == null)
             {
-                errorMessage = $"External publish message failed: External transport did not return a result";
+                errorMessage = "External publish message failed: External transport did not return a response";
             }
 
             throw new ApplicationException(errorMessage);
@@ -96,7 +115,7 @@ public sealed class ExternalMessageProcessor(
 
             foreach (var envelope in envelopes)
             {
-                envelope.MarkFailed(_externalMessageTransportName, exception);
+                envelope.MarkFailed(_externalMessageBrokerName, exception);
             }
             throw exception;
         }
@@ -105,13 +124,13 @@ public sealed class ExternalMessageProcessor(
             logger.LogError(ex, "Failed to process {MessageType}", messageTypeName);
             foreach (var envelope in envelopes)
             {
-                envelope.MarkFailed(_externalMessageTransportName, ex);
+                envelope.MarkFailed(_externalMessageBrokerName, ex);
             }
             throw;
         }
     }
 
-    public async Task<TResult> PublishExternallyAndWaitForResultsAsync<TMessage, TResult>(
+    public async Task<TResponse> PublishExternallyAndWaitForResponseAsync<TMessage, TResponse>(
         MessageEnvelope envelope, CancellationToken ct)
         where TMessage : IMessage
     {
@@ -129,21 +148,21 @@ public sealed class ExternalMessageProcessor(
         {
             var transportCt = linkedCts.Token;
 
-            await RunTransportPipeline<TMessage>(envelope, transportCt);
-            var result = await externalMessageTransport!.PublishAsync(envelope, options, transportCt);
-            if (result?.Exception != null)
+            await _middlewares.InvokeAsync<TMessage>(envelope, transportCt);
+            var response = await externalMessageBroker!.PublishAsync(envelope, options, transportCt);
+            if (response?.Exception != null)
             {
-                logger.LogError(result.Exception, "Failed to process {MessageType}", messageTypeName);
-                envelope.MarkFailed(_externalMessageTransportName, result.Exception);
-                throw result.Exception;
+                logger.LogError(response.Exception, "Failed to process {MessageType}", messageTypeName);
+                envelope.MarkFailed(_externalMessageBrokerName, response.Exception);
+                throw response.Exception;
             }
 
-            var errorMessage = result?.ErrorMessage ?? "External publish message failed";
-            if (result != null && result.Success)
+            var errorMessage = response?.ErrorMessage ?? "External publish message failed";
+            if (response != null && response.Success)
             {
-                if (result.Payload != null) return (TResult)result.Payload;
+                if (response.Payload != null) return (TResponse)response.Payload;
 
-                var returnType = typeof(TResult);
+                var returnType = typeof(TResponse);
                 // Reference types or Nullable<T> are allowed to return null
                 if (!returnType.IsValueType || Nullable.GetUnderlyingType(returnType) != null)
                 {
@@ -151,16 +170,16 @@ public sealed class ExternalMessageProcessor(
                     return default!;
                 }
 
-                // Success=true, but Payload is null and TResult is not nullable
+                // Success=true, but Payload is null and TResponse is not nullable
                 // populate errorMessage for use below
-                errorMessage = @$"Result from transport was marked as a success, but " +
-                    $"{nameof(ExternalResult.Payload)} was null and {returnType.GetTypeFullName()} is not nullable.";
-                envelope.MarkFailed(_externalMessageTransportName, errorMessage);
+                errorMessage = @$"Response from transport was marked as a success, but " +
+                    $"{nameof(ExternalResponse.Payload)} was null and {returnType.GetTypeFullName()} is not nullable.";
+                envelope.MarkFailed(_externalMessageBrokerName, errorMessage);
             }
 
-            if (result == null)
+            if (response == null)
             {
-                errorMessage = $"External publish message failed: External transport did not return a result";
+                errorMessage = $"External publish message failed: External transport did not return a response";
             }
 
             throw new ApplicationException(errorMessage);
@@ -177,29 +196,14 @@ public sealed class ExternalMessageProcessor(
                 messageTypeName,
                 $"Timed out after {options.Timeout}"
             );
-            envelope.MarkFailed(_externalMessageTransportName, exception);
+            envelope.MarkFailed(_externalMessageBrokerName, exception);
             throw exception;
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Failed to process {MessageType}", messageTypeName);
-            envelope.MarkFailed(_externalMessageTransportName, ex);
+            envelope.MarkFailed(_externalMessageBrokerName, ex);
             throw;
         }
-    }
-
-    private Task RunTransportPipeline<TMessage>(MessageEnvelope envelope, CancellationToken ct)
-        where TMessage : IMessage
-    {
-        var ctx = new TransportContext(envelope, serviceRegistry);
-        static Task Terminal() => Task.CompletedTask;
-
-        var validMiddlewares = externalTransportPublisherMiddleware
-            .GetValidMiddlewares<
-                IExternalTransportPublisherMiddleware<TMessage>, IExternalTransportPublisherMiddleware<IMessage>>();
-        var middlewares = validMiddlewares
-            .Select(mw => (Func<Func<Task>, Func<Task>>)(next => () => mw.InvokeAsync(ctx, next, ct)));
-
-        return MiddlewareExtensions.RunPipeline(middlewares, Terminal);
     }
 }

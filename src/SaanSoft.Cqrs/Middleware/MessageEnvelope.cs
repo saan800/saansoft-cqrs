@@ -19,7 +19,7 @@ public sealed class MessageEnvelope
     public required string MessageType { get; init; }
 
     /// <summary>
-    /// Timestamp when the message was created/published in UTC
+    /// Timestamp when the message was published in UTC
     /// </summary>
     public required DateTime OccurredOn { get; init; }
 
@@ -29,25 +29,10 @@ public sealed class MessageEnvelope
     public required object Message { get; init; }
 
     /// <summary>
-    /// CorrelationId / TraceId for distributed tracing
+    /// When saving messages to a database store, record the order in which they arrived.
+    /// When replaying messages, should order first by <see cref="Sequence"/>, then by <see cref="OccurredOn"/>
     /// </summary>
-    public string? CorrelationId { get; set; }
-
-    /// <summary>
-    /// IdentifierCase for the user that triggered the message (e.g. user id, machine-2-machine id, etc.)
-    ///
-    /// This is NOT a security feature, it's just for tracking/auditing purposes.
-    ///
-    /// IMPORTANT: Do not include any PII or sensitive information here.
-    /// </summary>
-    public string? AuthenticationId { get; set; }
-
-    /// <summary>
-    /// Record if this message was triggered by another command/event/query.
-    /// Should be populated by the initiating command/event/query/message Id.
-    /// Similar idea to CorrelationId, it provides a way to trace messages through the system
-    /// </summary>
-    public Guid? TriggeredByMessageId { get; set; }
+    public long Sequence { get; init; } = 0;
 
     // TODO: helpers to add/overwrite/read Metadata
     /// <summary>
@@ -71,8 +56,8 @@ public sealed class MessageEnvelope
     /// <summary>
     /// Private constructor to force use of <see cref="Wrap"/>.
     ///
-    /// Also a lot of serializers (e.g. System.Text.Json, Newtonsoft.Json, etc.) and databases require a
-    /// parameterless constructor
+    /// Also a lot of serialisers (e.g. System.Text.Json, Newtonsoft.Json, etc.) and databases require a
+    /// parameter-less constructor
     /// </summary>
     private MessageEnvelope()
     {
@@ -87,7 +72,7 @@ public sealed class MessageEnvelope
     /// <remarks>
     /// If the message does not have an Id or OccurredOn set, they will be automatically populated.
     /// </remarks>
-    public static MessageEnvelope Wrap<TMessage>(TMessage message) where TMessage : IMessage
+    public static MessageEnvelope Wrap<TMessage>(TMessage message, string publisher = "") where TMessage : IMessage
     {
         ArgumentNullException.ThrowIfNull(message);
         if (message is not IMessage m) throw new ArgumentException(
@@ -102,9 +87,7 @@ public sealed class MessageEnvelope
             MessageType = message.GetType().GetTypeFullName(),
             OccurredOn = m.OccurredOn,
             Message = m,
-            CorrelationId = m.CorrelationId,
-            AuthenticationId = m.AuthenticationId,
-            TriggeredByMessageId = m.TriggeredByMessageId
+            Publisher = !string.IsNullOrWhiteSpace(publisher) ? publisher.Trim() : null
         };
     }
 

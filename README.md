@@ -19,7 +19,7 @@ Todo...
 
 ## TODO
 
-InMemoryBus for publishers
+LocalBus for publishers
 - tryExecute / queue / fetch
 
 all messages - attribute to have 3rd party queue group name (for aws/azure/etc)
@@ -45,7 +45,7 @@ all messages - attribute to have 3rd party queue group name (for aws/azure/etc)
 
 ### Message Buses
 
-* :eyes: [In Memory](./src/SaanSoft.Cqrs/Bus)
+* :eyes: [Local](./src/SaanSoft.Cqrs/Bus)
 * AWS SNS/SQS
 * Azure Topics and Queues (maybe, plus example app if doing)
 
@@ -80,9 +80,9 @@ TodoList
 * Maybe in future
   * Add an image to the TodoItem, see how its dealt with in upload and message processing
 
-### Basic InMemory Api
+### Basic Local/InMemory Api
 
-* in memory messaging
+* local app messaging
 * no decorators
 * no message store
 * MongoDB for read model for queries 
@@ -97,7 +97,7 @@ TodoList
 
 ### MongoDB Store Api
 
-* in memory messaging
+* local app messaging
 * all the decorators
 * mongodb repositories 
 * use messages to build read model in queries

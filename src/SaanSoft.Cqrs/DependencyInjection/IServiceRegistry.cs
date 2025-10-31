@@ -1,5 +1,3 @@
-using SaanSoft.Cqrs.Handlers;
-
 namespace SaanSoft.Cqrs.DependencyInjection;
 
 /// <summary>
@@ -15,21 +13,21 @@ public interface IServiceRegistry
     /// Throws ApplicationException if more than one handler for the command.
     /// </summary>
     /// <exception cref="ApplicationException" />
-    bool HasCommandHandler(Type commandType);
+    bool HasCommandHandler<TCommand>() where TCommand : IMessage;
 
     /// <summary>
-    /// Checks if a command handler is registered in the current application for the given ICommand&lt;TResult&gt; type.
+    /// Checks if a command handler is registered in the current application for the given ICommand&lt;TResponse&gt; type.
     /// Throws ApplicationException if more than one handler for the command.
     /// </summary>
     /// <exception cref="ApplicationException" />
-    bool HasCommandResultHandler(Type commandType);
+    bool HasCommandWithResponseHandler<TCommand>() where TCommand : IMessage;
 
     /// <summary>
-    /// Checks if a query handler is registered in the current application for the given IQuery&lt;TResult&gt; type.
+    /// Checks if a query handler is registered in the current application for the given IQuery&lt;TResponse&gt; type.
     /// Throws ApplicationException if more than one handler for the query.
     /// </summary>
     /// <exception cref="ApplicationException" />
-    bool HasQueryHandler(Type queryType);
+    bool HasQueryHandler<TQuery>() where TQuery : IMessage;
 
     /// <summary>
     /// Checks if any event handlers are registered in the current application for the given IEvent type.
@@ -38,24 +36,7 @@ public interface IServiceRegistry
     /// false: no handlers for the event type
     /// true: one or more handlers for the event type
     /// </returns>
-    bool HasEventHandlers(Type eventType);
-
-    /// <summary>
-    /// Resolve a single handler instance for the given handler type.
-    /// </summary>
-    /// <remarks>
-    /// Throws <see cref="ApplicationException"/> if multiple handlers are found for the given type.
-    /// Returns null if no handlers are found.
-    /// </remarks>
-    /// <exception cref="ApplicationException">Multiple handlers found for the given type.</exception>
-    object? ResolveSingleHandler(Type handlerType);
-
-    // TODO: ICommandHandler<TCommand> GetCommandHandler<TCommand>(TCommand command) where TCommand : ICommand;
-
-    /// <summary>
-    /// Resolve multiple handler instances for the given handler type.
-    /// </summary>
-    IEnumerable<object> ResolveMultipleHandlers(Type handlerType);
+    bool HasEventHandlers<TEvent>() where TEvent : IMessage;
 
     /// <summary>
     /// Resolve a service (if any) of the given type from the underlying container.
@@ -67,4 +48,12 @@ public interface IServiceRegistry
     /// If no service is found, and exception is thrown.
     /// </summary>
     T ResolveRequiredService<T>() where T : notnull;
+
+    /// <summary>
+    /// Resolve 0-n instances for the given type.
+    /// </summary>
+    /// <remarks>
+    /// Useful for finding potentially multiple handlers of events
+    /// </remarks>
+    IEnumerable<T> ResolveServices<T>();
 }

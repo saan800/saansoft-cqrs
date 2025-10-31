@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\SaanSoft.Cqrs.DependencyInjection.ServiceProvider\SaanSoft.Cqrs.DependencyInjection.ServiceProvider.csproj" />
     <ProjectReference Include="..\SaanSoft.Tests.Cqrs.Shared\SaanSoft.Tests.Cqrs.Shared.csproj" />
   </ItemGroup>
 
