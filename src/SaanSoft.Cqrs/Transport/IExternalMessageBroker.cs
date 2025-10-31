@@ -5,7 +5,7 @@ namespace SaanSoft.Cqrs.Transport;
 /// <summary>
 /// Interface for an external pub/sub provider (eg Azure Service Bus, AWS SNS/SQS, RabbitMq)
 /// </summary>
-public interface IExternalMessageTransport
+public interface IExternalMessageBroker
 {
     /// <summary>
     /// Publish a message to the external transport
@@ -13,14 +13,14 @@ public interface IExternalMessageTransport
     /// The message will be serialized by the transport implementation.
     /// </summary>
     /// <remarks>
-    /// If WaitForExecution=false, the IExternalMessageTransport should still return a ExternalResult,
+    /// If WaitForExecution=false, the IExternalMessageBroker should still return a ExternalResponse,
     /// but Success indicates that the message was published successfully, rather than handled successfully.
     /// </remarks>
     /// <returns>
-    /// A null ExternalResult indicates an issue happened while publishing the message, and will result
+    /// A null ExternalResponse indicates an issue happened while publishing the message, and will result
     /// in exceptions.
     /// </returns>
-    Task<ExternalResult?> PublishAsync(
+    Task<ExternalResponse?> PublishAsync(
         MessageEnvelope envelope,
         IExternalProcessorOptions options,
         CancellationToken ct);
@@ -35,14 +35,14 @@ public interface IExternalMessageTransport
     /// Any batching of messages will be handled by the transport implementation.
     /// </summary>
     /// <remarks>
-    /// If WaitForExecution=false, the IExternalMessageTransport should still return a ExternalResult,
+    /// If WaitForExecution=false, the IExternalMessageBroker should still return a ExternalResponse,
     /// but Success indicates that the message was published successfully, rather than handled successfully.
     /// </remarks>
     /// <returns>
-    /// A null ExternalResult indicates an issue happened while publishing the messages, and will result
+    /// A null ExternalResponse indicates an issue happened while publishing the messages, and will result
     /// in exceptions.
     /// </returns>
-    Task<ExternalResult?> PublishManyAsync(
+    Task<ExternalResponse?> PublishManyAsync(
         IReadOnlyCollection<MessageEnvelope> envelopes,
         IExternalProcessorOptions options,
         CancellationToken ct);

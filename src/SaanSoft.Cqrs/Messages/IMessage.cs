@@ -3,8 +3,8 @@ namespace SaanSoft.Cqrs.Messages;
 /// <summary>
 /// Base interface with common properties for all messages
 /// You should never directly inherit from IMessage
-/// Use <see cref="ICommand"/>, <see cref="ICommand{TResult}"/>, <see cref="IEvent{TEntityKey}"/> or
-/// <see cref="IQuery{TResult}"/> instead
+/// Use <see cref="ICommand"/>, <see cref="ICommand{TResponse}"/>, <see cref="IEvent{TEntityKey}"/> or
+/// <see cref="IQuery{TResponse}"/> instead
 /// </summary>
 public interface IMessage
 {
@@ -61,7 +61,7 @@ public interface IMessage
 
 /// <summary>
 /// Base interface with common properties for messages with return types
-/// You should never directly inherit from IMessage{TResult}
-/// Use <see cref="ICommand{TResult}"/> or <see cref="IQuery{TResult}"/> instead
+/// You should never directly inherit from IMessage{TResponse}
+/// Use <see cref="ICommand{TResponse}"/> or <see cref="IQuery{TResponse}"/> instead
 /// </summary>
-public interface IMessage<TResult> : IMessage;
+public interface IMessage<TResponse> : IMessage;

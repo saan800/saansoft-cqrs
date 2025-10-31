@@ -6,4 +6,4 @@ namespace SaanSoft.Cqrs.Messages;
 /// <remarks>
 /// Names should be in the form of a verb, eg GetOrder, GetRecentBlogPosts
 /// </remarks>
-public interface IQuery<TResult> : IMessage<TResult>;
+public interface IQuery<TResponse> : IMessage<TResponse>;

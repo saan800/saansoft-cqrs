@@ -6,7 +6,7 @@ namespace SaanSoft.Cqrs.DependencyInjection.ServiceProvider;
 
 public static class MessageBusExtensions
 {
-    // TODO: this??
+    // TODO: remove this??
 
     /// <summary>
     /// Get handlers for an event, grouped and ordered by handler priority

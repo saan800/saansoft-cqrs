@@ -1252,6 +1252,13 @@
       "saansoft.cqrs": {
         "type": "Project"
       },
+      "saansoft.cqrs.dependencyinjection.serviceprovider": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection": "[9.0.9, )",
+          "SaanSoft.Cqrs": "[1.0.0, )"
+        }
+      },
       "saansoft.tests.cqrs.shared": {
         "type": "Project",
         "dependencies": {
@@ -1259,9 +1266,19 @@
           "AutoFixture.Xunit2": "[4.18.1, )",
           "AwesomeAssertions": "[9.1.0, )",
           "Microsoft.Extensions.DependencyInjection": "[9.0.9, )",
+          "Microsoft.Extensions.Logging.Abstractions": "[9.0.9, )",
           "Microsoft.NET.Test.Sdk": "[17.14.1, )",
           "SaanSoft.Cqrs": "[1.0.0, )",
           "xunit": "[2.9.2, )"
+        }
+      },
+      "Microsoft.Extensions.Logging.Abstractions": {
+        "type": "CentralTransitive",
+        "requested": "[9.0.9, )",
+        "resolved": "9.0.9",
+        "contentHash": "FEgpSF+Z9StMvrsSViaybOBwR0f0ZZxDm8xV5cSOFiXN/t+ys+rwAlTd/6yG7Ld1gfppgvLcMasZry3GsI9lGA==",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.9"
         }
       }
     }

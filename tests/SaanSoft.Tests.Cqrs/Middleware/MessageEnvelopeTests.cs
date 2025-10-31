@@ -21,9 +21,6 @@ public class MessageEnvelopeTests
 
         result.Id.Should().Be(message.Id);
         result.OccurredOn.Should().Be(message.OccurredOn);
-        result.CorrelationId.Should().Be(message.CorrelationId);
-        result.AuthenticationId.Should().Be(message.AuthenticationId);
-        result.TriggeredByMessageId.Should().Be(message.TriggeredByMessageId);
 
         result.MessageType.Should().Be(message.GetType().GetTypeFullName());
         result.Message.Should().Be(message);

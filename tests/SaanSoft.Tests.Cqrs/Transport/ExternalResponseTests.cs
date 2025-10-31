@@ -2,12 +2,12 @@ using SaanSoft.Cqrs.Transport;
 
 namespace SaanSoft.Tests.Cqrs.Transport;
 
-public class ExternalResultTests
+public class ExternalResponseTests
 {
     [Fact]
     public void FromSuccess()
     {
-        var result = ExternalResult.FromSuccess();
+        var result = ExternalResponse.FromSuccess();
         result.Success.Should().BeTrue();
         result.Payload.Should().BeNull();
         result.ErrorMessage.Should().BeNull();
@@ -19,7 +19,7 @@ public class ExternalResultTests
     [InlineData("Hello world")]
     public void FromSuccess_with_payload(string? payload)
     {
-        var result = ExternalResult.FromSuccess(payload);
+        var result = ExternalResponse.FromSuccess(payload);
         result.Success.Should().BeTrue();
         result.Payload.Should().Be(payload);
         result.ErrorMessage.Should().BeNull();
@@ -30,7 +30,7 @@ public class ExternalResultTests
     [InlineData("oops")]
     public void FromError(string errorMessage)
     {
-        var result = ExternalResult.FromError(errorMessage);
+        var result = ExternalResponse.FromError(errorMessage);
         result.Success.Should().BeFalse();
         result.Payload.Should().BeNull();
         result.ErrorMessage.Should().Be(errorMessage);
@@ -41,7 +41,7 @@ public class ExternalResultTests
     [AutoFakeData]
     public void FromException(Exception exception)
     {
-        var result = ExternalResult.FromException(exception);
+        var result = ExternalResponse.FromException(exception);
         result.Success.Should().BeFalse();
         result.Payload.Should().BeNull();
         result.ErrorMessage.Should().Be(exception.Message);
@@ -52,7 +52,7 @@ public class ExternalResultTests
     [AutoFakeData]
     public void FromError_with_message_and_exception(string errorMessage, Exception exception)
     {
-        var result = ExternalResult.FromError(errorMessage, exception);
+        var result = ExternalResponse.FromError(errorMessage, exception);
         result.Success.Should().BeFalse();
         result.Payload.Should().BeNull();
         result.ErrorMessage.Should().Be(errorMessage);
