@@ -51,11 +51,11 @@
       },
       "Microsoft.Extensions.DependencyInjection": {
         "type": "Direct",
-        "requested": "[9.0.9, )",
-        "resolved": "9.0.9",
-        "contentHash": "zQV2WOSP+3z1EuK91ULxfGgo2Y75bTRnmJHp08+w/YXAyekZutX/qCd88/HOMNh35MDW9mJJJxPpMPS+1Rww8A==",
+        "requested": "[9.0.12, )",
+        "resolved": "9.0.12",
+        "contentHash": "Ao81p3RGYdYUMsP4ST5p+DgF/8oLXJUMH8IQyLHb9Whr0JRqbe8+20/y6fUIpiRxe3xFypXlxGoIcwKixVtyfA==",
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.9"
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.12"
         }
       },
       "Microsoft.NET.Test.Sdk": {
@@ -134,8 +134,8 @@
       },
       "Microsoft.Extensions.DependencyInjection.Abstractions": {
         "type": "Transitive",
-        "resolved": "9.0.9",
-        "contentHash": "/hymojfWbE9AlDOa0mczR44m00Jj+T3+HZO0ZnVTI032fVycI0ZbNOVFP6kqZMcXiLSYXzR2ilcwaRi6dzeGyA=="
+        "resolved": "9.0.12",
+        "contentHash": "giBjLNJewLe2baQBmLp+8/HSm05WBA//Pd8G5of5G1qrT8a+KLg6mYE6k7w9GFLjYG8ckKyTC9u2yoA0b0J8kg=="
       },
       "Microsoft.NETCore.Platforms": {
         "type": "Transitive",
@@ -1255,7 +1255,7 @@
       "saansoft.cqrs.dependencyinjection.serviceprovider": {
         "type": "Project",
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection": "[9.0.9, )",
+          "Microsoft.Extensions.DependencyInjection": "[9.0.12, )",
           "SaanSoft.Cqrs": "[1.0.0, )"
         }
       },
@@ -1265,7 +1265,7 @@
           "AutoFixture.AutoFakeItEasy": "[4.18.1, )",
           "AutoFixture.Xunit2": "[4.18.1, )",
           "AwesomeAssertions": "[9.3.0, )",
-          "Microsoft.Extensions.DependencyInjection": "[9.0.9, )",
+          "Microsoft.Extensions.DependencyInjection": "[9.0.12, )",
           "Microsoft.Extensions.Logging.Abstractions": "[9.0.9, )",
           "Microsoft.NET.Test.Sdk": "[17.14.1, )",
           "SaanSoft.Cqrs": "[1.0.0, )",
