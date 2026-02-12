@@ -4,7 +4,7 @@ Lightweight CQRS and Event Sourcing implementation for C#
 
 ## Status
 
-[![build-and-test](https://github.com/saan800/saansoft-cqrs/actions/workflows/build-and-test.yml/badge.svg?branch=main)](https://github.com/saan800/saansoft-cqrs/actions/workflows/build-and-test.yml) 
+[![ci-cd](https://github.com/saan800/saansoft-cqrs/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/saan800/saansoft-cqrs/actions/workflows/ci-cd.yml)
 [![codecov](https://codecov.io/gh/saan800/saansoft-cqrs/graph/badge.svg?token=FIHYI10VIW)](https://codecov.io/gh/saan800/saansoft-cqrs)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/saan800/saansoft-cqrs/badge)](https://securityscorecards.dev/viewer/?uri=github.com/saan800/saansoft-cqrs)
 
