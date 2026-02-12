@@ -14,7 +14,6 @@ updates:
       - "dependencies"
       - "no-release"
       - "no-release-notes"
-      - "github-actions"
 
   - package-ecosystem: nuget
     directory: "/"
