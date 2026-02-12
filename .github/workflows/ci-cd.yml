@@ -32,7 +32,7 @@ jobs:
       dotnet-version: 9.0.x
       codecov-slug: "saan800/saansoft-cqrs"
       is-release-branch: ${{ github.ref == 'refs/heads/main' }}
-      force-release: ${{ github.event.inputs.force-release || false }}
+      force-release: ${{ github.event.inputs.force-release == 'true' }}
     secrets:
       GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
