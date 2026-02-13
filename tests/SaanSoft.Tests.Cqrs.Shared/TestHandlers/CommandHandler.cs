@@ -3,10 +3,10 @@ using SaanSoft.Cqrs.Handlers;
 namespace SaanSoft.Tests.Cqrs.Shared.TestHandlers;
 
 public class CommandHandler :
-    ICommandHandler<MyCommand>,
-    ICommandHandler<AnotherCommand>,
-    ICommandHandler<MyCommandWithResponse, string?>,
-    ICommandHandler<AnotherCommandWithResponse, string>
+    IHandleMessage<MyCommand>,
+    IHandleMessage<AnotherCommand>,
+    IHandleMessage<MyCommandWithResponse, string?>,
+    IHandleMessage<AnotherCommandWithResponse, string>
 {
     public Task HandleAsync(MyCommand command, CancellationToken cancellationToken = default)
         => Task.CompletedTask;

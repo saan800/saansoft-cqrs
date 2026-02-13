@@ -9,7 +9,6 @@ public class ExternalResponseTests
     {
         var result = ExternalResponse.FromSuccess();
         result.Success.Should().BeTrue();
-        result.Payload.Should().BeNull();
         result.ErrorMessage.Should().BeNull();
         result.Exception.Should().BeNull();
     }
@@ -19,7 +18,7 @@ public class ExternalResponseTests
     [InlineData("Hello world")]
     public void FromSuccess_with_payload(string? payload)
     {
-        var result = ExternalResponse.FromSuccess(payload);
+        var result = ExternalResponse<string>.FromSuccess(payload);
         result.Success.Should().BeTrue();
         result.Payload.Should().Be(payload);
         result.ErrorMessage.Should().BeNull();
@@ -30,7 +29,7 @@ public class ExternalResponseTests
     [InlineData("oops")]
     public void FromError(string errorMessage)
     {
-        var result = ExternalResponse.FromError(errorMessage);
+        var result = ExternalResponse<string>.FromError(errorMessage);
         result.Success.Should().BeFalse();
         result.Payload.Should().BeNull();
         result.ErrorMessage.Should().Be(errorMessage);
@@ -41,7 +40,7 @@ public class ExternalResponseTests
     [AutoFakeData]
     public void FromException(Exception exception)
     {
-        var result = ExternalResponse.FromException(exception);
+        var result = ExternalResponse<string>.FromException(exception);
         result.Success.Should().BeFalse();
         result.Payload.Should().BeNull();
         result.ErrorMessage.Should().Be(exception.Message);
@@ -52,7 +51,7 @@ public class ExternalResponseTests
     [AutoFakeData]
     public void FromError_with_message_and_exception(string errorMessage, Exception exception)
     {
-        var result = ExternalResponse.FromError(errorMessage, exception);
+        var result = ExternalResponse<string>.FromError(errorMessage, exception);
         result.Success.Should().BeFalse();
         result.Payload.Should().BeNull();
         result.ErrorMessage.Should().Be(errorMessage);

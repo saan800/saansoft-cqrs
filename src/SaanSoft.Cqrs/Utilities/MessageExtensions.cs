@@ -2,6 +2,8 @@ using SaanSoft.Cqrs.Middleware;
 
 namespace SaanSoft.Cqrs.Utilities;
 
+// TODO: test
+
 public static class MessageExtensions
 {
     private const string MessageIdKey = "MessageId";
@@ -24,9 +26,6 @@ public static class MessageExtensions
         if (!string.IsNullOrWhiteSpace(message.CorrelationId))
             scopeData.Add(nameof(IMessage.CorrelationId), message.CorrelationId);
 
-        if (message.IsReplay)
-            scopeData.Add(nameof(IMessage.IsReplay), true);
-
         if (handlerType != null)
             scopeData.Add(HandlerTypeKey, handlerType.GetTypeFullName());
 
@@ -44,12 +43,10 @@ public static class MessageExtensions
         string? messageType = null;
         string? correlationId = null;
         string? publisher = null;
-        bool? singleIsReplay = null;
 
         var multipleMessageTypes = false;
         var multipleCorrelationIds = false;
         var multiplePublishers = false;
-        var multipleIsReplay = false;
 
         foreach (var env in envelopes)
         {
@@ -78,13 +75,6 @@ public static class MessageExtensions
                 else if (!multipleCorrelationIds && correlationId != message.CorrelationId)
                     multipleCorrelationIds = true;
             }
-
-            // IsReplay
-            var isReplay = message.IsReplay;
-            if (singleIsReplay == null)
-                singleIsReplay = isReplay;
-            else if (!multipleIsReplay && singleIsReplay.Value != isReplay)
-                multipleIsReplay = true;
         }
 
         if (!multipleMessageTypes && messageType != null)
@@ -95,9 +85,6 @@ public static class MessageExtensions
 
         if (!multipleCorrelationIds && correlationId != null)
             scopeData.Add(nameof(IMessage.CorrelationId), correlationId);
-
-        if (!multipleIsReplay && singleIsReplay == true)
-            scopeData.Add(nameof(IMessage.IsReplay), true);
 
         if (handlerType != null)
             scopeData.Add(HandlerTypeKey, handlerType.GetTypeFullName());

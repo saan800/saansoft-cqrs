@@ -1,11 +1,11 @@
 namespace SaanSoft.Cqrs.Transport;
 
 /// <summary>
-/// Base interface with common properties for ProcessorOptions
-/// You should never directly inherit from IBaseProcessorOptions.
-/// Use <see cref="IDefaultProcessorOptions"/> or <see cref="IExternalProcessorOptions"/> instead
+/// Base interface with common properties for RouterOptions
+/// You should never directly inherit from IBaseMessageRouterOptions.
+/// Use <see cref="IDefaultExternalMessageRouterOptions"/> or <see cref="IExternalMessageProvider"/> instead
 /// </summary>
-public interface IBaseProcessorOptions
+public interface IBaseMessageRouterOptions
 {
     /// <summary>
     /// Timeout for handling a message, especially those messages where the publisher is waiting for a response.
@@ -15,29 +15,33 @@ public interface IBaseProcessorOptions
 }
 
 /// <summary>
-/// Provide the default processor options for use with local and external message transports.
-/// At run time the defaults will be cloned for each message.
+/// Provide options for use with local message transport.
 /// </summary>
-public interface IDefaultProcessorOptions : IBaseProcessorOptions
+public interface ILocalMessageRouterOptions : IBaseMessageRouterOptions;
+
+/// <summary>
+/// Provide the default router options for use with external message transports.
+/// At run time the defaults will be cloned for each message context.
+/// </summary>
+public interface IDefaultExternalMessageRouterOptions : IBaseMessageRouterOptions
 {
     /// <summary>
-    /// Create a IExternalProcessorOptions from the defaults
+    /// Create a IExternalMessageProviderOptions from the defaults
     /// </summary>
-    IExternalProcessorOptions Clone(bool waitForExecution, bool expectSingleHandler);
+    IExternalMessageProviderOptions Clone(bool waitForExecution, bool expectSingleHandler);
 }
 
 /// <summary>
-/// Transport options provided to the IExternalMessageBroker.
-/// Also used in TransportContext and IExternalTransportMiddleware to be enriched before publishing
+/// Transport options provided to the IExternalMessageProviderOptions.
 /// </summary>
-public interface IExternalProcessorOptions : IBaseProcessorOptions
+public interface IExternalMessageProviderOptions : IBaseMessageRouterOptions
 {
     /// <summary>
     /// Whether to wait for the external handler to deal with the message, or if its fire-and-forget.
     /// Configured at run time for each message, depending on the message type and IMessageBus method used.
     /// </summary>
     /// <remarks>
-    /// If WaitForExecution=false, the IExternalMessageBroker should still return a ExternalResponse,
+    /// If WaitForExecution=false, the IExternalMessageProviderOptions should still return a ExternalResponse,
     /// but Success is that the message was published successfully, rather than handled successfully.
     /// </remarks>
     bool WaitForExecution { get; set; }

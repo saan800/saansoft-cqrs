@@ -18,6 +18,10 @@ public static class TypeExtensions
     }
 
     // TODO: tests
+    public static bool IsMessageWithoutResponse(this Type type)
+        => type.IsCommand() || type.IsEvent();
+    public static bool IsMessageWithResponse(this Type type)
+        => type.IsCommandWithResponse() || type.IsQuery();
     public static bool IsCommand(this Type type)
         => type.Implements(typeof(ICommand)) && !type.IsCommandWithResponse();
     public static bool IsCommandWithResponse(this Type type)

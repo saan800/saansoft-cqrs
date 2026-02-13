@@ -3,8 +3,8 @@ using SaanSoft.Cqrs.Handlers;
 namespace SaanSoft.Tests.Cqrs.Shared.TestHandlers;
 
 public class QueryHandler :
-    IQueryHandler<MyQuery, MyQueryResponse?>,
-    IQueryHandler<AnotherQuery, MyQueryResponse>
+    IHandleMessage<MyQuery, MyQueryResponse?>,
+    IHandleMessage<AnotherQuery, MyQueryResponse>
 {
     public Task<MyQueryResponse?> HandleAsync(MyQuery query, CancellationToken cancellationToken = default)
     {

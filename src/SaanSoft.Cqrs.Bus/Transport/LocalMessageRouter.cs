@@ -13,27 +13,21 @@ namespace SaanSoft.Cqrs.Bus.Transport;
 public sealed class LocalMessageRouter(
         ILogger<LocalMessageRouter> logger,
         IServiceRegistry serviceRegistry,
-        IDefaultProcessorOptions? defaultProcessorOptions,
-        IMiddleware[]? subscriberMiddlewares) : IMessageRouter
+        ILocalMessageRouterOptions? messageRouterOptions = null,
+        IReadOnlyCollection<IMiddleware>? handlerMiddlewares = null) : IMessageRouter
 {
-    private readonly IMiddleware[] _middlewares = subscriberMiddlewares ?? [];
-    private readonly IDefaultProcessorOptions _defaultProcessorOptions
-        = defaultProcessorOptions ?? new DefaultProcessorOptions();
+    private readonly IMiddleware[] _middlewares = handlerMiddlewares?.ToArray() ?? [];
+    private readonly ILocalMessageRouterOptions _messageRouterOptions
+        = messageRouterOptions ?? new LocalMessageRouterOptions();
 
-    /// <summary>
-    /// Locally, there is no difference between fire-and-forget Send and immediate Execute for commands
-    /// </summary>
-    public Task SendAsync<TCommand>(MessageEnvelope envelope, CancellationToken ct) where TCommand : ICommand
-        => ExecuteAsync<TCommand>(envelope, ct);
-
-    public async Task ExecuteAsync<TCommand>(MessageEnvelope envelope, CancellationToken ct)
-        where TCommand : ICommand
+    public async Task ExecuteAsync<TMessage>(MessageEnvelope envelope, CancellationToken ct)
+        where TMessage : IMessage
     {
-        var handler = serviceRegistry.ResolveRequiredService<ICommandHandler<TCommand>>();
+        var handler = serviceRegistry.ResolveRequiredService<IHandleMessage<TMessage>>();
         var handlerType = handler.GetType();
         using (logger.BeginScope(envelope.BuildLoggingScopeData(handlerType)))
         {
-            await RunSubscriberPipeline<TCommand>(
+            await RunSubscriberPipeline<TMessage>(
                 envelope,
                 handlerType,
                 handlerFunc: async message => await handler.HandleAsync(message),
@@ -42,15 +36,16 @@ public sealed class LocalMessageRouter(
         }
     }
 
-    public async Task<TResponse> ExecuteAsync<TCommand, TResponse>(
+    public async Task<TResponse> ExecuteAsync<TRequest, TResponse>(
         MessageEnvelope envelope, CancellationToken ct)
-        where TCommand : ICommand<TResponse>
+        where TRequest : IMessage<TResponse>
     {
-        var handler = serviceRegistry.ResolveRequiredService<ICommandHandler<TCommand, TResponse>>();
+        var handler = serviceRegistry.ResolveRequiredService<IHandleMessage<TRequest, TResponse>>();
         var handlerType = handler.GetType();
+
         using (logger.BeginScope(envelope.BuildLoggingScopeData(handlerType)))
         {
-            return await RunSubscriberPipelineWithResponse<TCommand, TResponse>(
+            return await RunSubscriberPipelineWithResponse<TRequest, TResponse>(
                 envelope,
                 handlerType,
                 handlerFunc: message => handler.HandleAsync(message),
@@ -59,11 +54,38 @@ public sealed class LocalMessageRouter(
         }
     }
 
-    public async Task PublishManyAsync<TEvent>(MessageEnvelope[] envelopes, CancellationToken ct)
-        where TEvent : IEvent
+    public Task SendAsync<TMessage>(MessageEnvelope envelope, CancellationToken ct) where TMessage : IMessage
+        => SendManyAsync<TMessage>([envelope], ct);
+
+    public async Task SendManyAsync<TMessage>(MessageEnvelope[] envelopes, CancellationToken ct)
+        where TMessage : IMessage
+    {
+        var messageType = typeof(TMessage);
+        if (messageType.IsCommand())
+        {
+            // locally, there's no difference between sending a command and executing it
+            // so just run them all in parallel
+            var tasks = envelopes.Select(envelope => ExecuteAsync<TMessage>(envelope, ct));
+            await Task.WhenAll(tasks);
+            return;
+        }
+        else if (messageType.IsEvent())
+        {
+            await SendEventsAsync<TMessage>(envelopes, ct);
+            return;
+        }
+
+        throw new InvalidOperationException(
+            $"Cannot send messages of type {messageType.GetTypeFullName()}. " +
+            "Only commands and events that do not expect responses can be sent in bulk."
+        );
+    }
+
+    private async Task SendEventsAsync<TMessage>(MessageEnvelope[] envelopes, CancellationToken ct)
+        where TMessage : IMessage
     {
         if (envelopes.Length == 0) return;
-        var prioritisedHandlers = serviceRegistry.ResolveServices<IEventHandler<TEvent>>()
+        var prioritisedHandlers = serviceRegistry.ResolveServices<IHandleMessage<TMessage>>()
                                     // TODO: a way of prioritising event handlers
                                     // default priority = 0
                                     .GroupBy(_ => 0)
@@ -78,7 +100,7 @@ public sealed class LocalMessageRouter(
                 {
                     using (logger.BeginScope(envelope.BuildLoggingScopeData(handlerType)))
                     {
-                        await RunSubscriberPipeline<TEvent>(
+                        await RunSubscriberPipeline<TMessage>(
                             envelope,
                             handlerType,
                             handlerFunc: async message => await handler.HandleAsync(message),
@@ -89,43 +111,6 @@ public sealed class LocalMessageRouter(
             }
         }
     }
-
-    public async Task<TResponse> QueryAsync<TQuery, TResponse>(
-        MessageEnvelope envelope, CancellationToken ct)
-        where TQuery : IQuery<TResponse>
-    {
-        var handler = serviceRegistry.ResolveRequiredService<IQueryHandler<TQuery, TResponse>>();
-        var handlerType = handler.GetType();
-
-        using (logger.BeginScope(envelope.BuildLoggingScopeData(handlerType)))
-        {
-            return await RunSubscriberPipelineWithResponse<TQuery, TResponse>(
-                envelope,
-                handlerType,
-                handlerFunc: message => handler.HandleAsync(message),
-                ct
-            );
-        }
-    }
-
-    //private async Task<TResponse> RequestResponseAsync<TRequest, TResponse, THandler>(
-    //    MessageEnvelope envelope, CancellationToken ct)
-    //    where TRequest : IMessage<TResponse>
-    //    where THandler : IRequestHandler<TRequest, TResponse>
-    //{
-    //    var handler = serviceRegistry.ResolveRequiredService<THandler>();
-    //    var handlerType = handler.GetType();
-
-    //    using (logger.BeginScope(envelope.BuildLoggingScopeData(handlerType)))
-    //    {
-    //        return await RunSubscriberPipelineWithResponse<TRequest, TResponse>(
-    //            envelope,
-    //            handlerType,
-    //            handlerFunc: message => handler.HandleAsync(message),
-    //            ct
-    //        );
-    //    }
-    //}
 
     private Task RunSubscriberPipeline<TMessage>(
         MessageEnvelope envelope, Type handlerType, Func<TMessage, Task> handlerFunc, CancellationToken ct)
@@ -168,7 +153,7 @@ public sealed class LocalMessageRouter(
         Func<TMessage, Task> handlerFunc,
         CancellationToken ct) where TMessage : IMessage
     {
-        var timeout = _defaultProcessorOptions.Timeout;
+        var timeout = _messageRouterOptions.Timeout;
         if (envelope.Message is ITimeout timeoutMessage)
             timeout = timeoutMessage.Timeout;
 
@@ -220,7 +205,7 @@ public sealed class LocalMessageRouter(
         Func<TMessage, Task<TResponse>> handlerFunc,
         CancellationToken ct) where TMessage : IMessage<TResponse>
     {
-        var timeout = _defaultProcessorOptions.Timeout;
+        var timeout = _messageRouterOptions.Timeout;
         if (envelope.Message is ITimeout timeoutMessage)
             timeout = timeoutMessage.Timeout;
 

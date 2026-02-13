@@ -8,7 +8,7 @@ public class GenericUtilsBaseTests
     {
         public abstract class ForType<T> where T : struct
         {
-            protected abstract T NewId();
+            protected abstract T NewValue();
 
             [Fact]
             public void Nullable_without_value_should_return_true()
@@ -20,7 +20,7 @@ public class GenericUtilsBaseTests
             [Fact]
             public void Nullable_with_value_should_return_false()
             {
-                T? value = NewId();
+                T? value = NewValue();
                 GenericUtils.IsNullOrDefault(value).Should().Be(false);
             }
 
@@ -34,7 +34,7 @@ public class GenericUtilsBaseTests
             [Fact]
             public void Value_should_return_false()
             {
-                T value = NewId();
+                T value = NewValue();
                 GenericUtils.IsNullOrDefault(value).Should().BeFalse();
             }
         }

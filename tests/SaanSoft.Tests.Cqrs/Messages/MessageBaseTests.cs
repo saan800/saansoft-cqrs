@@ -14,7 +14,6 @@ public class MessageBaseTests
         message.CorrelationId.Should().BeNull();
         message.AuthenticationId.Should().BeNull();
         message.TriggeredByMessageId.Should().BeNull();
-        message.IsReplay.Should().BeFalse();
     }
 
     [Theory]
@@ -35,6 +34,5 @@ public class MessageBaseTests
         newMessage.TriggeredByMessageId.Should().Be(triggeredByMessage.Id);
         newMessage.CorrelationId.Should().Be(triggeredByMessage.CorrelationId);
         newMessage.AuthenticationId.Should().Be(triggeredByMessage.AuthenticationId);
-        newMessage.IsReplay.Should().Be(triggeredByMessage.IsReplay);
     }
 }

@@ -2,11 +2,11 @@ using SaanSoft.Cqrs.Transport;
 
 namespace SaanSoft.Tests.Cqrs.Transport;
 
-public class DefaultProcessorOptionsTests
+public class DefaultExternalMessageRouterOptionsTests
 {
     [Theory]
     [AutoFakeData]
-    public void Clone(bool waitForExecution, bool expectSingleHandler, DefaultProcessorOptions defaultOptions)
+    public void Clone(bool waitForExecution, bool expectSingleHandler, DefaultExternalMessageRouterOptions defaultOptions)
     {
         var externalProcessorOptions = defaultOptions.Clone(waitForExecution, expectSingleHandler);
 

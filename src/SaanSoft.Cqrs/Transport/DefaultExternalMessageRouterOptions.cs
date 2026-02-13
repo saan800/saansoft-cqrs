@@ -1,12 +1,12 @@
 namespace SaanSoft.Cqrs.Transport;
 
-public class DefaultProcessorOptions : IDefaultProcessorOptions
+public class DefaultExternalMessageRouterOptions : IDefaultExternalMessageRouterOptions
 {
-    public DefaultProcessorOptions()
+    public DefaultExternalMessageRouterOptions()
     {
     }
 
-    public DefaultProcessorOptions(TimeSpan timeout)
+    public DefaultExternalMessageRouterOptions(TimeSpan timeout)
     {
         Timeout = timeout;
     }
@@ -18,9 +18,9 @@ public class DefaultProcessorOptions : IDefaultProcessorOptions
     /// </summary>
     public virtual TimeSpan Timeout { get; set; } = TimeSpan.FromMinutes(15);
 
-    public virtual IExternalProcessorOptions Clone(bool waitForExecution, bool expectSingleHandler)
+    public virtual IExternalMessageProviderOptions Clone(bool waitForExecution, bool expectSingleHandler)
     {
-        var eto = new ExternalProcessorOptions
+        var eto = new ExternalMessageProviderOptions
         {
             WaitForExecution = waitForExecution,
             Timeout = Timeout,

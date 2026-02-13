@@ -9,14 +9,14 @@ namespace SaanSoft.Cqrs.Messages;
 public interface IMessage
 {
     /// <summary>
-    /// Unique Id for the command/event/query message.
+    /// Unique Id for the message.
     /// This will normally be the EventStore (or CommandStore and QueryStore if using) primary key
     /// Also used to populate the Metadata.TriggeredByMessageId property of any subsequent messages it raises
     /// </summary>
     Guid Id { get; set; }
 
     /// <summary>
-    /// Used to track related commands/events/queries through the platform.
+    /// Used to track related messages through the platform.
     ///
     /// Should be propagated between related messages.
     ///
@@ -26,7 +26,7 @@ public interface IMessage
     string? CorrelationId { get; set; }
 
     /// <summary>
-    /// Who triggered the command/event/query (eg User/Account Id, third party (eg Auth0) Id, Machine-2-Machine Id).
+    /// Who triggered the message (eg User/Account Id, third party (eg Auth0) Id, Machine-2-Machine Id).
     ///
     /// Should be propagated between related messages.
     ///
@@ -35,28 +35,18 @@ public interface IMessage
     string? AuthenticationId { get; set; }
 
     /// <summary>
-    /// When the command/event/query was raised in UTC
+    /// When the message was raised in UTC
     ///
     /// When running events in order, use OccurredOn to run them in the correct order
     /// </summary>
     DateTime OccurredOn { get; set; }
 
     /// <summary>
-    /// Record if this message was triggered by another command/event/query
-    /// Should be populated by the initiating command/event/query/message Id
-    /// Similar to CorrelationId, it provides a way to track messages through the system
+    /// Record if this message was triggered by another message
+    /// Should be populated by the initiating message Id
+    /// Similar to CorrelationId, it provides a way to track messages through the system in order
     /// </summary>
-    public Guid? TriggeredByMessageId { get; set; }
-
-    /// <summary>
-    /// Whether the message is being replayed or not
-    ///
-    /// Note:
-    /// - Events should replay
-    /// - Queries should NOT replay
-    /// - Commands should NOT replay
-    /// </summary>
-    bool IsReplay { get; set; }
+    Guid? TriggeredByMessageId { get; set; }
 }
 
 /// <summary>

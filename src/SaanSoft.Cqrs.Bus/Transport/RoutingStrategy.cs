@@ -6,7 +6,7 @@ namespace SaanSoft.Cqrs.Bus.Transport;
 
 /// <summary>
 /// Default Routing Strategy: use local router if a handler is registered locally or
-/// <see cref="IExternalMessageBroker"/> is not registered; otherwise use the external
+/// <see cref="IExternalMessageProvider"/> is not registered; otherwise use the external
 /// router if message can't be handled in memory locally
 /// </summary>
 public sealed class RoutingStrategy(IServiceRegistry serviceRegistry)
@@ -16,7 +16,7 @@ public sealed class RoutingStrategy(IServiceRegistry serviceRegistry)
     /// and then return the correct <see cref="IMessageRouter"/>
     /// </summary>
     /// <remarks>
-    /// If IExternalMessageBroker is not registered and doing local execution only, this will:
+    /// If IExternalMessageProvider is not registered and doing local execution only, this will:
     /// - Throw an exception if multiple handlers for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt; are
     ///   found in the serviceRegistry.
     /// - Throw an exception if no handlers for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt; are not
@@ -25,14 +25,14 @@ public sealed class RoutingStrategy(IServiceRegistry serviceRegistry)
     ///   IQuery&lt;TResponse&gt; is found in the serviceRegistry.
     /// - Return LocalMessageRouter for IEvent, regardless of the number of handlers in the serviceRegistry.
     ///
-    /// If IExternalMessageBroker is registered, this will:
+    /// If IExternalMessageProvider is registered, this will:
     /// - Throw an exception if multiple handlers for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt; are
     ///   found in the serviceRegistry.
-    /// - Return ExternalMessageProcessor if no handlers for ICommand, ICommand&lt;TResponse&gt;,
+    /// - Return ExternalMessageRouter if no handlers for ICommand, ICommand&lt;TResponse&gt;,
     ///   IQuery&lt;TResponse&gt; are not found in the serviceRegistry.
     /// - Return LocalMessageRouter if a single handler for ICommand, ICommand&lt;TResponse&gt;,
     ///   IQuery&lt;TResponse&gt; is found in the serviceRegistry.
-    /// - Return ExternalMessageProcessor for IEvent, regardless of the number of handlers in the serviceRegistry
+    /// - Return ExternalMessageRouter for IEvent, regardless of the number of handlers in the serviceRegistry
     ///   (assures events are handled by all subscribers, and in published order).
     /// </remarks>
     /// <exception cref="ApplicationException">
@@ -43,12 +43,12 @@ public sealed class RoutingStrategy(IServiceRegistry serviceRegistry)
     /// </exception>
     public IMessageRouter GetMessageRouter<TMessage>() where TMessage : IMessage
         => IsExternalMessage<TMessage>()
-            ? serviceRegistry.ResolveRequiredService<ExternalMessageProcessor>()
+            ? serviceRegistry.ResolveRequiredService<ExternalMessageRouter>()
             : serviceRegistry.ResolveRequiredService<LocalMessageRouter>();
 
     private bool IsExternalMessage<TMessage>() where TMessage : IMessage
     {
-        var hasExternal = serviceRegistry.ResolveService<IExternalMessageBroker>() != null;
+        var hasExternal = serviceRegistry.ResolveService<IExternalMessageProvider>() != null;
         var messageType = typeof(TMessage);
         if (messageType.IsEvent())
         {
@@ -58,10 +58,15 @@ public sealed class RoutingStrategy(IServiceRegistry serviceRegistry)
             return hasExternal;
         }
 
-        if (messageType.IsCommandWithResponse())
+        if (messageType.IsMessageWithResponse())
         {
-            var any = serviceRegistry.HasCommandWithResponseHandler<TMessage>();
-            if (any) return false;
+            var numHandlers = serviceRegistry.GetMessageHandlerWithResponseCount<TMessage>();
+            if (numHandlers > 1)
+            {
+                throw new ApplicationException($"Multiple handlers found for {messageType.GetTypeFullName()}");
+            }
+            if (numHandlers == 1) return false;
+
             return hasExternal
                 ? true
                 : throw new ApplicationException($"Could not find a handler for {messageType.GetTypeFullName()}");
@@ -69,19 +74,14 @@ public sealed class RoutingStrategy(IServiceRegistry serviceRegistry)
 
         if (messageType.IsCommand())
         {
-            var any = serviceRegistry.HasCommandHandler<TMessage>();
+            var numHandlers = serviceRegistry.GetMessageHandlerCount<TMessage>();
+            if (numHandlers > 1)
+            {
+                throw new ApplicationException($"Multiple handlers found for {messageType.GetTypeFullName()}");
+            }
 
-            if (any) return false;
-            return hasExternal
-                ? true
-                : throw new ApplicationException($"Could not find a handler for {messageType.GetTypeFullName()}");
-        }
+            if (numHandlers == 1) return false;
 
-        if (messageType.IsQuery())
-        {
-            var any = serviceRegistry.HasQueryHandler<TMessage>();
-
-            if (any) return false;
             return hasExternal
                 ? true
                 : throw new ApplicationException($"Could not find a handler for {messageType.GetTypeFullName()}");

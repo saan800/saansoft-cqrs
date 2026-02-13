@@ -4,6 +4,8 @@ using SaanSoft.Cqrs.Transport;
 
 namespace SaanSoft.Tests.Cqrs.Bus.Transport;
 
+// TODO:
+
 public class RoutingStrategyTests
 {
     // public class LocalOnly
@@ -27,7 +29,7 @@ public class RoutingStrategyTests
     //     public void Command_WithLocalHandler_ShouldUseLocalRouter()
     //     {
     //         // Arrange
-    //         _serviceRegistry.RegisterSingleton<ICommandHandler<MyCommand>, MyCommandHandler>();
+    //         _serviceRegistry.RegisterSingleton<IHandleMessage<MyCommand>, MyCommandHandler>();
 
     //         // Act
     //         var router = _sut.GetMessageRouter<MyCommand>();
@@ -42,7 +44,7 @@ public class RoutingStrategyTests
 // public class RoutingStrategyTests
 // {
 //     /// <summary>
-//     /// If IExternalMessageBroker is not registered and doing Local execution only, this will:
+//     /// If IExternalMessageProvider is not registered and doing Local execution only, this will:
 //     /// - Throw an exception if multiple handlers for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt;
 //           are found in the serviceRegistry.
 //     /// - Throw an exception if no handlers for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt; are not
@@ -59,7 +61,7 @@ public class RoutingStrategyTests
 //         public LocalOnly()
 //         {
 //             _serviceRegistry = A.Fake<IServiceRegistry>();
-//             A.CallTo(() => _serviceRegistry.ResolveService<IExternalMessageBroker>()).Returns(null);
+//             A.CallTo(() => _serviceRegistry.ResolveService<IExternalMessageProvider>()).Returns(null);
 
 //             _routingStrategy = new RoutingStrategy(_serviceRegistry);
 //         }
@@ -192,7 +194,7 @@ public class RoutingStrategyTests
 //     }
 
 //     /// <summary>
-//     /// If IExternalMessageBroker is registered, this will:
+//     /// If IExternalMessageProvider is registered, this will:
 //     /// - Throw an exception if multiple handlers for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt
 //     ///   are found in the serviceRegistry.
 //     /// - Return true if no handlers for ICommand, ICommand&lt;TResponse&gt;, IQuery&lt;TResponse&gt; are not
@@ -202,16 +204,16 @@ public class RoutingStrategyTests
 //     /// - Return true for IEvent, regardless of the number of handlers in the serviceRegistry (assures events are
 //     ///   handled by all subscribers, and in published order).
 //     /// </summary>
-//     public class ExternalMessageBroker
+//     public class ExternalMessageProvider
 //     {
 //         protected readonly IServiceRegistry _serviceRegistry;
 //         protected readonly RoutingStrategy _routingStrategy;
 
-//         public ExternalMessageBroker()
+//         public ExternalMessageProvider()
 //         {
 //             _serviceRegistry = A.Fake<IServiceRegistry>();
-//             A.CallTo(() => _serviceRegistry.ResolveService<IExternalMessageBroker>())
-//                 .Returns(A.Fake<IExternalMessageBroker>());
+//             A.CallTo(() => _serviceRegistry.ResolveService<IExternalMessageProvider>())
+//                 .Returns(A.Fake<IExternalMessageProvider>());
 
 //             _routingStrategy = new RoutingStrategy(_serviceRegistry);
 //         }
@@ -224,7 +226,7 @@ public class RoutingStrategyTests
 //                 .Should().Throw<NotSupportedException>();
 //         }
 
-//         public class Commands : ExternalMessageBroker
+//         public class Commands : ExternalMessageProvider
 //         {
 //             [Fact]
 //             public void Zero_handlers_should_return_true()
@@ -256,7 +258,7 @@ public class RoutingStrategyTests
 //             }
 //         }
 
-//         public class CommandWithResponse : ExternalMessageBroker
+//         public class CommandWithResponse : ExternalMessageProvider
 //         {
 //             [Fact]
 //             public void Zero_handlers_should_return_true()
@@ -291,7 +293,7 @@ public class RoutingStrategyTests
 //             }
 //         }
 
-//         public class Queries : ExternalMessageBroker
+//         public class Queries : ExternalMessageProvider
 //         {
 //             [Fact]
 //             public void Zero_handlers_should_return_true()
@@ -323,7 +325,7 @@ public class RoutingStrategyTests
 //             }
 //         }
 
-//         public class Events : ExternalMessageBroker
+//         public class Events : ExternalMessageProvider
 //         {
 //             [Fact]
 //             public void Zero_handlers_should_return_true()

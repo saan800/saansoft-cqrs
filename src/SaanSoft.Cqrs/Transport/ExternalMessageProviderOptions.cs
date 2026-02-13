@@ -1,6 +1,6 @@
 namespace SaanSoft.Cqrs.Transport;
 
-public class ExternalProcessorOptions : IExternalProcessorOptions
+public class ExternalMessageProviderOptions : IExternalMessageProviderOptions
 {
     public virtual TimeSpan Timeout { get; set; }
 

@@ -19,17 +19,18 @@ public sealed class MessageEnvelope
     public required string MessageType { get; init; }
 
     /// <summary>
-    /// Timestamp when the message was published in UTC
-    /// </summary>
-    public required DateTime OccurredOn { get; init; }
-
-    /// <summary>
     /// The original message object
     /// </summary>
     public required object Message { get; init; }
 
     /// <summary>
-    /// When saving messages to a database store, record the order in which they arrived.
+    /// Timestamp when the message was published in UTC
+    /// Usually populated from the message.OccurredOn
+    /// </summary>
+    public required DateTime OccurredOn { get; init; }
+
+    /// <summary>
+    /// When saving messages to a database store, (optionally) record the order in which they arrived.
     /// When replaying messages, should order first by <see cref="Sequence"/>, then by <see cref="OccurredOn"/>
     /// </summary>
     public long Sequence { get; init; } = 0;
@@ -38,7 +39,7 @@ public sealed class MessageEnvelope
     /// <summary>
     /// Optional metadata
     ///
-    /// Normally used by the publisher/subscriber middlewares to enrich the MessageEnvelope
+    /// Normally used by the publisher/subscriber middleware to enrich the MessageEnvelope
     /// with additional information.
     /// </summary>
     public Dictionary<string, string> Metadata { get; } = new(StringComparer.OrdinalIgnoreCase);

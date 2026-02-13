@@ -1252,11 +1252,18 @@
       "saansoft.cqrs": {
         "type": "Project"
       },
+      "saansoft.cqrs.bus": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "[9.0.9, )",
+          "SaanSoft.Cqrs": "[1.0.0, )"
+        }
+      },
       "saansoft.cqrs.dependencyinjection.serviceprovider": {
         "type": "Project",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection": "[9.0.9, )",
-          "SaanSoft.Cqrs": "[1.0.0, )"
+          "SaanSoft.Cqrs.Bus": "[1.0.0, )"
         }
       },
       "saansoft.tests.cqrs.shared": {

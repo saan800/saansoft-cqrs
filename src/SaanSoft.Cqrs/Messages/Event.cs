@@ -1,7 +1,6 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace SaanSoft.Cqrs.Messages;
 
+/// <inheritdoc cref="IEvent{TEntityKey}"/>
 public abstract class Event<TEntityKey> : MessageBase, IEvent<TEntityKey>
     where TEntityKey : struct
 {
@@ -19,7 +18,7 @@ public abstract class Event<TEntityKey> : MessageBase, IEvent<TEntityKey>
 
     /// <summary>
     /// Copy relevant data from triggering message to a new message.
-    /// - CorrelationId, AuthenticationId, TriggeredByMessageId, IsReplay
+    /// - CorrelationId, AuthenticationId, TriggeredByMessageId
     /// </summary>
     /// <remarks>
     /// Useful when tracking a chain of messages, and want to ensure can relate them later.
@@ -32,8 +31,12 @@ public abstract class Event<TEntityKey> : MessageBase, IEvent<TEntityKey>
 }
 
 /// <summary>
+/// Represents an event that usually alters the state of the system.
 /// Base Event model where the entity key is a Guid
 /// </summary>
+/// <remarks>
+/// Names should be in the form of a past tense verb, eg OrderCreated, UserDetailsUpdated, BlogPostDeleted
+/// </remarks>
 public abstract class Event : Event<Guid>
 {
     public Event() : base() { }

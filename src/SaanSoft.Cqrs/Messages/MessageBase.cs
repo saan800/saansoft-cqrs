@@ -17,16 +17,13 @@ public abstract class MessageBase : IMessage
     /// <inheritdoc/>
     public Guid? TriggeredByMessageId { get; set; }
 
-    /// <inheritdoc/>
-    public bool IsReplay { get; set; }
-
     public MessageBase()
     {
     }
 
     /// <summary>
     /// Copy relevant data from triggering message to a new message.
-    /// - CorrelationId, AuthenticationId, TriggeredByMessageId, IsReplay
+    /// - CorrelationId, AuthenticationId, TriggeredByMessageId
     /// </summary>
     /// <remarks>
     /// Useful when tracking a chain of messages, and want to ensure can relate them later.
@@ -37,6 +34,5 @@ public abstract class MessageBase : IMessage
         CorrelationId = triggeredByMessage.CorrelationId;
         AuthenticationId = triggeredByMessage.AuthenticationId;
         TriggeredByMessageId = triggeredByMessage.Id;
-        IsReplay = triggeredByMessage.IsReplay;
     }
 }

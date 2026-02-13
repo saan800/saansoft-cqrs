@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SaanSoft.Cqrs\SaanSoft.Cqrs.csproj" />
+    <ProjectReference Include="..\SaanSoft.Cqrs.Bus\SaanSoft.Cqrs.Bus.csproj" />
   </ItemGroup>
 
 </Project>

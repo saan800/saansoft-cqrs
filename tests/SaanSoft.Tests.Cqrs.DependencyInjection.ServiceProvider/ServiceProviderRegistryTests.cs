@@ -6,223 +6,88 @@ namespace SaanSoft.Tests.Cqrs.DependencyInjection.ServiceProvider;
 
 public class ServiceProviderRegistryTests
 {
-    public class HasCommandHandler
+    public class GetMessageHandlerCount
     {
         [Fact]
-        public void ShouldReturnTrue_WhenHandlerIsRegistered()
+        public void ShouldReturnOne_WhenHandlerIsRegistered()
         {
             var services = new ServiceCollection();
-            services.AddTransient<ICommandHandler<MyCommand>, CommandHandler>();
+            services.AddTransient<IHandleMessage<MyCommand>, CommandHandler>();
             var provider = services.BuildServiceProvider();
 
             var registry = new ServiceProviderRegistry(provider);
 
-            var result = registry.HasCommandHandler<MyCommand>();
+            var result = registry.GetMessageHandlerCount<MyCommand>();
 
-            result.Should().BeTrue();
+            result.Should().Be(1);
         }
 
         [Fact]
-        public void ShouldReturnFalse_WhenNoHandlerRegistered()
+        public void ShouldReturnZero_WhenNoHandlerRegistered()
         {
             var provider = new ServiceCollection().BuildServiceProvider();
             var registry = new ServiceProviderRegistry(provider);
 
-            var result = registry.HasCommandHandler<MyCommand>();
+            var result = registry.GetMessageHandlerCount<MyCommand>();
 
-            result.Should().BeFalse();
+            result.Should().Be(0);
         }
 
         [Fact]
-        public void ShouldThrow_WhenTypeIsNotCommand()
-        {
-            var provider = new ServiceCollection().BuildServiceProvider();
-            var registry = new ServiceProviderRegistry(provider);
-
-            Action act = () => registry.HasCommandHandler<MyEvent>(); // MyEvent is not a command
-
-            act.Should().Throw<ApplicationException>();
-        }
-
-        [Fact]
-        public void ShouldThrow_WhenMultipleHandlersRegistered()
+        public void ShouldReturnNumber_WhenMultipleHandlersRegistered()
         {
             var services = new ServiceCollection();
-            services.AddTransient<ICommandHandler<MyCommand>, CommandHandler>();
-            services.AddTransient<ICommandHandler<MyCommand>, CommandHandler>();
+            services.AddTransient<IHandleMessage<MyEvent>, EventsHandler>();
+            services.AddTransient<IHandleMessage<MyEvent>, EventsHandler>();
             var provider = services.BuildServiceProvider();
 
             var registry = new ServiceProviderRegistry(provider);
 
-            Action act = () => registry.HasCommandHandler<MyCommand>();
+            var result = registry.GetMessageHandlerCount<MyEvent>();
 
-            act.Should().Throw<ApplicationException>()
-                .WithMessage("*Multiple handlers*");
+            result.Should().Be(2);
         }
     }
 
-    public class HasCommandWithResponseHandler
+    public class GetMessageHandlerWithResponseCount
     {
         [Fact]
-        public void ShouldReturnTrue_WhenHandlerIsRegistered()
+        public void ShouldReturnOne_WhenHandlerIsRegistered()
         {
             var services = new ServiceCollection();
-            services.AddTransient<ICommandHandler<MyCommandWithResponse, string?>, CommandHandler>();
+            services.AddTransient<IHandleMessage<MyCommandWithResponse, string?>, CommandHandler>();
             var provider = services.BuildServiceProvider();
 
             var registry = new ServiceProviderRegistry(provider);
 
-            var result = registry.HasCommandWithResponseHandler<MyCommandWithResponse>();
-
-            result.Should().BeTrue();
+            var result = registry.GetMessageHandlerWithResponseCount<MyCommandWithResponse>();
+            result.Should().Be(1);
         }
 
         [Fact]
-        public void ShouldReturnFalse_WhenNoHandlerRegistered()
+        public void ShouldReturnZero_WhenNoHandlerRegistered()
         {
             var provider = new ServiceCollection().BuildServiceProvider();
             var registry = new ServiceProviderRegistry(provider);
 
-            var result = registry.HasCommandWithResponseHandler<MyCommandWithResponse>();
+            var result = registry.GetMessageHandlerWithResponseCount<MyCommandWithResponse>();
 
-            result.Should().BeFalse();
+            result.Should().Be(0);
         }
 
         [Fact]
-        public void ShouldThrow_WhenTypeIsNotCommand()
-        {
-            var provider = new ServiceCollection().BuildServiceProvider();
-            var registry = new ServiceProviderRegistry(provider);
-
-            Action act = () => registry.HasCommandWithResponseHandler<MyEvent>(); // MyEvent is not a command
-
-            act.Should().Throw<ApplicationException>();
-        }
-
-        [Fact]
-        public void ShouldThrow_WhenMultipleHandlersRegistered()
+        public void ShouldReturnCount_WhenMultipleHandlersRegistered()
         {
             var services = new ServiceCollection();
-            services.AddTransient<ICommandHandler<MyCommandWithResponse, string?>, CommandHandler>();
-            services.AddTransient<ICommandHandler<MyCommandWithResponse, string?>, CommandHandler>();
+            services.AddTransient<IHandleMessage<MyCommandWithResponse, string?>, CommandHandler>();
+            services.AddTransient<IHandleMessage<MyCommandWithResponse, string?>, CommandHandler>();
             var provider = services.BuildServiceProvider();
 
             var registry = new ServiceProviderRegistry(provider);
 
-            Action act = () => registry.HasCommandWithResponseHandler<MyCommandWithResponse>();
+            var result = registry.GetMessageHandlerWithResponseCount<MyCommandWithResponse>();
 
-            act.Should().Throw<ApplicationException>()
-                .WithMessage("*Multiple handlers*");
-        }
-    }
-
-    public class HasQueryHandler
-    {
-        [Fact]
-        public void ShouldReturnTrue_WhenHandlerIsRegistered()
-        {
-            var services = new ServiceCollection();
-            services.AddTransient<IQueryHandler<MyQuery, MyQueryResponse?>, QueryHandler>();
-            var provider = services.BuildServiceProvider();
-
-            var registry = new ServiceProviderRegistry(provider);
-
-            var result = registry.HasQueryHandler<MyQuery>();
-
-            result.Should().BeTrue();
-        }
-
-        [Fact]
-        public void ShouldReturnFalse_WhenNoHandlerRegistered()
-        {
-            var provider = new ServiceCollection().BuildServiceProvider();
-            var registry = new ServiceProviderRegistry(provider);
-
-            var result = registry.HasQueryHandler<MyQuery>();
-
-            result.Should().BeFalse();
-        }
-
-        [Fact]
-        public void ShouldThrow_WhenTypeIsNotQuery()
-        {
-            var provider = new ServiceCollection().BuildServiceProvider();
-            var registry = new ServiceProviderRegistry(provider);
-
-            Action act = () => registry.HasQueryHandler<MyEvent>(); // MyEvent is not a query
-
-            act.Should().Throw<ApplicationException>();
-        }
-
-        [Fact]
-        public void ShouldThrow_WhenMultipleHandlersRegistered()
-        {
-            var services = new ServiceCollection();
-            services.AddTransient<IQueryHandler<MyQuery, MyQueryResponse?>, QueryHandler>();
-            services.AddTransient<IQueryHandler<MyQuery, MyQueryResponse?>, QueryHandler>();
-            var provider = services.BuildServiceProvider();
-
-            var registry = new ServiceProviderRegistry(provider);
-
-            Action act = () => registry.HasQueryHandler<MyQuery>();
-
-            act.Should().Throw<ApplicationException>()
-                .WithMessage("*Multiple handlers*");
-        }
-    }
-
-    public class HasEventHandlers
-    {
-        [Fact]
-        public void ShouldReturnTrue_WhenOneHandlerIsRegistered()
-        {
-            var services = new ServiceCollection();
-            services.AddTransient<IEventHandler<MyEvent>, EventsHandler>();
-            var provider = services.BuildServiceProvider();
-
-            var registry = new ServiceProviderRegistry(provider);
-
-            var result = registry.HasEventHandlers<MyEvent>();
-
-            result.Should().BeTrue();
-        }
-
-        [Fact]
-        public void ShouldReturnTrue_WhenMultipleHandlersAreRegistered()
-        {
-            var services = new ServiceCollection();
-            services.AddTransient<IEventHandler<MyEvent>, EventsHandler>();
-            services.AddTransient<IEventHandler<MyEvent>, EventsHandler>();
-            services.AddTransient<IEventHandler<MyEvent>, EventsHandler>();
-            var provider = services.BuildServiceProvider();
-
-            var registry = new ServiceProviderRegistry(provider);
-
-            var result = registry.HasEventHandlers<MyEvent>();
-
-            result.Should().BeTrue();
-        }
-
-        [Fact]
-        public void ShouldReturnFalse_WhenNoHandlerRegistered()
-        {
-            var provider = new ServiceCollection().BuildServiceProvider();
-            var registry = new ServiceProviderRegistry(provider);
-
-            var result = registry.HasEventHandlers<MyEvent>();
-
-            result.Should().BeFalse();
-        }
-
-        [Fact]
-        public void ShouldThrow_WhenTypeIsNotEvent()
-        {
-            var provider = new ServiceCollection().BuildServiceProvider();
-            var registry = new ServiceProviderRegistry(provider);
-
-            Action act = () => registry.HasEventHandlers<MyQuery>(); // MyQuery is not an event
-
-            act.Should().Throw<ApplicationException>();
+            result.Should().Be(2);
         }
     }
 

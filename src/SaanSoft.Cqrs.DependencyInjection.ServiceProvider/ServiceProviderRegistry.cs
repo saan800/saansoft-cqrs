@@ -6,121 +6,63 @@ using SaanSoft.Cqrs.Utilities;
 
 namespace SaanSoft.Cqrs.DependencyInjection.ServiceProvider;
 
-// TODO: add helper to add default services and config?
-
 /// <summary>
 /// Minimal service registry backed by IServiceProvider.
 /// </summary>
 public sealed class ServiceProviderRegistry(IServiceProvider serviceProvider) : IServiceRegistry
 {
-    private readonly ConcurrentDictionary<Type, bool> _hasHandler = [];
+    private readonly ConcurrentDictionary<Type, int> _numHandlers = [];
 
-    public bool HasCommandHandler<TCommand>() where TCommand : IMessage
+    public int GetMessageHandlerCount<TMessage>() where TMessage : IMessage
     {
-        var serviceCollection = new ServiceCollection();
-        var serviceProvider2 = serviceCollection.BuildServiceProvider();
+        var messageType = typeof(TMessage);
+        if (_numHandlers.TryGetValue(messageType, out var numHandlers)) return numHandlers;
 
-        var messageType = typeof(TCommand);
-        if (_hasHandler.TryGetValue(messageType, out var hasHandler)) return hasHandler;
+        // Construct IHandleMessage<TMessage> type at runtime
+        var handlerType = typeof(IHandleMessage<>).MakeGenericType(messageType);
 
-        if (!messageType.IsCommand())
-        {
-            throw new ApplicationException(
-                $"{messageType.GetTypeFullName()} does not implement {nameof(ICommand)}");
-        }
+        numHandlers = CountServices(handlerType);
+        _numHandlers.TryAdd(messageType, numHandlers);
+        return numHandlers;
 
-        // Construct ICommandHandler<TCommand> at runtime
-        var handlerType = typeof(ICommandHandler<>).MakeGenericType(messageType);
-
-        var response = HasSingleHandler(handlerType);
-        _hasHandler.TryAdd(messageType, response);
-        return response;
     }
 
-    public bool HasCommandWithResponseHandler<TCommand>() where TCommand : IMessage
+    public int GetMessageHandlerWithResponseCount<TMessage>() where TMessage : IMessage
     {
-        var messageType = typeof(TCommand);
-        if (_hasHandler.TryGetValue(messageType, out var hasHandler)) return hasHandler;
+        var messageType = typeof(TMessage);
+        if (_numHandlers.TryGetValue(messageType, out var numHandlers)) return numHandlers;
 
         var i = messageType.GetInterfaces().FirstOrDefault(x =>
                 x.IsGenericType &&
-                x.GetGenericTypeDefinition() == typeof(ICommand<>)
+                x.GetGenericTypeDefinition() == typeof(IMessage<>)
             );
-        if (!messageType.IsCommandWithResponse() || i == null)
+        if ((!messageType.IsMessageWithResponse()) || i == null)
         {
             throw new ApplicationException(
-                $"{messageType.GetTypeFullName()} does not implement {nameof(ICommand)} with return type"); ;
+                $"{messageType.GetTypeFullName()} does not implement ICommand<TResponse> or IQuery<TResponse>"); ;
         }
 
-        // Construct ICommandHandler<TCommand, TResponse> at runtime
+        // Construct IHandleMessage<TMessage, TResponse> type at runtime
         var responseType = i.GetGenericArguments()[0];
-        var handlerType = typeof(ICommandHandler<,>).MakeGenericType(messageType, responseType);
+        var handlerType = typeof(IHandleMessage<,>).MakeGenericType(messageType, responseType);
 
-        var response = HasSingleHandler(handlerType);
-        _hasHandler.TryAdd(messageType, response);
-        return response;
+        numHandlers = CountServices(handlerType);
+        _numHandlers.TryAdd(messageType, numHandlers);
+        return numHandlers;
     }
 
-    public bool HasQueryHandler<TQuery>() where TQuery : IMessage
-    {
-        var messageType = typeof(TQuery);
-        if (_hasHandler.TryGetValue(messageType, out var hasHandler)) return hasHandler;
-
-        var i = messageType.GetInterfaces().FirstOrDefault(x =>
-                x.IsGenericType &&
-                x.GetGenericTypeDefinition() == typeof(IQuery<>)
-            );
-        if (!messageType.IsQuery() || i == null)
-        {
-            throw new ApplicationException($"{messageType.GetTypeFullName()} does not implement IQuery");
-        }
-
-        // Construct IQueryHandler<TQuery, TResponse> at runtime
-        var responseType = i.GetGenericArguments()[0];
-        var handlerType = typeof(IQueryHandler<,>).MakeGenericType(messageType, responseType);
-
-        var response = HasSingleHandler(handlerType);
-        _hasHandler.TryAdd(messageType, response);
-        return response;
-    }
-
-    public bool HasEventHandlers<TEvent>() where TEvent : IMessage
-    {
-        var messageType = typeof(TEvent);
-        if (_hasHandler.TryGetValue(messageType, out var hasHandler)) return hasHandler;
-
-        if (!messageType.IsEvent())
-        {
-            throw new ApplicationException(
-                $"{messageType.GetTypeFullName()} does not implement {nameof(IEvent)}");
-        }
-
-        // Construct IEventHandler<TEvent> at runtime
-        var handlerType = typeof(IEventHandler<>).MakeGenericType(messageType);
-
-        var handlers = serviceProvider.GetServices(handlerType);
-        var response = handlers.Any();
-        _hasHandler.TryAdd(messageType, response);
-        return response;
-    }
-
-    public T? ResolveService<T>() => serviceProvider.GetService<T>();
+    public T? ResolveService<T>() where T : notnull => serviceProvider.GetService<T>();
 
     public T ResolveRequiredService<T>() where T : notnull => serviceProvider.GetRequiredService<T>();
 
-    public IEnumerable<T> ResolveServices<T>() => serviceProvider.GetServices<T>();
+    public IEnumerable<T> ResolveServices<T>() where T : notnull => serviceProvider.GetServices<T>();
 
     /// <summary>
-    /// Check if there is an instance of the handler type
-    /// Having more than one handler instance throws the exception ApplicationException
+    /// Get the number of services registered for the type
     /// </summary>
-    private bool HasSingleHandler(Type handlerType)
+    private int CountServices(Type serviceType)
     {
-        var resolved = serviceProvider.GetServices(handlerType);
-        if (resolved.Count() > 1)
-        {
-            throw new ApplicationException($"Multiple handlers found for {handlerType.GetTypeFullName()}");
-        }
-        return resolved.Count() == 1;
+        var resolved = serviceProvider.GetServices(serviceType)?.Where(x => x != null);
+        return resolved?.Count() ?? 0;
     }
 }

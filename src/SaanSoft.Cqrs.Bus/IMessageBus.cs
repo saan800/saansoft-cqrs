@@ -6,7 +6,7 @@ namespace SaanSoft.Cqrs.Bus;
 public interface IMessageBus
 {
     /// <summary>
-    /// Execute a Command that does not expect a response, waits for completion
+    /// Execute a Command that does not expect a response, waits for handler completion
     ///
     /// Should mostly be used for commands that are handled by the same application instance.
     ///
@@ -30,7 +30,7 @@ public interface IMessageBus
         where TCommand : ICommand;
 
     /// <summary>
-    /// Execute a Command that expects a response, waits for completion.
+    /// Execute a Command that expects a response, waits for completion and the response.
     ///
     /// Exceptions that are thrown by the command handler will be propagated back to the caller.
     ///
@@ -55,7 +55,7 @@ public interface IMessageBus
         where TCommand : ICommand<TResponse>;
 
     /// <summary>
-    /// Send Command that's not expecting a response, fire-and-forget from caller perspective.
+    /// Send a Command that's not expecting a response, fire-and-forget from caller perspective.
     ///
     /// Exceptions that are thrown by the command handler will not be propagated back to the caller.
     ///
@@ -72,6 +72,28 @@ public interface IMessageBus
     /// </param>
     Task SendAsync<TCommand>(
         TCommand command,
+        CancellationToken ct = default,
+        [CallerFilePath] string callerFile = "")
+        where TCommand : ICommand;
+
+    /// <summary>
+    /// Send Commands that are not expecting a response, fire-and-forget from caller perspective.
+    ///
+    /// Exceptions that are thrown by the command handler will not be propagated back to the caller.
+    ///
+    /// Should be used for commands that are handled asynchronously, e.g. via a queue
+    /// or other out-of-process mechanism.
+    /// </summary>
+    /// <typeparam name="TCommand"></typeparam>
+    /// <param name="commands"></param>
+    /// <param name="ct"></param>
+    /// <param name="callerFile">
+    /// Used to populate the <see cref="MessageEnvelope.Publisher"/> at runtime. Parameter does not
+    /// need to be supplied by caller, it should be populated automatically by
+    /// System.Runtime.CompilerServices.CallerFilePath
+    /// </param>
+    Task SendManyAsync<TCommand>(
+        IReadOnlyCollection<TCommand> commands,
         CancellationToken ct = default,
         [CallerFilePath] string callerFile = "")
         where TCommand : ICommand;

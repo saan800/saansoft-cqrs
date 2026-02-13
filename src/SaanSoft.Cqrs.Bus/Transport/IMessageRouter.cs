@@ -4,18 +4,27 @@ namespace SaanSoft.Cqrs.Bus.Transport;
 
 public interface IMessageRouter
 {
-    Task ExecuteAsync<TCommand>(MessageEnvelope envelope, CancellationToken ct)
-        where TCommand : ICommand;
+    /// <summary>
+    /// Execute Command messages and wait for it to finish processing.
+    /// </summary>
+    Task ExecuteAsync<TMessage>(MessageEnvelope envelope, CancellationToken ct)
+        where TMessage : IMessage;
 
-    Task<TResponse> ExecuteAsync<TCommand, TResponse>(MessageEnvelope envelope, CancellationToken ct)
-        where TCommand : ICommand<TResponse>;
+    /// <summary>
+    /// Execute Command or Query messages that expect a response.
+    /// </summary>
+    Task<TResponse> ExecuteAsync<TMessage, TResponse>(MessageEnvelope envelope, CancellationToken ct)
+        where TMessage : IMessage<TResponse>;
 
-    Task SendAsync<TCommand>(MessageEnvelope envelope, CancellationToken ct)
-        where TCommand : ICommand;
+    /// <summary>
+    /// Send a Command or Event message, fire-and-forget from caller perspective.
+    /// </summary>
+    Task SendAsync<TMessage>(MessageEnvelope envelope, CancellationToken ct)
+        where TMessage : IMessage;
 
-    Task<TResponse> QueryAsync<TQuery, TResponse>(MessageEnvelope envelope, CancellationToken ct)
-        where TQuery : IQuery<TResponse>;
-
-    Task PublishManyAsync<TEvent>(MessageEnvelope[] envelopes, CancellationToken ct)
-        where TEvent : IEvent;
+    /// <summary>
+    /// Send multiple Command or Event messages, fire-and-forget from caller perspective.
+    /// </summary>
+    Task SendManyAsync<TMessage>(MessageEnvelope[] envelopes, CancellationToken ct)
+        where TMessage : IMessage;
 }

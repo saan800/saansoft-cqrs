@@ -14,12 +14,12 @@ public static class MessageBusExtensions
     /// <param name="serviceProvider"></param>
     /// <typeparam name="TEvent"></typeparam>
     /// <returns></returns>
-    public static List<IGrouping<int, IEventHandler<TEvent>>> GetPrioritisedEventHandlers<TEvent>(
+    public static List<IGrouping<int, IHandleMessage<TEvent>>> GetPrioritisedEventHandlers<TEvent>(
         this IServiceProvider serviceProvider)
         where TEvent : IEvent
     {
         return serviceProvider
-            .GetServices<IEventHandler<TEvent>>()
+            .GetServices<IHandleMessage<TEvent>>()
             // TODO: create optional attribute on event handlers to indicate running priority,
             // default priority = 0
             .GroupBy(_ => 0)
